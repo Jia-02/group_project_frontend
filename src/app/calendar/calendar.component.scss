@@ -5,6 +5,7 @@
   background-color: #f7f7f7;
   height: fit-content;
   border-radius: 25px;
+  margin-bottom: 20px;
 }
 
 .header {
@@ -25,8 +26,8 @@
 .calendar-table td {
   border: 1px solid #ddd;
   padding: 5px;
-  height: 60px;
-  width: 100px;
+  height: 80px;
+  width: 60px;
   vertical-align: top;
 }
 
@@ -63,20 +64,6 @@
   padding: 2px 5px;
 }
 
-/* --- 活動提示點樣式 --- */
-.activity-dot {
-  position: absolute;
-  bottom: 5px;
-  /* 位於單元格的底部 */
-  left: 50%;
-  transform: translateX(-50%);
-  width: 8px;
-  height: 8px;
-  background-color: #ff5722;
-  /* 醒目的提示顏色 */
-  border-radius: 50%;
-}
-
 /* --- 側邊欄活動列表樣式 --- */
 .activities-sidebar h3 {
   border-bottom: 2px solid #ccc;
@@ -107,4 +94,46 @@
 .display{
   display: flex;
   gap: 50px;
+}
+
+/* 容器樣式 - 確保長條在單元格內 */
+.calendar-day {
+    position: relative; /* 讓活動長條可以在裡面定位 */
+    padding-top: 5px;   /* 留空間給日期數字 */
+    height: 100px; /* 範例高度 */
+}
+
+/* 活動長條基本樣式 */
+.activity-bar {
+    margin-top: 2px;
+    padding: 0 4px;
+    height: 20px;
+    line-height: 20px;
+    font-size: 12px;
+    color: #333; /* 文字顏色 */
+    border-radius: 3px;
+    overflow: hidden; /* 隱藏溢出的文字 */
+    white-space: nowrap;
+}
+
+/* --- 顏色狀態樣式 --- */
+
+/* 活動已結束 (淡灰) */
+.activity-bar.status-finished {
+    background-color: #e0e0e0;
+}
+
+/* 活動正在進行 (淡紅) */
+.activity-bar.status-in-progress {
+    background-color: #ffcdd2; /* 淡紅 */
+}
+
+/* 活動即將開始 (7天內, 範例: 黃色) */
+.activity-bar.status-upcoming-7d {
+    background-color: #fff9c4; /* 淡黃 */
+}
+
+/* 活動未開始 (7天外, 範例: 藍色) */
+.activity-bar.status-not-started {
+    background-color: #bbdefb; /* 淡藍 */
 }
