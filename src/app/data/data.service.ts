@@ -17,3 +17,18 @@ export class DataService {
   }
 
 }
+
+
+export interface Table{
+  tableId:string;
+  tableStatus:string;
+  tableCapacity:number;
+  tablePositionX:number;
+  tablePositionY:number;
+}
+
+export interface TableRes{
+  code:number;
+  message:string;
+  tableList:Table[];
+}

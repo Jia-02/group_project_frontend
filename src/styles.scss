@@ -13,10 +13,12 @@ html {
     typography: Roboto,
     density: 0,
   ));
-}/* You can add global styles to this file, and also import other style files */
+}
 
 html, body { height: 100%;background-color: rgb(220,220,220); }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
 
 .mat-mdc-tab-labels {
     display: flex;
@@ -40,3 +42,6 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     border-radius: 10px;
     margin-bottom: 5%;
 }
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
