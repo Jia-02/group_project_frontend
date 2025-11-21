@@ -1,12 +1,15 @@
 import { DatePipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { NgClass } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-calendar',
   imports: [
     DatePipe,
-    NgClass
+    NgClass,
+    FormsModule
+
   ],
   templateUrl: './calendar.component.html',
   styleUrl: './calendar.component.scss'
@@ -14,38 +17,38 @@ import { NgClass } from '@angular/common';
 export class CalendarComponent {
   currentMonth: Date = new Date();
 
-  // ★ 活動資料（正確寫法）
+  // ★ 活動資料（單日活動結束日要加一天)
   activities: activity[] = [
     {
-      id:1,
+      id: 1,
       title: '部門會議',
       description: '...',
       startDate: new Date('2025-11-17'),
-      endDate: new Date('2025-11-17'),
+      endDate: new Date('2025-11-18'),
     },
     {
-      id:2,
+      id: 2,
       title: '客戶拜訪',
       description: '...',
       startDate: new Date('2025-11-20'),
-      endDate: new Date('2025-11-20'),
+      endDate: new Date('2025-11-21'),
     },
     {
-      id:3,
+      id: 3,
       title: '晚餐聚會',
       description: '...',
       startDate: new Date('2025-11-20'),
-      endDate: new Date('2025-11-20'),
+      endDate: new Date('2025-11-21'),
     },
     {
-      id:4,
+      id: 4,
       title: '巴黎旅遊',
       description: '...',
       startDate: new Date('2025-11-10'),
       endDate: new Date('2025-11-15'),
     },
     {
-      id:5,
+      id: 5,
       title: '專案 Sprint',
       description: '...',
       startDate: new Date('2025-11-18'),
@@ -109,15 +112,36 @@ export class CalendarComponent {
   }
 
   selectDay(day: Date | null): void {
-    if (day) this.selectedDay = day;
+    if (day) {
+      this.selectedDay = day;
+      this.selectedDayActivities = this.getDayActivities(day);
+    }
   }
 
-  getDayActivities(day: Date): activity[] {
-    if (!day) return [];
-    return this.activities.filter(a =>
+
+  // 您的原始程式碼：
+  getDayActivities(day: Date) {
+    // 檢查 day 是否在活動的 startDate 和 endDate 之間 (包含兩端)
+    return this.activities.filter((a: any) =>
       day >= a.startDate && day <= a.endDate
     );
   }
+
+  isActivityStartDay(activity: activity, currentDay: Date): boolean {
+    if (!currentDay || !activity.startDate) return false;
+
+    // 將時間部分歸零以確保準確比較日期
+    const start = new Date(activity.startDate.getFullYear(), activity.startDate.getMonth(), activity.startDate.getDate());
+    const current = new Date(currentDay.getFullYear(), currentDay.getMonth(), currentDay.getDate());
+
+    // 只有多日活動，且是開始的那一天，或者活動本身就是單日活動，才回傳 true
+    return current.getTime() === start.getTime();
+  }
+
+  isMultiDay(a: any): boolean {
+    return a.startDate.toDateString() !== a.endDate.toDateString();
+  }
+
 
   activityShow(startDate: Date, endDate: Date, currentDay: Date): string {
     const MS_PER_DAY = 1000 * 60 * 60 * 24;
@@ -146,12 +170,12 @@ export class CalendarComponent {
     return '';
   }
 
-  addActivity(){
+  addActivity() {
 
   }
 }
 
-interface activity{
+interface activity {
   id: number,
   title: string,
   description: string,

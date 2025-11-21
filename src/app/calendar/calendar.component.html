@@ -25,11 +25,12 @@
             @if (day) {
             <span class="day-number">{{ day | date: "d" }}</span>
 
-            <!-- 活動條狀顯示 -->
             <div class="activity-bar-container">
-              @for (act of getDayActivities(day); track $index) {
-              <div class="activity-bar" [ngClass]="activityShow(act.startDate, act.endDate, day)">
-                {{ act.title }}
+              @for (act of getDayActivities(day); track act.id) {
+              <div class="activity-bar" [class.multi-day]="isMultiDay(act)">
+                @if (isActivityStartDay(act, day) || !isMultiDay(act)) {
+                <span class="activity-title">{{ act.title }}</span>
+                }
               </div>
               }
             </div>
@@ -44,21 +45,24 @@
   </div>
 
   <div>
-    <div class="activities-sidebar">
+    <div class="sidebar-card">
       <h3>新增活動</h3>
+      <div class="sidebar-line"></div>
       <textarea></textarea>
       <button (click)="addActivity()">+</button>
     </div>
 
-    <div class="activities-sidebar">
+    <div class="sidebar-card">
       <h3>{{ selectedDay | date: 'MM/dd' }} 的活動</h3>
+      <div class="sidebar-line"></div>
 
       <div class="activities-content">
         @if (selectedDayActivities.length) {
         <ul>
           @for (activity of selectedDayActivities; track $index) {
           <li>
-            <span class="activity-title">{{ activity.title }}</span>
+            <span>{{ activity.title }}</span><br>
+            <span>{{ activity.description }}</span>
           </li>
           }
         </ul>
@@ -68,9 +72,4 @@
       </div>
     </div>
   </div>
-
-  <div class="block">
-  </div>
-
-
 </div>

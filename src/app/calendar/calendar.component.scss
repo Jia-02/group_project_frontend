@@ -1,22 +1,53 @@
-.activities-sidebar {
-  min-width: 250px;
-  padding: 15px;
-  border-left: 1px solid #ddd;
-  background-color: #f7f7f7;
-  height: fit-content;
-  border-radius: 25px;
-  margin-bottom: 20px;
-}
-
-.header {
+/* =======================
+   🗂️ 主版面排版
+======================= */
+.display {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 0;
-  width: 250px;
-
+  gap: 50px;
 }
 
+.sidebar-card {
+  width: 280px;
+  padding: 20px;
+  background: #fff;
+  border-radius: 22px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  border: 1px solid #e5e5e5;
+  margin-bottom: 25px;
+}
+
+.sidebar-card h3 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.sidebar-line {
+  height: 2px;
+  width: 100%;
+  background: #ddd;
+  margin: 6px 0 14px 0;
+}
+
+.activity-list-item {
+  padding: 6px 0;
+  font-size: 14px;
+}
+
+.activity-day-title {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.no-activity {
+  color: #666;
+  text-align: center;
+  padding: 10px 0;
+}
+
+
+/* =======================
+   📅 日曆表格
+======================= */
 .calendar-table {
   width: 100%;
   border-collapse: collapse;
@@ -35,14 +66,15 @@
   background-color: #e0e0e0;
 }
 
+/* =======================
+   📌 日曆單格樣式
+======================= */
 .calendar-day {
-  cursor: pointer;
   position: relative;
+  cursor: pointer;
   background-color: #fff;
-}
-
-.calendar-day.is-current-month {
-  background-color: #fff;
+  padding-top: 5px; /* 給日期數字留空間 */
+  height: 100px;
 }
 
 .calendar-day:not(.is-current-month) {
@@ -52,7 +84,6 @@
 
 .calendar-day.is-selected {
   border: 2px solid #007bff;
-  /* 選中日期的視覺效果 */
   background-color: #e6f0ff;
 }
 
@@ -64,76 +95,36 @@
   padding: 2px 5px;
 }
 
-/* --- 側邊欄活動列表樣式 --- */
-.activities-sidebar h3 {
-  border-bottom: 2px solid #ccc;
-  padding-bottom: 10px;
-  margin-bottom: 15px;
-}
-
-.activities-content ul {
-  list-style: none;
-  padding: 0;
-}
-
-.activities-content li {
-  padding: 8px 0;
-  border-bottom: 1px dashed #eee;
-}
-
-.activity-time {
-  font-weight: bold;
-  color: #007bff;
-}
-
-.no-activity {
-  color: #666;
-  text-align: center;
-}
-
-.display{
-  display: flex;
-  gap: 50px;
-}
-
-/* 容器樣式 - 確保長條在單元格內 */
-.calendar-day {
-    position: relative; /* 讓活動長條可以在裡面定位 */
-    padding-top: 5px;   /* 留空間給日期數字 */
-    height: 100px; /* 範例高度 */
-}
-
-/* 活動長條基本樣式 */
+/* =======================
+   📌 活動條樣式（單天 & 多天）
+======================= */
 .activity-bar {
-    margin-top: 2px;
-    padding: 0 4px;
-    height: 20px;
-    line-height: 20px;
-    font-size: 12px;
-    color: #333; /* 文字顏色 */
-    border-radius: 3px;
-    overflow: hidden; /* 隱藏溢出的文字 */
-    white-space: nowrap;
+  margin-top: 2px;
+  padding: 6px 6px;
+  font-size: 12px;
+  line-height: 16px;
+  color: #333;
+  border-radius: 6px;
+  background-color: var(--color, #ccc);
+  white-space: nowrap;
+  overflow: hidden;
 }
 
-/* --- 顏色狀態樣式 --- */
-
-/* 活動已結束 (淡灰) */
+/* =======================
+   📌 活動狀態色碼
+======================= */
 .activity-bar.status-finished {
-    background-color: #e0e0e0;
+  background-color: #e0e0e0;
 }
 
-/* 活動正在進行 (淡紅) */
 .activity-bar.status-in-progress {
-    background-color: #ffcdd2; /* 淡紅 */
+  background-color: #ffcdd2;
 }
 
-/* 活動即將開始 (7天內, 範例: 黃色) */
 .activity-bar.status-upcoming-7d {
-    background-color: #fff9c4; /* 淡黃 */
+  background-color: #fff9c4;
 }
 
-/* 活動未開始 (7天外, 範例: 藍色) */
 .activity-bar.status-not-started {
-    background-color: #bbdefb; /* 淡藍 */
+  background-color: #bbdefb;
 }
