@@ -1,1 +1,43 @@
-<p>calendar works!</p>
+<div class="block">
+  <div>
+    <button (click)="prevMonth()">⬅</button>
+    <h3>{{ currentMonth | date: 'yyyy年 MMM' }}</h3>
+    <button (click)="nextMonth()">⮕</button>
+  </div>
+
+  <div>
+    <div>
+      <table>
+        <thead>
+          <tr>
+            @for (dayName of dayNames; track $index) {
+            <th>{{ dayName }}</th>
+            }
+          </tr>
+        </thead>
+
+        <tbody>
+          @for (week of monthWeeks; track $index) {
+          <tr >
+            @for (day of week; track $index) {
+            <td
+              [class.is-current-month]="day && (day | date: 'MM') === (currentMonth | date: 'MM')"
+              [class.is-selected]="day && (day | date: 'yyyyMMdd') === (selectedDay | date: 'yyyyMMdd')"
+              (click)="selectDay(day)">
+
+              @if (day) {
+              <span >{{ day | date: "d" }}</span>
+
+              @if (hasActivity(day)) {
+              <div  title="有活動"></div>
+              }
+              }
+            </td>
+            }
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
