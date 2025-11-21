@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { TabsComponent } from './tabs/tabs.component';
 
+
 export const routes: Routes = [
-  {path:'tabs',component:TabsComponent},
+  {path:'tabs',component:TabsComponent}
 ];
