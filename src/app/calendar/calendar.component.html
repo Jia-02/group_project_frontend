@@ -1,62 +1,63 @@
-<div class="block">
-  <div class="display">
-    <button (click)="prevMonth()">⬅</button>
-    <h3>{{ currentMonth | date: 'yyyy年 MMM' }}</h3>
-    <button (click)="nextMonth()">⮕</button>
-  </div>
-
-  <div class="display">
-    <div>
-      <table class="calendar-table">
-        <thead>
-          <tr>
-            @for (dayName of dayNames; track $index) {
-            <th>{{ dayName }}</th>
-            }
-          </tr>
-        </thead>
-
-        <tbody>
-          @for (week of monthWeeks; track $index) {
-          <tr class="calendar-week">
-            @for (day of week; track $index) {
-            <td class="calendar-day"
-              [class.is-current-month]="day && (day | date: 'MM') === (currentMonth | date: 'MM')"
-              [class.is-selected]="day && (day | date: 'yyyyMMdd') === (selectedDay | date: 'yyyyMMdd')"
-              (click)="selectDay(day)">
-
-              @if (day) {
-              <span class="day-number">{{ day | date: "d" }}</span>
-
-              @if (hasActivity(day)) {
-              <div title="有活動"></div>
-              }
-              }
-            </td>
-            }
-          </tr>
+<div class="header">
+  <button (click)="prevMonth()">⬅</button>
+  <h3>{{ currentMonth | date: 'yyyy年 MMM' }}</h3>
+  <button (click)="nextMonth()">⮕</button>
+  <button (click)="addActivity()">+</button>
+</div>
+<div class="display">
+  <div class="calendar-wrapper">
+    <table class="calendar-table">
+      <thead>
+        <tr>
+          @for (dayName of dayNames; track $index) {
+          <th>{{ dayName }}</th>
           }
-        </tbody>
-      </table>
-    </div>
+        </tr>
+      </thead>
 
-    <div>
-      <h3>{{ selectedDay | date: 'MM/dd' }} 的活動</h3>
+      <tbody>
+        @for (week of monthWeeks; track $index) {
+        <tr class="calendar-week">
+          @for (day of week; track $index) {
+          <td class="calendar-day" [class.is-current-month]="day && (day | date: 'MM') === (currentMonth | date: 'MM')"
+            [class.is-selected]="day && (day | date: 'yyyyMMdd') === (selectedDay | date: 'yyyyMMdd')"
+            (click)="selectDay(day)">
 
-      <div>
-        @if (selectedDayActivities.length) {
-        <ul>
-          @for (activity of selectedDayActivities; track $index) {
-          <li>
-            <span>{{ activity.time }}</span> -
-            <span>{{ activity.title }}</span>
-          </li>
+            @if (day) {
+            <span class="day-number">{{ day | date: "d" }}</span>
+
+            @if (hasActivity(day)) {
+            <div class="activity-dot" title="有活動"></div>
+            }
+            }
+          </td>
           }
-        </ul>
-        } @else {
-        <p>本日沒有活動。</p>
+        </tr>
         }
-      </div>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="activities-sidebar">
+    <h3>{{ selectedDay | date: 'MM/dd' }} 的活動</h3>
+
+    <div class="activities-content">
+      @if (selectedDayActivities.length) {
+      <ul>
+        @for (activity of selectedDayActivities; track $index) {
+        <li>
+          <span class="activity-time">{{ activity.time }}</span> -
+          <span class="activity-title">{{ activity.title }}</span>
+        </li>
+        }
+      </ul>
+      } @else {
+      <p class="no-activity">本日沒有活動。</p>
+      }
     </div>
   </div>
+</div>
+
+<div class="block">
+
 </div>

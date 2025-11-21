@@ -1,16 +1,23 @@
-.block{
-  width: 50%;
-  height: 50%;
-  border: 1px solid black;
+.activities-sidebar {
+  min-width: 250px;
+  padding: 15px;
+  border-left: 1px solid #ddd;
+  background-color: #f7f7f7;
+  height: fit-content;
+  border-radius: 25px;
 }
 
-.display{
+.header {
   display: flex;
-  gap: 50px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  width: 250px;
+
 }
 
 .calendar-table {
-  width: 50%;
+  width: 100%;
   border-collapse: collapse;
 }
 
@@ -18,7 +25,8 @@
 .calendar-table td {
   border: 1px solid #ddd;
   padding: 5px;
-  height: 30px;
+  height: 60px;
+  width: 100px;
   vertical-align: top;
 }
 
@@ -53,4 +61,50 @@
   font-weight: bold;
   font-size: 1.1em;
   padding: 2px 5px;
+}
+
+/* --- 活動提示點樣式 --- */
+.activity-dot {
+  position: absolute;
+  bottom: 5px;
+  /* 位於單元格的底部 */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 8px;
+  height: 8px;
+  background-color: #ff5722;
+  /* 醒目的提示顏色 */
+  border-radius: 50%;
+}
+
+/* --- 側邊欄活動列表樣式 --- */
+.activities-sidebar h3 {
+  border-bottom: 2px solid #ccc;
+  padding-bottom: 10px;
+  margin-bottom: 15px;
+}
+
+.activities-content ul {
+  list-style: none;
+  padding: 0;
+}
+
+.activities-content li {
+  padding: 8px 0;
+  border-bottom: 1px dashed #eee;
+}
+
+.activity-time {
+  font-weight: bold;
+  color: #007bff;
+}
+
+.no-activity {
+  color: #666;
+  text-align: center;
+}
+
+.display{
+  display: flex;
+  gap: 50px;
 }
