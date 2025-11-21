@@ -1,13 +1,13 @@
 <div class="block">
-  <div>
+  <div class="display">
     <button (click)="prevMonth()">⬅</button>
     <h3>{{ currentMonth | date: 'yyyy年 MMM' }}</h3>
     <button (click)="nextMonth()">⮕</button>
   </div>
 
-  <div>
+  <div class="display">
     <div>
-      <table>
+      <table class="calendar-table">
         <thead>
           <tr>
             @for (dayName of dayNames; track $index) {
@@ -18,18 +18,18 @@
 
         <tbody>
           @for (week of monthWeeks; track $index) {
-          <tr >
+          <tr class="calendar-week">
             @for (day of week; track $index) {
-            <td
+            <td class="calendar-day"
               [class.is-current-month]="day && (day | date: 'MM') === (currentMonth | date: 'MM')"
               [class.is-selected]="day && (day | date: 'yyyyMMdd') === (selectedDay | date: 'yyyyMMdd')"
               (click)="selectDay(day)">
 
               @if (day) {
-              <span >{{ day | date: "d" }}</span>
+              <span class="day-number">{{ day | date: "d" }}</span>
 
               @if (hasActivity(day)) {
-              <div  title="有活動"></div>
+              <div title="有活動"></div>
               }
               }
             </td>
@@ -38,6 +38,25 @@
           }
         </tbody>
       </table>
+    </div>
+
+    <div>
+      <h3>{{ selectedDay | date: 'MM/dd' }} 的活動</h3>
+
+      <div>
+        @if (selectedDayActivities.length) {
+        <ul>
+          @for (activity of selectedDayActivities; track $index) {
+          <li>
+            <span>{{ activity.time }}</span> -
+            <span>{{ activity.title }}</span>
+          </li>
+          }
+        </ul>
+        } @else {
+        <p>本日沒有活動。</p>
+        }
+      </div>
     </div>
   </div>
 </div>

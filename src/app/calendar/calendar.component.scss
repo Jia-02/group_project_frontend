@@ -3,3 +3,54 @@
   height: 50%;
   border: 1px solid black;
 }
+
+.display{
+  display: flex;
+  gap: 50px;
+}
+
+.calendar-table {
+  width: 50%;
+  border-collapse: collapse;
+}
+
+.calendar-table th,
+.calendar-table td {
+  border: 1px solid #ddd;
+  padding: 5px;
+  height: 30px;
+  vertical-align: top;
+}
+
+.calendar-table th {
+  background-color: #e0e0e0;
+}
+
+.calendar-day {
+  cursor: pointer;
+  position: relative;
+  background-color: #fff;
+}
+
+.calendar-day.is-current-month {
+  background-color: #fff;
+}
+
+.calendar-day:not(.is-current-month) {
+  opacity: 0.6;
+  background-color: #fafafa;
+}
+
+.calendar-day.is-selected {
+  border: 2px solid #007bff;
+  /* 選中日期的視覺效果 */
+  background-color: #e6f0ff;
+}
+
+.day-number {
+  display: block;
+  text-align: right;
+  font-weight: bold;
+  font-size: 1.1em;
+  padding: 2px 5px;
+}
