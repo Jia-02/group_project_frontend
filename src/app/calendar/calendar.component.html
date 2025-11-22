@@ -1,75 +1,124 @@
-<div class="header">
-  <button (click)="prevMonth()">⬅</button>
-  <h3>{{ currentMonth | date: 'yyyy年 MMM' }}</h3>
-  <button (click)="nextMonth()">⮕</button>
+<div class="calendar-container">
 
-</div>
-<div class="display">
-  <div class="calendar-wrapper">
-    <table class="calendar-table">
-      <thead>
-        <tr>
-          @for (dayName of dayNames; track $index) {
-          <th>{{ dayName }}</th>
-          }
-        </tr>
-      </thead>
-
-      <tbody>
-        @for (week of monthWeeks; track $index) {
-        <tr class="calendar-week">
-          @for (day of week; track $index) {
-          <td class="calendar-day" [class.is-current-month]="day && (day | date: 'MM') === (currentMonth | date: 'MM')"
-            (click)="selectDay(day)">
-
-            @if (day) {
-            <span class="day-number">{{ day | date: "d" }}</span>
-
-            <div class="activity-bar-container">
-              @for (act of getDayActivities(day); track act.id) {
-              <div class="activity-bar" [class.multi-day]="isMultiDay(act)">
-                @if (isActivityStartDay(act, day) || !isMultiDay(act)) {
-                <span class="activity-title">{{ act.title }}</span>
-                }
-              </div>
-              }
-            </div>
-            }
-          </td>
-
-          }
-        </tr>
-        }
-      </tbody>
-    </table>
+  <div class="header">
+    <button (click)="prevMonth()">⬅</button>
+    <h3>{{ currentMonth | date: 'yyyy年 MMM' }}</h3>
+    <button (click)="nextMonth()">⮕</button>
   </div>
 
-  <div>
-    <div class="sidebar-card">
-      <h3>新增活動</h3>
-      <div class="sidebar-line"></div>
-      <textarea></textarea>
-      <button (click)="addActivity()">+</button>
+  <div class="display">
+
+    <!-- ======= 月曆區 ======= -->
+    <div class="calendar-wrapper">
+      <table class="calendar-table">
+        <thead>
+          <tr>
+            @for (dayName of dayNames; track $index) {
+            <th>{{ dayName }}</th>
+            }
+          </tr>
+        </thead>
+
+        <tbody>
+          @for (week of monthWeeks; track $index) {
+          <tr class="calendar-week">
+
+            @for (day of week; track $index) {
+            <td class="calendar-day"
+              [class.is-current-month]="day && (day | date:'MM') === (currentMonth | date:'MM')"
+              [class.selected-day]="selectedDay && day && (day | date:'yyyy-MM-dd') === (selectedDay | date:'yyyy-MM-dd')"
+              (click)="selectDay(day)">
+
+              @if (day) {
+
+              <!-- 日期數字 -->
+              <span class="day-number">{{ day | date:'d' }}</span>
+
+              <!-- 活動條 -->
+              <div class="activity-bar-container">
+                @for (act of getDayActivities(day); track act.id) {
+
+                <!-- 🚨 修正：重新加入 [ngClass] 狀態綁定以顯示顏色 -->
+                <div
+                  class="activity-bar"
+                  [class.multi-day]="isMultiDay(act)"
+                  [title]="act.title + ' (' + act.status + ')'"
+                  [ngClass]="{
+                    'activity-published': act.status === 'published',
+                    'activity-draft': act.status === 'draft'
+                  }"
+                >
+
+                  @if (isActivityStartDay(act, day) || !isMultiDay(act)) {
+                  <span class="activity-title">{{ act.title }}</span>
+                  }
+                </div>
+
+                }
+              </div>
+
+              }
+            </td>
+            }
+
+          </tr>
+          }
+        </tbody>
+      </table>
     </div>
 
-    <div class="sidebar-card">
-      <h3>{{ selectedDay | date: 'MM/dd' }} 的活動</h3>
-      <div class="sidebar-line"></div>
+    <!-- ======= 側邊欄 ======= -->
+    <div>
 
-      <div class="activities-content">
-        @if (selectedDayActivities.length) {
-        <ul>
-          @for (activity of selectedDayActivities; track $index) {
-          <li>
-            <span>{{ activity.title }}</span><br>
-            <span>{{ activity.description }}</span>
-          </li>
-          }
-        </ul>
-        } @else {
-        <p class="no-activity">本日沒有活動。</p>
-        }
+      <!-- 新增活動 -->
+      <div class="sidebar-card">
+        <h3>新增活動</h3>
+        <div class="sidebar-line"></div>
+        <label>活動標題:<input type="text" [(ngModel)]="title"></label>
+        <label>活動內容:<input type="text" [(ngModel)]="description"></label>
+        <label>活動時間:
+          <input type="date" [(ngModel)]="startDate" required /> ~
+          <input type="date" [(ngModel)]="endDate" required />
+        </label>
+        <button (click)="openDialog()">新增活動</button>
       </div>
+
+
+      <!-- 今日活動 -->
+      <div class="sidebar-card">
+        <h3>{{ selectedDay | date:'MM/dd' }} 的活動</h3>
+        <div class="sidebar-line"></div>
+
+        <div class="activities-content">
+
+          @if (selectedDayActivities.length > 0) {
+
+          <ul>
+            @for (activity of selectedDayActivities; track activity.id) {
+
+            <!-- 🚨 修正：將狀態樣式綁定到詳情列表項目上 -->
+            <li [ngClass]="{
+              'detail-published': activity.status === 'published',
+              'detail-draft': activity.status === 'draft'
+            }">
+              <strong>{{ activity.title }}</strong><br>
+              <span>{{ activity.description }}</span><br>
+              <small>
+                {{ activity.startDate | date:'MM/dd' }}
+                -
+                {{ activity.endDate | date:'MM/dd' }}
+              </small>
+            </li>
+            }
+          </ul>
+
+          } @else {
+          <p class="no-activity">本日沒有活動。</p>
+          }
+
+        </div>
+      </div>
+
     </div>
   </div>
 </div>

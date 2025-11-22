@@ -1,13 +1,18 @@
 /* =======================
    🗂️ 主版面排版
 ======================= */
+.header{
+  display: flex;
+  gap: 3%;
+}
+
 .display {
   display: flex;
   gap: 50px;
 }
 
 .sidebar-card {
-  width: 280px;
+  width: 400px;
   padding: 20px;
   background: #fff;
   border-radius: 22px;
@@ -75,6 +80,7 @@
   background-color: #fff;
   padding-top: 5px; /* 給日期數字留空間 */
   height: 100px;
+  border: 0%;
 }
 
 .calendar-day:not(.is-current-month) {
@@ -83,7 +89,7 @@
 }
 
 .calendar-day.is-selected {
-  border: 2px solid #007bff;
+  border: 0px solid #007bff;
   background-color: #e6f0ff;
 }
 
@@ -100,31 +106,28 @@
 ======================= */
 .activity-bar {
   margin-top: 2px;
-  padding: 6px 6px;
+  padding: 4px 6px;
   font-size: 12px;
   line-height: 16px;
-  color: #333;
+  color: white;
   border-radius: 6px;
-  background-color: var(--color, #ccc);
   white-space: nowrap;
   overflow: hidden;
+  text-overflow: ellipsis;
+  width: 90%;
+
+  border-left-width: 3px;
+  border-left-style: solid;
 }
 
-/* =======================
-   📌 活動狀態色碼
-======================= */
-.activity-bar.status-finished {
-  background-color: #e0e0e0;
+.activity-published {
+  background-color: #1e90ff;
+  border-left-color: #b3d1ff;
 }
 
-.activity-bar.status-in-progress {
-  background-color: #ffcdd2;
+.activity-draft {
+  background-color: #ff9900;
+  border-left-color: #ffecb3;
 }
 
-.activity-bar.status-upcoming-7d {
-  background-color: #fff9c4;
-}
 
-.activity-bar.status-not-started {
-  background-color: #bbdefb;
-}

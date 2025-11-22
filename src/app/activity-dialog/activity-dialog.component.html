@@ -1,1 +1,26 @@
-<p>activity-dialog works!</p>
+<!-- <h2 mat-dialog-title>AI 產生活動結果</h2>
+
+<mat-dialog-content>
+  <p><strong>標題：</strong>{{ data.title }}</p>
+  <p><strong>內容：</strong>{{ data.description }}</p>
+  <p><strong>開始：</strong>{{ data.startDate }}</p>
+  <p><strong>結束：</strong>{{ data.endDate }}</p>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>公布</button>
+  <button mat-button mat-dialog-close>暫存</button>
+  <button mat-button mat-dialog-close>取消</button>
+</mat-dialog-actions> -->
+
+<mat-dialog-content>
+  <h2>活動標題:</h2> {{ data.title }} <br>
+  <h2>活動時間:</h2> {{ data.startDate }} ~ {{ data.endDate }} <br>
+  <h2>問卷說明:</h2> {{ data.description }}
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onPublishClick()">公布</button>
+  <button mat-button (click)="onSaveClick()">暫存</button>
+  <button mat-button (click)="onCancelClick()">取消</button>
+</mat-dialog-actions>
