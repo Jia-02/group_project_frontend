@@ -1,3 +1,4 @@
+import { CalendarService } from './../@service/calendar.service';
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core'; // 導入 OnInit
 import { FormsModule } from '@angular/forms';
@@ -6,12 +7,13 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivityDialogComponent, DialogResult } from '../activity-dialog/activity-dialog.component';
 import { AiService } from '../@service/ai.service';
 
+
 @Component({
   selector: 'app-calendar',
   imports: [
     DatePipe,
     FormsModule,
-    NgClass
+    NgClass,
   ],
   templateUrl: './calendar.component.html',
   styleUrl: './calendar.component.scss'
@@ -24,7 +26,7 @@ export class CalendarComponent implements OnInit { // 實現 OnInit 介面
     { id: 2, title: '客戶拜訪', description: '拜訪', startDate: new Date('2025-11-20'), endDate: new Date('2025-11-20'), status: 'published' },
     { id: 3, title: '晚餐聚會', description: '聚會', startDate: new Date('2025-11-20'), endDate: new Date('2025-11-20'), status: 'draft' },
     { id: 4, title: '巴黎旅遊', description: '旅遊', startDate: new Date('2025-11-10'), endDate: new Date('2025-11-15'), status: 'draft' },
-    { id: 5, title: '專案 Sprint', description: 'Sprint', startDate: new Date('2025-11-18'), endDate: new Date('2025-11-22'), status: 'published' }
+    { id: 5, title: '專案 Sprint', description: 'Sprint', startDate: new Date('2025-11-18'), endDate: new Date('2025-11-25'), status: 'published' }
   ];
 
   dayNames: string[] = ['日', '一', '二', '三', '四', '五', '六'];
@@ -132,7 +134,7 @@ export class CalendarComponent implements OnInit { // 實現 OnInit 介面
 
   constructor(
     public aiService: AiService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
   ) { }
 
   // async addActivity() {

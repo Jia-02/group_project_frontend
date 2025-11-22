@@ -1,6 +1,6 @@
-import { Component, Input } from '@angular/core';
-import { Activity } from '../calendar/calendar.component';
+import { Component } from '@angular/core';
 import { DatePipe } from '@angular/common';
+import { CalendarService, Activity } from '../@service/calendar.service';
 
 @Component({
   selector: 'app-board',
@@ -11,35 +11,13 @@ import { DatePipe } from '@angular/common';
   styleUrl: './board.component.scss'
 })
 export class BoardComponent {
-  @Input() activities: Activity[] = [];
+  constructor(private calendarService: CalendarService) { }
 
-  ongoingActivities: Activity[] = [];
-  upcomingActivities: Activity[] = [];
+  ongoingAndUpcoming: Activity[] = [];
 
-  ngOnChanges() {
-    this.filterActivities();
+  ngOnInit(): void {
+    this.ongoingAndUpcoming = this.calendarService.getOngoingAndUpcoming();
   }
 
-  filterActivities() {
-    const today = new Date();
-
-    /** 📌 正在進行中的活動：today 落在 startDate ~ endDate */
-    this.ongoingActivities = this.activities.filter(a =>
-      a.status === 'published' &&
-      today >= new Date(a.startDate) &&
-      today <= new Date(a.endDate)
-    );
-
-    /** 📌 未來三天內即將開始：startDate 是 1～3 天內 */
-    this.upcomingActivities = this.activities.filter(a => {
-      if (a.status !== 'published') return false;
-
-      const start = new Date(a.startDate);
-      const diffDays =
-        (start.getTime() - today.getTime()) / (1000 * 60 * 60 * 24);
-
-      return diffDays > 0 && diffDays <= 3;
-    });
-  }
 
 }

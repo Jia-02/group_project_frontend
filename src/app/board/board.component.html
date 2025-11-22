@@ -1,32 +1,16 @@
 <div class="board-container">
+  <h2>📢 公告欄</h2>
 
-  <h3>📢 公告欄</h3>
-  <div class="board-line"></div>
-
-  <!-- 正在進行 -->
-  <h4>🔥 目前正在進行的活動</h4>
-  <ul>
-    @for (act of ongoingActivities; track act.id) {
-      <li>
-        <strong>{{ act.title }}</strong><br>
-        <small>
-          {{ act.startDate | date:'MM/dd' }} - {{ act.endDate | date:'MM/dd' }}
-        </small>
-      </li>
+  @if (ongoingAndUpcoming.length > 0) {
+    @for (activity of ongoingAndUpcoming; track activity.id) {
+      <div class="board-item">
+        <h3>{{ activity.title }}</h3>
+        <p>{{ activity.description }}</p>
+        <p>開始：{{ activity.startDate | date }}</p>
+        <p>結束：{{ activity.endDate | date }}</p>
+      </div>
     }
-  </ul>
-
-  <!-- 未來三天內開始 -->
-  <h4>⏳ 即將開始（3 天內）</h4>
-  <ul>
-    @for (act of upcomingActivities; track act.id) {
-      <li>
-        <strong>{{ act.title }}</strong><br>
-        <small>
-          {{ act.startDate | date:'MM/dd' }} - {{ act.endDate | date:'MM/dd' }}
-        </small>
-      </li>
-    }
-  </ul>
-
+  } @else {
+    <p>目前沒有進行中或即將開始的活動</p>
+  }
 </div>
