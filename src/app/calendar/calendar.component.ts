@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { NgClass } from '@angular/common'; // 確保 NgClass 被導入
 import { MatDialog } from '@angular/material/dialog';
 import { ActivityDialogComponent, DialogResult } from '../activity-dialog/activity-dialog.component';
-import { AiService } from '../@sevice/ai.service';
+import { AiService } from '../@service/ai.service';
 
 @Component({
   selector: 'app-calendar',
@@ -226,7 +226,7 @@ export class CalendarComponent implements OnInit { // 實現 OnInit 介面
 
 }
 
-interface Activity {
+export interface Activity {
   id: number,
   title: string,
   description: string,

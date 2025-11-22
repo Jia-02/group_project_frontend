@@ -1,0 +1,32 @@
+<div class="board-container">
+
+  <h3>📢 公告欄</h3>
+  <div class="board-line"></div>
+
+  <!-- 正在進行 -->
+  <h4>🔥 目前正在進行的活動</h4>
+  <ul>
+    @for (act of ongoingActivities; track act.id) {
+      <li>
+        <strong>{{ act.title }}</strong><br>
+        <small>
+          {{ act.startDate | date:'MM/dd' }} - {{ act.endDate | date:'MM/dd' }}
+        </small>
+      </li>
+    }
+  </ul>
+
+  <!-- 未來三天內開始 -->
+  <h4>⏳ 即將開始（3 天內）</h4>
+  <ul>
+    @for (act of upcomingActivities; track act.id) {
+      <li>
+        <strong>{{ act.title }}</strong><br>
+        <small>
+          {{ act.startDate | date:'MM/dd' }} - {{ act.endDate | date:'MM/dd' }}
+        </small>
+      </li>
+    }
+  </ul>
+
+</div>

@@ -1,0 +1,19 @@
+.board-card {
+  padding: 15px;
+  border-radius: 12px;
+  background: #f8f8f8;
+  border: 1px solid #ddd;
+  margin-bottom: 20px;
+}
+
+.board-line {
+  height: 2px;
+  background: #ccc;
+  margin: 8px 0 12px;
+}
+
+.board-item {
+  margin-bottom: 12px;
+  padding: 8px;
+  border-left: 4px solid #1976d2;
+}
