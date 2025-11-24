@@ -1,4 +1,3 @@
-import { CalendarService } from './../@service/calendar.service';
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core'; // 導入 OnInit
 import { FormsModule } from '@angular/forms';
@@ -139,57 +138,59 @@ export class CalendarComponent implements OnInit { // 實現 OnInit 介面
 
   inputText = '';
   activityResult: CreateActivity | null = null;
-  errorMsg = '';
 
-  postAi() {
-    this.activityResult = null;
-    this.errorMsg = '';
-
-    if (!this.inputText.trim()) {
-      this.errorMsg = '請輸入活動描述';
-      return;
-    }
-
-    this.aiService.postAi(this.inputText).subscribe({
-      next: (res: any) => {
-        try {
-          const jsonStr = res.choices[0].message.content;
-          this.activityResult = JSON.parse(jsonStr);
-        } catch (res) {
-          this.errorMsg = '解析 AI 回傳內容失敗，使用假資料 fallback';
-          console.error(res);
-        }
-      },
-      error: (res: any) => {
-        console.error(res);
-        this.errorMsg = 'AI API 請求失敗或過多 (429)，使用假資料 fallback';
-      }
-    });
-  }
-
-  title!: string;
   description!: string;
   startDate!: Date;
-  endDate!: Date;
+
+  extractTitle(text: string): string {
+    const separators = ['，', ',', '。'];
+    const firstPart = text.split(new RegExp(separators.join('|')))[0];
+    return firstPart.replace(/優惠|活動|促銷/g, '').trim();
+  }
+
+  detectDuration(text: string): number {
+    const t = text.replace(/\s+/g, '').toLowerCase();
+
+    if (t.includes('一周') || t.includes('一週') || t.includes('7天') || t.includes('7日')) return 7;
+    if (t.includes('三天') || t.includes('3天')) return 3;
+    if (t.includes('兩週') || t.includes('兩周') || t.includes('2週') || t.includes('14天')) return 14;
+    if (t.includes('一天') || t.includes('1天') || t.includes('當日')) return 1;
+    if (t.includes('兩天') || t.includes('2天')) return 2;
+    if (t.includes('一個月') || t.includes('1個月') || t.includes('30天')) return 30;
+
+    // 若句中有 "持續X天" 類型，自行擷取數字
+    const m = text.match(/持續(\d+)[天日週週天]/);
+    if (m && m[1]) return parseInt(m[1], 10);
+
+    // default fallback: 7 天
+    return 7;
+  }
 
   openDialog(): void {
-    // 檢查屬性 (使用 this.title 等)
-    if (!this.title || !this.startDate || !this.endDate || !this.description) {
-      alert('請填寫所有活動資訊 (標題、開始日、結束日)');
+    if (!this.startDate || !this.inputText) {
+      alert('請填寫所有活動資訊');
       return;
     }
+    const title = this.extractTitle(this.inputText);
+    const durationDays = this.detectDuration(this.inputText);
+    const start = new Date(this.startDate);
+    const end = new Date(start);
+    end.setDate(start.getDate() + durationDays - 1);
+
+
 
     // 1. 建立 CreateActivity 物件
     const activityData: CreateActivity = {
-      title: this.title,
+      title: title,
       startDate: new Date(this.startDate),
-      endDate: new Date(this.endDate),
-      description: this.description
+      endDate: new Date(end),
+      description: this.inputText
     };
     console.log('準備新增的活動資料:', activityData);
 
     const dialogRef = this.dialog.open(ActivityDialogComponent, {
-      width: '500px',
+      width: '400px',
+      height: '400px',
       data: activityData
     })
 

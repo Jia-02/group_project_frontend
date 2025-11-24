@@ -24,30 +24,22 @@
           <tr class="calendar-week">
 
             @for (day of week; track $index) {
-            <td class="calendar-day"
-              [class.is-current-month]="day && (day | date:'MM') === (currentMonth | date:'MM')"
+            <td class="calendar-day" [class.is-current-month]="day && (day | date:'MM') === (currentMonth | date:'MM')"
               [class.selected-day]="selectedDay && day && (day | date:'yyyy-MM-dd') === (selectedDay | date:'yyyy-MM-dd')"
               (click)="selectDay(day)">
 
               @if (day) {
 
-              <!-- 日期數字 -->
               <span class="day-number">{{ day | date:'d' }}</span>
 
-              <!-- 活動條 -->
               <div class="activity-bar-container">
                 @for (act of getDayActivities(day); track act.id) {
 
-                <!-- 🚨 修正：重新加入 [ngClass] 狀態綁定以顯示顏色 -->
-                <div
-                  class="activity-bar"
-                  [class.multi-day]="isMultiDay(act)"
-                  [title]="act.title + ' (' + act.status + ')'"
-                  [ngClass]="{
+                <div class="activity-bar" [class.multi-day]="isMultiDay(act)"
+                  [title]="act.title + ' (' + act.status + ')'" [ngClass]="{
                     'activity-published': act.status === 'published',
                     'activity-draft': act.status === 'draft'
-                  }"
-                >
+                  }">
 
                   @if (isActivityStartDay(act, day) || !isMultiDay(act)) {
                   <span class="activity-title">{{ act.title }}</span>
@@ -74,12 +66,15 @@
       <div class="sidebar-card">
         <h3>新增活動</h3>
         <div class="sidebar-line"></div>
-        <label>活動標題:<input type="text" [(ngModel)]="title"></label><br>
-        <label>活動內容:<input type="text" [(ngModel)]="description"></label><br>
-        <label>活動時間:
-          <input type="date" [(ngModel)]="startDate" required /> ~
-          <input type="date" [(ngModel)]="endDate" required />
-        </label>
+        <label>輸入活動內容：</label>
+        <textarea [(ngModel)]="inputText" rows="3"></textarea>
+
+        <br><br>
+
+        <label>開始日期：</label>
+        <input type="date" [(ngModel)]="startDate">
+
+        <br><br>
         <button (click)="openDialog()">新增活動</button>
       </div>
 
@@ -96,7 +91,6 @@
           <ul>
             @for (activity of selectedDayActivities; track activity.id) {
 
-            <!-- 🚨 修正：將狀態樣式綁定到詳情列表項目上 -->
             <li [ngClass]="{
               'detail-published': activity.status === 'published',
               'detail-draft': activity.status === 'draft'
@@ -122,21 +116,3 @@
     </div>
   </div>
 </div>
-
-<div class="ai-box">
-  <h2>活動解析器</h2>
-
-  <textarea [(ngModel)]="inputText" rows="5" placeholder="輸入活動描述..."></textarea>
-
-  <button (click)="postAi()">解析活動</button>
-
-
-  <div class="result">
-    <h3>解析結果：</h3>
-    <p><strong>標題：</strong>{{ activityResult?.title }}</p>
-    <p><strong>描述：</strong>{{ activityResult?.description }}</p>
-    <p><strong>開始日期：</strong>{{ activityResult?.startDate }}</p>
-    <p><strong>結束日期：</strong>{{ activityResult?.endDate }}</p>
-  </div>
-</div>
-

@@ -14,9 +14,9 @@
 </mat-dialog-actions> -->
 
 <mat-dialog-content>
-  <h2>活動標題:</h2> {{ data.title }} <br>
-  <h2>活動時間:</h2> {{ data.startDate }} ~ {{ data.endDate }} <br>
-  <h2>問卷說明:</h2> {{ data.description }}
+  <h4>活動標題:</h4> {{ data.title }} <br>
+  <h4>活動時間:</h4> {{ data.startDate | date:'yyyy/MM/dd'}} ~ {{ data.endDate | date:'yyyy/MM/dd'}} <br>
+  <h4>問卷說明:</h4> {{ data.description }}
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">

@@ -61,7 +61,7 @@
 .calendar-table th,
 .calendar-table td {
   border: 1px solid #ddd;
-  padding: 5px;
+  padding: 10px;
   height: 80px;
   width: 60px;
   vertical-align: top;
@@ -106,7 +106,7 @@
 ======================= */
 .activity-bar {
   margin-top: 2px;
-  padding: 4px 6px;
+  padding: 4px 4px 4px;
   font-size: 12px;
   line-height: 16px;
   color: white;
@@ -114,7 +114,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  width: 90%;
+  width: 100%;
 
   border-left-width: 3px;
   border-left-style: solid;
