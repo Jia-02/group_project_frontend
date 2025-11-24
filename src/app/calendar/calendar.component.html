@@ -123,3 +123,20 @@
   </div>
 </div>
 
+<div class="ai-box">
+  <h2>活動解析器</h2>
+
+  <textarea [(ngModel)]="inputText" rows="5" placeholder="輸入活動描述..."></textarea>
+
+  <button (click)="postAi()">解析活動</button>
+
+
+  <div class="result">
+    <h3>解析結果：</h3>
+    <p><strong>標題：</strong>{{ activityResult?.title }}</p>
+    <p><strong>描述：</strong>{{ activityResult?.description }}</p>
+    <p><strong>開始日期：</strong>{{ activityResult?.startDate }}</p>
+    <p><strong>結束日期：</strong>{{ activityResult?.endDate }}</p>
+  </div>
+</div>
+

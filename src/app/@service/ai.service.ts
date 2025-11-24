@@ -1,23 +1,27 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AiService {
-  private apiUrl = 'https://api.openai.com/v1/chat/completions';
-  private apiKey = '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';
+  apiUrl = 'https://api.openai.com/v1/chat/completions';
+  apiKey = '';
 
-  constructor(private http: HttpClient) { }
+  constructor(private httpClient: HttpClient){}
 
-  async generateActivity(text: string): Promise<any> {
-    const body = {
-      model: "gpt-4o-mini",
-      messages: [
-        {
-          role: "user",
-          content: `
+  postAi(postData: string): Observable<any> {
+  const headers = new HttpHeaders({
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${this.apiKey}`
+  });
+
+  const body = {
+    model: 'gpt-4o-mini',
+    messages: [
+      {role: 'user',
+        content: `
 請解析以下活動描述，回傳 JSON 格式，包含：
 {
   "title": "",
@@ -25,20 +29,24 @@ export class AiService {
   "startDate": "YYYY-MM-DD",
   "endDate": "YYYY-MM-DD"
 }
-活動描述：
-${text}
-`
-        }
-      ]
-    };
+活動內容：
+${postData}
+        `}
+    ]
+  };
 
-    const headers = {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.apiKey}`
-    };
-
-    const res: any = await firstValueFrom(this.http.post(this.apiUrl, body, { headers }));
-
-    return JSON.parse(res.choices[0].message.content);
-  }
+  return this.httpClient.post(this.apiUrl, body, { headers });
 }
+
+}
+
+// content: `
+// 請解析以下活動描述，回傳 JSON 格式，包含：
+// {
+//   "title": "",
+//   "description": "",
+//   "startDate": "YYYY-MM-DD",
+//   "endDate": "YYYY-MM-DD"
+// }
+// 活動內容：
+// ${text}

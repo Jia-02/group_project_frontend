@@ -130,45 +130,42 @@ export class CalendarComponent implements OnInit { // 實現 OnInit 介面
     return current.getTime() === start.getTime();
   }
 
-  activityText = '';
+  // activityText = '';
 
   constructor(
     public aiService: AiService,
     public dialog: MatDialog,
   ) { }
 
-  // async addActivity() {
-  //   if (!this.activityInput.trim()) {
-  //     alert("請先輸入活動內容！");
-  //     return;
-  //   }
+  inputText = '';
+  activityResult: CreateActivity | null = null;
+  errorMsg = '';
 
-  //   const prompt = `
-  // 解析以下活動內容，生成 JSON：
+  postAi() {
+    this.activityResult = null;
+    this.errorMsg = '';
 
-  // 活動內容：${this.activityInput}
+    if (!this.inputText.trim()) {
+      this.errorMsg = '請輸入活動描述';
+      return;
+    }
 
-  // 回傳格式：
-  // {
-  //   "title": "",
-  //   "description": "",
-  //   "startDate": "YYYY-MM-DD",
-  //   "endDate": "YYYY-MM-DD"
-  // }
-  // `;
-
-  //   const aiResponse = await this.aiService.generateActivity(prompt);
-
-  //   this.dialog.open(ActivityDialogComponent, {
-  //     data: aiResponse
-  //   });
-
-  //   // 清空 textarea
-  //   this.activityInput = "";
-  // }
-
-
-  // activityInput = "";
+    this.aiService.postAi(this.inputText).subscribe({
+      next: (res: any) => {
+        try {
+          const jsonStr = res.choices[0].message.content;
+          this.activityResult = JSON.parse(jsonStr);
+        } catch (res) {
+          this.errorMsg = '解析 AI 回傳內容失敗，使用假資料 fallback';
+          console.error(res);
+        }
+      },
+      error: (res: any) => {
+        console.error(res);
+        this.errorMsg = 'AI API 請求失敗或過多 (429)，使用假資料 fallback';
+      }
+    });
+  }
 
   title!: string;
   description!: string;
