@@ -60,9 +60,8 @@
     </div>
 
 
-
     <!-- 右側當日狀態 -->
-    <div class="schedule-panel">
+    <div class="schedulePanel">
       <div class="scheduleHeader">
         <h3 class="scheduleTitle">
           {{ selectedDay() | date: 'yyyy年 MM月 dd日' }} ({{ getDayName(selectedDay()) }})
@@ -71,27 +70,28 @@
 
 
       <!-- 桌位狀態 -->
-      <div class="table-header-row" [style.grid-template-columns]="'var(--time-label-width) repeat(' + tables().length + ', minmax(100px, 1fr))'">
+      <div class="table-header-row"
+        [style.grid-template-columns]="'var(--time-label-width) repeat(' + tables().length + ', minmax(100px, 1fr))'">
         <div class="time-label-spacer"></div>
         @for (table of tables(); track table.table_id) {
-          <div class="tableHeader">
-            <span class="tableName" [class.text-muted]="table.table_status !== '開放'">
-              {{ table.table_id }}
-              <span style="font-size: 12px">({{ table.capacity }}人)</span>
-            </span>
+        <div class="tableHeader">
+          <span class="tableName" [class.text-muted]="table.table_status !== '開放'">
+            {{ table.table_id }}
+            <span style="font-size: 12px">({{ table.capacity }}人)</span>
+          </span>
 
-            <!-- 開關按鈕 -->
-            <label class="toggleSwitch" title="切換開放狀態">
-              <input type="checkbox" [checked]="table.table_status == '開放'"
-                (change)="tableAvailabe(table)">
-              <span class="slider round"></span>
-            </label>
-          </div>
+          <!-- 開關按鈕 -->
+          <label class="toggleSwitch" title="切換開放狀態">
+            <input type="checkbox" [checked]="table.table_status == '開放'" (change)="tableAvailabe(table)">
+            <span class="slider round"></span>
+          </label>
+        </div>
         }
       </div>
 
 
-      <div class="time-grid-container" [style.grid-template-columns]="'var(--time-label-width) repeat(' + tables().length + ', minmax(100px, 1fr))'">
+      <div class="time-grid-container"
+        [style.grid-template-columns]="'var(--time-label-width) repeat(' + tables().length + ', minmax(100px, 1fr))'">
         <!-- 時間 -->
         @for (label of timeLabels; track label.time) {
         <div class="timeLabelCell">
@@ -101,17 +101,19 @@
         @for (table of tables(); track table.table_id) {
         <div class="hourSlot" [class.isUnavailable]="table.table_status !== '開放'"
           (click)="addReservation(table.table_id, label.hour)"
-          title="{{ table.table_status === '開放' ? '點擊新增預約' : '未開放' }}">
+          title="{{ table.table_status == '開放' ? '點擊新增預約' : '未開放' }}">
         </div>
         }
         }
 
-        <div class="activitiesLayer" [style.grid-template-columns]="'repeat(' + tables().length + ', minmax(100px, 1fr))'">
+        <div class="activitiesLayer"
+          [style.grid-template-columns]="'repeat(' + tables().length + ', minmax(100px, 1fr))'">
 
           @for (reserveData of currentDayReserve(); track reserveData.id) {
           <div class="activityBlock" [style.top.px]="getTopPosition(reserveData.reservationTime)"
             [style.height.px]="getHeight(reserveData.useTime)" [style.grid-column]="getTableGridColumn(reserveData)"
             title="{{ reserveData.reservationName }}">
+
             <div class="activityContent">
               <span class="customer-name">{{ reserveData.reservationName }}</span>
               <span class="table-time">{{ reserveData.reservationTime }} - {{ reserveData.endTime }}</span>

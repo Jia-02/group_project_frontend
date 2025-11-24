@@ -39,7 +39,7 @@ export class ReservationComponent {
   timeLabels: timeLabel[] = [];
 
   // 每小時的高度 (CSS 中定義，用於計算)
-  readonly HOUR_HEIGHT_PX = 60;
+  readonly HOUR_HEIGHT_PX = 50;
   // 預設預約長度 (1.5 小時 = 90 分鐘)
   readonly DEFAULT_DURATION_MINUTES = 90;
 
@@ -70,7 +70,7 @@ export class ReservationComponent {
   // 時間欄
   timeLabelsColumns() {
     this.timeLabels = [];  // 把 timeLabels 清空，重新建立新的時間列表
-    for (let hour = 11; hour <= 21; hour++) {
+    for (let hour = 11; hour <= 22; hour++) {
       let hourStr = hour.toString().padStart(2, '0'); // padStart: 若只有 1 位數，前面補 0
       let time = hourStr + ":00";
       let display = hourStr + ":00";
@@ -241,11 +241,11 @@ export class ReservationComponent {
       startTime: string,
       duration: number
     }[] = [
-        { tableId: 'A01', name: '李先生', startTime: '09:00', duration: 90 },
-        { tableId: 'A02', name: '王小姐', startTime: '11:00', duration: 60 },
-        { tableId: 'A03', name: '團體預約', startTime: '12:30', duration: 120 },
-        { tableId: 'B01', name: 'VIP 客戶', startTime: '16:00', duration: 90 },
-        { tableId: 'A01', name: '陳先生', startTime: '18:30', duration: 90 },
+        { tableId: 'A01', name: '李先生', startTime: '11:00', duration: 90 },
+        { tableId: 'A02', name: '王小姐', startTime: '11:00', duration: 90 },
+        { tableId: 'A03', name: '團體預約', startTime: '12:30', duration: 90 },
+        { tableId: 'A06', name: 'VIP 客戶', startTime: '16:20', duration: 90 },
+        { tableId: 'A07', name: '陳先生', startTime: '18:30', duration: 90 },
       ];
 
     const scheduleList: scheduleItem[] = mockReservations.map(r => {
