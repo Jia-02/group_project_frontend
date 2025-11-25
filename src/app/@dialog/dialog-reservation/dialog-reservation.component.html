@@ -1,16 +1,33 @@
 <div class="background">
 
   <!-- dialog標題 -->
-  <div class="diaTitle" mat-dialog-title>感謝你的填寫</div>
-  <div style="color: #971D10; font-size: 7px; letter-spacing: 1px; text-align: center; margin-left: 7px;"> ▋▋▋</div>
+  <div mat-dialog-title>新增訂位</div>
 
   <!-- dialog內容 -->
   <mat-dialog-content>
-    <p>感謝您的寶貴意見，歡迎填下一份問卷</p>
+
+    <label>訂位人:</label><input type="text" [(ngModel)]="reservation.reservationName">
+    <label>訂位總人數:</label><input type="number" [(ngModel)]="reservation.reservationCount">
+    <label>大人:</label><input type="number" [(ngModel)]="reservation.reservationAdultCount">
+    <label>小孩:</label><input type="number" [(ngModel)]="reservation.reservationChildCount">
+    <label>兒童座椅:</label><input type="number" [(ngModel)]="reservation.childSeat">
+
+
+    <label>訂位日期:</label>
+
+    <label>訂位時間:</label>
+
+
+    <label>電話:</label>
+    <input type="text" [(ngModel)]="reservation.reservationPhone">
+    <label>備註:</label>
+    <textarea></textarea>
+
   </mat-dialog-content>
 
   <!-- dialog按鈕 -->
   <mat-dialog-actions>
-    <button class="btnCss" (click)="onClick()">開心找下一份問卷 →</button>
+    <button (click)="onClick()">取消</button>
+    <button (click)="onClick()">新增</button>
   </mat-dialog-actions>
 </div>

@@ -2,6 +2,7 @@ import { Component, inject, signal, WritableSignal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogReservationComponent } from '../@dialog/dialog-reservation/dialog-reservation.component';
+import { tables, reservation, scheduleItem, timeLabel } from '../@interface/interface';
 
 @Component({
   selector: 'app-reservation',
@@ -18,10 +19,11 @@ export class ReservationComponent {
   currentDayReserve: WritableSignal<scheduleItem[]> = signal([]); // 存放當前選中日期的活動
   dayNames: string[] = ['日', '一', '二', '三', '四', '五', '六']; // 星期
   monthWeeks: Date[][] = []; // 存放日期的月曆
+
   readonly dialog = inject(MatDialog);
 
   // 資源列表 (桌位)
-  tables = signal<table[]>([
+  tables = signal<tables[]>([
     { table_id: 'A01', table_status: '開放', capacity: 2, position_x: 0, position_y: 0 },
     { table_id: 'A02', table_status: '關閉', capacity: 2, position_x: 0, position_y: 0 },
     { table_id: 'A03', table_status: '開放', capacity: 4, position_x: 0, position_y: 0 },
@@ -39,9 +41,9 @@ export class ReservationComponent {
   timeLabels: timeLabel[] = [];
 
   // 每小時的高度 (CSS 中定義，用於計算)
-  readonly HOUR_HEIGHT_PX = 50;
-  // 預設預約長度 (1.5 小時 = 90 分鐘)
-  readonly DEFAULT_DURATION_MINUTES = 90;
+  readonly HOUR_HEIGHT_PX = 40;
+  // 預設預約長度 (2 小時 = 120 分鐘)
+  readonly DEFAULT_DURATION_MINUTES = 120;
 
   // 模擬活動資料 (Key: YYYY-MM-DD)
   mockActivities: { [key: string]: scheduleItem[] } = {};
@@ -70,7 +72,7 @@ export class ReservationComponent {
   // 時間欄
   timeLabelsColumns() {
     this.timeLabels = [];  // 把 timeLabels 清空，重新建立新的時間列表
-    for (let hour = 11; hour <= 22; hour++) {
+    for (let hour = 10; hour <= 22; hour++) {
       let hourStr = hour.toString().padStart(2, '0'); // padStart: 若只有 1 位數，前面補 0
       let time = hourStr + ":00";
       let display = hourStr + ":00";
@@ -81,7 +83,7 @@ export class ReservationComponent {
   // 計算時間區塊的位置 (px)
   getTopPosition(startTime: string): number {
     let [hours, minutes] = startTime.split(':').map(Number); // hours = 18, minutes = 30
-    let totalMin = (hours - 11) * 60 + minutes;
+    let totalMin = (hours - 10) * 60 + minutes;
     return totalMin * (this.HOUR_HEIGHT_PX / 60);  // 每分鐘對應的像素 this.HOUR_HEIGHT_PX 是 一小時的高度（像素）。
   }
 
@@ -156,7 +158,7 @@ export class ReservationComponent {
   }
 
   // 切換桌位開放狀態
-  tableAvailabe(t: table): void {
+  tableAvailabe(t: tables): void {
     this.tables.update(currentTables => {
       return currentTables.map(table => {
         if (table.table_id == t.table_id) {
@@ -217,98 +219,61 @@ export class ReservationComponent {
     return year + "-" + month + "-" + day;
   }
 
-  // ------------------------------------
+
   // 模擬資料 (根據新結構調整)
   generateMockData() {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = (today.getMonth() + 1).toString().padStart(2, '0');
-    const todayDate = today.getDate().toString().padStart(2, '0');
-    const keyToday = `${year}-${month}-${todayDate}`;
+    // 取得今日時間
+    let today = new Date();
+    let keyToday = this.formatDateStr(today);
 
-    // 輔助函式：計算結束時間
-    const calculateEndTime = (startTime: string, durationMinutes: number): string => {
-      const [startHour, startMinute] = startTime.split(':').map(Number);
+    // 計算訂位結束時間
+    let calculateEndTime = (startTime: string, durationMinutes: number): string => {
+      let [startHour, startMinute] = startTime.split(':').map(Number);  // ["11", "00"] > [11, 0]
       let totalMinutes = startHour * 60 + startMinute + durationMinutes;
-      const endHour = Math.floor(totalMinutes / 60) % 24;
-      const endMinute = totalMinutes % 60;
-      return `${endHour.toString().padStart(2, '0')}:${endMinute.toString().padStart(2, '0')}`;
+      let endHour = Math.floor(totalMinutes / 60) % 24;  //Math.floor 無條件捨去
+      let endMinute = totalMinutes % 60;
+      return `${endHour.toString().padStart(2, '0')}:${endMinute.toString().padStart(2, '0')}`;  // 結果變成 “12:30” 格式
     };
 
-    const mockReservations: {
-      tableId: string,
-      name: string,
-      startTime: string,
-      duration: number
-    }[] = [
-        { tableId: 'A01', name: '李先生', startTime: '11:00', duration: 90 },
-        { tableId: 'A02', name: '王小姐', startTime: '11:00', duration: 90 },
-        { tableId: 'A03', name: '團體預約', startTime: '12:30', duration: 90 },
-        { tableId: 'A06', name: 'VIP 客戶', startTime: '16:20', duration: 90 },
-        { tableId: 'A07', name: '陳先生', startTime: '18:30', duration: 90 },
-      ];
-
-    const scheduleList: scheduleItem[] = mockReservations.map(r => {
-      const duration = r.duration;
-      const endTime = calculateEndTime(r.startTime, duration);
+    // 將後端 reservation → 前端 scheduleItem
+    const scheduleList: scheduleItem[] = this.reservation.map(r => {
+      const duration = 120; // 若後端未提供 duration，可固定值 or 改成 r.useTime
+      const endTime = calculateEndTime(r.reservationTime, duration);
 
       return {
-        id: this.nextActivityId++, // <--- *** 修正點：賦予 ID ***
-        tableId: r.tableId,
-        // Reservation 欄位
-        reservationDate: keyToday,
-        reservationTime: r.startTime, // 開始時間
-        reservationName: r.name,
-        reservationPhone: '09XX-XXXXXX',
-        reservationCount: 4,
-        reservationAdultCount: 4,
-        reservationChildCount: 0,
-        reservationStatus: 'CONFIRMED',
-        // ScheduleItem 額外欄位
+        ...r,
+        id: this.nextActivityId++,
         endTime: endTime,
         useTime: duration
-      }
+      };
     });
 
     this.mockActivities = {
-      [keyToday]: scheduleList,
+      [keyToday]: scheduleList
     };
   }
+
+
+  reservation: reservation[] = [
+    {
+      newDate: '',
+      reservationDate: '2025-11-25',
+      reservationTime: '11:00',
+      reservationPhone: '0912-345-678',
+      reservationName: '李先生',
+      reservationCount: 4,
+      reservationAdultCount: 4,
+      reservationChildCount: 0,
+      reservationStatus: true,
+      reservationNote: '',
+      childSeat: 0,
+      tableId: 'A01'
+    },
+    // ... 其他資料
+  ];
 }
 
 
-// 後端傳來的預約介面
-interface reservation {
-  reservationDate: string;   // YYYY-MM-DD
-  reservationTime: string; // HH:MM
-  reservationPhone: string;
-  reservationName: string;
-  reservationCount: number;
-  reservationAdultCount: number;
-  reservationChildCount: number;
-  reservationStatus: string;
-  reservationNote?: string;
-  tableId?: string;
-}
 
-// 繼承
-interface scheduleItem extends reservation {
-  id: number;
-  endTime: string;
-  useTime: number; // 以分鐘計的時長
-}
 
-// 時間插槽介面，用於左側時間標籤
-interface timeLabel {
-  time: string; // HH:00, e.g., "09:00"
-  display: string; // e.g., "上午 9 點"
-  hour: number; // 0-23
-}
 
-interface table {
-  table_id: string;
-  table_status: string;
-  capacity: number;
-  position_x: number;    // X 座標
-  position_y: number;    // Y 座標
-}

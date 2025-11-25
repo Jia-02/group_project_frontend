@@ -1,5 +1,5 @@
 <div class="background">
-  <div class="main-layout-container">
+  <div class="mainLayout">
 
     <div class="calendarPanel">
 
@@ -90,7 +90,7 @@
       </div>
 
 
-      <div class="time-grid-container"
+      <div class="timeGrid"
         [style.grid-template-columns]="'var(--time-label-width) repeat(' + tables().length + ', minmax(100px, 1fr))'">
         <!-- 時間 -->
         @for (label of timeLabels; track label.time) {
@@ -115,8 +115,8 @@
             title="{{ reserveData.reservationName }}">
 
             <div class="activityContent">
-              <span class="customer-name">{{ reserveData.reservationName }}</span>
-              <span class="table-time">{{ reserveData.reservationTime }} - {{ reserveData.endTime }}</span>
+              <span class="customerName">{{ reserveData.reservationName }}</span>
+              <span class="tableTime">{{ reserveData.reservationTime }} - {{ reserveData.endTime }}</span>
             </div>
           </div>
           }

@@ -12,7 +12,7 @@ $color-other-month: #d1d5db; // 非當月 (Gray-300)
 
 // 尺寸變數
 $time-label-width: 90px;
-$hour-height: 50px; // 每小時的高度 (必須與 TS 中的 HOUR_HEIGHT_PX 匹配)
+$hour-height: 48px; // 每小時的高度 (必須與 TS 中的 HOUR_HEIGHT_PX 匹配)
 
 :host {
   --time-label-width: #{$time-label-width};
@@ -27,23 +27,20 @@ $hour-height: 50px; // 每小時的高度 (必須與 TS 中的 HOUR_HEIGHT_PX �
   flex-direction: column;
   align-items: center;
   font-family: 'Inter', sans-serif;
-  color: $color-text;
+  color: #374151;
 }
 
-.main-layout-container {
+.mainLayout {
   width: 100%;
   max-width: 1600px;
-  background-color: #ffffff;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
-  border-radius: 1rem;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  min-height: 80vh;
+  min-height: 100vh;
 }
 
 @media (min-width: 992px) {
-  .main-layout-container {
+  .mainLayout {
     flex-direction: row;
   }
 }
@@ -53,8 +50,10 @@ $hour-height: 50px; // 每小時的高度 (必須與 TS 中的 HOUR_HEIGHT_PX �
   width: 200px;
   height: 300px;
   padding: 20px;
-  border-bottom: 1px solid #e5e7eb;
+  // border-bottom: 1px solid #e5e7eb;
   background-color: #ffffff;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+  border-radius: 1rem;
 }
 
 // 手機板
@@ -206,7 +205,7 @@ $hour-height: 50px; // 每小時的高度 (必須與 TS 中的 HOUR_HEIGHT_PX �
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-  padding: 24px 10px;
+  padding: 0px 10px;
 }
 
 .scheduleHeader {
@@ -318,12 +317,12 @@ input:checked+.slider:before {
 }
 
 /* --- 時間網格 --- */
-.time-grid-container {
+.timeGrid {
   flex-grow: 1;
   position: relative;
   display: grid;
   grid-auto-rows: var(--hour-height);
-  padding-top: 10px;
+  padding-top: 20px;
 }
 
 /* 定位在網格上方的容器 */
@@ -336,7 +335,7 @@ input:checked+.slider:before {
   top: 0;
   left: var(--time-label-width);
   right: 0;
-  margin-top: 10px;
+  margin-top: 30px;
   grid-auto-columns: 1fr;
   pointer-events: none;
 }
@@ -360,7 +359,7 @@ input:checked+.slider:before {
   cursor: pointer;
   transition: background-color 0.1s;
   position: relative;
-  box-sizing: border-box; /* 確保邊框包含在高度內 */
+  box-sizing: border-box;
 
   /* 只有已開放的桌位才允許點擊 hover */
   &:not(.isUnavailable):hover {
@@ -375,23 +374,25 @@ input:checked+.slider:before {
 }
 
 .activityBlock {
-  position: absolute;  /* 絕對定位在 activitiesLayer 中 */
+  position: absolute;    /* 絕對定位在 activitiesLayer 中 */
   left: 5px;
   right: 5px;
   z-index: 99;
-  background-color: #E9BF2A;   /* 輔色-黃 */
+  background-color: #E9BF2A;
   border: 1px solid darken(#E9BF2A, 10%);
   border-radius: 4px;
-  padding: 4px 8px;
+  padding: 0 8px;
   overflow: hidden;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
   color: #374151;
   font-size: 12px;
   line-height: 1.5;
-  cursor: move;   /* 可拖曳 */
+  cursor: move;
+  /* 可拖曳 */
 
   &:hover {
-    z-index: 100; /* hover 時浮到最上層 */
+    z-index: 100;
+    /* hover 時浮到最上層 */
     background-color: #9ca3af;
     border: 1px solid darken(#9ca3af, 10%);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
@@ -401,30 +402,19 @@ input:checked+.slider:before {
 .activityContent {
   display: flex;
   flex-direction: column;
-  justify-content: center; /* 內容垂直置中 */
+  justify-content: center;
+  /* 內容垂直置中 */
   height: 100%;
 }
 
-.customer-name {
+.customerName {
   font-weight: 600;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.table-time {
-  font-size: 0.75rem;
-  color: darken($color-text, 10%);
-}
-
-/* 無排程提示 */
-.no-schedule {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 40px 0;
-  color: $color-muted;
-  font-size: 1rem;
+.tableTime {
+  font-size: 12px;
+  color: #3e3a39;
 }
