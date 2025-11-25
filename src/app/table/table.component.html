@@ -2,8 +2,8 @@
   <span style="flex:1 1 auto"></span>
   <div>
     <div style="margin-top: 5%;">
-      <canvas #myCanvas width="500" height="500" style="border: 1px solid black;"
-        (click)="handleClick($event)"></canvas>
+      <canvas #myCanvas style="border: 1px solid black;" width="500" height="500"
+        (click)="handleClick($event)" (mousemove)="handleMove($event)"></canvas>
     </div>
   </div>
   <span style="flex:1 1 auto"></span>

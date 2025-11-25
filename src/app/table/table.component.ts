@@ -26,13 +26,35 @@ export class TableComponent {
     this.service.getApi(url).subscribe((res: TableRes) => {
       console.log(res)
       const canvasElement = this.canvas.nativeElement;
-      const ctx = canvasElement.getContext('2d');
+      const ctx = canvasElement.getContext('2d') ;
       this.tableList = res.tableList;
       for (let i = 0; i < res.tableList.length; i++) {
         ctx.fillStyle = 'red';
         ctx.fillRect(res.tableList[i].tablePositionX, res.tableList[i].tablePositionY, 20, 20);
       }
     })
+
+  }
+
+  handleMove(e: MouseEvent) {
+
+    const canvasElement = this.canvas.nativeElement;
+    const ctx = canvasElement.getContext('2d');
+    const rect = canvasElement.getBoundingClientRect()
+
+    //x為滑鼠點擊時畫布中的x軸座標位置 y同上為y軸位置
+    let x = e.clientX - rect.left;
+    let y = e.clientY - rect.top;
+
+    for (let i = 0; i < this.tableList.length; i++) {
+      if (this.tableList[i].tablePositionX <= x && (this.tableList[i].tablePositionX + 20) >= x &&
+        this.tableList[i].tablePositionY <= y && (this.tableList[i].tablePositionY + 20) >= y) {
+        canvasElement.style.cursor = 'pointer'
+        break;
+      } else {
+        canvasElement.style.cursor = 'default'
+      }
+    }
 
   }
 
@@ -88,6 +110,7 @@ export class TableComponent {
               for (let i = 0; i < res.tableList.length; i++) {
                 ctx.fillStyle = 'red';
                 ctx.fillRect(res.tableList[i].tablePositionX, res.tableList[i].tablePositionY, 20, 20);
+
               }
             })
           }
