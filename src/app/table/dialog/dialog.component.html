@@ -1,0 +1,10 @@
+<div style="padding: 5%;">
+  <span style="color: red;">{{data.message}}</span> <br> <br>
+  <!-- data.flag 判斷 是否因為api的res報錯 是的話為true 只會顯示一個button   false的話為兩個button去決定是否執行刪除或更新 -->
+  @if(data.flag){
+    <button (click)="next(false)">確定</button>
+  }@else {
+    <button (click)="next(false)">取消</button>
+    <button (click)="next(true)">確定</button>
+  }
+</div>
