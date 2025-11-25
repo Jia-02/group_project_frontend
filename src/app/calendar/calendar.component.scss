@@ -61,9 +61,9 @@
 .calendar-table th,
 .calendar-table td {
   border: 1px solid #ddd;
-  padding: 10px;
-  height: 80px;
-  width: 60px;
+  padding: 1px;
+  height: 100px;
+  width: 70px;
   vertical-align: top;
 }
 
@@ -75,12 +75,8 @@
    📌 日曆單格樣式
 ======================= */
 .calendar-day {
-  position: relative;
-  cursor: pointer;
   background-color: #fff;
-  padding-top: 5px; /* 給日期數字留空間 */
   height: 100px;
-  border: 0%;
 }
 
 .calendar-day:not(.is-current-month) {
@@ -88,17 +84,12 @@
   background-color: #fafafa;
 }
 
-.calendar-day.is-selected {
-  border: 0px solid #007bff;
-  background-color: #e6f0ff;
-}
-
 .day-number {
   display: block;
   text-align: right;
   font-weight: bold;
-  font-size: 1.1em;
-  padding: 2px 5px;
+  font-size: 1em;
+  padding: 0px ;
 }
 
 /* =======================
@@ -106,28 +97,19 @@
 ======================= */
 .activity-bar {
   margin-top: 2px;
-  padding: 4px 4px 4px;
+  padding: 4px;
   font-size: 12px;
-  line-height: 16px;
-  color: white;
+  line-height: 14px;
   border-radius: 6px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  width: 100%;
-
-  border-left-width: 3px;
-  border-left-style: solid;
+  width: 90%;
 }
 
 .activity-published {
   background-color: #1e90ff;
-  border-left-color: #b3d1ff;
 }
 
 .activity-draft {
   background-color: #ff9900;
-  border-left-color: #ffecb3;
 }
 
 

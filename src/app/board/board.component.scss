@@ -17,3 +17,15 @@
   padding: 8px;
   border-left: 4px solid #1976d2;
 }
+
+.boardCss{
+  display: flex;
+  justify-content: center;      /* 水平置中 */
+  align-items: center;          /* 垂直置中 */
+  width: 20%;
+  height: 20%;
+  border-radius: 30px;
+  background-color: lightblue;
+}
+
+

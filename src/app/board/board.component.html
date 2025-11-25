@@ -1,16 +1,19 @@
 <div class="board-container">
   <h2>📢 公告欄</h2>
 
-  @if (ongoingAndUpcoming.length > 0) {
+  <div class="boardCss">
+    @if (ongoingAndUpcoming.length > 0) {
     @for (activity of ongoingAndUpcoming; track activity.id) {
-      <div class="board-item">
-        <h3>{{ activity.title }}</h3>
-        <p>{{ activity.description }}</p>
-        <p>開始：{{ activity.startDate | date }}</p>
-        <p>結束：{{ activity.endDate | date }}</p>
-      </div>
+    <div class="board-item">
+      <h3>{{ activity.title }}</h3>
+      <p>{{ activity.description }}</p>
+      <p>開始：{{ activity.startDate | date }}</p>
+      <p>結束：{{ activity.endDate | date }}</p>
+    </div>
     }
-  } @else {
+    } @else {
     <p>目前沒有進行中或即將開始的活動</p>
-  }
+    }
+  </div>
+
 </div>
