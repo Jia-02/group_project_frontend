@@ -5,6 +5,7 @@ import { NgClass } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivityDialogComponent, DialogResult } from '../activity-dialog/activity-dialog.component';
 import { ActivityCheckDialogComponent } from '../activity-check-dialog/activity-check-dialog.component';
+import { BoardComponent } from '../board/board.component';
 
 @Component({
   selector: 'app-calendar',
@@ -12,6 +13,7 @@ import { ActivityCheckDialogComponent } from '../activity-check-dialog/activity-
     DatePipe,
     FormsModule,
     NgClass,
+    BoardComponent
   ],
   templateUrl: './calendar.component.html',
   styleUrl: './calendar.component.scss'
@@ -23,7 +25,7 @@ export class CalendarComponent implements OnInit {
     { id: 1, title: '部門會議', description: '會議', startDate: new Date('2025-11-17'), endDate: new Date('2025-11-17'), status: 'published', photo: null },
     { id: 3, title: '晚餐聚會', description: '聚會', startDate: new Date('2025-11-20'), endDate: new Date('2025-11-20'), status: 'draft', photo: null },
     { id: 4, title: '巴黎旅遊', description: '旅遊', startDate: new Date('2025-11-10'), endDate: new Date('2025-11-15'), status: 'draft', photo: null },
-    { id: 5, title: '部門會議', description: '會議', startDate: new Date('2025-11-25'), endDate: new Date('2025-11-30'), status: 'published', photo: '' }
+    { id: 5, title: '部門會議', description: '會議', startDate: new Date('2025-11-25'), endDate: new Date('2025-11-30'), status: 'published', photo: null }
   ];
 
   dayNames: string[] = ['日', '一', '二', '三', '四', '五', '六'];
@@ -247,26 +249,37 @@ export class CalendarComponent implements OnInit {
     this.startDate = new Date().toISOString().split('T')[0];
   }
 
+  readonly BOARD_THRESHOLD_DAYS = 3;
+
   get boardActivities(): Activity[] {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
-  const futureCutoff = new Date(today);
-  futureCutoff.setDate(today.getDate() + BOARD_THRESHOLD_DAYS);
+    console.log('DEBUG: Today (midnight) is:', today.toLocaleDateString());
 
-  return this.activities.filter(activity => {
-    const isPublished = activity.status === 'published';
+    const futureCutoff = new Date(today);
+    futureCutoff.setDate(today.getDate() + this.BOARD_THRESHOLD_DAYS);
+    console.log('DEBUG: Future Cutoff is:', futureCutoff.toLocaleDateString());
 
-    const startDate = new Date(activity.startDate);
-    startDate.setHours(0, 0, 0, 0);
+    return this.activities.filter(activity => {
+      if (activity.status !== 'published') {
+        return false;
+      }
 
-    const isFuture = today.getTime() < startDate.getTime();
+      const startDate = new Date(activity.startDate);
+      startDate.setHours(0, 0, 0, 0);
+      const endDate = new Date(activity.endDate);
+      endDate.setHours(0, 0, 0, 0);
 
-    const isUpcoming = startDate.getTime() <= futureCutoff.getTime();
+      const isOngoing = startDate.getTime() <= today.getTime() && today.getTime() <= endDate.getTime();
 
-    return isPublished && isFuture && isUpcoming;
-  });
-}
+      const isUpcoming = today.getTime() < startDate.getTime() && startDate.getTime() <= futureCutoff.getTime();
+
+      console.log(`DEBUG Activity ID ${activity.id} (${activity.title}): isOngoing=${isOngoing}, isUpcoming=${isUpcoming}, Start=${startDate.toLocaleDateString()}, End=${endDate.toLocaleDateString()}`);
+
+      return isOngoing || isUpcoming;
+    });
+  }
 }
 
 export interface Activity {
@@ -286,4 +299,3 @@ export interface CreateActivity {
   photoBase64?: string | null;
 }
 
-const BOARD_THRESHOLD_DAYS = 3;

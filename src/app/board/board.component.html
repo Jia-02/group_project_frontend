@@ -1,16 +1,25 @@
+<div class="board-container">
+  <h3 class="board-header">🔔 公告欄</h3>
 
-<h3>🔔 公告欄</h3>
+  @for (activity of activities; track activity.id) {
+  <div class="activity-card" [ngStyle]="{'background-image': getBackgroundStyle(activity.photo)}">
+    <div class="overlay">
+      <h4 class="activity-title">{{ activity.title }}</h4>
+      <p class="activity-description">{{ activity.description }}</p>
 
-@for (activity of activities; track activity.id) {
-  <div class="activity-card">
-    <h4>{{ activity.title }}</h4>
-    <p>
-      開始日期: {{ activity.startDate | date: 'yyyy/MM/dd' }}
-      ({{ getDaysUntil(activity.startDate) }} 天後開始)
-    </p>
+      <div class="activity-footer">
+        <span class="activity-time">
+          {{ activity.startDate | date: 'yyyy/MM/dd' }}~{{ activity.endDate | date: 'yyyy/MM/dd' }}
+        </span>
+        <span class="activity-countdown">
+          ⏳ {{ getDaysUntil(activity.startDate) > 0 ? (getDaysUntil(activity.startDate) + ' 天後開始') : '進行中' }}
+        </span>
+      </div>
+    </div>
   </div>
-} @empty {
+  } @empty {
   <div class="no-activity">
-    目前沒有即將開始的公開活動。
+    目前沒有即將開始或正在進行的公開活動。
   </div>
-}
+  }
+</div>
