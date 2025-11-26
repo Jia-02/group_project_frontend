@@ -15,5 +15,4 @@ export class DataService {
   postApi(url:string,postData:any):any{
     return this.http.post(url,postData);
   }
-
 }

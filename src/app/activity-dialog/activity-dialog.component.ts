@@ -68,10 +68,12 @@ export class ActivityDialogComponent {
   }
 
   onPublishClick(): void {
+    console.log(this.activityData);
     this.dialogRef.close({ action: 'publish' });
   }
 
   onSaveClick(): void {
+    console.log(this.activityData);
     this.dialogRef.close({ action: 'save' });
   }
 

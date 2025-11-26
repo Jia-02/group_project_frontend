@@ -255,11 +255,8 @@ export class CalendarComponent implements OnInit {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    console.log('DEBUG: Today (midnight) is:', today.toLocaleDateString());
-
     const futureCutoff = new Date(today);
     futureCutoff.setDate(today.getDate() + this.BOARD_THRESHOLD_DAYS);
-    console.log('DEBUG: Future Cutoff is:', futureCutoff.toLocaleDateString());
 
     return this.activities.filter(activity => {
       if (activity.status !== 'published') {
@@ -274,8 +271,6 @@ export class CalendarComponent implements OnInit {
       const isOngoing = startDate.getTime() <= today.getTime() && today.getTime() <= endDate.getTime();
 
       const isUpcoming = today.getTime() < startDate.getTime() && startDate.getTime() <= futureCutoff.getTime();
-
-      console.log(`DEBUG Activity ID ${activity.id} (${activity.title}): isOngoing=${isOngoing}, isUpcoming=${isUpcoming}, Start=${startDate.toLocaleDateString()}, End=${endDate.toLocaleDateString()}`);
 
       return isOngoing || isUpcoming;
     });
