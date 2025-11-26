@@ -30,8 +30,43 @@ export interface Table {
   lengthY:number;
 }
 
+export interface Reservation{
+  reservationDate:any;
+  reservationPhone:string;
+  reservationTime:any;
+  reservationName:string;
+  reservationCount:number;
+  reservationAdultCount:number;
+  reservationChildCount:number;
+  reservationStatus:boolean;
+  reservationNote:string;
+  childSeat:number;
+  tableId:string;
+}
+
 export interface TableRes {
   code: number;
   message: string;
   tableList: Table[];
+}
+
+
+export interface ReservationListRes{
+  code: number;
+  message: string;
+  reservationList:Reservation[];
+}
+
+export interface ReservationListTodayRes{
+  code: number;
+  message:string;
+  reservationAndTableByDateList:ReservationToday[];
+  reservationDate:string;
+}
+
+export interface ReservationToday{
+  capacity:number;
+  reservations: Reservation[];
+  tableDailyStatus:boolean;
+  tableId:string;
 }

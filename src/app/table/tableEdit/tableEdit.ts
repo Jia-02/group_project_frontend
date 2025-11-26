@@ -1,5 +1,5 @@
 import { Component, ErrorHandler, inject } from '@angular/core';
-import { DataService, Table } from '../../data/data.service';
+import { DataService, Reservation, ReservationListTodayRes, Table } from '../../data/data.service';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
 import { DialogComponent } from '../dialog/dialog.component';
@@ -29,7 +29,12 @@ export class TableEditComponent {
   lengthX!: number;
   lengthY!: number;
 
+  reservation!:Reservation[];
+
+
   ngOnInit(): void {
+
+
 
     // 如果data.tableInfo有值代表這次執行為編輯 需將存在中的table資訊assign給宣告的變數
     if (this.data.tableInfo) {
@@ -48,6 +53,27 @@ export class TableEditComponent {
       this.tablePositionX = this.data.position_x;
       this.tablePositionY = this.data.position_y;
     }
+
+
+    if (this.data.mod == "資訊") {
+      let today = new Date();
+      let year = today.getFullYear();
+      let month = String(today.getMonth() + 1).padStart(2, '0');
+      let day = String(today.getDate()).padStart(2, '0');
+      let reservation_date = `${year}-${month}-${day}`;
+      this.reservation = [];
+      let url = "http://localhost:8080/reservation/date_list?reservation_date=" + reservation_date;
+      this.service.getApi(url).subscribe((res: ReservationListTodayRes) => {
+        for(let i = 0;i < res.reservationAndTableByDateList.length; i++){
+          if(this.tableId == res.reservationAndTableByDateList[i].tableId){
+            this.reservation = res.reservationAndTableByDateList[i].reservations;
+            console.log(this.reservation)
+          }
+        }
+      })
+    }
+
+
   }
 
 

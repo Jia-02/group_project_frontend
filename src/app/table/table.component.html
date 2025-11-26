@@ -1,10 +1,32 @@
 <div style="display: flex">
   <span style="flex:1 1 auto"></span>
+  <div style="width: 300px; height: 500px; border: 1px solid black; margin-top: 5%; overflow: auto;">
+    @for(item of reservationList; track item){
+      <div style="border: 1px solid black;">
+      <span>{{item.tableId}}</span> <br> <br>
+      @for(item1 of item.reservations; track item1){
+        <div style="border: 1px solid black;">
+          <span>訂位時間: {{item1.reservationTime}}</span> <br> <br>
+          <span>訂位人數: {{item1.reservationCount}}</span> <br> <br>
+          <span>手機: {{item1.reservationPhone}}</span> <br> <br>
+          <span>小孩人數: {{item1.reservationChildCount}}</span> <br> <br>
+
+        </div> <br> <br>
+      }
+      </div> <br> <br>
+    }
+  </div>
   <div>
-    <div style="margin-top: 5%;">
+    <div style="margin-top: 15%;">
       <canvas #myCanvas style="border: 1px solid black;" width="500" height="500"
         (click)="handleClick($event)" (mousemove)="handleMove($event)" (mousedown)="handlePress($event)" (mouseup)="handleUp($event)" (mouseout)="handleOut($event)"></canvas>
     </div>
+    @if(admin){
+      <button (click)="edit(false)">編輯模式</button>
+    }@else {
+      <button (click)="edit(true)">營業模式</button>
+    }
   </div>
   <span style="flex:1 1 auto"></span>
+  <span>{{currentTime}}</span>
 </div>
