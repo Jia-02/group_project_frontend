@@ -26,6 +26,8 @@ export interface Table {
   tableCapacity: number;
   tablePositionX: number;
   tablePositionY: number;
+  lengthX:number;
+  lengthY:number;
 }
 
 export interface TableRes {

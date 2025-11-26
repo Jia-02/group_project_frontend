@@ -26,6 +26,8 @@ export class TableEditComponent {
   tableCapacity!: number;
   tablePositionX!: number;
   tablePositionY!: number;
+  lengthX!: number;
+  lengthY!: number;
 
   ngOnInit(): void {
 
@@ -36,6 +38,8 @@ export class TableEditComponent {
       this.tableCapacity = this.data.tableInfo.tableCapacity;
       this.tablePositionX = this.data.tableInfo.tablePositionX;
       this.tablePositionY = this.data.tableInfo.tablePositionY;
+      this.lengthX = this.data.tableInfo.lengthX;
+      this.lengthY = this.data.tableInfo.lengthY;
     }
     //若沒有值代表這次執行狀態為新增 將預設的table各個參數assign給宣告的變數
     else {
@@ -89,7 +93,8 @@ export class TableEditComponent {
         let url = "http://localhost:8080/table/update";
         let table: Table = {
           tableId: this.tableId, tableStatus: this.tableStatus, tableCapacity: this.tableCapacity,
-          tablePositionX: this.tablePositionX, tablePositionY: this.tablePositionY
+          tablePositionX: this.tablePositionX, tablePositionY: this.tablePositionY,
+          lengthX: this.lengthX, lengthY: this.lengthY
         }
         console.log(table);
         this.service.postApi(url, table).pipe(
@@ -123,7 +128,8 @@ export class TableEditComponent {
       let url = "http://localhost:8080/table/add";
       let table: Table = {
         tableId: this.tableId, tableStatus: this.tableStatus, tableCapacity: this.tableCapacity,
-        tablePositionX: this.tablePositionX, tablePositionY: this.tablePositionY
+        tablePositionX: this.tablePositionX, tablePositionY: this.tablePositionY,
+        lengthX: this.lengthX, lengthY: this.lengthY
       }
       this.service.postApi(url, table).pipe(
         catchError((error) => {

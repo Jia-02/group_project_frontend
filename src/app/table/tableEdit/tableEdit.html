@@ -8,6 +8,8 @@
   <span>容納人數:</span> <input type="text" [(ngModel)] = "tableCapacity"> <br> <br>
   <span>座標x軸</span> <input type="text" [(ngModel)] = "tablePositionX"> <br> <br>
   <span>座標y軸</span> <input type="text" [(ngModel)] = "tablePositionY"> <br> <br>
+  <span>x軸長度</span> <input type="text" [(ngModel)] = "lengthX"> <br> <br>
+  <span>y軸長度</span> <input type="text" [(ngModel)] = "lengthY"> <br> <br>
   @if(data.mod == "編輯"){
     <button (click)="tableEdit(true)">刪除座位</button>
     <button (click)="tableEdit(false)">更新座位資訊</button>
