@@ -1,19 +1,16 @@
-<div class="board-container">
-  <h2>📢 公告欄</h2>
 
-  <div class="boardCss">
-    @if (ongoingAndUpcoming.length > 0) {
-    @for (activity of ongoingAndUpcoming; track activity.id) {
-    <div class="board-item">
-      <h3>{{ activity.title }}</h3>
-      <p>{{ activity.description }}</p>
-      <p>開始：{{ activity.startDate | date }}</p>
-      <p>結束：{{ activity.endDate | date }}</p>
-    </div>
-    }
-    } @else {
-    <p>目前沒有進行中或即將開始的活動</p>
-    }
+<h3>🔔 公告欄</h3>
+
+@for (activity of activities; track activity.id) {
+  <div class="activity-card">
+    <h4>{{ activity.title }}</h4>
+    <p>
+      開始日期: {{ activity.startDate | date: 'yyyy/MM/dd' }}
+      ({{ getDaysUntil(activity.startDate) }} 天後開始)
+    </p>
   </div>
-
-</div>
+} @empty {
+  <div class="no-activity">
+    目前沒有即將開始的公開活動。
+  </div>
+}

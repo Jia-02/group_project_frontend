@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { CalendarService, Activity } from '../@service/calendar.service';
+import { Activity } from '../calendar/calendar.component';
 
 @Component({
   selector: 'app-board',
@@ -11,12 +11,17 @@ import { CalendarService, Activity } from '../@service/calendar.service';
   styleUrl: './board.component.scss'
 })
 export class BoardComponent {
-  constructor(private calendarService: CalendarService) { }
+  @Input() activities: Activity[] = [];
 
-  ongoingAndUpcoming: Activity[] = [];
+  getDaysUntil(startDate: Date): number {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const start = new Date(startDate);
+    start.setHours(0, 0, 0, 0);
 
-  ngOnInit(): void {
-    this.ongoingAndUpcoming = this.calendarService.getOngoingAndUpcoming();
+    const diffTime = start.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays;
   }
 
 

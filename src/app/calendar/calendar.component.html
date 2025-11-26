@@ -7,7 +7,6 @@
   </div>
 
   <div class="display">
-
     <!-- ======= 月曆區 ======= -->
     <div class="calendar-wrapper">
       <table class="calendar-table">
@@ -45,41 +44,41 @@
                   <span class="activity-title">{{ act.title }}</span>
                   }
                 </div>
-
                 }
               </div>
-
               }
             </td>
             }
-
           </tr>
           }
         </tbody>
       </table>
     </div>
 
-    <!-- ======= 側邊欄 ======= -->
     <div>
-
       <!-- 新增活動 -->
       <div class="sidebar-card">
         <h3>新增活動</h3>
         <div class="sidebar-line"></div>
         <label>輸入活動內容：</label>
-        <textarea [(ngModel)]="inputText" rows="3"></textarea>
-
-        <br><br>
-
+        <textarea [(ngModel)]="inputText" rows="3"></textarea><br>
+        <label for="photo-file-input">
+          <button type="button" class="file-select-button">選擇 Photo</button>
+          {{ selectedPhotoFile ? selectedPhotoFile.name : '未選擇檔案' }}
+          <input type="file" accept="image/*" id="photo-file-input" (change)="onFileSelected($event)"
+            style="display: none;">
+        </label><br>
+        @if (photoBase64) {
+        <div>
+          <img [src]="photoBase64" alt="活動圖片預覽" style="max-width: 100%; max-height: 150px; margin-top: 10px;">
+        </div>
+        }
         <label>開始日期：</label>
         <input type="date" [(ngModel)]="startDate">
-
-        <br><br>
-        <button (click)="openDialog()">新增活動</button>
+        <button (click)="openDialog()" style="margin-left: 330px;">新增活動</button>
       </div>
 
-
-      <!-- 今日活動 -->
+      <!-- 查看活動 -->
       <div class="sidebar-card">
         <h3>{{ selectedDay | date:'MM/dd' }} 的活動</h3>
         <div class="sidebar-line"></div>
@@ -91,16 +90,13 @@
           <ul>
             @for (activity of selectedDayActivities; track activity.id) {
 
-            <li [ngClass]="{
-              'detail-published': activity.status === 'published',
-              'detail-draft': activity.status === 'draft'
-            }">
+            <li
+              [ngClass]="{ 'detail-published': activity.status === 'published', 'detail-draft': activity.status === 'draft' }"
+              class="activity-item" (click)="openActivity(activity)">
               <strong>{{ activity.title }}</strong><br>
               <span>{{ activity.description }}</span><br>
               <small>
-                {{ activity.startDate | date:'MM/dd' }}
-                -
-                {{ activity.endDate | date:'MM/dd' }}
+                {{ activity.startDate | date:'MM/dd' }}-{{ activity.endDate | date:'MM/dd' }}
               </small>
             </li>
             }

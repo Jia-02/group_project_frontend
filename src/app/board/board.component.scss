@@ -1,9 +1,13 @@
 .board-card {
   padding: 15px;
-  border-radius: 12px;
-  background: #f8f8f8;
+  border-radius: 20px;
+  background-color: lightblue;
   border: 1px solid #ddd;
   margin-bottom: 20px;
+  justify-content: center;
+  align-items: center;
+  width: 20%;
+  height: 20%;
 }
 
 .board-line {
@@ -13,19 +17,15 @@
 }
 
 .board-item {
-  margin-bottom: 12px;
+  margin-bottom: 20px;
   padding: 8px;
   border-left: 4px solid #1976d2;
 }
 
 .boardCss{
   display: flex;
-  justify-content: center;      /* 水平置中 */
-  align-items: center;          /* 垂直置中 */
-  width: 20%;
-  height: 20%;
-  border-radius: 30px;
-  background-color: lightblue;
+  justify-content: center;
+  // align-items: center;
 }
 
 

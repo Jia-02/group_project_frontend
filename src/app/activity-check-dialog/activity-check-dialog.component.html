@@ -1,0 +1,16 @@
+<h2 mat-dialog-title>{{ activity.title }}</h2>
+
+<div mat-dialog-content>
+  <p>{{ activity.description }}</p>
+
+  <small>
+    {{ activity.startDate | date:'yyyy/MM/dd ' }}~
+    {{ activity.endDate | date:'yyyy/MM/dd ' }}
+  </small>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button (click)="close()">關閉</button>
+  <button mat-button (click)="edit()">編輯</button>
+  <button mat-button (click)="publish()">發布</button>
+</div>
