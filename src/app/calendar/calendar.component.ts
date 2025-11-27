@@ -1,11 +1,12 @@
+import { ActivityReadDialogComponent } from './../activity-read-dialog/activity-read-dialog.component';
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgClass } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivityDialogComponent, DialogResult } from '../activity-dialog/activity-dialog.component';
-import { ActivityCheckDialogComponent } from '../activity-check-dialog/activity-check-dialog.component';
 import { BoardComponent } from '../board/board.component';
+import { ActivityCheckDialogComponent } from '../activity-check-dialog/activity-check-dialog.component';
 
 @Component({
   selector: 'app-calendar',
@@ -231,15 +232,73 @@ export class CalendarComponent implements OnInit {
   }
 
   openActivity(activity: Activity) {
-    this.dialog.open(ActivityCheckDialogComponent, {
+    if (activity.status === 'published') {
+      this.ActivityReadDialog(activity);
+    } else if (activity.status === 'draft') {
+      this.ActivityCheckDialog(activity);
+    }
+  }
+
+  private ActivityReadDialog(activity: Activity) {
+    const dialogRef = this.dialog.open(ActivityReadDialogComponent, {
       width: '400px',
-      height: '500px',
-      data: { ...activity }
-    }).afterClosed().subscribe(result => {
+      maxHeight: '600px',
+      data: activity,
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('Published Dialog 關閉，結果:', result);
+    });
+  }
+
+  private ActivityCheckDialog(activity: Activity) {
+    const dialogRef = this.dialog.open(ActivityCheckDialogComponent, {
+      width: '400px',
+      maxHeight: '600px',
+      data: { ...activity }, // 傳入活動數據的拷貝
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        Object.assign(activity, result);
+        let updatedActivity = result.data;
+        const newPhotoFile: File | null = result.photoFile;
+        const mainIndex = this.activities.findIndex(act => act.id === updatedActivity.id);
+
+        if (mainIndex > -1) {
+
+          if (newPhotoFile) {
+            const tempPhotoUrl = URL.createObjectURL(newPhotoFile);
+            updatedActivity.photo = tempPhotoUrl;
+          }
+
+          if (updatedActivity.startDate && typeof updatedActivity.startDate === 'string') {
+            updatedActivity.startDate = new Date(updatedActivity.startDate);
+          }
+          if (updatedActivity.endDate && typeof updatedActivity.endDate === 'string') {
+            updatedActivity.endDate = new Date(updatedActivity.endDate);
+          }
+
+          this.activities[mainIndex] = updatedActivity;
+
+          this.activities = [...this.activities];
+
+          this.generateCalendar(this.currentMonth);
+          if (this.selectedDay) {
+            this.selectedDayActivities = this.getDayActivities(this.selectedDay);
+          }
+
+          if (result.action === 'published') {
+            console.log(`活動 ${updatedActivity.title} 已發布，呼叫發布 API...`);
+          } else if (result.action === 'saveDraft') {
+            console.log(`活動 ${updatedActivity.title} 已暫存，呼叫暫存 API...`);
+          }
+
+        } else {
+          console.error(`找不到 ID 為 ${updatedActivity.id} 的活動來更新。`);
+        }
+
       }
-    })
+    });
   }
 
   private resetForm(): void {

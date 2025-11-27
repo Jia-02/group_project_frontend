@@ -1,16 +1,44 @@
-<h2 mat-dialog-title>{{ activity.title }}</h2>
+<h2 mat-dialog-title>編輯活動：{{ data.title }}</h2>
 
-<div mat-dialog-content>
-  <p>{{ activity.description }}</p>
+<mat-dialog-content class="mat-typography">
+  <form [formGroup]="form">
+    <mat-form-field appearance="outline">
+      <mat-label>活動標題</mat-label>
+      <input matInput formControlName="title">
+    </mat-form-field>
 
-  <small>
-    {{ activity.startDate | date:'yyyy/MM/dd ' }}~
-    {{ activity.endDate | date:'yyyy/MM/dd ' }}
-  </small>
-</div>
+    <mat-form-field appearance="outline">
+      <mat-label>活動內容</mat-label>
+      <input matInput formControlName="description">
+    </mat-form-field><br>
 
-<div mat-dialog-actions align="end">
-  <button mat-button (click)="close()">關閉</button>
-  <button mat-button (click)="edit()">編輯</button>
-  <button mat-button (click)="publish()">發布</button>
-</div>
+    <h3>活動圖片</h3>
+    <div class="activity-photo-container">
+      @if (newPhotoUrl) {
+        <img [src]="newPhotoUrl" alt="{{ data.title }} 活動照片" style="width: 200px; height: 200px; object-fit: cover;">
+      } @else {
+        <p>此活動沒有可顯示的圖片。</p>
+      }
+    </div>
+
+    <input type="file" (change)="onFileSelected($event)" accept="image/*">
+    <br><br>
+
+    <small>
+      原本時間:{{ data.startDate | date:'yyyy/MM/dd ' }}~{{ data.endDate | date:'yyyy/MM/dd ' }}
+    </small><br>
+    <input matInput type="date" formControlName="startDate">~<input matInput type="date" formControlName="endDate">
+
+
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancelClick()">取消</button>
+  <button mat-raised-button color="primary" [disabled]="form.invalid" (click)="onSaveDraftClick()">
+    暫存
+  </button>
+  <button mat-raised-button color="accent" [disabled]="form.invalid" (click)="onPublishClick()">
+    發布
+  </button>
+</mat-dialog-actions>

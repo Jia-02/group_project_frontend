@@ -1,0 +1,22 @@
+<mat-dialog-content>
+  <h2 mat-dialog-title>{{ activity.title }}</h2>
+
+  <div mat-dialog-content>
+    <p>{{ activity.description }}</p>
+    <div class="activity-photo-container">
+      @if (activity.photo) {
+        <img [src]="activity.photo" alt="{{ activity.title }} 活動照片" style="width: 200px; height: 200px;">
+      } @else {
+        <p>此活動沒有可顯示的圖片。</p>
+      }
+    </div>
+    <small>
+      {{ activity.startDate | date:'yyyy/MM/dd ' }}~{{ activity.endDate | date:'yyyy/MM/dd ' }}
+    </small>
+  </div>
+</mat-dialog-content>
+
+
+<div mat-dialog-actions align="end">
+  <button mat-button (click)="close()">關閉</button>
+</div>

@@ -5,6 +5,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { DataService } from '../@service/data.service';
+
 
 @Component({
   selector: 'app-activity-dialog',
@@ -25,12 +27,13 @@ export class ActivityDialogComponent {
   public photo: string | null;
 
   constructor(
-    public dialogRef: MatDialogRef<ActivityDialogComponent, DialogResult>,
-    @Inject(MAT_DIALOG_DATA) public rawData: CreateActivity
-  ) {
+  public dialogRef: MatDialogRef<ActivityDialogComponent, DialogResult>,
+  @Inject(MAT_DIALOG_DATA) public rawData: CreateActivity,
+  private dataService: DataService,
+) {
+  this.photo = (this.rawData as any).photoBase64 || null;
+}
 
-    this.photo = (this.rawData as any).photoBase64 || null;
-  }
 
   ngOnInit(): void {
     this.activityData = this.processRawData(this.rawData);
@@ -80,6 +83,33 @@ export class ActivityDialogComponent {
   onCancelClick(): void {
     this.dialogRef.close({ action: 'cancel' });
   }
+
+  // onPublishClick(): void {
+  //   const body = {
+  //     ...this.activityData,
+  //     status: true
+  //   };
+
+  //   this.dataService.postApi('http://localhost:8080/calendar/create', body)
+  //     .subscribe((res: any)  => {
+  //         console.log('活動已發布:', res);
+  //         this.dialogRef.close({ action: 'publish' });
+  //       }
+  //     );
+  // }
+
+  // onSaveClick(): void {
+  //   const body = {
+  //     ...this.activityData,
+  //     status: false
+  //   };
+
+  //   this.dataService.postApi('http://localhost:8080/calendar/create', body)
+  //     .subscribe((res: any)  => {
+  //         console.log('活動已暫存:', res);
+  //         this.dialogRef.close({ action: 'save' });
+  //       });
+  // }
 
 }
 
