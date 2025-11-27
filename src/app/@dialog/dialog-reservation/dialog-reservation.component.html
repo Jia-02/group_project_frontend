@@ -1,33 +1,84 @@
 <div class="background">
 
   <!-- dialog標題 -->
-  <div mat-dialog-title>新增訂位</div>
+  <div mat-dialog-title class="diaTitle">新增訂位</div>
 
   <!-- dialog內容 -->
   <mat-dialog-content>
 
-    <label>訂位人:</label><input type="text" [(ngModel)]="reservation.reservationName">
-    <label>訂位總人數:</label><input type="number" [(ngModel)]="reservation.reservationCount">
-    <label>大人:</label><input type="number" [(ngModel)]="reservation.reservationAdultCount">
-    <label>小孩:</label><input type="number" [(ngModel)]="reservation.reservationChildCount">
-    <label>兒童座椅:</label><input type="number" [(ngModel)]="reservation.childSeat">
+    <div class="inputBoxCss">
+      <label>訂位人</label>
+      <input type="text" class="inputCss" [(ngModel)]="reservation.reservationName">
+      <label>電話</label>
+      <input type="text" class="inputCss" [(ngModel)]="reservation.reservationPhone">
 
+      <label>總人數</label>
+      <select class="inputCss" [(ngModel)]="reservation.reservationCount" (change)="updateTotal()">
+        <option value="''">--請選擇--</option>
+        @for (data of totalPeople; track data) {
+        <option [value]="data">{{ data }}</option>
+        }
+      </select>
 
-    <label>訂位日期:</label>
+      <label>桌號</label>
+      <select class="inputCss" [(ngModel)]="reservation.tableId">
+        <option value="">--請選擇--</option>
+        @for (data of displayTableIds; track data) {
+        <option [value]="data">{{ data }}</option>
+        }
+      </select>
+    </div>
 
-    <label>訂位時間:</label>
+    <div class="inputBoxCss">
+      <label>大人</label>
+      <select class="inputCss" [(ngModel)]="reservation.reservationAdultCount" (change)="updateAdultChild()">
+        <option value="''">--請選擇--</option>
+        @for (data of adultList; track data) {
+        <option [value]="data">{{ data }}</option>
+        }
+      </select>
 
+      <label>小孩</label>
+      <select class="inputCss" [(ngModel)]="reservation.reservationChildCount" (change)="updateAdultChild()">
+        <option value="''">--請選擇--</option>
+        @for (data of childList; track data) {
+        <option [value]="data">{{ data }}</option>
+        }
+      </select>
 
-    <label>電話:</label>
-    <input type="text" [(ngModel)]="reservation.reservationPhone">
-    <label>備註:</label>
-    <textarea></textarea>
+      <label>兒童座椅</label>
+      <select class="inputCss" [(ngModel)]="reservation.childSeat">
+        <option value="''">--請選擇--</option>
+        @for (data of childSeatList; track data) {
+        <option [value]="data">{{ data }}</option>
+        }
+      </select>
+    </div>
 
+    <div class="inputBoxCss">
+      <label>訂位日期</label>
+      <input type="date" class="inputCss" [(ngModel)]="reservation.reservationDate" (change)="onDateChange()" [min]="currentDate">
+      <label>訂位時間</label>
+      <select class="inputCss" [(ngModel)]="reservation.reservationTime">
+        <option value="">--請選擇--</option>
+        @for (time of timeList; track time) {
+        <option [value]="time">{{ time }}</option>
+        }
+      </select>
+
+    </div>
+
+    <div class="inputBoxCss">
+      <label>備註</label>
+      <textarea [(ngModel)]="reservation.reservationNote"></textarea>
+    </div>
   </mat-dialog-content>
 
   <!-- dialog按鈕 -->
   <mat-dialog-actions>
-    <button (click)="onClick()">取消</button>
-    <button (click)="onClick()">新增</button>
+    <div class="btnBox">
+      <button (click)="onNoClick()" class="btn">取消</button>
+      <button (click)="onAddClick()" class="btn">新增</button>
+    </div>
   </mat-dialog-actions>
 </div>

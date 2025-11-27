@@ -1,7 +1,8 @@
 export interface reservation {
+  id: number;
   newDate: string;
   reservationDate: string;
-  reservationTime: string;
+  reservationTime: string; // 應為 "HH:mm:ss"
   reservationPhone: string;
   reservationName: string;
   reservationCount: number;
@@ -10,22 +11,20 @@ export interface reservation {
   reservationStatus: boolean;
   reservationNote: string;
   childSeat: number;
-  tableId: string;
+  tableId: string; // 從後端數據結構中知道這是必要的
+}
+
+export interface tables {
+  table_id: string;
+  table_status: '開放' | '關閉' | string; // 調整為允許 '開放'/'關閉' 字串
+  capacity: number;
+  position_x: number;
+  position_y: number;
 }
 
 
-  export interface tables {
-    table_id: string;
-    table_status: string;
-    capacity: number;
-    position_x: number;
-    position_y: number;
-  }
-
-
-  // 繼承
+// 繼承
 export interface scheduleItem extends reservation {
-  id: number;
   endTime: string;
   useTime: number; // 以分鐘計的時長
 }
@@ -36,3 +35,4 @@ export interface timeLabel {
   display: string;
   hour: number;
 }
+

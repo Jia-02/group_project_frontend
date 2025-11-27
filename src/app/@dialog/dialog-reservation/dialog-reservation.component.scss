@@ -1,1 +1,70 @@
+.background {
+  text-align: left;
+  padding: 30px 30PX;
+}
 
+.diaTitle {
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 20px;
+  text-align: center;
+  letter-spacing: 2px;
+}
+
+
+.btn {
+  width: 100px;
+  height: 35px;
+  border-radius: 20px;
+  background: #971D10;
+  border: 2px solid #971D10;
+  color: #fafafa;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  cursor: pointer;
+
+  &:hover {
+    color: #971D10;
+    background: #fafafa;
+  }
+}
+
+.btnBox {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  width: 100%;
+}
+
+.inputBoxCss {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+label {
+  white-space: nowrap; /* 確保標籤文字不會換行 */
+  font-weight: 500;
+}
+
+.inputBoxCss:last-child {
+  /* 備註和電話放在同一行，讓備註欄位寬度拉開 */
+  align-items: flex-start;  /* 電話號碼頂部對齊 */
+}
+
+.inputCss, textarea {
+  height: 30px; /* 增加輸入框高度，更易點擊 */
+  padding: 4px 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  flex-grow: 1; /* 讓輸入框佔滿剩餘寬度 */
+  margin-right: 5px;
+}
+
+textarea {
+  height: 80px; /* 備註欄位的高度 */
+  resize: vertical; /* 允許用戶垂直調整大小 */
+}
