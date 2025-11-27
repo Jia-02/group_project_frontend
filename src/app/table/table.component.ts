@@ -4,10 +4,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { TableEditComponent } from './tableEdit/tableEdit';
 import { catchError, min } from 'rxjs';
 import { DialogComponent } from './dialog/dialog.component';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @Component({
   selector: 'app-table',
-  imports: [],
+  imports: [MatProgressBarModule],
   templateUrl: './table.component.html',
   styleUrl: './table.component.scss'
 })
@@ -28,6 +29,8 @@ export class TableComponent {
   reservationList!: ReservationToday[];
   reservation!: Reservation;
   currentTime!: string;
+  reservation_date!: string;
+  timeList = [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22];
 
   ngOnInit() {
     this.admin = true;
@@ -35,45 +38,238 @@ export class TableComponent {
     let year = today.getFullYear();
     let month = String(today.getMonth() + 1).padStart(2, '0');
     let day = String(today.getDate()).padStart(2, '0');
-    let hour = String(today.getHours()).padStart(2,'0');
-    let minute = String(today.getMinutes()).padStart(2,'0');
+    let hour = String(today.getHours()).padStart(2, '0');
+    let minute = String(today.getMinutes()).padStart(2, '0');
     this.currentTime = hour + ":" + minute;
     console.log(this.currentTime)
-    let reservation_date = `${year}-${month}-${day}`;
+    this.reservation_date = `${year}-${month}-${day}`;
 
-    console.log(reservation_date);
+    let myDiv = document.getElementById("progressBar") as HTMLDivElement;
+
+    let nowTime = this.currentTime.split(':').map(Number);
+    let nowHour = nowTime[0] * 3600;
+    let nowMinute = nowTime[1] * 60;
+
+    if (nowHour + nowMinute >= 36000) {
+      let timePercent = (((nowHour + nowMinute - 36000) / 3600) / 12) * 100
+      let str = timePercent + "%";
+      console.log(str)
+      myDiv.style.height = str;
+    }
+
+
+
+    console.log(this.reservation_date);
 
     if (this.admin) {
       let url = "http://localhost:8080/table/list";
-      this.service.getApi(url).subscribe((res: TableRes) => {
-        console.log(res)
-        this.reBuild(res);
+      this.service.getApi(url).subscribe((table: TableRes) => {
+        console.log(table)
+        url = "http://localhost:8080/reservation/date_list?reservation_date=" + this.reservation_date;
+        this.service.getApi(url).subscribe((res: ReservationListTodayRes) => {
+          this.reservationList = res.reservationAndTableByDateList;
+          console.log(this.reservationList);
+          this.reBuild(table);
+        })
+
       })
     }
-    let url = "http://localhost:8080/reservation/date_list?reservation_date=" + reservation_date;
-    this.service.getApi(url).subscribe((res: ReservationListTodayRes) => {
-      this.reservationList = res.reservationAndTableByDateList;
-      console.log(this.reservationList);
-    })
+
 
     this.timerId = setInterval(() => {
       let today = new Date();
-      let hour = String(today.getHours()).padStart(2,'0');
-      let minute = String(today.getMinutes()).padStart(2,'0');
+      let hour = String(today.getHours()).padStart(2, '0');
+      let minute = String(today.getMinutes()).padStart(2, '0');
+      let month = String(today.getMonth() + 1).padStart(2, '0');
+      let day = String(today.getDate()).padStart(2, '0');
+      this.reservation_date = `${year}-${month}-${day}`;
       this.currentTime = hour + ":" + minute;
+      let nowTime = this.currentTime.split(':').map(Number);
+      let nowHour = nowTime[0] * 3600;
+      let nowMinute = nowTime[1] * 60;
       console.log(this.currentTime);
+      if (nowHour + nowMinute >= 36000) {
+        let timePercent = (((nowHour + nowMinute - 36000) / 3600) / 12) * 100
+        let str = timePercent + "%";
+        console.log(str)
+        myDiv.style.height = str;
+      }
       if (this.admin) {
         let url = "http://localhost:8080/table/list";
-        this.service.getApi(url).subscribe((res: TableRes) => {
-          console.log(res)
-          this.reBuild(res);
+        this.service.getApi(url).subscribe((tableRes: TableRes) => {
+          console.log(tableRes)
+          let table = tableRes.tableList;
+          url = "http://localhost:8080/reservation/date_list?reservation_date=" + this.reservation_date;
+          this.service.getApi(url).subscribe((res: ReservationListTodayRes) => {
+            this.reservationList = res.reservationAndTableByDateList;
+            console.log(res);
+            for (let i = 0; i < table.length; i++) {
+              for (let j = 0; j < res.reservationAndTableByDateList.length; j++) {
+                if (table[i].tableId == res.reservationAndTableByDateList[j].tableId && res.reservationAndTableByDateList[j].reservations.length > 0) {
+                  for (let k = 0; k < res.reservationAndTableByDateList[j].reservations.length; k++) {
+                    let resTime = res.reservationAndTableByDateList[j].reservations[k].reservationTime.split(':').map(Number);
+                    let nowTime = this.currentTime.split(':').map(Number);
+                    let nowHour = nowTime[0] * 3600;
+                    let nowMinute = nowTime[1] * 60;
+                    let resHour = resTime[0] * 3600;
+                    let resMinute = resTime[1] * 60;
+                    let resSecond = resTime[2];
+                    let nowTotalSecond = nowHour + nowMinute;
+                    let resTotalSecond = resHour + resMinute + resSecond;
+                    if (resTotalSecond - nowTotalSecond <= 1800 && nowTotalSecond < resTotalSecond) {
+                      if (res.reservationAndTableByDateList[j].reservations[k].reservationStatus) {
+                        let url = "http://localhost:8080/table/update";
+                        let updateTable: Table = {
+                          tableId: table[i].tableId, tableStatus: "使用中", tableCapacity: table[i].tableCapacity,
+                          tablePositionX: table[i].tablePositionX, tablePositionY: table[i].tablePositionY,
+                          lengthX: table[i].lengthX, lengthY: table[i].lengthY
+                        }
+                        this.service.postApi(url, updateTable).pipe(
+                          catchError((error) => {
+                            if (error.error.code == 400) {
+                              this.dialog.open(DialogComponent, {
+                                data: { message: error.error.message, flag: true },
+                                width: 'auto',
+                                height: 'auto'
+                              });
+                            }
+                            return error;
+                          })).subscribe((res: any) => {
+                            console.log(res)
+                            if (res.code == 200) {
+                              url = "http://localhost:8080/table/list";
+                              this.service.getApi(url).subscribe((res: TableRes) => {
+                                console.log(res)
+                                console.log(res.tableList)
+                                this.reBuild(res);
+                              })
+                            } else {
+                              this.dialog.open(DialogComponent, {
+                                data: { message: res.message, flag: true },
+                                width: 'auto',
+                                height: 'auto'
+                              });
+                            }
+                          });
+                      } else {
+                        let url = "http://localhost:8080/table/update";
+                        let updateTable: Table = {
+                          tableId: table[i].tableId, tableStatus: "已預約", tableCapacity: table[i].tableCapacity,
+                          tablePositionX: table[i].tablePositionX, tablePositionY: table[i].tablePositionY,
+                          lengthX: table[i].lengthX, lengthY: table[i].lengthY
+                        }
+                        this.service.postApi(url, updateTable).pipe(
+                          catchError((error) => {
+                            if (error.error.code == 400) {
+                              this.dialog.open(DialogComponent, {
+                                data: { message: error.error.message, flag: true },
+                                width: 'auto',
+                                height: 'auto'
+                              });
+                            }
+                            return error;
+                          })).subscribe((res: any) => {
+                            console.log(res)
+                            if (res.code == 200) {
+                              url = "http://localhost:8080/table/list";
+                              this.service.getApi(url).subscribe((res: TableRes) => {
+                                console.log(res)
+                                console.log(res.tableList)
+                                this.reBuild(res);
+                              })
+                            } else {
+                              this.dialog.open(DialogComponent, {
+                                data: { message: res.message, flag: true },
+                                width: 'auto',
+                                height: 'auto'
+                              });
+                            }
+                          });
+                      }
+                      break;
+                    }
+                    else if (table[i].tableStatus != "使用中") {
+                      let url = "http://localhost:8080/table/update";
+                      let updateTable: Table = {
+                        tableId: table[i].tableId, tableStatus: "可預約", tableCapacity: table[i].tableCapacity,
+                        tablePositionX: table[i].tablePositionX, tablePositionY: table[i].tablePositionY,
+                        lengthX: table[i].lengthX, lengthY: table[i].lengthY
+                      }
+                      this.service.postApi(url, updateTable).pipe(
+                        catchError((error) => {
+                          if (error.error.code == 400) {
+                            this.dialog.open(DialogComponent, {
+                              data: { message: error.error.message, flag: true },
+                              width: 'auto',
+                              height: 'auto'
+                            });
+                          }
+                          return error;
+                        })).subscribe((res: any) => {
+                          console.log(res)
+                          if (res.code == 200) {
+                            url = "http://localhost:8080/table/list";
+                            this.service.getApi(url).subscribe((res: TableRes) => {
+                              console.log(res)
+                              console.log(res.tableList)
+                              this.reBuild(res);
+                            })
+                          } else {
+                            this.dialog.open(DialogComponent, {
+                              data: { message: res.message, flag: true },
+                              width: 'auto',
+                              height: 'auto'
+                            });
+                          }
+                        });
+                    }
+                    console.log(resTotalSecond - nowTotalSecond);
+                  }
+                }
+                // else if (table[i].tableStatus != "使用中" && table[i].tableStatus != "已預約") {
+                //   let url = "http://localhost:8080/table/update";
+                //   let updateTable: Table = {
+                //     tableId: table[i].tableId, tableStatus: "可預約", tableCapacity: table[i].tableCapacity,
+                //     tablePositionX: table[i].tablePositionX, tablePositionY: table[i].tablePositionY,
+                //     lengthX: table[i].lengthX, lengthY: table[i].lengthY
+                //   }
+                //   this.service.postApi(url, updateTable).pipe(
+                //     catchError((error) => {
+                //       if (error.error.code == 400) {
+                //         this.dialog.open(DialogComponent, {
+                //           data: { message: error.error.message, flag: true },
+                //           width: 'auto',
+                //           height: 'auto'
+                //         });
+                //       }
+                //       return error;
+                //     })).subscribe((res: any) => {
+                //       console.log(res)
+                //       if (res.code == 200) {
+                //         url = "http://localhost:8080/table/list";
+                //         this.service.getApi(url).subscribe((res: TableRes) => {
+                //           console.log(res)
+                //           console.log(res.tableList)
+                //           this.reBuild(res);
+                //         })
+                //       } else {
+                //         this.dialog.open(DialogComponent, {
+                //           data: { message: res.message, flag: true },
+                //           width: 'auto',
+                //           height: 'auto'
+                //         });
+                //       }
+                //     });
+                // }
+              }
+            }
+          })
+          this.reBuild(tableRes);
+
         })
       }
 
-      let url = "http://localhost:8080/reservation/date_list?reservation_date=" + reservation_date;
-      this.service.getApi(url).subscribe((res: ReservationListTodayRes) => {
-        console.log(res);
-      })
+
     }, 60000); // 每60秒執行一次
   }
 
@@ -127,6 +323,7 @@ export class TableComponent {
         if (this.tableList[i].tablePositionX <= x && (this.tableList[i].tablePositionX + this.tableList[i].lengthX - 1) >= x &&
           this.tableList[i].tablePositionY <= y && (this.tableList[i].tablePositionY + this.tableList[i].lengthY - 1) >= y) {
           this.editTable = this.tableList[i];
+          this.isEdit = true;
           break;
         }
         else {
@@ -184,38 +381,31 @@ export class TableComponent {
 
     if (this.isResize) {
       if (x > this.editTable.tablePositionX && y > this.editTable.tablePositionY) {
-        ctx.clearRect(this.editTable.tablePositionX - 1, this.editTable.tablePositionY - 1,
-          x - this.editTable.tablePositionX + 10, y - this.editTable.tablePositionY + 10);
-        // ctx.clearText(this.editTable.tablePositionX - 1, this.editTable.tablePositionY - 1, x - this.editTable.tablePositionX + 20, y - this.editTable.tablePositionY + 20);
+        ctx.clearRect(this.editTable.tablePositionX - 5, this.editTable.tablePositionY - 5,
+          x - this.editTable.tablePositionX + 20, y - this.editTable.tablePositionY + 20);
         ctx.strokeStyle = "black";
         ctx.strokeRect(this.editTable.tablePositionX, this.editTable.tablePositionY,
           x - this.editTable.tablePositionX, y - this.editTable.tablePositionY);
-        // ctx.strokeStyle = 'green';
-        // ctx.strokeText(this.editTable.tableStatus, this.editTable.tablePositionX + this.editTable.lengthX / 2,
-        //   this.editTable.tablePositionY + this.editTable.lengthY / 2)
       }
+    } else {
+      for (let i = 0; i < this.tableList.length; i++) {
+        if (this.tableList[i].tablePositionX <= x && (this.tableList[i].tablePositionX + this.tableList[i].lengthX - 1) >= x &&
+          this.tableList[i].tablePositionY <= y && (this.tableList[i].tablePositionY + this.tableList[i].lengthY - 1) >= y) {
+          canvasElement.style.cursor = 'pointer'
+          break;
+        } else if (x <= (this.tableList[i].tablePositionX + this.tableList[i].lengthX + 5) &&
+          x > (this.tableList[i].tablePositionX + this.tableList[i].lengthX - 5) &&
+          y <= (this.tableList[i].tablePositionY + this.tableList[i].lengthY + 5) &&
+          y > (this.tableList[i].tablePositionY + this.tableList[i].lengthY - 5) && !this.admin) {
+          canvasElement.style.cursor = 'nwse-resize'
+          break;
+        }
+        else {
+          canvasElement.style.cursor = 'default'
+        }
+      }
+
     }
-
-    for (let i = 0; i < this.tableList.length; i++) {
-      if (this.tableList[i].tablePositionX <= x && (this.tableList[i].tablePositionX + this.tableList[i].lengthX - 1) >= x &&
-        this.tableList[i].tablePositionY <= y && (this.tableList[i].tablePositionY + this.tableList[i].lengthY - 1) >= y) {
-        canvasElement.style.cursor = 'pointer'
-        break;
-      } else if (x <= (this.tableList[i].tablePositionX + this.tableList[i].lengthX + 5) &&
-        x > (this.tableList[i].tablePositionX + this.tableList[i].lengthX - 5) &&
-        y <= (this.tableList[i].tablePositionY + this.tableList[i].lengthY + 5) &&
-        y > (this.tableList[i].tablePositionY + this.tableList[i].lengthY - 5) && !this.admin) {
-        canvasElement.style.cursor = 'nwse-resize'
-        break;
-      }
-      else {
-        canvasElement.style.cursor = 'default'
-      }
-    }
-
-
-
-
 
 
   }
@@ -236,7 +426,6 @@ export class TableComponent {
     let y = e.clientY - rect.top;
 
     if (!this.admin) {
-      //flag為判斷該次滑鼠點擊的位置是否已有桌位 若有桌位則為false 如下行for迴圈中 #1處
       let flag = true;
       if (this.isEdit) {
         let url = "http://localhost:8080/table/update";
@@ -396,12 +585,23 @@ export class TableComponent {
       this.isResize = false;
       this.isEdit = false;
     } else {
-      const dialogRef = this.dialog.open(TableEditComponent, {
-        data: { tableInfo: this.editTable, mod: "資訊" },
-        width: 'auto',
-        height: 'auto'
-      });
-
+      if (this.isEdit) {
+        let url = "http://localhost:8080/reservation/date_list?reservation_date=" + this.reservation_date;
+        this.service.getApi(url).subscribe((res: ReservationListTodayRes) => {
+          this.reservationList = res.reservationAndTableByDateList;
+          for (let i = 0; i < this.reservationList.length; i++) {
+            if (this.editTable.tableId == this.reservationList[i].tableId && this.reservationList[i].reservations.length > 0) {
+              console.log(this.reservationList[i].reservations.length)
+              const dialogRef = this.dialog.open(TableEditComponent, {
+                data: { tableInfo: this.editTable, mod: "資訊" },
+                width: 'auto',
+                height: 'auto'
+              });
+              break;
+            }
+          }
+        })
+      }
     }
 
 
@@ -411,6 +611,10 @@ export class TableComponent {
     const canvasElement = this.canvas.nativeElement;
     const ctx = canvasElement.getContext('2d');
     this.tableList = res.tableList;
+    ctx.textAlign = 'center';
+    // ctx.textBaseline = 'middle'
+    ctx.lineWidth = 5;
+    ctx.font = "15px serif";
     if (this.admin) {
       ctx.clearRect(0, 0, canvasElement.width, canvasElement.height);
       for (let i = 0; i < res.tableList.length; i++) {
@@ -419,45 +623,101 @@ export class TableComponent {
           ctx.strokeStyle = "black";
           ctx.strokeRect(res.tableList[i].tablePositionX,
             res.tableList[i].tablePositionY, res.tableList[i].lengthX, res.tableList[i].lengthY);
-          ctx.strokeStyle = 'red';
-          str = res.tableList[i].tableId + res.tableList[i].tableCapacity;
-          ctx.strokeText(str, res.tableList[i].tablePositionX + res.tableList[i].lengthX / 2,
-            res.tableList[i].tablePositionY + res.tableList[i].lengthY / 2)
+          ctx.fillStyle = 'yellow';
+          ctx.fillRect(res.tableList[i].tablePositionX, res.tableList[i].tablePositionY,
+            res.tableList[i].lengthX, res.tableList[i].lengthY)
+          ctx.fillStyle = 'black';
+          ctx.fillText(res.tableList[i].tableId, res.tableList[i].tablePositionX + res.tableList[i].lengthX / 2,
+            res.tableList[i].tablePositionY + res.tableList[i].lengthY / 2 - 10)
+          str = res.tableList[i].tableCapacity + "人";
+          ctx.fillText(str, res.tableList[i].tablePositionX + res.tableList[i].lengthX / 2,
+            res.tableList[i].tablePositionY + res.tableList[i].lengthY / 2 + 10)
+          for (let j = 0; j < this.reservationList.length; j++) {
+            for (let k = 0; k < this.reservationList[j].reservations.length; k++) {
+              let resTime = this.reservationList[j].reservations[k].reservationTime.split(':').map(Number);
+              let nowTime = this.currentTime.split(':').map(Number);
+              let nowHour = nowTime[0] * 3600;
+              let nowMinute = nowTime[1] * 60;
+              let resHour = resTime[0] * 3600;
+              let resMinute = resTime[1] * 60;
+              let resSecond = resTime[2];
+              let nowTotalSecond = nowHour + nowMinute;
+              let resTotalSecond = resHour + resMinute + resSecond;
+              if (resTotalSecond - nowTotalSecond <= 1800 && nowTotalSecond < resTotalSecond) {
+                str = this.reservationList[j].reservations[k].reservationName
+                ctx.fillText(str, res.tableList[i].tablePositionX + res.tableList[i].lengthX / 2,
+                  res.tableList[i].tablePositionY + res.tableList[i].lengthY / 2 + 30)
+              }
+            }
+          }
         } else if (res.tableList[i].tableStatus == "可預約") {
           ctx.strokeStyle = 'black';
           ctx.strokeRect(res.tableList[i].tablePositionX, res.tableList[i].tablePositionY,
             res.tableList[i].lengthX, res.tableList[i].lengthY);
-          ctx.strokeStyle = 'green';
-          ctx.strokeText(res.tableList[i].tableId, res.tableList[i].tablePositionX + res.tableList[i].lengthX / 2,
-            res.tableList[i].tablePositionY + res.tableList[i].lengthY / 2)
+          ctx.fillStyle = 'gray';
+          ctx.fillRect(res.tableList[i].tablePositionX, res.tableList[i].tablePositionY,
+            res.tableList[i].lengthX, res.tableList[i].lengthY)
+          ctx.fillStyle = 'black';
+          ctx.fillText(res.tableList[i].tableId, res.tableList[i].tablePositionX + res.tableList[i].lengthX / 2,
+            res.tableList[i].tablePositionY + res.tableList[i].lengthY / 2 - 10)
           str = res.tableList[i].tableCapacity + "人";
-          ctx.strokeText(str, res.tableList[i].tablePositionX + res.tableList[i].lengthX / 2,
+          ctx.fillText(str, res.tableList[i].tablePositionX + res.tableList[i].lengthX / 2,
             res.tableList[i].tablePositionY + res.tableList[i].lengthY / 2 + 10)
+        } else if (res.tableList[i].tableStatus == "使用中") {
+          ctx.strokeStyle = "black";
+          ctx.strokeRect(res.tableList[i].tablePositionX,
+            res.tableList[i].tablePositionY, res.tableList[i].lengthX, res.tableList[i].lengthY);
+          ctx.fillStyle = 'red';
+          ctx.fillRect(res.tableList[i].tablePositionX, res.tableList[i].tablePositionY,
+            res.tableList[i].lengthX, res.tableList[i].lengthY)
+          ctx.fillStyle = 'black';
+          ctx.fillText(res.tableList[i].tableId, res.tableList[i].tablePositionX + res.tableList[i].lengthX / 2,
+            res.tableList[i].tablePositionY + res.tableList[i].lengthY / 2 - 10)
+          str = res.tableList[i].tableCapacity + "人";
+          ctx.fillText(str, res.tableList[i].tablePositionX + res.tableList[i].lengthX / 2,
+            res.tableList[i].tablePositionY + res.tableList[i].lengthY / 2 + 10)
+          for (let j = 0; j < this.reservationList.length; j++) {
+            for (let k = 0; k < this.reservationList[j].reservations.length; k++) {
+              let resTime = this.reservationList[j].reservations[k].reservationTime.split(':').map(Number);
+              let nowTime = this.currentTime.split(':').map(Number);
+              let nowHour = nowTime[0] * 3600;
+              let nowMinute = nowTime[1] * 60;
+              let resHour = resTime[0] * 3600;
+              let resMinute = resTime[1] * 60;
+              let resSecond = resTime[2];
+              let nowTotalSecond = nowHour + nowMinute;
+              let resTotalSecond = resHour + resMinute + resSecond;
+              if (resTotalSecond - nowTotalSecond <= 1800 && nowTotalSecond < resTotalSecond &&
+                res.tableList[i].tableId == this.reservationList[j].tableId) {
+                str = this.reservationList[j].reservations[k].reservationName
+                ctx.fillText(str, res.tableList[i].tablePositionX + res.tableList[i].lengthX / 2,
+                  res.tableList[i].tablePositionY + res.tableList[i].lengthY / 2 + 30)
+              } else if (nowTotalSecond > resTotalSecond && nowTotalSecond - nowTotalSecond <= 5400 &&
+                res.tableList[i].tableId == this.reservationList[j].tableId) {
+                str = this.reservationList[j].reservations[k].reservationName
+                ctx.fillText(str, res.tableList[i].tablePositionX + res.tableList[i].lengthX / 2,
+                  res.tableList[i].tablePositionY + res.tableList[i].lengthY / 2 + 30)
+              }
+            }
+          }
         }
       }
     } else {
       ctx.clearRect(0, 0, canvasElement.width, canvasElement.height);
       for (let i = 0; i < res.tableList.length; i++) {
         let str = "";
-        if (res.tableList[i].tableStatus == "已預約") {
-          ctx.strokeStyle = "black";
-          ctx.strokeRect(res.tableList[i].tablePositionX,
-            res.tableList[i].tablePositionY, res.tableList[i].lengthX, res.tableList[i].lengthY);
-          ctx.strokeStyle = 'red';
-          str = res.tableList[i].tableId + res.tableList[i].tableCapacity;
-          ctx.strokeText(str, res.tableList[i].tablePositionX + res.tableList[i].lengthX / 2,
-            res.tableList[i].tablePositionY + res.tableList[i].lengthY / 2)
-        } else if (res.tableList[i].tableStatus == "可預約") {
-          ctx.strokeStyle = 'black';
-          ctx.strokeRect(res.tableList[i].tablePositionX, res.tableList[i].tablePositionY,
-            res.tableList[i].lengthX, res.tableList[i].lengthY);
-          ctx.strokeStyle = 'green';
-          ctx.strokeText(res.tableList[i].tableId, res.tableList[i].tablePositionX + res.tableList[i].lengthX / 2,
-            res.tableList[i].tablePositionY + res.tableList[i].lengthY / 2)
-          str = res.tableList[i].tableCapacity + "人";
-          ctx.strokeText(str, res.tableList[i].tablePositionX + res.tableList[i].lengthX / 2,
-            res.tableList[i].tablePositionY + res.tableList[i].lengthY / 2 + 10)
-        }
+        ctx.strokeStyle = 'black';
+        ctx.strokeRect(res.tableList[i].tablePositionX, res.tableList[i].tablePositionY,
+          res.tableList[i].lengthX, res.tableList[i].lengthY);
+        ctx.fillStyle = 'gray';
+        ctx.fillRect(res.tableList[i].tablePositionX, res.tableList[i].tablePositionY,
+          res.tableList[i].lengthX, res.tableList[i].lengthY)
+        ctx.fillStyle = 'black';
+        ctx.fillText(res.tableList[i].tableId, res.tableList[i].tablePositionX + res.tableList[i].lengthX / 2,
+          res.tableList[i].tablePositionY + res.tableList[i].lengthY / 2 - 10)
+        str = res.tableList[i].tableCapacity + "人";
+        ctx.fillText(str, res.tableList[i].tablePositionX + res.tableList[i].lengthX / 2,
+          res.tableList[i].tablePositionY + res.tableList[i].lengthY / 2 + 10)
       }
     }
   }
@@ -467,10 +727,5 @@ export class TableComponent {
 
 
 
-}
-
-
-function moment(arg0: any): any {
-  throw new Error('Function not implemented.');
 }
 

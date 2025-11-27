@@ -1,32 +1,52 @@
 <div style="display: flex">
   <span style="flex:1 1 auto"></span>
-  <div style="width: 300px; height: 500px; border: 1px solid black; margin-top: 5%; overflow: auto;">
+  <div style="width: 300px; height: 500px; border: 1px solid black; margin-top: 5%; overflow: auto; padding: 1%;">
     @for(item of reservationList; track item){
-      <div style="border: 1px solid black;">
-      <span>{{item.tableId}}</span> <br> <br>
-      @for(item1 of item.reservations; track item1){
-        <div style="border: 1px solid black;">
-          <span>訂位時間: {{item1.reservationTime}}</span> <br> <br>
-          <span>訂位人數: {{item1.reservationCount}}</span> <br> <br>
-          <span>手機: {{item1.reservationPhone}}</span> <br> <br>
-          <span>小孩人數: {{item1.reservationChildCount}}</span> <br> <br>
 
-        </div> <br> <br>
-      }
-      </div> <br> <br>
+    @if(item.reservations.length > 0){
+    <div style="border: 1px solid black; padding: 5%;">
+    <span>{{item.tableId}}</span> <br> <br>
+    @for(item1 of item.reservations; track item1){
+    <div style="border: 1px solid black;">
+      <span>訂位人姓名: {{item1.reservationName}}</span> <br> <br>
+      <span>訂位時間: {{item1.reservationTime}}</span> <br> <br>
+      <span>訂位人數: {{item1.reservationCount}}</span> <br> <br>
+      <span>手機: {{item1.reservationPhone}}</span> <br> <br>
+      <span>小孩人數: {{item1.reservationChildCount}}</span> <br> <br>
+
+    </div> <br> <br>
     }
+    </div> <br> <br>
+    }
+
+  }
+</div>
+<span style="flex:1 1 auto"></span>
+<div>
+  <div style="margin-top: 15%;">
+    <canvas #myCanvas style="border: 1px solid black;" width="500" height="500" (click)="handleClick($event)"
+      (mousemove)="handleMove($event)" (mousedown)="handlePress($event)" (mouseup)="handleUp($event)"
+      (mouseout)="handleOut($event)"></canvas>
   </div>
-  <div>
-    <div style="margin-top: 15%;">
-      <canvas #myCanvas style="border: 1px solid black;" width="500" height="500"
-        (click)="handleClick($event)" (mousemove)="handleMove($event)" (mousedown)="handlePress($event)" (mouseup)="handleUp($event)" (mouseout)="handleOut($event)"></canvas>
+  @if(admin){
+  <button (click)="edit(false)">編輯模式</button>
+  }@else {
+  <button (click)="edit(true)">營業模式</button>
+  }
+</div>
+<span style="flex:1 1 auto"></span>
+<div style="margin-top: 1%;">
+  <div style="border: 1px solid black;">
+    <span>{{currentTime}} </span>
+  </div> <br>
+  <div style="border: 1px solid black;height: 90%; text-align: center; overflow: hidden;  position: relative;">
+    <div id="progressBar" style="width: 100%; background-color: greenyellow; height: 10%;position: absolute; top: 0; left: 0; z-index: -1;">
     </div>
-    @if(admin){
-      <button (click)="edit(false)">編輯模式</button>
-    }@else {
-      <button (click)="edit(true)">營業模式</button>
+    @for(time of timeList;track time){
+      {{time}} <br> <br> <br>
     }
   </div>
-  <span style="flex:1 1 auto"></span>
-  <span>{{currentTime}}</span>
+
+</div>
+<span style="flex:1 1 auto"></span>
 </div>
