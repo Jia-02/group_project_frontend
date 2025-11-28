@@ -1,10 +1,10 @@
 <mat-dialog-content>
-  <h4>活動標題:</h4> {{ activityData.title }} <br>
-  <h4>活動時間:</h4> {{ activityData.startDate | date:'yyyy/MM/dd'}} ~ {{ activityData.endDate | date:'yyyy/MM/dd'}} <br>
-  <h4>問卷說明:</h4> {{ activityData.description }}
+  <h4>活動標題:</h4> {{ activityData.calendarTitle }} <br>
+  <h4>活動時間:</h4> {{ activityData.calendarStartDate | date:'yyyy/MM/dd'}} ~ {{ activityData.calendarEndDate | date:'yyyy/MM/dd'}} <br>
+  <h4>問卷說明:</h4> {{ activityData.calendarDescription }}
 
-  @if (activityData.photo) {
-    <img [src]="activityData.photo" alt="活動圖片" style="max-width: 100%; height: auto; margin-top: 10px;">
+  @if (activityData.calendarPhoto) {
+    <img [src]="activityData.calendarPhoto" alt="活動圖片" style="max-width: 100%; height: auto; margin-top: 10px;">
   } @else {
     <p style="color: #999;">[無活動圖片]</p>
   }

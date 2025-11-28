@@ -1,3 +1,4 @@
+import { DataService } from './../@service/data.service';
 import { ActivityReadDialogComponent } from './../activity-read-dialog/activity-read-dialog.component';
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
@@ -5,7 +6,6 @@ import { FormsModule } from '@angular/forms';
 import { NgClass } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivityDialogComponent, DialogResult } from '../activity-dialog/activity-dialog.component';
-import { BoardComponent } from '../board/board.component';
 import { ActivityCheckDialogComponent } from '../activity-check-dialog/activity-check-dialog.component';
 
 @Component({
@@ -13,8 +13,7 @@ import { ActivityCheckDialogComponent } from '../activity-check-dialog/activity-
   imports: [
     DatePipe,
     FormsModule,
-    NgClass,
-    BoardComponent
+    NgClass
   ],
   templateUrl: './calendar.component.html',
   styleUrl: './calendar.component.scss'
@@ -22,25 +21,26 @@ import { ActivityCheckDialogComponent } from '../activity-check-dialog/activity-
 export class CalendarComponent implements OnInit {
   currentMonth: Date = new Date();
 
-  activities: Activity[] = [
-    { id: 1, title: '部門會議', description: '會議', startDate: new Date('2025-11-17'), endDate: new Date('2025-11-17'), status: 'published', photo: null },
-    { id: 3, title: '晚餐聚會', description: '聚會', startDate: new Date('2025-11-20'), endDate: new Date('2025-11-20'), status: 'draft', photo: null },
-    { id: 4, title: '巴黎旅遊', description: '旅遊', startDate: new Date('2025-11-10'), endDate: new Date('2025-11-15'), status: 'draft', photo: null },
-    { id: 5, title: '部門會議', description: '會議', startDate: new Date('2025-11-25'), endDate: new Date('2025-11-30'), status: 'published', photo: null }
-  ];
+  activities: Activity[] = [];
+  boardActivities: Activity[] = [];
+  BOARD_THRESHOLD_DAYS = 4;
 
   dayNames: string[] = ['日', '一', '二', '三', '四', '五', '六'];
   monthWeeks: (Date | null)[][] = [];
   selectedDay: Date | null = null;
   selectedDayActivities: Activity[] = [];
 
-  inputText: string = '';
-  startDate: string = '';
+  calendarTitle: string = '';
+  calendarDescription: string = '';
+  calendarStartDate: string = '';
+  calendarEndDate: string = '';
+
   selectedPhotoFile: File | null = null;
-  photoBase64: string | null = null;
+  photoUrl: string | null = null;
 
   constructor(
     public dialog: MatDialog,
+    private dataService: DataService,
   ) { }
 
   ngOnInit() {
@@ -48,12 +48,77 @@ export class CalendarComponent implements OnInit {
     const today = new Date();
     this.selectedDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
 
+    this.loadActivities();
+
     if (this.selectedDay) {
       this.selectedDayActivities = this.getDayActivities(this.selectedDay);
     }
 
-    this.startDate = new Date().toISOString().split('T')[0];
+    this.calendarStartDate = new Date().toISOString().split('T')[0];
+    this.calendarEndDate = this.calendarStartDate;
   }
+
+  loadActivities(): void {
+    const apiUrl = 'http://localhost:8080/calendar/list';
+
+    this.dataService.getApi(apiUrl).subscribe((res: any) => {
+      const rawActivities: Activity[] = res.activities || res;
+
+      const processedActivities = rawActivities.map(act => {
+        return {
+          ...act,
+          calendarStartDate: new Date(act.calendarStartDate),
+          calendarEndDate: new Date(act.calendarEndDate),
+          calendarStatus: act.calendarStatus ? 'published' : 'draft'
+        };
+      });
+
+      // this.activities = processedActivities;
+
+      // this.boardActivities = this.filterBoardActivities(processedActivities);
+
+      console.log('已從後端取得所有活動:', this.activities.length);
+      console.log('Board 活動數量:', this.boardActivities.length);
+
+      this.generateCalendar(this.currentMonth);
+      if (this.selectedDay) {
+        this.selectedDayActivities = this.getDayActivities(this.selectedDay);
+      }
+
+    });
+  }
+
+  private filterBoardActivities(allActivities: Activity[]): Activity[] {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const futureLimit = new Date(today);
+    futureLimit.setDate(today.getDate() + this.BOARD_THRESHOLD_DAYS);
+
+    return allActivities
+      .filter(act => act.calendarStatus === 'published')
+      .filter(act => {
+        const startDate = new Date(act.calendarStartDate);
+        const endDate = new Date(act.calendarEndDate);
+
+        const ongoingOrFuture = endDate >= today && startDate < futureLimit;
+
+        return ongoingOrFuture;
+      })
+      .sort((a, b) => a.calendarStartDate.getTime() - b.calendarStartDate.getTime());
+  }
+
+  selectDay(day: Date | null): void {
+    if (day) {
+      this.selectedDay = new Date(day.getFullYear(), day.getMonth(), day.getDate());
+
+      if (this.selectedDay) {
+        this.selectedDayActivities = this.getDayActivities(this.selectedDay);
+      }
+    }
+  }
+
+
 
   generateCalendar(date: Date): void {
     this.monthWeeks = [];
@@ -94,73 +159,68 @@ export class CalendarComponent implements OnInit {
     this.generateCalendar(this.currentMonth);
   }
 
-  selectDay(day: Date | null): void {
-    if (day) {
-      this.selectedDay = day;
-      this.selectedDayActivities = this.getDayActivities(day);
-    }
-  }
+  // selectDay(day: Date | null): void {
+  //   if (day) {
+  //     this.selectedDay = new Date(day.getFullYear(), day.getMonth(), day.getDate());
+
+  //     const formattedDate = day.toISOString().split('T')[0];
+
+  //     const apiUrl = `http://localhost:8080/calendar/selectDate`;
+
+  //     this.dataService.getApi(apiUrl).subscribe((res: any) => {
+  //       const activitiesFromApi: Activity[] = res.activities || res;
+
+  //       this.selectedDayActivities = activitiesFromApi.map(act => {
+  //         return {
+  //           ...act,
+  //           calendarStartDate: new Date(act.calendarStartDate),
+  //           calendarEndDate: new Date(act.calendarEndDate)
+  //         };
+  //       })
+  //       console.log(`已從後端取得 ${formattedDate} 的活動:`, this.selectedDayActivities);
+  //     }
+  //     );
+  //   }
+  // }
 
   getDayActivities(day: Date) {
     const currentDay = new Date(day.getFullYear(), day.getMonth(), day.getDate());
 
     return this.activities.filter((a: Activity) => {
-      const startDate = new Date(a.startDate.getFullYear(), a.startDate.getMonth(), a.startDate.getDate());
-      const endDate = new Date(a.endDate.getFullYear(), a.endDate.getMonth(), a.endDate.getDate());
+      const startDate = new Date(a.calendarStartDate.getFullYear(), a.calendarStartDate.getMonth(), a.calendarStartDate.getDate());
+      const endDate = new Date(a.calendarEndDate.getFullYear(), a.calendarEndDate.getMonth(), a.calendarEndDate.getDate());
 
       return currentDay.getTime() >= startDate.getTime() && currentDay.getTime() <= endDate.getTime();
     });
   }
 
   isMultiDay(a: Activity): boolean {
-    return a.startDate.toDateString() !== a.endDate.toDateString();
+    return a.calendarStartDate.toDateString() !== a.calendarEndDate.toDateString();
   }
 
   isActivityStartDay(activity: Activity, currentDay: Date): boolean {
-    if (!currentDay || !activity.startDate || !this.isMultiDay(activity)) {
+    if (!currentDay || !activity.calendarStartDate) {
       return false;
     }
 
-    const start = new Date(activity.startDate.getFullYear(), activity.startDate.getMonth(), activity.startDate.getDate());
+    const start = new Date(activity.calendarStartDate.getFullYear(), activity.calendarStartDate.getMonth(), activity.calendarStartDate.getDate());
     const current = new Date(currentDay.getFullYear(), currentDay.getMonth(), currentDay.getDate());
 
     return current.getTime() === start.getTime();
   }
 
-  extractTitle(text: string): string {
-    const separators = ['，', ',', '。'];
-    const firstPart = text.split(new RegExp(separators.join('|')))[0];
-    return firstPart.replace(/優惠|活動|促銷/g, '').trim();
-  }
-
-  detectDuration(text: string): number {
-    const t = text.replace(/\s+/g, '').toLowerCase();
-
-    if (t.includes('一周') || t.includes('一週') || t.includes('7天') || t.includes('7日')) return 7;
-    if (t.includes('三天') || t.includes('3天')) return 3;
-    if (t.includes('兩週') || t.includes('兩周') || t.includes('2週') || t.includes('14天')) return 14;
-    if (t.includes('一天') || t.includes('1天') || t.includes('當日')) return 1;
-    if (t.includes('兩天') || t.includes('2天')) return 2;
-    if (t.includes('一個月') || t.includes('1個月') || t.includes('30天')) return 30;
-
-    // 若句中有 "持續X天" 類型，自行擷取數字
-    const m = text.match(/持續(\d+)[天日週週天]/);
-    if (m && m[1]) return parseInt(m[1], 10);
-
-    return 7;
-  }
-
   openDialog(): void {
-    if (!this.startDate || !this.inputText.trim() || !this.selectedPhotoFile) {
+    if (!this.calendarTitle.trim() || !this.calendarDescription.trim() || !this.photoUrl || !this.calendarStartDate || !this.calendarEndDate) {
       alert('請填寫所有活動資訊');
       return;
     }
 
     const createData: CreateActivity = {
-      inputText: this.inputText.trim(),
-      startDate: this.startDate,
-      photoFile: this.selectedPhotoFile,
-      photoBase64: this.photoBase64
+      calendarTitle: this.calendarTitle.trim(),
+      calendarDescription: this.calendarDescription.trim(),
+      calendarStartDate: this.calendarStartDate,
+      calendarEndDate: this.calendarEndDate,
+      calendarPhoto: this.photoUrl
     };
     console.log('準備新增的活動資料:', createData);
 
@@ -171,29 +231,16 @@ export class CalendarComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result: DialogResult) => {
-      if (result && (result.action === 'publish' || result.action === 'save')) {
-
-        const durationDays = this.detectDuration(createData.inputText);
-        const start = new Date(createData.startDate);
-        const end = new Date(start);
-
-        end.setDate(start.getDate() + durationDays - 1);
+      if (result && (result.action === 'published' || result.action === 'saveDraft')) {
+        const newActivity: Activity = result.data as Activity;
 
         const nextId = this.activities.length > 0 ?
-          Math.max(...this.activities.map(a => a.id)) + 1 :
+          Math.max(...this.activities.map(a => a.calendarId)) + 1 :
           1;
+        newActivity.calendarId = nextId;
 
-        const status = result.action === 'publish' ? 'published' : 'draft';
-
-        const newActivity: Activity = {
-          id: nextId,
-          title: this.extractTitle(createData.inputText),
-          description: createData.inputText,
-          startDate: start,
-          endDate: end,
-          status: status,
-          photo: this.photoBase64,
-        };
+        if (typeof newActivity.calendarStartDate === 'string') newActivity.calendarStartDate = new Date(newActivity.calendarStartDate);
+        if (typeof newActivity.calendarEndDate === 'string') newActivity.calendarEndDate = new Date(newActivity.calendarEndDate);
 
         this.activities = [...this.activities, newActivity];
 
@@ -211,30 +258,17 @@ export class CalendarComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       this.selectedPhotoFile = input.files[0];
-      this.convertToBase64(this.selectedPhotoFile);
+      this.photoUrl = `calendar/images/${this.selectedPhotoFile.name}`;
     } else {
       this.selectedPhotoFile = null;
-      this.photoBase64 = null;
+      this.photoUrl = null;
     }
   }
 
-  convertToBase64(file: File): void {
-    const reader = new FileReader();
-    reader.onload = () => {
-      this.photoBase64 = reader.result as string;
-      console.log('圖片已轉換為 Base64');
-    };
-    reader.onerror = (error) => {
-      console.error('檔案讀取失敗', error);
-      this.photoBase64 = null;
-    };
-    reader.readAsDataURL(file);
-  }
-
   openActivity(activity: Activity) {
-    if (activity.status === 'published') {
+    if (activity.calendarStatus === 'published') {
       this.ActivityReadDialog(activity);
-    } else if (activity.status === 'draft') {
+    } else if (activity.calendarStatus === 'draft') {
       this.ActivityCheckDialog(activity);
     }
   }
@@ -255,27 +289,27 @@ export class CalendarComponent implements OnInit {
     const dialogRef = this.dialog.open(ActivityCheckDialogComponent, {
       width: '400px',
       maxHeight: '600px',
-      data: { ...activity }, // 傳入活動數據的拷貝
+      data: { ...activity },
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         let updatedActivity = result.data;
         const newPhotoFile: File | null = result.photoFile;
-        const mainIndex = this.activities.findIndex(act => act.id === updatedActivity.id);
+        const mainIndex = this.activities.findIndex(act => act.calendarId === updatedActivity.calendarId);
 
         if (mainIndex > -1) {
 
           if (newPhotoFile) {
-            const tempPhotoUrl = URL.createObjectURL(newPhotoFile);
-            updatedActivity.photo = tempPhotoUrl;
+            // 模擬 Public 路徑儲存
+            updatedActivity.calendarPhoto = `calendar/images/${newPhotoFile.name}`;
           }
 
-          if (updatedActivity.startDate && typeof updatedActivity.startDate === 'string') {
-            updatedActivity.startDate = new Date(updatedActivity.startDate);
+          if (updatedActivity.calendarStartDate && typeof updatedActivity.calendarStartDate === 'string') {
+            updatedActivity.calendarStartDate = new Date(updatedActivity.calendarStartDate);
           }
-          if (updatedActivity.endDate && typeof updatedActivity.endDate === 'string') {
-            updatedActivity.endDate = new Date(updatedActivity.endDate);
+          if (updatedActivity.calendarEndDate && typeof updatedActivity.calendarEndDate === 'string') {
+            updatedActivity.calendarEndDate = new Date(updatedActivity.calendarEndDate);
           }
 
           this.activities[mainIndex] = updatedActivity;
@@ -288,13 +322,13 @@ export class CalendarComponent implements OnInit {
           }
 
           if (result.action === 'published') {
-            console.log(`活動 ${updatedActivity.title} 已發布，呼叫發布 API...`);
+            console.log(`活動 ${updatedActivity.calendarTitle} 已發布，呼叫發布 API...`);
           } else if (result.action === 'saveDraft') {
-            console.log(`活動 ${updatedActivity.title} 已暫存，呼叫暫存 API...`);
+            console.log(`活動 ${updatedActivity.calendarTitle} 已暫存，呼叫暫存 API...`);
           }
 
         } else {
-          console.error(`找不到 ID 為 ${updatedActivity.id} 的活動來更新。`);
+          console.error(`找不到 ID 為 ${updatedActivity.calendarId} 的活動來更新。`);
         }
 
       }
@@ -302,54 +336,31 @@ export class CalendarComponent implements OnInit {
   }
 
   private resetForm(): void {
-    this.inputText = '';
+    this.calendarTitle = '';
+    this.calendarDescription = '';
     this.selectedPhotoFile = null;
-    this.photoBase64 = null;
-    this.startDate = new Date().toISOString().split('T')[0];
+    this.photoUrl = null;
+    this.calendarStartDate = new Date().toISOString().split('T')[0];
+    this.calendarEndDate = this.calendarStartDate;
   }
 
-  readonly BOARD_THRESHOLD_DAYS = 3;
-
-  get boardActivities(): Activity[] {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    const futureCutoff = new Date(today);
-    futureCutoff.setDate(today.getDate() + this.BOARD_THRESHOLD_DAYS);
-
-    return this.activities.filter(activity => {
-      if (activity.status !== 'published') {
-        return false;
-      }
-
-      const startDate = new Date(activity.startDate);
-      startDate.setHours(0, 0, 0, 0);
-      const endDate = new Date(activity.endDate);
-      endDate.setHours(0, 0, 0, 0);
-
-      const isOngoing = startDate.getTime() <= today.getTime() && today.getTime() <= endDate.getTime();
-
-      const isUpcoming = today.getTime() < startDate.getTime() && startDate.getTime() <= futureCutoff.getTime();
-
-      return isOngoing || isUpcoming;
-    });
-  }
 }
 
 export interface Activity {
-  id: number;
-  title: string;
-  description: string;
-  startDate: Date;
-  endDate: Date;
-  status: 'published' | 'draft';
-  photo: string | null;
+  calendarId: number;
+  calendarTitle: string;
+  calendarDescription: string;
+  calendarStartDate: Date;
+  calendarEndDate: Date;
+  calendarStatus: 'published' | 'draft';
+  calendarPhoto: string | null;
 }
 
 export interface CreateActivity {
-  inputText: string;
-  startDate: string;
-  photoFile?: File | null;
-  photoBase64?: string | null;
+  calendarTitle: string;
+  calendarDescription: string;
+  calendarStartDate: string;
+  calendarEndDate: string;
+  calendarPhoto?: string | null;
 }
 

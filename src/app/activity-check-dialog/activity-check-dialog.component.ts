@@ -33,19 +33,23 @@ export class ActivityCheckDialogComponent {
 
   ngOnInit(): void {
     this.form = this.fb.group({
-      id: [this.data.id],
-      title: [this.data.title, Validators.required],
-      description: [this.data.description, Validators.required],
-      startDate: [this.data.startDate ? this.formatDateForInput(this.data.startDate) : null],
-      endDate: [this.data.endDate ? this.formatDateForInput(this.data.endDate) : null],
+      calendarId: [this.data.calendarId],
+      calendarTitle: [this.data.calendarTitle, Validators.required],
+      calendarDescription: [this.data.calendarDescription, Validators.required],
+      calendarStartDate: [this.data.calendarStartDate ? this.formatDateForInput(this.data.calendarStartDate) : null],
+      calendarEndDate: [this.data.calendarEndDate ? this.formatDateForInput(this.data.calendarEndDate) : null],
     });
-    this.newPhotoUrl = this.data.photo;
+
+    this.newPhotoUrl = this.data.calendarPhoto;
   }
 
   private formatDateForInput(dateString: string | Date): string {
     const date = new Date(dateString);
     if (isNaN(date.getTime())) return '';
-    return date.toISOString().split('T')[0];
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 
   onFileSelected(event: Event): void {
@@ -62,12 +66,19 @@ export class ActivityCheckDialogComponent {
   }
 
   onSave(action: 'saveDraft' | 'publish'): void {
+    const updatedActivityData = {
+      calendarId: this.form.value.calendarId,
+      calendarTitle: this.form.value.calendarTitle,
+      calendarDescription: this.form.value.calendarDescription,
+      calendarStartDate: this.form.value.calendarStartDate,
+      calendarEndDate: this.form.value.calendarEndDate,
+      calendarPhoto: this.data.calendarPhoto,
+      calendarStatus: action === 'publish' ? 'published' : 'draft',
+    };
+
     this.dialogRef.close({
       action: action,
-      data: {
-        ...this.form.value,
-        status: action === 'publish' ? 'published' : 'draft'
-      },
+      data: updatedActivityData,
       photoFile: this.newPhotoFile
     });
   }

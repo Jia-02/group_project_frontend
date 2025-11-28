@@ -23,24 +23,10 @@ import { MatInputModule } from '@angular/material/input';
 export class ActivityReadDialogComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA) public activity: Activity,
-    private dialogRef: MatDialogRef<ActivityReadDialogComponent>){}
+    private dialogRef: MatDialogRef<ActivityReadDialogComponent>
+  ) { }
 
-    close() {
+  close() {
     this.dialogRef.close();
-  }
-
-  photoBase64: string | null = null;
-
-  convertToBase64(file: File): void {
-    const reader = new FileReader();
-    reader.onload = () => {
-      this.photoBase64 = reader.result as string;
-      console.log('圖片已轉換為 Base64');
-    };
-    reader.onerror = (error) => {
-      console.error('檔案讀取失敗', error);
-      this.photoBase64 = null;
-    };
-    reader.readAsDataURL(file);
   }
 }

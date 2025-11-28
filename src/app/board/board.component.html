@@ -1,19 +1,18 @@
 <div class="board-container">
   <h3 class="board-header">🔔 公告欄</h3>
 
-  @for (activity of activities; track activity.id) {
-  <div class="activity-card" [ngStyle]="{'background-image': getBackgroundStyle(activity.photo)}">
+  @for (activity of activities; track activity.calendarId) { <div class="activity-card"
+    [ngStyle]="{'background-image': getBackgroundStyle(activity.calendarPhoto)}">
     <div class="overlay">
-      <h4 class="activity-title">{{ activity.title }}</h4>
-      <p class="activity-description">{{ activity.description }}</p>
-
+      <h4 class="activity-title">{{ activity.calendarTitle }}</h4>
+      <p class="activity-description">{{ activity.calendarDescription }}</p>
       <div class="activity-footer">
         <span class="activity-time">
-          {{ activity.startDate | date: 'yyyy/MM/dd' }}~{{ activity.endDate | date: 'yyyy/MM/dd' }}
-        </span>
+          {{ activity.calendarStartDate | date: 'yyyy/MM/dd' }}~{{ activity.calendarEndDate | date: 'yyyy/MM/dd'
+          }}</span>
         <span class="activity-countdown">
-          ⏳ {{ getDaysUntil(activity.startDate) > 0 ? (getDaysUntil(activity.startDate) + ' 天後開始') : '進行中' }}
-        </span>
+          ⏳ {{ getDaysUntil(activity.calendarStartDate) > 0 ? (getDaysUntil(activity.calendarStartDate) + ' 天後開始') :
+          '進行中' }} </span>
       </div>
     </div>
   </div>

@@ -1,4 +1,4 @@
-import { DatePipe } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { Component, Inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -10,29 +10,30 @@ import { DataService } from '../@service/data.service';
 
 @Component({
   selector: 'app-activity-dialog',
-  imports: [MatFormFieldModule,
+  imports: [
+    CommonModule,
+    MatFormFieldModule,
     MatInputModule,
     FormsModule,
     MatButtonModule,
     MatDialogContent,
     MatDialogActions,
+  ],
+  providers: [
     DatePipe
   ],
   templateUrl: './activity-dialog.component.html',
   styleUrl: './activity-dialog.component.scss'
 })
 export class ActivityDialogComponent {
-
   public activityData!: Activity;
-  public photo: string | null;
 
   constructor(
-  public dialogRef: MatDialogRef<ActivityDialogComponent, DialogResult>,
-  @Inject(MAT_DIALOG_DATA) public rawData: CreateActivity,
-  private dataService: DataService,
-) {
-  this.photo = (this.rawData as any).photoBase64 || null;
-}
+    public dialogRef: MatDialogRef<ActivityDialogComponent, DialogResult>,
+    @Inject(MAT_DIALOG_DATA) public rawData: CreateActivity,
+    private datePipe: DatePipe,
+    private dataService: DataService,
+  ) { }
 
 
   ngOnInit(): void {
@@ -40,93 +41,94 @@ export class ActivityDialogComponent {
     console.log('Dialog 內生成的 Activity:', this.activityData);
   }
 
-  private extractTitle(text: string): string {
-    const separators = ['，', ',', '。'];
-    const firstPart = text.split(new RegExp(separators.join('|')))[0];
-    return firstPart.replace(/優惠|活動|促銷/g, '').trim();
-  }
-
-  private detectDuration(text: string): number {
-    const t = text.replace(/\s+/g, '').toLowerCase();
-    const m = text.match(/持續(\d+)[天日週週天]/);
-    if (m && m[1]) return parseInt(m[1], 10);
-    return 1;
-  }
-
   private processRawData(data: CreateActivity): Activity {
-    const durationDays = this.detectDuration(data.inputText);
-
-    const start = new Date(data.startDate);
-    const end = new Date(start);
-
-    end.setDate(start.getDate() + durationDays - 1);
-
     return {
-      title: this.extractTitle(data.inputText),
-      description: data.inputText,
-      startDate: start,
-      endDate: end,
-      photo: this.photo,
+      calendarTitle: data.calendarTitle,
+      calendarDescription: data.calendarDescription,
+      calendarStartDate: new Date(data.calendarStartDate),
+      calendarEndDate: new Date(data.calendarEndDate),
+      calendarStatus: 'draft',
+      calendarPhoto: data.calendarPhoto || null,
     };
-  }
-
-  onPublishClick(): void {
-    console.log(this.activityData);
-    this.dialogRef.close({ action: 'publish' });
-  }
-
-  onSaveClick(): void {
-    console.log(this.activityData);
-    this.dialogRef.close({ action: 'save' });
   }
 
   onCancelClick(): void {
     this.dialogRef.close({ action: 'cancel' });
   }
 
-  // onPublishClick(): void {
-  //   const body = {
-  //     ...this.activityData,
-  //     status: true
-  //   };
+  private _mapActivityToCalendarBody(published: boolean): any {
+    const activityData = this.activityData;
 
-  //   this.dataService.postApi('http://localhost:8080/calendar/create', body)
-  //     .subscribe((res: any)  => {
-  //         console.log('活動已發布:', res);
-  //         this.dialogRef.close({ action: 'publish' });
-  //       }
-  //     );
-  // }
+    console.log('Activity Data:', activityData);
 
-  // onSaveClick(): void {
-  //   const body = {
-  //     ...this.activityData,
-  //     status: false
-  //   };
+    const dateFormat = 'yyyy-MM-dd HH:mm:ss';
 
-  //   this.dataService.postApi('http://localhost:8080/calendar/create', body)
-  //     .subscribe((res: any)  => {
-  //         console.log('活動已暫存:', res);
-  //         this.dialogRef.close({ action: 'save' });
-  //       });
-  // }
+    const mappedBody = {
+      calendarTitle: activityData.calendarTitle,
+      calendarDescription: activityData.calendarDescription,
 
+      calendarStartDate: this.datePipe.transform(activityData.calendarStartDate, dateFormat),
+      calendarEndDate: this.datePipe.transform(activityData.calendarEndDate, dateFormat),
+
+      calendarPhoto: activityData.calendarPhoto,
+      calendarStatus: published
+    };
+
+    return mappedBody;
+  }
+
+  onPublishClick(): void {
+    const body = this._mapActivityToCalendarBody(true);
+
+    this.dataService.postApi('http://localhost:8080/calendar/create', body)
+      .subscribe((res: any) => {
+          console.log('活動已發布:', res);
+          this.activityData.calendarStatus = 'published';
+
+          this.dialogRef.close({
+            action: 'published',
+            data: { ...this.activityData } as Activity
+          });
+        }
+      );
+  }
+
+  onSaveClick(): void {
+    const body = this._mapActivityToCalendarBody(false);
+
+    this.dataService.postApi('http://localhost:8080/calendar/create', body)
+      .subscribe((res: any) => {
+          console.log('活動已暫存:', res);
+          this.activityData.calendarStatus = 'draft';
+
+          this.dialogRef.close({
+            action: 'saveDraft',
+            data: { ...this.activityData } as Activity
+          });
+        }
+      );
+  }
 }
 
 export interface Activity {
-    title: string;
-    description: string;
-    startDate: Date;
-    endDate: Date;
-    photo: string | null;
+  calendarId?: number;
+  calendarTitle: string;
+  calendarDescription: string;
+  calendarStartDate: Date;
+  calendarEndDate: Date;
+  calendarStatus: 'published' | 'draft';
+  calendarPhoto: string | null;
 }
 
 export interface CreateActivity {
-    inputText: string;
-    startDate: string;
-    photoFile?: File | null;
+  calendarTitle: string;
+  calendarDescription: string;
+  calendarStartDate: string;
+  calendarEndDate: string;
+  calendarPhoto?: string | null;
 }
 
 export interface DialogResult {
-    action: 'publish' | 'save' | 'cancel';
+  action: 'published' | 'saveDraft' | 'cancel';
+  data?: Activity;
 }

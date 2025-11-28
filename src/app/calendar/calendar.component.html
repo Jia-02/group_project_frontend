@@ -17,31 +17,22 @@
             }
           </tr>
         </thead>
-
         <tbody>
           @for (week of monthWeeks; track $index) {
           <tr class="calendar-week">
-
             @for (day of week; track $index) {
             <td class="calendar-day" [class.is-current-month]="day && (day | date:'MM') === (currentMonth | date:'MM')"
               [class.selected-day]="selectedDay && day && (day | date:'yyyy-MM-dd') === (selectedDay | date:'yyyy-MM-dd')"
               (click)="selectDay(day)">
-
               @if (day) {
-
               <span class="day-number">{{ day | date:'d' }}</span>
-
               <div class="activity-bar-container">
-                @for (act of getDayActivities(day); track act.id) {
-
+                @for (act of getDayActivities(day); track act.calendarId) {
                 <div class="activity-bar" [class.multi-day]="isMultiDay(act)"
-                  [title]="act.title + ' (' + act.status + ')'" [ngClass]="{
-                    'activity-published': act.status === 'published',
-                    'activity-draft': act.status === 'draft'
-                  }">
-
+                  [title]="act.calendarTitle + ' (' + act.calendarStatus + ')'"
+                  [ngClass]="{'activity-published': act.calendarStatus === 'published', 'activity-draft': act.calendarStatus === 'draft'}">
                   @if (isActivityStartDay(act, day) || !isMultiDay(act)) {
-                  <span class="activity-title">{{ act.title }}</span>
+                  <span class="activity-title">{{ act.calendarTitle }}</span>
                   }
                 </div>
                 }
@@ -60,21 +51,22 @@
       <div class="sidebar-card">
         <h3>新增活動</h3>
         <div class="sidebar-line"></div>
-        <label>輸入活動內容：</label>
-        <textarea [(ngModel)]="inputText" rows="3"></textarea><br>
+        <label>活動標題:<input type="text" [(ngModel)] = "calendarTitle"></label><br>
+        <label>活動內容：</label>
+        <textarea [(ngModel)]="calendarDescription" rows="3"></textarea><br>
         <label for="photo-file-input">
           <button type="button" class="file-select-button">選擇 Photo</button>
           {{ selectedPhotoFile ? selectedPhotoFile.name : '未選擇檔案' }}
           <input type="file" accept="image/*" id="photo-file-input" (change)="onFileSelected($event)"
             style="display: none;">
         </label><br>
-        @if (photoBase64) {
+        @if (photoUrl) {
         <div>
-          <img [src]="photoBase64" alt="活動圖片預覽" style="max-width: 100%; max-height: 150px; margin-top: 10px;">
+          <img [src]="photoUrl" alt="活動圖片預覽" style="max-width: 100%; max-height: 150px; margin-top: 10px;">
         </div>
         }
-        <label>開始日期：</label>
-        <input type="date" [(ngModel)]="startDate">
+        <label>活動時間：</label>
+        <input type="date" [(ngModel)]="calendarStartDate">~<input type="date" [(ngModel)]="calendarEndDate">
         <button (click)="openDialog()" style="margin-left: 330px;">新增活動</button>
       </div>
 
@@ -88,15 +80,14 @@
           @if (selectedDayActivities.length > 0) {
 
           <ul>
-            @for (activity of selectedDayActivities; track activity.id) {
-
+            @for (activity of selectedDayActivities; track activity.calendarId) {
             <li
-              [ngClass]="{ 'detail-published': activity.status === 'published', 'detail-draft': activity.status === 'draft' }"
+              [ngClass]="{ 'detail-published': activity.calendarStatus === 'published', 'detail-draft': activity.calendarStatus === 'draft' }"
               class="activity-item" (click)="openActivity(activity)">
-              <strong>{{ activity.title }}</strong><br>
-              <span>{{ activity.description }}</span><br>
+              <strong>{{ activity.calendarTitle }}</strong><br>
+              <span>{{ activity.calendarDescription }}</span><br>
               <small>
-                {{ activity.startDate | date:'MM/dd' }}-{{ activity.endDate | date:'MM/dd' }}
+                {{ activity.calendarStartDate | date:'MM/dd' }}-{{ activity.calendarEndDate | date:'MM/dd' }}
               </small>
             </li>
             }
@@ -112,6 +103,4 @@
     </div>
   </div>
 </div>
-<br><br><br><br><br>
-<!-- 公告欄顯示在這 -->
-<app-board [activities]="boardActivities"></app-board>
+
