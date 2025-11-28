@@ -62,7 +62,7 @@ export class TableEditComponent {
       let day = String(today.getDate()).padStart(2, '0');
       let reservation_date = `${year}-${month}-${day}`;
       this.reservation = [];
-      let url = "http://localhost:8080/reservation/date_list?reservation_date=" + reservation_date;
+      let url = "http://localhost:8080/reservation/date_list?reservationDate=" + reservation_date;
       this.service.getApi(url).subscribe((res: ReservationListTodayRes) => {
         for(let i = 0;i < res.reservationAndTableByDateList.length; i++){
           if(this.tableId == res.reservationAndTableByDateList[i].tableId){

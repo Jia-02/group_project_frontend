@@ -1,52 +1,112 @@
 <div style="display: flex">
   <span style="flex:1 1 auto"></span>
   <div style="width: 300px; height: 500px; border: 1px solid black; margin-top: 5%; overflow: auto; padding: 1%;">
-    @for(item of reservationList; track item){
-
-    @if(item.reservations.length > 0){
+    <div style="width: 300px; text-align: center;">
+      <span>{{reservation_date}}</span> <br> <br>
+      <span>查詢:</span><input type="text" [(ngModel)]="inputSearch" (ngModelChange)="search()">
+    </div> <br> <br>
+    @if(searchRes){
+    @for(item of searchRes;track item){
     <div style="border: 1px solid black; padding: 5%;">
-    <span>{{item.tableId}}</span> <br> <br>
-    @for(item1 of item.reservations; track item1){
-    <div style="border: 1px solid black;">
-      <span>訂位人姓名: {{item1.reservationName}}</span> <br> <br>
-      <span>訂位時間: {{item1.reservationTime}}</span> <br> <br>
-      <span>訂位人數: {{item1.reservationCount}}</span> <br> <br>
-      <span>手機: {{item1.reservationPhone}}</span> <br> <br>
-      <span>小孩人數: {{item1.reservationChildCount}}</span> <br> <br>
-
+      <span>{{item.tableId}}</span> <br> <br>
+      <div style="border: 1px solid black; position: relative;">
+        <span>訂位人姓名: {{item.reservationName}}</span> <br> <br>
+        <span>訂位時間: {{item.reservationTime}}</span> <br> <br>
+        <span>訂位人數: {{item.reservationCount}}</span> <br> <br>
+        <span>手機: {{item.reservationPhone}}</span> <br> <br>
+        <span>小孩人數: {{item.reservationChildCount}}</span> <br> <br>
+        <button (click)="arrive(item.tableId,item.reservationName,
+        item.reservationPhone,item.childSeat,item.reservationAdultCount,
+        item.reservationChildCount,item.reservationNote,
+        item.reservationTime,item.reservationCount)">報到</button>
+      </div> <br> <br>
     </div> <br> <br>
     }
+    }@else {
+    @for(item of reservationListToday; track item){
+    @if(item.reservations){
+    @for(item1 of item.reservations;track item1){
+    <div style="border: 1px solid black; padding: 5%;">
+      <span>{{item.tableId}}</span> <br> <br>
+      <div style="border: 1px solid black; height: 100px; position: relative;">
+        <span>{{item1.reservationName}}</span>
+        <span>{{item1.reservationTime}}</span>
+        <span>{{item1.reservationCount}}</span>
+        <span>{{item1.reservationPhone}}</span>
+        <span>{{item1.reservationChildCount}}</span>
+        @if(item1.reservationStatus){
+        <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="check_small"></mat-icon>
+        }@else {
+        <button (click)="arrive(item.tableId,item1.reservationName,
+        item1.reservationPhone,item1.childSeat,item1.reservationAdultCount,
+        item1.reservationChildCount,item1.reservationNote,
+        item1.reservationTime,item1.reservationCount)">報到</button>
+        }
+
+      </div> <br> <br>
     </div> <br> <br>
     }
+    }
+    }
+    }
 
-  }
-</div>
-<span style="flex:1 1 auto"></span>
-<div>
-  <div style="margin-top: 15%;">
-    <canvas #myCanvas style="border: 1px solid black;" width="500" height="500" (click)="handleClick($event)"
-      (mousemove)="handleMove($event)" (mousedown)="handlePress($event)" (mouseup)="handleUp($event)"
-      (mouseout)="handleOut($event)"></canvas>
   </div>
-  @if(admin){
-  <button (click)="edit(false)">編輯模式</button>
-  }@else {
-  <button (click)="edit(true)">營業模式</button>
-  }
-</div>
-<span style="flex:1 1 auto"></span>
-<div style="margin-top: 1%;">
-  <div style="border: 1px solid black;">
-    <span>{{currentTime}} </span>
-  </div> <br>
-  <div style="border: 1px solid black;height: 90%; text-align: center; overflow: hidden;  position: relative;">
-    <div id="progressBar" style="width: 100%; background-color: greenyellow; height: 10%;position: absolute; top: 0; left: 0; z-index: -1;">
+  <span style="flex:1 1 auto"></span>
+  <div>
+    <div style="margin-top: 15%;">
+      <div style="display: flex;">
+        <span style="flex: 1 1 auto;"></span>
+        <span style="display: flex;align-items: center; margin-right: 5%;">可預約: <div
+            style="height: 10px; width: 10px; background-color: green;"></div></span>
+        <span style="display: flex;align-items: center;margin-right: 5%;">已預約: <div
+            style="height: 10px; width: 10px; background-color: yellow;"></div></span>
+        <span style="display: flex;align-items: center;margin-right: 5%;">使用中: <div
+            style="height: 10px; width: 10px; background-color: red;"></div></span>
+        <span style="display: flex;align-items: center;">未開放: <div
+            style="height: 10px; width: 10px; background-color: gray;"></div></span>
+      </div>
+      <div>
+        <div style="display: flex;">
+          <span style="flex: 1 1 auto;"></span>
+          <span>x軸</span>
+          <span style="flex: 1 1 auto;"></span>
+        </div>
+        <div style="display: flex;">
+          @for(item of len;track item){
+          @if(item == 0){
+          <span>{{item}}</span>
+          }@else {
+          <span style="flex:1 1 auto;"></span>
+          <span>{{item}}</span>
+          }
+
+          }
+        </div>
+      </div>
+      <canvas #myCanvas style="border: 1px solid black;" width="500" height="500" (click)="handleClick($event)"
+        (mousemove)="handleMove($event)" (mousedown)="handlePress($event)" (mouseup)="handleUp($event)"
+        (mouseout)="handleOut($event)"></canvas>
     </div>
-    @for(time of timeList;track time){
-      {{time}} <br> <br> <br>
+    @if(admin){
+    <button (click)="edit(false)">編輯模式</button>
+    }@else {
+    <button (click)="edit(true)">營業模式</button>
     }
   </div>
+  <span style="flex:1 1 auto"></span>
+  <div style="margin-top: 1%;">
+    <div style="border: 1px solid black;">
+      <span>{{currentTime}} </span>
+    </div> <br>
+    <div style="border: 1px solid black;height: 90%; text-align: center; overflow: hidden;  position: relative;">
+      <div id="progressBar"
+        style="width: 100%; background-color: greenyellow; height: 10%;position: absolute; top: 0; left: 0; z-index: -1;">
+      </div>
+      @for(time of timeList;track time){
+      {{time}} <br> <br> <br>
+      }
+    </div>
 
-</div>
-<span style="flex:1 1 auto"></span>
+  </div>
+  <span style="flex:1 1 auto"></span>
 </div>

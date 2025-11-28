@@ -5,7 +5,7 @@ import { catchError } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class DataService{
+export class DataService {
 
   constructor(private http: HttpClient) { }
 
@@ -26,22 +26,37 @@ export interface Table {
   tableCapacity: number;
   tablePositionX: number;
   tablePositionY: number;
-  lengthX:number;
-  lengthY:number;
+  lengthX: number;
+  lengthY: number;
 }
 
-export interface Reservation{
-  reservationDate:any;
-  reservationPhone:string;
-  reservationTime:any;
-  reservationName:string;
-  reservationCount:number;
-  reservationAdultCount:number;
-  reservationChildCount:number;
-  reservationStatus:boolean;
-  reservationNote:string;
-  childSeat:number;
-  tableId:string;
+export interface Reservation {
+  reservationDate: string;
+  reservationPhone: string;
+  reservationTime: string;
+  reservationName: string;
+  reservationCount: number;
+  reservationAdultCount: number;
+  reservationChildCount: number;
+  reservationStatus: boolean;
+  reservationNote: string;
+  childSeat: number;
+  tableId: string;
+}
+
+export interface UpdateReservation{
+  reservationDate: string;
+  reservationPhone: string;
+  reservationTime: string;
+  reservationName: string;
+  reservationCount: number;
+  reservationAdultCount: number;
+  reservationChildCount: number;
+  reservationStatus: boolean;
+  reservationNote: string;
+  childSeat: number;
+  tableId: string;
+  newDate:string;
 }
 
 export interface TableRes {
@@ -51,22 +66,45 @@ export interface TableRes {
 }
 
 
-export interface ReservationListRes{
+export interface ReservationListRes {
   code: number;
   message: string;
-  reservationList:Reservation[];
+  reservationList: Reservation[];
 }
 
-export interface ReservationListTodayRes{
+export interface ReservationListTodayRes {
   code: number;
-  message:string;
-  reservationAndTableByDateList:ReservationToday[];
-  reservationDate:string;
+  message: string;
+  reservationAndTableByDateList: ReservationToday[];
+  reservationDate: string;
 }
 
-export interface ReservationToday{
-  capacity:number;
+export interface ReservationToday {
+  capacity: number;
   reservations: Reservation[];
+  tableDailyStatus: boolean;
+  tableId: string;
+}
+
+export interface ReservationNowListRes{
+  code:number;
+  message:string;
+  reservationAndTableByTimeList:ReservationNowList[]
+}
+
+export interface ReservationNowList {
+  capacity:number;
+  childSeat:number;
+  reservationAdultCount:number;
+  reservationChildCount:number;
+  reservationCount:number;
+  reservationDate:string;
+  reservationName:string;
+  reservationNote:string;
+  reservationPhone:string;
+  reservationStatus:boolean;
+  reservationTime:string;
   tableDailyStatus:boolean;
   tableId:string;
+  tableStatus:string;
 }
