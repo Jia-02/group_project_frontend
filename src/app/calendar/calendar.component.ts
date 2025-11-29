@@ -1,12 +1,13 @@
 import { DataService } from './../@service/data.service';
-import { ActivityReadDialogComponent } from './../activity-read-dialog/activity-read-dialog.component';
+import { ActivityCheckDialogComponent } from '../activity-check-dialog/activity-check-dialog.component';
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgClass } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
+import { ActivityReadDialogComponent } from '../activity-read-dialog/activity-read-dialog.component';
 import { ActivityDialogComponent, DialogResult } from '../activity-dialog/activity-dialog.component';
-import { ActivityCheckDialogComponent } from '../activity-check-dialog/activity-check-dialog.component';
+import { ActivityCreateDialogComponent } from '../activity-create-dialog/activity-create-dialog.component';
 
 @Component({
   selector: 'app-calendar',
@@ -20,6 +21,7 @@ import { ActivityCheckDialogComponent } from '../activity-check-dialog/activity-
 })
 export class CalendarComponent implements OnInit {
   currentMonth: Date = new Date();
+  today: Date = new Date();
 
   activities: Activity[] = [];
   boardActivities: Activity[] = [];
@@ -50,9 +52,11 @@ export class CalendarComponent implements OnInit {
 
     this.loadActivities();
 
+    this.generateCalendar(this.currentMonth);
     if (this.selectedDay) {
       this.selectedDayActivities = this.getDayActivities(this.selectedDay);
     }
+
 
     this.calendarStartDate = new Date().toISOString().split('T')[0];
     this.calendarEndDate = this.calendarStartDate;
@@ -72,11 +76,8 @@ export class CalendarComponent implements OnInit {
           calendarStatus: act.calendarStatus ? 'published' : 'draft'
         };
       });
-
       // this.activities = processedActivities;
-
       // this.boardActivities = this.filterBoardActivities(processedActivities);
-
       console.log('已從後端取得所有活動:', this.activities.length);
       console.log('Board 活動數量:', this.boardActivities.length);
 
@@ -118,8 +119,6 @@ export class CalendarComponent implements OnInit {
     }
   }
 
-
-
   generateCalendar(date: Date): void {
     this.monthWeeks = [];
     const year = date.getFullYear();
@@ -128,24 +127,43 @@ export class CalendarComponent implements OnInit {
     const firstDayOfMonth = new Date(year, month, 1);
     const startingDay = firstDayOfMonth.getDay();
 
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const daysInPrevMonth = new Date(year, month, 0).getDate();
+
+    const prevMonthDaysToShow = startingDay;
+
+    const daysInCurrentMonth = new Date(year, month + 1, 0).getDate();
 
     let currentDay = 1;
+    let nextMonthDay = 1;
 
     for (let w = 0; w < 6; w++) {
       const week: (Date | null)[] = [];
+      let hasCurrentMonthDay = false;
+
       for (let d = 0; d < 7; d++) {
-        if (w === 0 && d < startingDay) {
-          week.push(null);
-        } else if (currentDay <= daysInMonth) {
+        if (w === 0 && d < prevMonthDaysToShow) {
+          const prevMonthDay = daysInPrevMonth - prevMonthDaysToShow + d + 1;
+          week.push(new Date(year, month - 1, prevMonthDay));
+        } else if (currentDay <= daysInCurrentMonth) {
           week.push(new Date(year, month, currentDay));
           currentDay++;
+          hasCurrentMonthDay = true;
         } else {
-          week.push(null);
+          week.push(new Date(year, month + 1, nextMonthDay));
+          nextMonthDay++;
         }
       }
+
+      if (currentDay > daysInCurrentMonth && !hasCurrentMonthDay) break;
+
       this.monthWeeks.push(week);
-      if (currentDay > daysInMonth) break;
+
+      if (currentDay > daysInCurrentMonth && w === 5) break;
+
+      if (currentDay > daysInCurrentMonth && week.some(day => day?.getMonth() === month)) {
+      } else if (currentDay > daysInCurrentMonth) {
+        break;
+      }
     }
   }
 
@@ -210,48 +228,42 @@ export class CalendarComponent implements OnInit {
   }
 
   openDialog(): void {
-    if (!this.calendarTitle.trim() || !this.calendarDescription.trim() || !this.photoUrl || !this.calendarStartDate || !this.calendarEndDate) {
-      alert('請填寫所有活動資訊');
-      return;
-    }
-
-    const createData: CreateActivity = {
-      calendarTitle: this.calendarTitle.trim(),
-      calendarDescription: this.calendarDescription.trim(),
-      calendarStartDate: this.calendarStartDate,
-      calendarEndDate: this.calendarEndDate,
-      calendarPhoto: this.photoUrl
-    };
-    console.log('準備新增的活動資料:', createData);
-
-    const dialogRef = this.dialog.open(ActivityDialogComponent, {
-      width: '400px',
-      height: '400px',
-      data: createData
+    const dialogRef = this.dialog.open(ActivityCreateDialogComponent, {
+      width: '500px',
+      height: 'auto'
     });
 
-    dialogRef.afterClosed().subscribe((result: DialogResult) => {
-      if (result && (result.action === 'published' || result.action === 'saveDraft')) {
-        const newActivity: Activity = result.data as Activity;
+    dialogRef.afterClosed().subscribe(result => {
+      if (!result) return;
 
-        const nextId = this.activities.length > 0 ?
-          Math.max(...this.activities.map(a => a.calendarId)) + 1 :
-          1;
-        newActivity.calendarId = nextId;
+      const { formData, photoFile } = result;
 
-        if (typeof newActivity.calendarStartDate === 'string') newActivity.calendarStartDate = new Date(newActivity.calendarStartDate);
-        if (typeof newActivity.calendarEndDate === 'string') newActivity.calendarEndDate = new Date(newActivity.calendarEndDate);
+      // 👉 呼叫你的確認頁面 (ActivityDialogComponent)
+      const checkRef = this.dialog.open(ActivityDialogComponent, {
+        width: '400px',
+        height: '400px',
+        data: formData
+      });
 
-        this.activities = [...this.activities, newActivity];
+      checkRef.afterClosed().subscribe((finalResult) => {
+        if (!finalResult) return;
+
+        const newActivity: Activity = {
+          ...finalResult.data,
+          calendarStartDate: new Date(finalResult.data.calendarStartDate),
+          calendarEndDate: new Date(finalResult.data.calendarEndDate)
+        };
+
+        this.activities.push(newActivity);
+        this.activities = [...this.activities];
 
         this.generateCalendar(this.currentMonth);
         if (this.selectedDay) {
           this.selectedDayActivities = this.getDayActivities(this.selectedDay);
         }
+      });
 
-        this.resetForm();
-      }
-    });
+    })
   }
 
   onFileSelected(event: Event): void {

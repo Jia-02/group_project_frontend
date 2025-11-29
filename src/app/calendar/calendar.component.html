@@ -2,7 +2,7 @@
 
   <div class="header">
     <button (click)="prevMonth()">⬅</button>
-    <h3>{{ currentMonth | date: 'yyyy年 MMM' }}</h3>
+    <h3>{{ currentMonth | date: 'yyyy年 MM月' }}</h3>
     <button (click)="nextMonth()">⮕</button>
   </div>
 
@@ -23,6 +23,7 @@
             @for (day of week; track $index) {
             <td class="calendar-day" [class.is-current-month]="day && (day | date:'MM') === (currentMonth | date:'MM')"
               [class.selected-day]="selectedDay && day && (day | date:'yyyy-MM-dd') === (selectedDay | date:'yyyy-MM-dd')"
+              [class.is-today]="day && (day | date:'yyyy-MM-dd') === (today | date:'yyyy-MM-dd')"
               (click)="selectDay(day)">
               @if (day) {
               <span class="day-number">{{ day | date:'d' }}</span>
@@ -48,27 +49,8 @@
 
     <div>
       <!-- 新增活動 -->
-      <div class="sidebar-card">
-        <h3>新增活動</h3>
-        <div class="sidebar-line"></div>
-        <label>活動標題:<input type="text" [(ngModel)] = "calendarTitle"></label><br>
-        <label>活動內容：</label>
-        <textarea [(ngModel)]="calendarDescription" rows="3"></textarea><br>
-        <label for="photo-file-input">
-          <button type="button" class="file-select-button">選擇 Photo</button>
-          {{ selectedPhotoFile ? selectedPhotoFile.name : '未選擇檔案' }}
-          <input type="file" accept="image/*" id="photo-file-input" (change)="onFileSelected($event)"
-            style="display: none;">
-        </label><br>
-        @if (photoUrl) {
-        <div>
-          <img [src]="photoUrl" alt="活動圖片預覽" style="max-width: 100%; max-height: 150px; margin-top: 10px;">
-        </div>
-        }
-        <label>活動時間：</label>
-        <input type="date" [(ngModel)]="calendarStartDate">~<input type="date" [(ngModel)]="calendarEndDate">
-        <button (click)="openDialog()" style="margin-left: 330px;">新增活動</button>
-      </div>
+      <button (click)="openDialog()" class="add-btn">新增活動</button>
+
 
       <!-- 查看活動 -->
       <div class="sidebar-card">
