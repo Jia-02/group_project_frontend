@@ -4,6 +4,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { DataService } from '../@service/data.service';
 
 @Component({
   selector: 'app-activity-check-dialog',
@@ -28,8 +29,9 @@ export class ActivityCheckDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<ActivityCheckDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private fb: FormBuilder
-  ) { }
+    private fb: FormBuilder,
+    private dataService: DataService
+  ) {}
 
   ngOnInit(): void {
     this.form = this.fb.group({
@@ -65,7 +67,7 @@ export class ActivityCheckDialogComponent {
     }
   }
 
-  onSave(action: 'saveDraft' | 'publish'): void {
+  private saveActivity(status: boolean) {
     const updatedActivityData = {
       calendarId: this.form.value.calendarId,
       calendarTitle: this.form.value.calendarTitle,
@@ -73,22 +75,31 @@ export class ActivityCheckDialogComponent {
       calendarStartDate: this.form.value.calendarStartDate,
       calendarEndDate: this.form.value.calendarEndDate,
       calendarPhoto: this.data.calendarPhoto,
-      calendarStatus: action === 'publish' ? 'published' : 'draft',
+      calendarStatus: status
     };
 
-    this.dialogRef.close({
-      action: action,
-      data: updatedActivityData,
-      photoFile: this.newPhotoFile
-    });
+    this.dataService.postApi('http://localhost:8080/calendar/update', updatedActivityData)
+      .subscribe((res: any) => {
+        console.log(res);
+        this.dialogRef.close({ action: status ? 'publish' : 'saveDraft', data: updatedActivityData, photoFile: this.newPhotoFile })
+      });
   }
 
   onSaveDraftClick() {
-    this.onSave('saveDraft');
+    this.saveActivity(false);
   }
 
   onPublishClick() {
-    this.onSave('publish');
+    this.saveActivity(true);
+  }
+
+  onDeleteClick() {
+    const id = this.data.calendarId;
+    this.dataService.postApi('http://localhost:8080/calendar/del', { calendarId: id })
+      .subscribe((res: any) => {
+        console.log(res);
+        this.dialogRef.close({ action: 'delete', calendarId: id })
+      });
   }
 
   onCancelClick(): void {

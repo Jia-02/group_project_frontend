@@ -32,6 +32,7 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
+  <button mat-raised-button color="warn" (click)="onDeleteClick()">刪除</button>
   <button mat-button (click)="onCancelClick()">取消</button>
   <button mat-raised-button color="primary" [disabled]="form.invalid" (click)="onSaveDraftClick()">
     暫存
