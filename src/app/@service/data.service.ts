@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { reservation } from '../@interface/interface';
+import { reservation, scheduleItem, tables } from '../@interface/interface';
 
 @Injectable({
   providedIn: 'root'
@@ -8,23 +8,13 @@ export class DataService {
 
   constructor() { }
 
-  // reservation: reservation[] = [
-  //   {
-  //     newDate: '',
-  //     reservationDate: '2025-11-25',
-  //     reservationTime: '11:00',
-  //     reservationPhone: '0912-345-678',
-  //     reservationName: '李先生',
-  //     reservationCount: 4,
-  //     reservationAdultCount: 2,
-  //     reservationChildCount: 2,
-  //     reservationStatus: true,
-  //     reservationNote: '',
-  //     childSeat: 0,
-  //     tableId: 'A01'
-  //   },
-  //   // ... 其他資料
-  // ];
-
   reservation: reservation[] = [];
+
+  // Map<"YYYY-MM-DD", scheduleItem[]>
+  // 每天所有預約的 scheduleItem 列表
+  dailyReservations: Map<string, scheduleItem[]> = new Map();
+
+  // 用 Map 保存每個日期的桌位狀態，讓不同日期可以有獨立的桌位設定
+  tableAvailableByDate: Map<string, tables[]> = new Map();
+
 }

@@ -1,8 +1,18 @@
+// 桌位列表
+export interface tables {
+  table_id: string;
+  table_status: boolean;
+  capacity: number;
+  position_x: number;
+  position_y: number;
+}
+
+// 訂位
 export interface reservation {
-  id: number;
-  newDate: string;
-  reservationDate: string;
-  reservationTime: string; // 應為 "HH:mm:ss"
+  id?: number; // 唯一 ID
+  newDate?: string;
+  reservationDate: string; // "2025-11-29"
+  reservationTime: string; // "14:00:00"
   reservationPhone: string;
   reservationName: string;
   reservationCount: number;
@@ -11,28 +21,36 @@ export interface reservation {
   reservationStatus: boolean;
   reservationNote: string;
   childSeat: number;
-  tableId: string; // 從後端數據結構中知道這是必要的
+  tableId: string;
 }
 
-export interface tables {
-  table_id: string;
-  table_status: '開放' | '關閉' | string; // 調整為允許 '開放'/'關閉' 字串
+
+// 單一桌位與該桌位預約列表（後端結構）
+export interface tableReservationByDate {
+  tableId: string;
   capacity: number;
-  position_x: number;
-  position_y: number;
+  tableDailyStatus: boolean;
+  reservations: reservation[];
+}
+
+// 後端 API 的頂層回傳結構
+export interface apiResponse {
+  code: number;
+  message: string;
+  reservationDate: string;
+  reservationAndTableByDateList: tableReservationByDate[];
 }
 
 
-// 繼承
+// 繼承 (排程項目)
 export interface scheduleItem extends reservation {
   endTime: string;
   useTime: number; // 以分鐘計的時長
 }
 
-// 時間插槽介面，用於左側時間標籤
+// 時間軸
 export interface timeLabel {
   time: string;
   display: string;
   hour: number;
 }
-

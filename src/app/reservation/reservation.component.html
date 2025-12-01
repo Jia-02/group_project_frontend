@@ -82,10 +82,13 @@
           <p class="note"><strong>備註:</strong> {{ selectedReservationDetail()!.reservationNote || '無' }}</p>
           }
         </div>
+
+        @if (selectedReservationDetail() && !isReservationPast(selectedReservationDetail()!)) {
         <div class="btnBox">
           <button class="btn" (click)="updateReserve()">修改</button>
           <button class="btn" (click)="deleteReserve()">刪除</button>
         </div>
+        }
       </div>
       }
     </div>
@@ -114,14 +117,14 @@
 
             @for (table of tables(); track table.table_id) {
             <div class="tableHeader">
-              <span class="tableName" [class.text-muted]="table.table_status !== '開放'">
+              <span class="tableName" [class.text-muted]="table.table_status !== true">
                 {{ table.table_id }}
                 <span style="font-size: 12px">({{ table.capacity }}人)</span>
               </span>
 
               <!-- 桌位開關按鈕 -->
               <label class="toggleSwitch" title="切換開放狀態">
-                <input type="checkbox" [checked]="table.table_status == '開放'" (change)="tableAvailabe(table)">
+                <input type="checkbox" [checked]="table.table_status == true" (change)="tableAvailabe(table)">
                 <span class="slider round"></span>
               </label>
             </div>
@@ -137,7 +140,7 @@
             <div class="timeLabelCell">{{ label.display }}</div>
 
             @for (table of tables(); track table.table_id) {
-            <div class="hourSlot" [class.isUnavailable]="table.table_status !== '開放'"
+            <div class="hourSlot" [class.isUnavailable]="table.table_status !== true"
               [class.is-not-allowed]="!isAllowedHour(label.hour)"
               [class.is-past-day]="isPastDay() || (isToday(selectedDay()) && isPastHourSlot(label.hour))"
               (click)="!(isPastDay() || (isToday(selectedDay()) && isPastHourSlot(label.hour))) && addReservation(table.table_id, label.hour)">
@@ -148,7 +151,7 @@
             <div class="activitiesLayer"
               [style.grid-template-columns]="'var(--time-label-width) repeat(' + tables().length + ', minmax(110px, 1fr))'">
 
-              @for (reserveData of currentDayReserve(); track reserveData.id) {
+              @for (reserveData of currentDayReserve(); track $index) {
               <div class="activityBlock" [style.top.px]="getTopPosition(reserveData.reservationTime)"
                 [style.height.px]="getHeight(reserveData.useTime)" [style.grid-column]="getTableGridColumn(reserveData)"
                 title="{{ reserveData.reservationName }}" (click)="showReservationDetail(reserveData)">
