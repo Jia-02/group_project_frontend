@@ -1,3 +1,12 @@
-.TabsComponent   {
-  background-color: #e32738; /* 設定為紅色 */
+.TabsComponent {
+  background-color: #e32738;
+  /* 設定為紅色 */
+}
+
+.mat-tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100px;
+  height: 48px;
 }

@@ -1,9 +1,9 @@
 <div style="display: flex;">
   <span style="flex: 1 1 auto;"></span>
   <div style="width: 90%; margin-top: 5%;">
-    <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="center" style="padding: 0;">
+    <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="center">
       @for(link of links;track link){
-      <mat-tab label={{link.name}} >
+      <mat-tab label={{link.name}}>
         @for(order of order;track order){
         @if(order.workTableId == link.id){
         <div
@@ -30,9 +30,9 @@
       }
       <mat-tab>
         <ng-template mat-tab-label>
-          <span (click)="addLink($event)" style="width: auto;">
-            <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="add" ></mat-icon>
-          </span>
+          <div class = "mat-tab" (click)="addLink($event)">
+            <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="add"></mat-icon>
+          </div>
         </ng-template>
       </mat-tab>
     </mat-tab-group>
