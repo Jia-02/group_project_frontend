@@ -1,8 +1,8 @@
 import { Component, ElementRef, inject, ViewChild } from '@angular/core';
-import { DataService, Reservation, ReservationListRes, ReservationListTodayRes, ReservationNowList, ReservationNowListRes, ReservationToday, Table, TableRes, UpdateReservation } from '../data/data.service';
+import { BasicRes, DataService, Rect, Reservation, ReservationListRes, ReservationListTodayRes, ReservationNowList, ReservationNowListRes, ReservationToday, Table, TableRes, UpdateReservation } from '../data/data.service';
 import { MatDialog } from '@angular/material/dialog';
 import { TableEditComponent } from './tableEdit/tableEdit';
-import { catchError, min } from 'rxjs';
+import { catchError, min, of } from 'rxjs';
 import { DialogComponent } from './dialog/dialog.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { FormsModule } from '@angular/forms';
@@ -22,6 +22,9 @@ export class TableComponent {
 
   constructor(private service: DataService) { }
 
+  @ViewChild('canvas', { static: true }) canvasRef!: ElementRef<HTMLCanvasElement>;
+  ctx!: CanvasRenderingContext2D;
+
   tableList!: Table[];
   admin!: boolean;
   isEdit!: boolean;
@@ -33,138 +36,41 @@ export class TableComponent {
   reservationList!: ReservationNowList[];
   reservationListToday!: ReservationToday[];
   searchRes!: Reservation[];
-  reservation!: Reservation;
+  reservation!: Reservation[];
   currentTime!: string;
   reservation_date!: string;
   timeList = [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22];
   inputSearch!: string;
-  len = [0,100,200,300,400,500];
+  len = [0, 100, 200, 300, 400, 500];
+  mouseDownTime!: any;
+  mouseUpTime!: any;
+
+  cornerSize = 10;
+  rects!: Rect[];
+
+  activeRect: Rect | null = null;
+  draggingCorner: string | null = null;
+  draggingWholeRect = false;
+
+  offsetX = 0;
+  offsetY = 0;
+
 
   ngOnInit() {
     this.admin = true;
-    let today = new Date();
-    let year = today.getFullYear();
-    let month = String(today.getMonth() + 1).padStart(2, '0');
-    let day = String(today.getDate()).padStart(2, '0');
-    let hour = String(today.getHours()).padStart(2, '0');
-    let minute = String(today.getMinutes()).padStart(2, '0');
-    this.currentTime = hour + ":" + minute;
-    console.log(this.currentTime)
-    this.reservation_date = `${year}-${month}-${day}`;
+    //初始進入呼叫方法 顯示 第一次畫面
+    this.screenRefreshMinute();
 
-    let myDiv = document.getElementById("progressBar") as HTMLDivElement;
-
-    let nowTime = this.currentTime.split(':').map(Number);
-    let nowHour = nowTime[0] * 3600;
-    let nowMinute = nowTime[1] * 60;
-
-
-    if (nowHour + nowMinute >= 36000) {
-      let timePercent = (((nowHour + nowMinute - 36000) / 3600) / 12) * 100
-      let str = timePercent + "%";
-      console.log(str)
-      myDiv.style.height = str;
-    } else {
-      myDiv.style.height = "0%"
-    }
-
-    console.log(this.reservation_date);
-
-    if (this.admin) {
-      let url = "http://localhost:8080/reservation/date_list?reservationDate=" + this.reservation_date;
-      this.service.getApi(url).subscribe((res: ReservationListTodayRes) => {
-        this.reservationListToday = res.reservationAndTableByDateList;
-        console.log(this.reservationListToday)
-      })
-      url = "http://localhost:8080/reservation/now_time_list";
-      this.service.getApi(url).subscribe((res: ReservationNowListRes) => {
-        this.reservationList = res.reservationAndTableByTimeList;
-        console.log(res.reservationAndTableByTimeList)
-        url = "http://localhost:8080/table/list";
-        this.service.getApi(url).subscribe((tableRes: TableRes) => {
-          url = "http://localhost:8080/table/update";
-          for (let i = 0; i < this.reservationList.length; i++) {
-            console.log(tableRes.tableList[i])
-            if (this.reservationList[i].tableDailyStatus) {
-              let table: Table = {
-                tableId: this.reservationList[i].tableId,
-                tableStatus: this.reservationList[i].tableStatus,
-                tableCapacity: tableRes.tableList[i].tableCapacity,
-                tablePositionX: tableRes.tableList[i].tablePositionX,
-                tablePositionY: tableRes.tableList[i].tablePositionY,
-                lengthX: tableRes.tableList[i].lengthX,
-                lengthY: tableRes.tableList[i].lengthY
-              }
-              this.service.postApi(url, table).subscribe((res: any) => {
-                console.log(res);
-              })
-            }
-          }
-          url = "http://localhost:8080/table/list";
-          this.service.getApi(url).subscribe((tableRes: TableRes) => {
-            this.reBuild(tableRes);
-          })
-        })
-      })
-    }
-
-
+    //每分鐘重新更新畫面資訊 搭配ngOnDestroy()
     this.timerId = setInterval(() => {
-      let today = new Date();
-      let hour = String(today.getHours()).padStart(2, '0');
-      let minute = String(today.getMinutes()).padStart(2, '0');
-      let month = String(today.getMonth() + 1).padStart(2, '0');
-      let day = String(today.getDate()).padStart(2, '0');
-      this.reservation_date = `${year}-${month}-${day}`;
-      this.currentTime = hour + ":" + minute;
-      let nowTime = this.currentTime.split(':').map(Number);
-      let nowHour = nowTime[0] * 3600;
-      let nowMinute = nowTime[1] * 60;
-      console.log(this.currentTime);
-
-      if (nowHour + nowMinute >= 36000) {
-        let timePercent = (((nowHour + nowMinute - 36000) / 3600) / 12) * 100
-        let str = timePercent + "%";
-        console.log(str)
-        myDiv.style.height = str;
-      } else {
-        myDiv.style.height = "0%"
-      }
-
-      if (this.admin) {
-        let url = "http://localhost:8080/reservation/now_time_list"
-        this.service.getApi(url).subscribe((res: ReservationNowListRes) => {
-          this.reservationList = res.reservationAndTableByTimeList;
-          console.log(res.reservationAndTableByTimeList)
-          url = "http://localhost:8080/table/list";
-          this.service.getApi(url).subscribe((tableRes: TableRes) => {
-            url = "http://localhost:8080/table/update";
-            for (let i = 0; i < this.reservationList.length; i++) {
-              console.log(tableRes.tableList[i])
-              if (this.reservationList[i].tableDailyStatus) {
-                let table: Table = {
-                  tableId: this.reservationList[i].tableId,
-                  tableStatus: this.reservationList[i].tableStatus,
-                  tableCapacity: tableRes.tableList[i].tableCapacity,
-                  tablePositionX: tableRes.tableList[i].tablePositionX,
-                  tablePositionY: tableRes.tableList[i].tablePositionY,
-                  lengthX: tableRes.tableList[i].lengthX,
-                  lengthY: tableRes.tableList[i].lengthY
-                }
-                this.service.postApi(url, table).subscribe((res: any) => {
-                  console.log(res);
-                })
-              }
-            }
-            url = "http://localhost:8080/table/list";
-            this.service.getApi(url).subscribe((tableRes: TableRes) => {
-              this.reBuild(tableRes);
-            })
-          })
-        })
-      }
+      this.screenRefreshMinute();
     }, 60000); // 每60秒執行一次
   }
+
+  ngAfterViewInit() {
+    this.ctx = this.canvasRef.nativeElement.getContext('2d')!;
+  }
+
 
   ngOnDestroy() {
     if (this.timerId) {
@@ -172,6 +78,8 @@ export class TableComponent {
     }
   }
 
+
+  // 報到按鈕
   arrive(tableId: string, name: string, phone: string,
     childSeat: number, adultCount: number, childCount: number,
     note: string, time: string, personCount: number) {
@@ -181,13 +89,16 @@ export class TableComponent {
     console.log(name);
     console.log(childSeat);
 
+    //開啟是否確認報到畫面
     const dialogRef = this.dialog.open(DialogComponent, {
       data: { message: "是否確定報到", flag: false },
       width: 'auto',
       height: 'auto'
     });
 
+    //畫面結束後執行res 結果 true / false 若true則代表確認報到
     dialogRef.afterClosed().subscribe(res => {
+      //確認報到則執行更新訂位資訊
       if (res) {
         let url = "http://localhost:8080/reservation/update";
         let updateRes: UpdateReservation = {
@@ -205,435 +116,459 @@ export class TableComponent {
           newDate: this.reservation_date
         };
         console.log(updateRes);
-        this.service.postApi(url, updateRes).subscribe((res: any) => {
-          url = "http://localhost:8080/reservation/date_list?reservationDate=" + this.reservation_date;
-          this.service.getApi(url).subscribe((res: ReservationListTodayRes) => {
-            this.reservationListToday = res.reservationAndTableByDateList;
-            console.log(this.reservationListToday)
-          })
+        //執行更新訂位資訊api
+        this.service.postApi(url, updateRes).subscribe((res: BasicRes) => {
+          //更新訂位資訊結束後執行查詢當日訂位api
+          if (res.code == 200) {
+            url = "http://localhost:8080/reservation/date_list?reservationDate=" + this.reservation_date;
+            this.service.getApi(url).subscribe((reservationListRes: ReservationListTodayRes) => {
+              this.reservationListToday = reservationListRes.reservationAndTableByDateList;
+              this.screenRefreshMinute();
+            })
+          }
         })
       }
     })
 
   }
 
+  //即時搜尋功能 手機號碼/姓名
   search() {
     // console.log(this.inputSearch)
-    this.searchRes = [];
-    for (let i = 0; i < this.reservationListToday.length; i++) {
-      if (this.reservationListToday[i].reservations.length > 0) {
-        for (let j = 0; j < this.reservationListToday[i].reservations.length; j++) {
-          if (this.reservationListToday[i].reservations[j].reservationName.includes(this.inputSearch)) {
-            console.log(this.inputSearch)
-            this.searchRes.push(this.reservationListToday[i].reservations[j])
-          } else if (this.reservationListToday[i].reservations[j].reservationPhone.includes(this.inputSearch)) {
-            this.searchRes.push(this.reservationListToday[i].reservations[j])
-          }
+    console.log(this.reservationListToday[1])
+    if (this.inputSearch) {
+      this.searchRes = [];
+      for(const reservation of this.reservation){
+        if(reservation.reservationName.includes(this.inputSearch)){
+          this.searchRes.push(reservation);
+        }
+        if(reservation.reservationPhone.includes(this.inputSearch)){
+          this.searchRes.push(reservation);
         }
       }
     }
     console.log(this.searchRes)
   }
 
-  @ViewChild('myCanvas') canvas!: ElementRef;
+
+  drawByStatus(rect: Rect, color: string) {
+    const ctx = this.ctx;
+    ctx.strokeRect(rect.x, rect.y, rect.w, rect.h);
+    ctx.fillStyle = color
+    ctx.fillRect(rect.x, rect.y, rect.w, rect.h);
+    ctx.fillStyle = 'black'
+    let str = rect.tableId
+    ctx.fillText(str, rect.x + rect.w / 2, rect.y + rect.h / 2 - 10)
+    str = rect.capacity + "人";
+    ctx.fillText(str, rect.x + rect.w / 2, rect.y + rect.h / 2)
+    if (rect.reservationName) {
+      ctx.fillText(rect.reservationName, rect.x + rect.w / 2, rect.y + rect.h / 2 + 10)
+    }
+  }
+
+  draw() {
+    const ctx = this.ctx;
+    ctx.clearRect(0, 0, this.canvasRef.nativeElement.width, this.canvasRef.nativeElement.height);
+
+    for (const rect of this.rects) {
+      // ctx.strokeStyle = rect.selected ? 'black' : 'gray';
+      ctx.strokeStyle = 'black';
+      ctx.textAlign = 'center';
+      // ctx.textBaseline = 'middle'
+      ctx.lineWidth = 5;
+      if (rect.status == "可預約") {
+        this.drawByStatus(rect, "green");
+      } else if (rect.status == "使用中") {
+        this.drawByStatus(rect, "red");
+      } else if (rect.status == "已預約") {
+        this.drawByStatus(rect, "yellow");
+      } else {
+        this.drawByStatus(rect, "gray");
+      }
 
 
-  handlePress(e: MouseEvent) {
-    const canvasElement = this.canvas.nativeElement;
-    const ctx = canvasElement.getContext('2d');
-    const rect = canvasElement.getBoundingClientRect()
-    this.isEdit = false;
 
-    //x為滑鼠點擊時畫布中的x軸座標位置 y同上為y軸位置
-    let x = e.clientX - rect.left;
-    let y = e.clientY - rect.top;
+      // ctx.fillText(str, rect.x + rect.w / 2, rect.y + rect.h / 2 + 10)
+      // selected rectangle shows corner handles
+      // if (rect.selected) {
+      //   ctx.fillStyle = 'red';
+      //   this.getCorners(rect).forEach(c => {
+      //     ctx.fillRect(
+      //       c.x - this.cornerSize / 2,
+      //       c.y - this.cornerSize / 2,
+      //       this.cornerSize,
+      //       this.cornerSize
+      //     );
+      //   });
+      // }
 
+    }
+  }
 
-    if (!this.admin) {
-      setTimeout(() => {
-        for (let i = 0; i < this.tableList.length; i++) {
-          if (this.tableList[i].tablePositionX <= x && (this.tableList[i].tablePositionX + this.tableList[i].lengthX - 1) >= x &&
-            this.tableList[i].tablePositionY <= y && (this.tableList[i].tablePositionY + this.tableList[i].lengthY - 1) >= y) {
-            this.isEdit = true;
-            this.editTable = this.tableList[i];
-            break;
-          } else if (x <= (this.tableList[i].tablePositionX + this.tableList[i].lengthX + 5) &&
-            x > (this.tableList[i].tablePositionX + this.tableList[i].lengthX - 1) &&
-            y <= (this.tableList[i].tablePositionY + this.tableList[i].lengthY + 5) &&
-            y > (this.tableList[i].lengthY - 1)) {
+  getCorners(rect: Rect) {
+    return [
+      // { name: 'tl', x: rect.x, y: rect.y },
+      // { name: 'tr', x: rect.x + rect.w, y: rect.y },
+      // { name: 'bl', x: rect.x, y: rect.y + rect.h },
+      { name: 'br', x: rect.x + rect.w, y: rect.y + rect.h },
+    ];
+  }
+
+  // ================= Mouse Events =================
+  handleDown(event: MouseEvent) {
+
+    const { offsetX, offsetY } = event;
+
+    // 清除選取
+    this.rects.forEach(r => r.selected = false);
+    this.activeRect = null;
+
+    // 1. 先檢查是否按到某個矩形的 corner
+    for (const rect of [...this.rects].reverse()) {
+      const corner = this.getCorners(rect).find(c =>
+        Math.abs(offsetX - c.x) < this.cornerSize &&
+        Math.abs(offsetY - c.y) < this.cornerSize
+      );
+
+      if (corner) {
+        for (const table of this.tableList) {
+          if (table.tableId == rect.tableId) {
+            this.editTable = table;
             this.isResize = true;
-            this.editTable = this.tableList[i];
-            canvasElement.style.cursor = 'nwse-resize'
-            break;
+            rect.selected = true;
+            this.activeRect = rect;
+            this.draggingCorner = corner.name;
+            this.draw();
+            return;
           }
-          else {
-            this.isResize = false;
-            this.isEdit = false;
-          }
-        }
-      }, 100);
-    } else {
-      for (let i = 0; i < this.tableList.length; i++) {
-        if (this.tableList[i].tablePositionX <= x && (this.tableList[i].tablePositionX + this.tableList[i].lengthX - 1) >= x &&
-          this.tableList[i].tablePositionY <= y && (this.tableList[i].tablePositionY + this.tableList[i].lengthY - 1) >= y) {
-          this.editTable = this.tableList[i];
-          this.isEdit = true;
-          break;
-        }
-        else {
-          this.isResize = false;
-          this.isEdit = false;
         }
       }
     }
 
+
+    for (const rect of this.rects) {
+      if (offsetX < rect.x + rect.w && offsetX > rect.x &&
+        offsetY < rect.y + rect.h && offsetY > rect.y) {
+        for (const table of this.tableList) {
+          if (table.tableId == rect.tableId) {
+            this.editTable = table;
+            this.isEdit = true;
+            rect.selected = true;
+            this.activeRect = rect;
+            console.log(this.activeRect)
+            this.mouseDownTime = new Date().getTime();
+            this.draggingWholeRect = true;
+            this.offsetX = offsetX - rect.x;
+            this.offsetY = offsetY - rect.y;
+            this.draw();
+            return;
+          }
+        }
+      }
+    }
+
+    // 2. 再檢查是否按到矩形本體 → 移動矩形
+    // for (const rect of [...this.rects].reverse()) {
+    //   if (
+    //     offsetX >= rect.x && offsetX <= rect.x + rect.w &&
+    //     offsetY >= rect.y && offsetY <= rect.y + rect.h
+    //   ) {
+    //     rect.selected = true;
+    //     this.activeRect = rect;
+    //     this.draggingWholeRect = true;
+    //     this.offsetX = offsetX - rect.x;
+    //     this.offsetY = offsetY - rect.y;
+    //     this.draw();
+    //     return;
+    //   }
+    // }
+
+    // this.draw();
+
   }
 
-  edit(flag: boolean) {
-    let nowTime = this.currentTime.split(':').map(Number);
-    let nowHour = nowTime[0] * 3600;
-    let nowMinute = nowTime[1] * 60;
-    this.admin = flag;
-    let url = "http://localhost:8080/table/list";
-    this.service.getApi(url).subscribe((res: any) => {
-      this.reBuild(res);
-    })
-  }
-
-  handleOut(e: MouseEvent) {
-
-    if (this.isResize) {
-      const canvasElement = this.canvas.nativeElement;
-      const ctx = canvasElement.getContext('2d');
-
-      ctx.clearRect(0, 0, ctx.width, ctx.height);
-
-      let url = "http://localhost:8080/table/list";
-      this.service.getApi(url).subscribe((res: TableRes) => {
-        console.log(res)
-        this.reBuild(res);
+  click(event: MouseEvent) {
+    if (this.isEdit && this.mouseUpTime - this.mouseDownTime < 100) {
+      console.log(this.editTable)
+      const dialogRef = this.dialog.open(TableEditComponent, {
+        data: {
+          tableInfo: {
+            tableId: this.editTable.tableId,
+            tableStatus: this.editTable.tableStatus,
+            tableCapacity: this.editTable.tableCapacity,
+            tablePositionX: this.editTable.tablePositionX,
+            tablePositionY: this.editTable.tablePositionY,
+            lengthX: this.editTable.lengthX,
+            lengthY: this.editTable.lengthY
+          }, flag: false, mod: "編輯"
+        },
+        width: 'auto',
+        height: 'auto'
+      });
+      dialogRef.afterClosed().subscribe((res: any) => {
+        if (res) {
+          this.screenRefreshMinute();
+        }
+        this.isEdit = false;
+      })
+    }
+    if (!this.isEdit && !this.isResize) {
+      const rect = this.canvasRef.nativeElement.getBoundingClientRect();
+      const dialogRef = this.dialog.open(TableEditComponent, {
+        data: { flag: false, mod: "新增" },
+        width: 'auto',
+        height: 'auto'
+      });
+      dialogRef.afterClosed().subscribe((res: any) => {
+        if (res) {
+          this.screenRefreshMinute();
+        }
       })
     }
 
-    this.isEdit = false;
-    this.isResize = false;
-
   }
 
-  handleMove(e: MouseEvent) {
-
-
-    const canvasElement = this.canvas.nativeElement;
-    const ctx = canvasElement.getContext('2d');
-    const rect = canvasElement.getBoundingClientRect()
-
-    //x為滑鼠在畫布中的x軸座標位置 y同上為y軸位置
-    let x = e.clientX - rect.left;
-    let y = e.clientY - rect.top;
-
-    if (this.isResize) {
-      if (x > this.editTable.tablePositionX && y > this.editTable.tablePositionY) {
-        ctx.clearRect(this.editTable.tablePositionX - 5, this.editTable.tablePositionY - 5,
-          x - this.editTable.tablePositionX + 20, y - this.editTable.tablePositionY + 20);
-        ctx.strokeStyle = "black";
-        ctx.strokeRect(this.editTable.tablePositionX, this.editTable.tablePositionY,
-          x - this.editTable.tablePositionX, y - this.editTable.tablePositionY);
+  handleMove(event: MouseEvent) {
+    if (!this.rects) {
+      return;
+    }
+    const { offsetX, offsetY } = event;
+    for (const rect of this.rects) {
+      if (offsetX >= rect.x && offsetX <= rect.x + rect.w &&
+        offsetY >= rect.y && offsetY <= rect.y + rect.h) {
+        this.canvasRef.nativeElement.style.cursor = 'pointer'
+        break;
+      } else if (offsetX < rect.x + rect.w + 5 && offsetX > rect.x + rect.w - 5 &&
+        offsetY < rect.y + rect.h + 5 && offsetY > rect.y + rect.h - 5) {
+        this.canvasRef.nativeElement.style.cursor = 'nwse-resize'
+        break;
       }
-    } else {
-      for (let i = 0; i < this.tableList.length; i++) {
-        if (this.tableList[i].tablePositionX <= x && (this.tableList[i].tablePositionX + this.tableList[i].lengthX - 1) >= x &&
-          this.tableList[i].tablePositionY <= y && (this.tableList[i].tablePositionY + this.tableList[i].lengthY - 1) >= y) {
-          canvasElement.style.cursor = 'pointer'
-          break;
-        } else if (x <= (this.tableList[i].tablePositionX + this.tableList[i].lengthX + 5) &&
-          x > (this.tableList[i].tablePositionX + this.tableList[i].lengthX - 5) &&
-          y <= (this.tableList[i].tablePositionY + this.tableList[i].lengthY + 5) &&
-          y > (this.tableList[i].tablePositionY + this.tableList[i].lengthY - 5) && !this.admin) {
-          canvasElement.style.cursor = 'nwse-resize'
-          break;
-        }
-        else {
-          canvasElement.style.cursor = 'default'
-        }
+      else {
+        this.canvasRef.nativeElement.style.cursor = 'default'
+      }
+    }
+    if (!this.activeRect) {
+      return;
+    }
+
+
+
+
+    // ------------- 拖曳角落（縮放）-------------
+    if (this.draggingCorner) {
+      const r = this.activeRect;
+      if (offsetX > r.x && offsetY > r.y) {
+        r.w = offsetX - r.x;
+        r.h = offsetY - r.y;
+      }
+
+
+      // switch (this.draggingCorner) {
+      // case 'tl':
+      //   r.w += r.x - offsetX;
+      //   r.h += r.y - offsetY;
+      //   r.x = offsetX;
+      //   r.y = offsetY;
+      //   break;
+      // case 'tr':
+      //   r.w = offsetX - r.x;
+      //   r.h += r.y - offsetY;
+      //   r.y = offsetY;
+      //   break;
+      // case 'bl':
+      //   r.w += r.x - offsetX;
+      //   r.x = offsetX;
+      //   r.h = offsetY - r.y;
+      //   break;
+      // case 'br':
+      //   r.w = offsetX - r.x;
+      //   r.h = offsetY - r.y;
+      //   break;
+      // }
+
+      this.draw();
+      return;
+    }
+
+    // ------------- 拖曳整個矩形（移動）-------------
+    if (this.draggingWholeRect) {
+      if (this.activeRect.x + this.activeRect.w <= this.canvasRef.nativeElement.width &&
+        this.activeRect.y + this.activeRect.h <= this.canvasRef.nativeElement.height) {
+        this.activeRect.x = offsetX - this.offsetX;
+        this.activeRect.y = offsetY - this.offsetY;
+        this.draw();
       }
 
     }
 
-
   }
 
-  handleUp(e: MouseEvent) {
-
-  }
-
-  //監聽滑鼠點擊事件
-  handleClick(e: MouseEvent) {
-    console.log(e.clientX, e.clientY)
-    const canvasElement = this.canvas.nativeElement;
-    const ctx = canvasElement.getContext('2d');
-    const rect = canvasElement.getBoundingClientRect()
-
-    //x為滑鼠點擊時畫布中的x軸座標位置 y同上為y軸位置
-    let x = e.clientX - rect.left;
-    let y = e.clientY - rect.top;
-
-    if (!this.admin) {
-      let flag = true;
-      if (this.isEdit) {
-        let url = "http://localhost:8080/table/update";
-        let table: Table = {
-          tableId: this.editTable.tableId, tableStatus: this.editTable.tableStatus, tableCapacity: this.editTable.tableCapacity,
-          tablePositionX: x, tablePositionY: y, lengthX: this.editTable.lengthX, lengthY: this.editTable.lengthY
-        }
-        console.log(table);
-        this.service.postApi(url, table).pipe(
-          catchError((error) => {
-            if (error.error.code == 400) {
-              this.dialog.open(DialogComponent, {
-                data: { message: error.error.message, flag: true },
-                width: 'auto',
-                height: 'auto'
-              });
-            }
-            return error;
-          })).subscribe((res: any) => {
-            console.log(res)
+  handleUp() {
+    this.mouseUpTime = new Date().getTime();
+    if (this.isEdit && this.mouseUpTime - this.mouseDownTime > 100) {
+      let url = "http://localhost:8080/table/update";
+      for (const rect of this.rects) {
+        if (rect.tableId == this.editTable.tableId) {
+          this.editTable.tablePositionX = rect.x;
+          this.editTable.tablePositionY = rect.y;
+          this.service.postApi(url, this.editTable).subscribe((res: BasicRes) => {
+            console.log(res);
             if (res.code == 200) {
-              url = "http://localhost:8080/table/list";
-              this.service.getApi(url).subscribe((res: TableRes) => {
-                console.log(res)
-
-                // 重置畫布
-                ctx.reset();
-
-                console.log(res.tableList)
-                this.reBuild(res);
-              })
+              // this.screenRefreshMinute();
             } else {
               this.dialog.open(DialogComponent, {
                 data: { message: res.message, flag: true },
                 width: 'auto',
                 height: 'auto'
               });
+              this.ctx.clearRect(0, 0, this.canvasRef.nativeElement.width, this.canvasRef.nativeElement.height);
+              this.screenRefreshMinute();
             }
-          });
-      } else if (this.isResize) {
-        let url = "http://localhost:8080/table/update";
-        let table: Table = {
-          tableId: this.editTable.tableId, tableStatus: this.editTable.tableStatus, tableCapacity: this.editTable.tableCapacity,
-          tablePositionX: this.editTable.tablePositionX, tablePositionY: this.editTable.tablePositionY,
-          lengthX: x - this.editTable.tablePositionX, lengthY: y - this.editTable.tablePositionY
-        }
-        this.service.postApi(url, table).pipe(
-          catchError((error) => {
-            if (error.error.code == 400) {
-              this.dialog.open(DialogComponent, {
-                data: { message: error.error.message, flag: true },
-                width: 'auto',
-                height: 'auto'
-              });
-            }
-            return error;
-          })).subscribe((res: any) => {
-            console.log(res)
-            if (res.code == 200) {
-              url = "http://localhost:8080/table/list";
-              this.service.getApi(url).subscribe((res: TableRes) => {
-                console.log(res)
-
-                // 重置畫布
-                ctx.reset();
-
-                console.log(res.tableList)
-                this.reBuild(res);
-              })
-            } else {
-              const dialogRef = this.dialog.open(DialogComponent, {
-                data: { message: res.message, flag: true },
-                width: 'auto',
-                height: 'auto'
-              });
-
-              dialogRef.afterClosed().subscribe(res => {
-                let url = "http://localhost:8080/table/list";
-                this.service.getApi(url).subscribe((res: TableRes) => {
-                  console.log(res)
-                  ctx.reset();
-                  console.log(res.tableList)
-                  this.reBuild(res);
-                })
-
-              })
-
-            }
-          });
-      }
-      else {
-        // for迴圈遍歷資料庫中所有table的資訊
-        for (let i = 0; i < this.tableList.length; i++) {
-          // 由於預設畫布桌位大小為 20*20 px 的範圍 所以去判斷 滑鼠點擊時的點是否有涵蓋到已存在中的桌位
-          if (this.tableList[i].tablePositionX <= x && (this.tableList[i].tablePositionX + this.tableList[i].lengthX) >= x &&
-            this.tableList[i].tablePositionY <= y && (this.tableList[i].tablePositionY + this.tableList[i].lengthY) >= y) {
-
-            // #1 滑鼠點擊處已有存在table則將flag值更改為false
-            flag = false;
-
-            // 由於滑鼠點擊到的 座標 已有存在的桌位 則已編輯桌位狀態 開啟dialog
-            const dialogRef = this.dialog.open(TableEditComponent, {
-              data: { tableInfo: this.tableList[i], mod: "編輯" },
-              width: 'auto',
-              height: 'auto'
-            });
-
-
-            dialogRef.afterClosed().subscribe(res => {
-              let url = "http://localhost:8080/table/list";
-
-              // 編輯結束後去判斷 res 是否為 true 若為 true 代表有進行 刪除/更新 的動作
-              if (res) {
-
-                // 由於有對資料庫table資料進行 更新/刪除 需重新獲取資料庫中的所有table資料
-                this.service.getApi(url).subscribe((res: TableRes) => {
-                  console.log(res)
-                  // 重置畫布
-                  ctx.reset();
-
-                  //重新渲染畫布 將資料庫中所有table資料 撈出 並跑for迴圈顯示在畫布上
-
-                  console.log(res.tableList)
-                  this.reBuild(res);
-                })
-              }
-            })
-          }
-        }
-
-        // flag 為true 時 代表點擊的點沒有涵蓋在存在的table中
-        if (flag) {
-
-          // 因為沒有涵蓋在存在的table中所已進行 新增table
-          const dialogRef = this.dialog.open(TableEditComponent, {
-            // data為 table 欄位的預設資料 可進行修改
-            data: { status: "可預約", capacity: 2, position_x: x, position_y: y, mod: "新增" },
-            width: 'auto',
-            height: 'auto'
-          });
-
-          // dialog結束後 判斷 res是否為 true 若為 true 代表有新增table
-          dialogRef.afterClosed().subscribe(res => {
-            let url = "http://localhost:8080/table/list";
-
-            // res為true 代表新增table 則需重新獲取資料庫中的table資訊並顯示在畫布上
-            if (res) {
-              this.service.getApi(url).subscribe((res: TableRes) => {
-                console.log(res)
-                this.reBuild(res);
-              })
-            }
+            this.isEdit = false;
+            this.draggingCorner = null;
+            this.draggingWholeRect = false;
+            return;
           })
         }
       }
-
-      this.isResize = false;
-      this.isEdit = false;
     }
+    if (this.isResize) {
+      let url = "http://localhost:8080/table/update";
+      for (const rect of this.rects) {
+        if (rect.tableId == this.editTable.tableId) {
+          this.editTable.lengthX = rect.w;
+          this.editTable.lengthY = rect.h;
+          this.service.postApi(url, this.editTable).subscribe((res: BasicRes) => {
+            if (res.code == 200) {
 
-
-  }
-
-  reBuild(tableList: TableRes) {
-    const canvasElement = this.canvas.nativeElement;
-    const ctx = canvasElement.getContext('2d');
-    this.tableList = tableList.tableList;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle'
-    ctx.lineWidth = 5;
-    ctx.font = "15px serif";
-    if (this.admin) {
-      ctx.clearRect(0, 0, canvasElement.width, canvasElement.height);
-      for (let i = 0; i < tableList.tableList.length; i++) {
-        let str = "";
-        if (tableList.tableList[i].tableStatus == "已預約") {
-          ctx.strokeStyle = "black";
-          ctx.strokeRect(tableList.tableList[i].tablePositionX,
-            tableList.tableList[i].tablePositionY, tableList.tableList[i].lengthX, tableList.tableList[i].lengthY);
-          ctx.fillStyle = 'yellow';
-          ctx.fillRect(tableList.tableList[i].tablePositionX, tableList.tableList[i].tablePositionY,
-            tableList.tableList[i].lengthX, tableList.tableList[i].lengthY)
-          ctx.fillStyle = 'black';
-          ctx.fillText(tableList.tableList[i].tableId, tableList.tableList[i].tablePositionX + tableList.tableList[i].lengthX / 2,
-            tableList.tableList[i].tablePositionY + tableList.tableList[i].lengthY / 2 - 10)
-          str = tableList.tableList[i].tableCapacity + "人";
-          ctx.fillText(str, tableList.tableList[i].tablePositionX + tableList.tableList[i].lengthX / 2,
-            tableList.tableList[i].tablePositionY + tableList.tableList[i].lengthY / 2 + 10)
-          ctx.fillText(str, tableList.tableList[i].tablePositionX + tableList.tableList[i].lengthX / 2,
-            tableList.tableList[i].tablePositionY + tableList.tableList[i].lengthY / 2 + 10)
-          str = this.reservationList[i].reservationName;
-          ctx.fillText(str, tableList.tableList[i].tablePositionX + tableList.tableList[i].lengthX / 2,
-            tableList.tableList[i].tablePositionY + tableList.tableList[i].lengthY / 2 + 30);
-        } else if (tableList.tableList[i].tableStatus == "可預約") {
-          ctx.strokeStyle = 'black';
-          ctx.strokeRect(tableList.tableList[i].tablePositionX, tableList.tableList[i].tablePositionY,
-            tableList.tableList[i].lengthX, tableList.tableList[i].lengthY);
-          ctx.fillStyle = 'green';
-          ctx.fillRect(tableList.tableList[i].tablePositionX, tableList.tableList[i].tablePositionY,
-            tableList.tableList[i].lengthX, tableList.tableList[i].lengthY)
-          ctx.fillStyle = 'black';
-          ctx.fillText(tableList.tableList[i].tableId, tableList.tableList[i].tablePositionX + tableList.tableList[i].lengthX / 2,
-            tableList.tableList[i].tablePositionY + tableList.tableList[i].lengthY / 2 - 10)
-          str = tableList.tableList[i].tableCapacity + "人";
-          ctx.fillText(str, tableList.tableList[i].tablePositionX + tableList.tableList[i].lengthX / 2,
-            tableList.tableList[i].tablePositionY + tableList.tableList[i].lengthY / 2 + 10)
-        } else if (tableList.tableList[i].tableStatus == "使用中") {
-          ctx.strokeStyle = "black";
-          ctx.strokeRect(tableList.tableList[i].tablePositionX,
-            tableList.tableList[i].tablePositionY, tableList.tableList[i].lengthX, tableList.tableList[i].lengthY);
-          ctx.fillStyle = 'red';
-          ctx.fillRect(tableList.tableList[i].tablePositionX, tableList.tableList[i].tablePositionY,
-            tableList.tableList[i].lengthX, tableList.tableList[i].lengthY)
-          ctx.fillStyle = 'black';
-          ctx.fillText(tableList.tableList[i].tableId, tableList.tableList[i].tablePositionX + tableList.tableList[i].lengthX / 2,
-            tableList.tableList[i].tablePositionY + tableList.tableList[i].lengthY / 2 - 10)
-          str = tableList.tableList[i].tableCapacity + "人";
-          ctx.fillText(str, tableList.tableList[i].tablePositionX + tableList.tableList[i].lengthX / 2,
-            tableList.tableList[i].tablePositionY + tableList.tableList[i].lengthY / 2 + 10)
-          str = this.reservationList[i].reservationName;
-          ctx.fillText(str, tableList.tableList[i].tablePositionX + tableList.tableList[i].lengthX / 2,
-            tableList.tableList[i].tablePositionY + tableList.tableList[i].lengthY / 2 + 30);
-        } else if (tableList.tableList[i].tableStatus == "未開放") {
-          ctx.strokeStyle = "black";
-          ctx.strokeRect(tableList.tableList[i].tablePositionX,
-            tableList.tableList[i].tablePositionY, tableList.tableList[i].lengthX, tableList.tableList[i].lengthY);
-          ctx.fillStyle = 'gray';
-          ctx.fillRect(tableList.tableList[i].tablePositionX, tableList.tableList[i].tablePositionY,
-            tableList.tableList[i].lengthX, tableList.tableList[i].lengthY)
-          ctx.fillStyle = 'black';
-          ctx.fillText(tableList.tableList[i].tableId, tableList.tableList[i].tablePositionX + tableList.tableList[i].lengthX / 2,
-            tableList.tableList[i].tablePositionY + tableList.tableList[i].lengthY / 2 - 10)
-          str = tableList.tableList[i].tableCapacity + "人";
-          ctx.fillText(str, tableList.tableList[i].tablePositionX + tableList.tableList[i].lengthX / 2,
-            tableList.tableList[i].tablePositionY + tableList.tableList[i].lengthY / 2 + 10)
+            } else {
+              this.dialog.open(DialogComponent, {
+                data: { message: res.message, flag: true },
+                width: 'auto',
+                height: 'auto'
+              });
+              this.ctx.clearRect(0, 0, this.canvasRef.nativeElement.width, this.canvasRef.nativeElement.height);
+              this.screenRefreshMinute();
+            }
+            console.log(res);
+            this.isResize = false;
+            this.draggingCorner = null;
+            this.draggingWholeRect = false;
+            return;
+          })
         }
       }
-    } else {
-      ctx.clearRect(0, 0, canvasElement.width, canvasElement.height);
-      for (let i = 0; i < tableList.tableList.length; i++) {
-        let str = "";
-        ctx.strokeStyle = 'black';
-        ctx.strokeRect(tableList.tableList[i].tablePositionX, tableList.tableList[i].tablePositionY,
-          tableList.tableList[i].lengthX, tableList.tableList[i].lengthY);
-        ctx.fillStyle = 'gray';
-        ctx.fillRect(tableList.tableList[i].tablePositionX, tableList.tableList[i].tablePositionY,
-          tableList.tableList[i].lengthX, tableList.tableList[i].lengthY)
-        ctx.fillStyle = 'black';
-        ctx.fillText(tableList.tableList[i].tableId, tableList.tableList[i].tablePositionX + tableList.tableList[i].lengthX / 2,
-          tableList.tableList[i].tablePositionY + tableList.tableList[i].lengthY / 2 - 10)
-        str = tableList.tableList[i].tableCapacity + "人";
-        ctx.fillText(str, tableList.tableList[i].tablePositionX + tableList.tableList[i].lengthX / 2,
-          tableList.tableList[i].tablePositionY + tableList.tableList[i].lengthY / 2 + 10)
-      }
     }
+    this.draggingCorner = null;
+    this.draggingWholeRect = false;
   }
+
+
+  // edit(flag: boolean) {
+  // this.admin = flag;
+  // let url = "http://localhost:8080/table/list";
+  // this.service.getApi(url).subscribe((res: any) => {
+  //   this.draw();
+  // })
+  // }
+
+  screenRefreshMinute() {
+    let today = new Date();
+    let year = today.getFullYear();
+    let month = String(today.getMonth() + 1).padStart(2, '0');
+    let day = String(today.getDate()).padStart(2, '0');
+    let hour = String(today.getHours()).padStart(2, '0');
+    let minute = String(today.getMinutes()).padStart(2, '0');
+    this.currentTime = hour + ":" + minute;
+    console.log(this.currentTime)
+    this.reservation_date = `${year}-${month}-${day}`;
+
+    let myDiv = document.getElementById("progressBar") as HTMLDivElement;
+
+    let nowTime = this.currentTime.split(':').map(Number);
+    let nowHour = nowTime[0] * 3600;
+    let nowMinute = nowTime[1] * 60;
+
+    if (nowHour + nowMinute >= 36000) {
+      let timePercent = (((nowHour + nowMinute - 36000) / 3600) / 12) * 100
+      let str = timePercent + "%";
+      console.log(str)
+      myDiv.style.height = str;
+    } else {
+      myDiv.style.height = "0%"
+    }
+    let url = "http://localhost:8080/reservation/date_list?reservationDate=" + this.reservation_date;
+    this.service.getApi(url).subscribe((reservationListToday: ReservationListTodayRes) => {
+      this.reservationListToday = reservationListToday.reservationAndTableByDateList;
+      this.reservation = [];
+      for (const table of reservationListToday.reservationAndTableByDateList) {
+        for (const reservation of table.reservations) {
+          reservation.tableId = table.tableId
+          this.reservation.push(reservation)
+        }
+      }
+      //=========gpt協助產生排序定位時間陣列=========
+      const now = new Date();
+      this.reservation.sort((a, b) => {
+        const timeA = buildTodayTime(a.reservationTime);
+        const timeB = buildTodayTime(b.reservationTime);
+
+        const isAPast = timeA < now;
+        const isBPast = timeB < now;
+
+        // 未過期排前面
+        if (isAPast && !isBPast) return 1;
+        if (!isAPast && isBPast) return -1;
+
+        // 同為過期或同為未過期 → 正常排序
+        return timeA.getTime() - timeB.getTime();
+      });
+
+      function buildTodayTime(hms: string): Date {
+        const [h, m, s] = hms.split(':').map(Number);
+        const d = new Date();
+        d.setHours(h, m, s, 0);
+        return d;
+      }
+      //================
+      console.log(this.reservation)
+      console.log(this.reservationListToday)
+    })
+
+    url = "http://localhost:8080/reservation/now_time_list";
+    this.service.getApi(url).subscribe((reservation: ReservationNowListRes) => {
+      url = "http://localhost:8080/table/list"
+      this.reservationList = reservation.reservationAndTableByTimeList;
+      console.log(this.reservationList)
+      this.service.getApi(url).subscribe((tableRes: TableRes) => {
+        if (tableRes.tableList) {
+          this.tableList = tableRes.tableList;
+          this.rects = [];
+          for (let i = 0; i < tableRes.tableList.length; i++) {
+            let reservationName;
+            if (reservation.reservationAndTableByTimeList) {
+              reservationName = reservation.reservationAndTableByTimeList[i].reservationName;
+            }
+            this.rects.push({
+              x: tableRes.tableList[i].tablePositionX,
+              y: tableRes.tableList[i].tablePositionY,
+              w: tableRes.tableList[i].lengthX, h: tableRes.tableList[i].lengthY,
+              tableId: this.tableList[i].tableId,
+              capacity: tableRes.tableList[i].tableCapacity,
+              reservationName: reservationName,
+              status: tableRes.tableList[i].tableStatus
+            })
+          }
+          console.log(this.rects)
+          this.draw();
+        }
+      })
+    })
+
+
+
+  }
+
 
   // 已預約 可預約 使用中 未開放
 

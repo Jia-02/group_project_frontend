@@ -153,7 +153,7 @@ export class TableEditComponent {
     } else if (this.data.mod == "新增") {
       let url = "http://localhost:8080/table/add";
       let table: Table = {
-        tableId: this.tableId, tableStatus: this.tableStatus, tableCapacity: this.tableCapacity,
+        tableId: this.tableId, tableStatus: "可預約", tableCapacity: this.tableCapacity,
         tablePositionX: this.tablePositionX, tablePositionY: this.tablePositionY,
         lengthX: this.lengthX, lengthY: this.lengthY
       }

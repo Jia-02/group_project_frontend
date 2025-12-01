@@ -44,7 +44,7 @@ export interface Reservation {
   tableId: string;
 }
 
-export interface UpdateReservation{
+export interface UpdateReservation {
   reservationDate: string;
   reservationPhone: string;
   reservationTime: string;
@@ -56,7 +56,7 @@ export interface UpdateReservation{
   reservationNote: string;
   childSeat: number;
   tableId: string;
-  newDate:string;
+  newDate: string;
 }
 
 export interface TableRes {
@@ -86,25 +86,43 @@ export interface ReservationToday {
   tableId: string;
 }
 
-export interface ReservationNowListRes{
-  code:number;
-  message:string;
-  reservationAndTableByTimeList:ReservationNowList[]
+export interface ReservationNowListRes {
+  code: number;
+  message: string;
+  reservationAndTableByTimeList: ReservationNowList[]
 }
 
 export interface ReservationNowList {
-  capacity:number;
-  childSeat:number;
-  reservationAdultCount:number;
-  reservationChildCount:number;
-  reservationCount:number;
-  reservationDate:string;
-  reservationName:string;
-  reservationNote:string;
-  reservationPhone:string;
-  reservationStatus:boolean;
-  reservationTime:string;
-  tableDailyStatus:boolean;
-  tableId:string;
-  tableStatus:string;
+  capacity: number;
+  childSeat: number;
+  reservationAdultCount: number;
+  reservationChildCount: number;
+  reservationCount: number;
+  reservationDate: string;
+  reservationName: string;
+  reservationNote: string;
+  reservationPhone: string;
+  reservationStatus: boolean;
+  reservationTime: string;
+  tableDailyStatus: boolean;
+  tableId: string;
+  tableStatus: string;
+}
+
+export interface BasicRes {
+  code: number;
+  message: string;
+}
+
+
+export interface Rect {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  tableId: string;
+  capacity: number;
+  reservationName?: string;
+  status: string;
+  selected?: boolean;
 }
