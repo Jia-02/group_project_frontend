@@ -1,32 +1,40 @@
 <div style="display: flex;">
   <span style="flex: 1 1 auto;"></span>
   <div style="width: 90%; margin-top: 5%;">
-    <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="center">
+    <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="center" style="padding: 0;">
       @for(link of links;track link){
-      <mat-tab label={{link.name}}>
+      <mat-tab label={{link.name}} >
         @for(order of order;track order){
-          @if(order.workTableId == link.id){
-              <div style="height: auto; width: 300px; border: 1px solid black; margin: 20px  ; padding: 20px; border-radius: 10px;">
-                <span>訂單編號:{{order.id}}</span> <br> <br>
-                @if(!order.takeaway){
-                  <span>內用桌號:{{order.tableId}}</span> <br> <br>
-                }
-                <span>外帶:{{order.takeaway}}</span> <br> <br>
-                <span>餐點:</span> <br> <br>
-            @for(menu of order.meal;track menu){
-              <div style="width: auto; border: 1px solid black; border-radius: 10px; padding: 10px;">
-                {{menu.name}}
-              </div> <br>
-            }
-              <div style="display: flex">
-                <span style="flex: 1 1 auto;"></span>
-                <span>金額:{{order.price}}</span> <br>
-              </div>
-              </div>
+        @if(order.workTableId == link.id){
+        <div
+          style="height: auto; width: 300px; border: 1px solid black; margin: 20px  ; padding: 20px; border-radius: 10px;">
+          <span>訂單編號:{{order.id}}</span> <br> <br>
+          @if(!order.takeaway){
+          <span>內用桌號:{{order.tableId}}</span> <br> <br>
           }
+          <span>外帶:{{order.takeaway}}</span> <br> <br>
+          <span>餐點:</span> <br> <br>
+          @for(menu of order.meal;track menu){
+          <div style="width: auto; border: 1px solid black; border-radius: 10px; padding: 10px;">
+            {{menu.name}}
+          </div> <br>
+          }
+          <div style="display: flex">
+            <span style="flex: 1 1 auto;"></span>
+            <span>金額:{{order.price}}</span> <br>
+          </div>
+        </div>
+        }
         }
       </mat-tab>
       }
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <span (click)="addLink($event)" style="width: auto;">
+            <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="add" ></mat-icon>
+          </span>
+        </ng-template>
+      </mat-tab>
     </mat-tab-group>
   </div>
   <span style="flex: 1 1 auto;"></span>

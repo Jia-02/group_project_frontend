@@ -18,7 +18,9 @@ html {
 html, body { height: 100%;background-color: rbg(220,220,220); }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
-
+.mat-mdc-tab.mdc-tab{
+  padding: 0;
+}
 
 .mat-mdc-tab-labels {
     display: flex;
