@@ -1,45 +1,49 @@
-
 // Custom Theming for Angular Material
 // For more information: https://material.angular.dev/guide/theming
 @use '@angular/material' as mat;
 
 html {
-  @include mat.theme((
-    color: (
-      theme-type: light,
-      primary: mat.$azure-palette,
-      tertiary: mat.$blue-palette,
-    ),
-    typography: Roboto,
-    density: 0,
-  ));
-}/* You can add global styles to this file, and also import other style files */
-
-html, body { height: 100%;background-color: rgb(248,249,250); }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
-
-.mat-mdc-tab-labels {
-    display: flex;
-    border-radius: 10px;
-    background-color: white;
-    overflow: hidden;
-    border: 1px solid black;
-    margin-bottom: 5%;
-    flex: 1 0 auto;
+  @include mat.theme((color: (theme-type: light,
+        primary: mat.$azure-palette,
+        tertiary: mat.$blue-palette,
+      ),
+      typography: Roboto,
+      density: 0,
+    ));
 }
 
-.mat-tab-body-animating>.mat-mdc-tab-body-content, .mat-mdc-tab-body-active>.mat-mdc-tab-body-content {
-    visibility: visible;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    background-color: white;
-}
-.mat-mdc-tab-body-wrapper{
-    border: 1px solid black;
-    border-radius: 10px;
-    margin-bottom: 5%;
+/* You can add global styles to this file, and also import other style files */
+
+html,
+body {
+  height: 100%;
+  background-color: rgb(248, 249, 250);
 }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.menu-admin-container .mat-mdc-tab-labels {
+  display: flex;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 30px;
+  flex: 1 0 auto;
+}
+
+// Tab 內容區域
+.menu-admin-container .mat-tab-body-animating>.mat-mdc-tab-body-content,
+.menu-admin-container .mat-mdc-tab-body-active>.mat-mdc-tab-body-content {
+  visibility: visible;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
