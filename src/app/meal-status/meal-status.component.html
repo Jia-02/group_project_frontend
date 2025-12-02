@@ -70,7 +70,10 @@
             <span>{{order.innerId}}</span>
           </div>
         </div>
-        @for(meal of order.optionsDetail;track meal){
+        @if(order.settingId){
+          <span style="margin-left: 10px;">{{order.settingId}}號餐</span>
+        }
+         @for(meal of order.optionsDetail;track meal){
         <div>
           <ul>
             <li>{{meal.productName}}&#40;
@@ -86,6 +89,11 @@
         </div>
         <br>
         }
+        <div style="display: flex; padding: 10px;">
+          <span style="flex: 1 1 auto;"></span>
+          <button (click)="delivery()">已送餐</button>
+        </div>
+
         }@else if(order.takeOutId){
         {{order.takeOutId}}
         }

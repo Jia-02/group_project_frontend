@@ -67,6 +67,11 @@ export class MealStatusComponent {
 
   }
 
+  delivery(){
+    this.orderMealList[0].orderStatus = "已送達";
+    console.log(this.orderMealList)
+  }
+
 }
 
 interface OrderMealList {
