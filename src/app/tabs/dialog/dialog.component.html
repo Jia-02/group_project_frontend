@@ -1,5 +1,9 @@
 <div style="padding: 10%;">
-  <span>工作檯名稱:</span> <input type="text" [(ngModel)] = "workStationName" style="width: 50%;"> <br> <br>
+  @if(data.mod == "新增"){
+    <span>工作檯名稱:</span> <input type="text" [(ngModel)] = "workStationName" style="width: 50%;"> <br> <br>
+  }@else {
+    <span style="color: red;">是否確定刪除工作檯</span> <br>
+  }
   <button (click)="next(false)">取消</button>
   <button (click)="next(true)">確認</button>
 </div>

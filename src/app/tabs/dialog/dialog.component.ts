@@ -17,7 +17,7 @@ export class DialogComponent {
 
   next(flag:boolean){
     if(flag){
-      this.dialogRef.close(this.workStationName);
+      this.dialogRef.close({name:this.workStationName,flag:true});
     }else{
       this.dialogRef.close();
     }

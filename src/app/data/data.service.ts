@@ -19,6 +19,16 @@ export class DataService {
 
 }
 
+export interface WorkTable {
+  workStationId: number;
+  workStationName: string;
+}
+
+export interface WorkTableListRes {
+  code: number;
+  message: string;
+  workStationList: WorkTable[];
+}
 
 export interface Table {
   tableId: string;
