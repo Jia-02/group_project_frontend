@@ -1,14 +1,15 @@
 <div style="height: auto; padding-left: 5%; padding-right: 5%;">
   <div style="display: flex; align-items: center;">
-    <h3>餐點狀態</h3>
+    <h1>餐點狀態</h1>
     <span style="flex: 1 1 auto"></span>
-    <span>待送餐點</span>
-    <span>{{count}}</span>
-    <div class="divCss1"></div>
+    <h3 style="margin-right: 30px;">待送餐點</h3>
+    <div class="divCss1">
+      <span>{{count}}</span>
+    </div>
   </div>
   <div style="width: 100%; height: auto; display: flex;">
     <div
-      style="height: 800px; width:300px; border: 1px solid black; background-color: gray; border-radius: 10px; padding: 10px;">
+      style="height: 800px; width:300px; border: 1px solid black; background-color: rgba(128,128,128,0.5); border-radius: 10px; padding: 10px;">
       <h3>準備中</h3>
       @for(order of orderMealList;track order){
       @if(order.orderStatus == "準備中"){
@@ -26,13 +27,15 @@
             <span>{{order.innerId}}</span>
           </div>
         </div>
-        @for(meal of order.optionsNote;track meal){
+        @for(meal of order.optionsDetail;track meal){
         <div>
           <ul>
             <li>{{meal.productName}}&#40;
               @for(detail of meal.detailList;track detail){
               <span>{{detail.option}}</span>
-              <span></span>
+              @if(detail.id != meal.detailList.length){
+              <span>，</span>
+              }
               }
               <span>&#41;</span>
             </li>
@@ -67,15 +70,15 @@
             <span>{{order.innerId}}</span>
           </div>
         </div>
-        @for(meal of order.optionsNote;track meal){
+        @for(meal of order.optionsDetail;track meal){
         <div>
           <ul>
-
-
             <li>{{meal.productName}}&#40;
               @for(detail of meal.detailList;track detail){
               <span>{{detail.option}}</span>
-              <span></span>
+              @if(detail.id != meal.detailList.length){
+              <span>，</span>
+              }
               }
               <span>&#41;</span>
             </li>
@@ -93,7 +96,7 @@
     </div>
     <span style="flex: 1 1 auto;"></span>
     <div
-      style="height: 800px; width:300px; border: 1px solid black; background-color: gray; border-radius: 10px; padding: 10px;">
+      style="height: 800px; width:300px; border: 1px solid black; background-color: rgba(128,128,128,0.5); border-radius: 10px; padding: 10px;">
       <h3>已送達</h3>
       @for(order of orderMealList;track order){
       @if(order.orderStatus == "已送達"){
@@ -111,15 +114,15 @@
             <span>{{order.innerId}}</span>
           </div>
         </div>
-        @for(meal of order.optionsNote;track meal){
+        @for(meal of order.optionsDetail;track meal){
         <div>
           <ul>
-
-
             <li>{{meal.productName}}&#40;
               @for(detail of meal.detailList;track detail){
               <span>{{detail.option}}</span>
-              <span></span>
+              @if(detail.id != meal.detailList.length){
+              <span>，</span>
+              }
               }
               <span>&#41;</span>
             </li>
