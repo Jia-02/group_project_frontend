@@ -6,11 +6,13 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogReservationComponent } from '../@dialog/dialog-reservation/dialog-reservation.component';
 import { tables, tableReservationByDate, reservation, scheduleItem, timeLabel, apiResponse } from '../@interface/interface';
 import { DialogDeleteComponent } from '../@dialog/dialog-delete/dialog-delete.component';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-reservation',
   imports: [
     CommonModule,
+    MatIconModule
   ],
   templateUrl: './reservation.component.html',
   styleUrl: './reservation.component.scss'
@@ -31,6 +33,7 @@ export class ReservationComponent {
   selectedReservationDetail: WritableSignal<scheduleItem | null> = signal(null); // 存使用者點擊的單筆預約詳情
   dayNames: string[] = ['日', '一', '二', '三', '四', '五', '六']; // 星期
   monthWeeks: Date[][] = []; // 存6 週 x 7 天的月曆
+  tableReservationByDate!: tableReservationByDate;
 
   // 排程圖區塊
   readonly HOUR_HEIGHT_PX = 45;   // 每小時區塊對應的像素高度
@@ -191,27 +194,51 @@ export class ReservationComponent {
 
   // 切換桌位開放狀態 (在當前選定日期)
   tableAvailabe(t: tables): void {
-    const dateStr = this.formatDateStr(this.selectedDay()); // 取得當前選定日期
+    const dateStr = this.formatDateStr(this.selectedDay());
 
-    // 確保當日資料存在於 Map 中
     if (!this.dataService.tableAvailableByDate.has(dateStr)) {
-      // 如果當日沒有桌位狀態紀錄，則從當前 signal 複製一份作為初始狀態
       this.dataService.tableAvailableByDate.set(dateStr, JSON.parse(JSON.stringify(this.tables())));
     }
-
     let dayTables = this.dataService.tableAvailableByDate.get(dateStr)!;
 
-    // 找到目標桌位，並反轉其 table_status 狀態
-    dayTables = dayTables.map(table => {
-      if (table.table_id == t.table_id) {
-        let newStatus = !table.table_status;
-        return { ...table, table_status: newStatus };
-      }
-      return table;
-    });
-    this.dataService.tableAvailableByDate.set(dateStr, dayTables);  // 更新 Map 中的快取資料
-    this.tables.set(dayTables);  // 更新 signal 以觸發畫面更新
+    // 用來暫存「被修改的那張桌子」的新資料
+    const targetTable = dayTables.find(table => table.table_id == t.table_id);
+    if (!targetTable) return;
+
+    // 在快取中直接修改狀態
+    const newStatus = !targetTable.table_status;
+    targetTable.table_status = newStatus;
+
+    // 直接從修改後的快取物件建立，並確保所有欄位名稱匹配
+    const dtoToSend = {
+      tableId: targetTable.table_id, // 使用正確的屬性名稱
+      capacity: targetTable.capacity,
+      tableDailyStatus: targetTable.table_status,
+      tableDailyDate: dateStr,
+      reservations: [] as any[]
+    };
+
+    // 重新設置 Signal 和快取
+    this.dataService.tableAvailableByDate.set(dateStr, dayTables);
+    this.tables.set([...dayTables]); // 建議使用擴散運算符確保 Signal 偵測到變化
+
+    const isNewStatusAvailable = dtoToSend.tableDailyStatus;
+
+    if (isNewStatusAvailable) {
+      // 如果桌子是關閉要開啟 (新狀態為 true)
+      this.httpClientService.postApi('http://localhost:8080/table/status/update', dtoToSend)
+        .subscribe((res) => {
+          console.log(res);
+        });
+    } else {
+      // 如果桌子是開啟，要關閉 (新狀態為 false)
+      this.httpClientService.postApi('http://localhost:8080/table/status/add', dtoToSend)
+        .subscribe((res) => {
+          console.log(res);
+        });
+    }
   }
+
 
   // 處理DB資料獲取和載入
   findDataAndLoad(date: Date): void {
@@ -228,8 +255,6 @@ export class ReservationComponent {
       .subscribe({
         next: (res) => {
           const apiRes = res as apiResponse;
-          console.log(apiRes);
-
           if (apiRes.code == 200) {
             // 處理後端回傳的原始資料，轉換成前端 reservation 結構，並同時更新桌位狀態
             const allReservations = this.backendData(apiRes.reservationAndTableByDateList, selectedDateStr);

@@ -1,17 +1,14 @@
 // 顏色變數
 $color-primary: #013c70; // 藍色 (Blue-600)
 $color-secondary: #fe6d13; // 淺橙色 (用於活動區塊, 類似圖片顏色)
-$color-active: #ef5350; // 橘紅色 (用於未開放/預約中)
-$color-text: #374151; // 灰色 (Gray-700)
+$color-text: #333; // 深灰色
 $color-card-bg: #ffffff; // 白色
-$color-page-bg: #f9fafb; // 淺灰 (Gray-50)
-$color-border: #e5e7eb; // 邊框 (Gray-200)
-$color-light-border: #f3f4f6; // 更淺的邊框 (Gray-100)
-$color-muted: #9ca3af; // 靜音 (Gray-400)
-$color-other-month: #d1d5db; // 非當月 (Gray-300)
+$color-page-bg: #F8F9FA; // 淺灰(背景色)
+$color-gray-bg: #cbcbcb; // 淺灰
+$color-muted: #9ca3af; // 灰色
 
 // 尺寸變數
-$time-label-width: 90px;
+$time-label-width: 59px;
 $hour-height: 45px; // 每小時的高度 (必須與 TS 中的 HOUR_HEIGHT_PX 匹配)
 
 :host {
@@ -19,13 +16,12 @@ $hour-height: 45px; // 每小時的高度 (必須與 TS 中的 HOUR_HEIGHT_PX �
   --hour-height: #{$hour-height};
 }
 
-// ------------------------------------
+// 背景
 .background {
-  min-height: 100vh;
-  background-color: $color-page-bg;
+  height: 100vh;
+  width: 100%;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  justify-content: center;
   font-family: 'Inter', sans-serif;
   color: $color-text;
 }
@@ -35,41 +31,29 @@ $hour-height: 45px; // 每小時的高度 (必須與 TS 中的 HOUR_HEIGHT_PX �
   height: 100vh;
   max-width: 1600px;
   display: flex;
-  flex-direction: column; // 預設為直向（手機版）
-  min-height: 100vh;
+  overflow: hidden;
 }
 
-@media (min-width: 992px) {
-  .mainLayout {
-    flex-direction: row; // 桌面版：左右佈局
-    padding: 15px 15px; // 確保有邊距
-  }
-}
-
-/* 左側面板容器 */
+// 左側面板容器
 .leftPanel {
   flex-shrink: 0;
   display: flex;
-  flex-direction: column; // 確保日曆和詳細資訊垂直堆疊
-
-  @media (min-width: 992px) {
-    width: 200px; // 桌面版固定寬度
-    padding: 0 20px 0 0; // 調整右邊間距
-    margin-right: 20px;
-  }
+  flex-direction: column;
+  width: 250px;
+  margin: 45px 20px 0 10px;
 }
 
+// 日曆
 .calendarPanel {
   flex-shrink: 0;
-  width: 100%;
   height: 260px;
   padding: 20px;
   background-color: $color-card-bg;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
-  border-radius: 1rem;
-
+  border-radius: 8px;
 }
 
+// 日曆抬頭
 .header {
   display: flex;
   align-items: center;
@@ -80,54 +64,44 @@ $hour-height: 45px; // 每小時的高度 (必須與 TS 中的 HOUR_HEIGHT_PX �
 .monthTitle {
   font-size: 14px;
   font-weight: 700;
-  color: #1f2937;
+  color: $color-text;
 }
 
 .navButtons {
   display: flex;
-  gap: 4px;
+  gap: 3px;
 }
 
 .navButton {
-  padding: 6px;
   background: none;
   border: none;
   cursor: pointer;
   border-radius: 9999px;
-  transition: background-color 0.2s;
+  transition: background-color 0.3s; // 平滑過渡
 
   &:hover {
-    background-color: $color-border;
+    background-color: $color-gray-bg;
   }
 
   svg {
-    color: #4b5563;
+    color: $color-text;
     display: block;
   }
 }
 
-.calendarGrid {
-  padding: 0px 0px;
-}
-
+// 星期
 .dayNames {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  margin-bottom: 3px;
+  margin-bottom: 5px;
 }
 
 .dayName {
   text-align: center;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 500;
-  color: $color-muted;
+  color: $color-text;
   padding: 1px 0;
-}
-
-.calendarCss {
-  display: flex;
-  flex-direction: column;
-  gap: 0px;
 }
 
 .calendarWeek {
@@ -135,6 +109,7 @@ $hour-height: 45px; // 每小時的高度 (必須與 TS 中的 HOUR_HEIGHT_PX �
   grid-template-columns: repeat(7, 1fr);
 }
 
+// 單日
 .calendarDays {
   position: relative;
   width: 100%;
@@ -144,20 +119,18 @@ $hour-height: 45px; // 每小時的高度 (必須與 TS 中的 HOUR_HEIGHT_PX �
   align-items: center;
   justify-content: center;
   border-radius: 50px;
-  transition: background-color 0.1s;
+  transition: background-color 0.3s;
 
   &:hover {
-    background-color: #f2f2f2;
+    background-color: $color-gray-bg;
   }
 }
 
+// 選日期的圈圈
 .dayContent {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 25px;
-  height: 25px;
+  width: 28px;
+  height: 28px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -172,29 +145,29 @@ $hour-height: 45px; // 每小時的高度 (必須與 TS 中的 HOUR_HEIGHT_PX �
   }
 
   &.is-other-month {
-    color: $color-other-month;
+    color: $color-muted;
   }
 
   &.is-selected {
-    background-color: #0357A4;
+    background-color: $color-primary;
     color: $color-card-bg;
-    box-shadow: 0 2px 4px rgba(#0357A4, 0.3);
+    box-shadow: 0 2px 4px rgba($color-primary, 0.3);
   }
 }
 
+// 日期號碼
 .dayNumber {
   font-size: 12px;
-  line-height: 1;
 }
 
 .activityDot {
-  width: 4px;
-  height: 4px;
+  width: 5px;
+  height: 5px;
   border-radius: 9999px;
-  margin-top: 3px;
+  margin-top: 2px;
 
   &.dot-blue {
-    background-color: #0357A4;
+    background-color: $color-secondary;
   }
 
   &.dot-white {
@@ -202,28 +175,36 @@ $hour-height: 45px; // 每小時的高度 (必須與 TS 中的 HOUR_HEIGHT_PX �
   }
 }
 
-/* 訂單詳細資訊面板樣式 */
+// 訂單詳細資訊面板樣式
 .reservationDetailPanel {
   background-color: $color-card-bg;
-  padding: 0 20px;
-  border-radius: 1rem;
+  padding: 0 30px 20px 30px;
+  border-radius: 8px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
-  width: 100%;
-  margin-top: 10px;
+  margin-top: 15px;
   flex-shrink: 0;
 
+  // 用於包標題和按鈕的容器
+  .detailHeader {
+    display: flex;
+    align-items: center; // 垂直居中對齊
+    justify-content: space-between; // 將標題和按鈕推向兩端
+    margin-bottom: 10px;
+  }
+
   .detailTitle {
-    font-size: 15px;
-    font-weight: 700;
+    font-size: 16px;
+    font-weight: 600;
     color: $color-primary;
-    margin-bottom: 15px;
-    padding-bottom: 5px;
-    border-bottom: 1px solid $color-border;
+    padding-top: 10px;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid $color-gray-bg;
   }
 
   .detailContent p {
     font-size: 14px;
-    line-height: 1.6;
+    line-height: 1.5;
     margin: 0 0 5px 0;
   }
 
@@ -233,34 +214,28 @@ $hour-height: 45px; // 每小時的高度 (必須與 TS 中的 HOUR_HEIGHT_PX �
   }
 
   .detailContent p.note {
-    white-space: pre-wrap;
-    word-break: break-word;
+    white-space: pre-wrap; // 自動換行
   }
 
   .detailContent hr {
-    border: none;
-    border-top: 1px solid $color-light-border;
-    margin: 10px 0;
+    border-top: 1px solid $color-page-bg;
   }
 }
 
 
-// 右側行程
+// 右側排程表
 .schedulePanel {
   flex-grow: 1;
   display: flex;
-  flex-direction: column;
-  padding: 0px 5px;
   overflow-y: auto;
+  margin-top: 20px;
+  margin-right: 40px;
 }
 
 .scheduleHeader {
-  flex-shrink: 0;
   text-align: center;
-  position: sticky;
-  top: 0;
   z-index: 30;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 3px solid $color-primary;
 }
 
 .scheduleTitle {
@@ -269,31 +244,23 @@ $hour-height: 45px; // 每小時的高度 (必須與 TS 中的 HOUR_HEIGHT_PX �
   color: $color-text;
 }
 
-/* --- 新增：內層捲動區，桌號 + 時間網格同步水平滾動 --- */
+// 桌號 + 時間網格同步水平滾動
 .scheduleScrollArea {
   flex-grow: 1;
   overflow-y: auto;
   position: relative;
 }
 
-/* --- 桌位標頭 --- */
+// 桌位標頭
 .table-header-row {
   display: grid;
-  border-bottom: 2px solid $color-border;
+  border-bottom: 3px solid $color-page-bg;
   background-color: $color-card-bg;
-  position: sticky;
-  top: 0;
   z-index: 20;
   min-width: max-content;
 
   .tableHeader {
-    border-left: 1px solid $color-light-border;
-    min-width: 0;
-  }
-
-  /* 第一個桌子 (在 spacer 之後) 不要有左邊框 */
-  &>div:nth-child(2) {
-    border-left: none;
+    border-left: 3px solid $color-page-bg;
   }
 }
 
@@ -301,60 +268,41 @@ $hour-height: 45px; // 每小時的高度 (必須與 TS 中的 HOUR_HEIGHT_PX �
   width: var(--time-label-width);
   min-width: var(--time-label-width);
   flex-shrink: 0;
-  border-bottom: 1px solid transparent;
   position: sticky;
   left: 0;
-
-  z-index: 21; // 比 tableHeader 高
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+  background-color: $color-card-bg;
+  box-shadow: 1px 0 5px rgba(0, 0, 0, 0.05);
+  z-index: 21;
 }
 
 .tableHeader {
-  padding: 10px 8px;
+  padding: 12px 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
-  font-weight: 500;
-  color: #1f2937;
+  font-size: 15px;
+  font-weight: 600;
+  color: $color-text;
 
   .tableName {
-    margin-bottom: 10px;
-
-    &.text-muted {
-      color: $color-muted;
-    }
+    margin-bottom: 8px;
   }
 }
 
-/* 右側整體包覆區，讓 header 與內容能分離滾動 */
+// 右側整體包覆區，讓 header 與內容能分離滾動
 .rightPanelWrapper {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
 }
 
-.scheduleContentWrapper {
-  flex-grow: 1; // 佔據剩餘空間
-  overflow: auto; // 讓這個容器負責水平和垂直滾動
-  background-color: $color-card-bg; // 設定背景色
-  border-radius: 1rem;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05); // 增加陰影
-}
-
-/* --- 開關樣式 --- */
+// 開關樣式
 .toggleSwitch {
   position: relative;
   display: inline-block;
-  width: 34px;
-  height: 20px;
-}
-
-.toggleSwitch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
+  width: 32px;
+  height: 17px;
 }
 
 .slider {
@@ -372,103 +320,107 @@ $hour-height: 45px; // 每小時的高度 (必須與 TS 中的 HOUR_HEIGHT_PX �
 .slider:before {
   position: absolute;
   content: "";
-  height: 14px;
-  width: 14px;
+  height: 11px;
+  width: 11px;
   left: 3px;
-  bottom: 3px;
-  background-color: white;
+  bottom: 3.5px;
+  background-color: $color-card-bg;
   transition: .4s;
   border-radius: 50%;
 }
 
 input:checked+.slider {
-  background-color: #0357A4;
+  background-color: $color-primary;
 }
 
 input:checked+.slider:before {
   transform: translateX(14px);
 }
 
-/* --- 時間網格 --- */
+// 時間網格
 .timeGrid {
-  // flex-grow: 1;
   position: relative;
   display: grid;
   grid-auto-rows: var(--hour-height);
-  padding-top: 0;
   min-width: max-content;
 }
 
-/* 定位在網格上方的容器 */
+// 定位在網格上方的容器
 .activitiesLayer {
   position: absolute;
   display: grid;
-  height: 100%;
-  width: 100%;
   top: 0;
   left: 0;
   right: 0;
-  pointer-events: none;
   z-index: 10;
   margin-left: 8px;
 }
 
+// 時間軸
 .timeLabelCell {
   grid-column: 1;
   padding-right: 15px;
-  text-align: right;
-  font-size: 12px;
+  font-size: 13px;
   color: $color-muted;
+  background-color: $color-card-bg;
   height: $hour-height;
   display: flex;
   align-items: flex-start;
   justify-content: flex-end;
+  text-align: right;
   position: sticky;
   left: 0;
+  background-color: $color-card-bg;
   z-index: 15; // 比 hourSlot 高
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.02);
+  box-shadow: 1px 0 5px rgba(0, 0, 0, 0.02);
+  border-right: 2px solid $color-page-bg;
+  border-top: 3px solid $color-page-bg;
+
+  &.isNotAllowed {
+    background-color: rgba(0, 0, 0, 0.04);
+  }
+
+  &.isPastDay {
+    background-color: $color-card-bg;
+
+    &:hover {
+      background-color: $color-card-bg !important;
+    }
+  }
 }
 
-/* 時間插槽單元格 */
+// 時間插槽單元格
 .hourSlot {
-  border-left: 1px solid #ebebeb;
-  border-top: 1px dashed #ebebeb;
+  border-left: 3px solid $color-page-bg;
+  border-top: 3px solid $color-page-bg;
   cursor: pointer;
   transition: background-color 0.1s;
   position: relative;
   box-sizing: border-box;
 
-  &.is-not-allowed {
+  &.isNotAllowed {
     cursor: not-allowed;
-    background-color: rgba(0, 0, 0, 0.02);
+    background-color: rgba(0, 0, 0, 0.04);
   }
 
-  &.is-past-day {
+  &.isPastDay {
     cursor: default;
-    /* 更改為一般指針或 default */
-    background-color: $color-light-border;
-    /* 使用更淺的顏色作為背景 */
-    opacity: 0.7;
-    border-top: 1px solid #ebebeb;
+    background-color: $color-card-bg;
+    border-left: 3px solid $color-page-bg;
+    border-top: 3px solid $color-page-bg;
 
     &:hover {
-      background-color: $color-light-border !important;
+      background-color: $color-card-bg !important;
     }
   }
 
-  &:not(.isUnavailable):not(.is-not-allowed):not(.is-past-day):hover {
-    /* 確保過去日期沒有 hover */
-    background-color: rgba(3, 87, 164, 0.1);
-  }
-
   &.isUnavailable {
-    background-color: rgba(180, 180, 180, 0.1);
     cursor: not-allowed;
-    background-image: repeating-linear-gradient(45deg,
-        $color-light-border, // 條紋底色 (淺灰)
-        $color-light-border 6px,
-        $color-border 6px, // 線條顏色 (中灰)
-        $color-border 7px // 線條寬度
+    background-image: repeating-linear-gradient(35deg,
+        $color-gray-bg, // 條紋底色
+        $color-page-bg 3px,
+        $color-card-bg 2px, // 線條顏色
+        $color-page-bg 4px // 線條寬度
       );
   }
 }
@@ -476,7 +428,7 @@ input:checked+.slider:before {
 .activityBlock {
   position: absolute;
   z-index: 99;
-  background-color: $color-secondary; // 假設這是一個自訂的活動顏色
+  background-color: $color-secondary;
   border-left: 5px solid darken($color-secondary, 10%);
   border-top: 1px solid darken($color-secondary, 10%);
   border-bottom: 1px solid darken($color-secondary, 10%);
@@ -486,9 +438,11 @@ input:checked+.slider:before {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
   color: $color-text;
   font-size: 12px;
-  line-height: 1.5;
+  line-height: 1.6;
   cursor: pointer;
-  pointer-events: all;
+  width: calc(100% - 8px); // 保證永遠不超出
+  box-sizing: border-box; // 計算寬度時把 padding & border 算進去
+  left: 0; // 鎖回格子起點
 
   &:hover {
     z-index: 100;
@@ -507,46 +461,34 @@ input:checked+.slider:before {
 
 .customerName {
   font-weight: 600;
-  white-space: nowrap;
 }
 
 .tableTime {
   font-size: 12px;
-  color: #3e3a39;
+  font-weight: 500;
+  color: $color-text;
 }
 
-.btn {
-  flex-grow: 1;
-  padding: 8px 15px;
-  border: none;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 600;
+.updateBtn {
+  color: $color-muted;
   cursor: pointer;
-  transition: background-color 0.2s, box-shadow 0.2s;
-  color: $color-card-bg;
-  background-color: $color-primary; // 預設藍色 (用於 '修改')
 
   &:hover {
-    background-color: darken($color-primary, 5%);
-    box-shadow: 0 4px 8px rgba($color-primary, 0.2);
+    color: $color-secondary;
   }
+}
 
-  &:last-child {
-    background-color: $color-active; // 橘紅色 (用於 '刪除')
+.deleteBtn {
+  color: $color-muted;
+  cursor: pointer;
 
-    &:hover {
-      background-color: darken($color-active, 5%);
-      box-shadow: 0 4px 8px rgba($color-active, 0.2);
-    }
+  &:hover {
+    color: $color-primary;
   }
 }
 
 .btnBox {
   display: flex;
-  justify-content: center;
-  gap: 30px;
-  margin-top: 20px;
-  margin-bottom: 20px;
-  width: 100%;
+  justify-content: right;
+  gap: 5px;
 }

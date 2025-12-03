@@ -1,13 +1,137 @@
-/* 圖片樣式調整 */
-.menuItem img {
-    max-width: 200px;
-    height: auto;
-    max-height: 200px;
-    border-radius: 4px;
-}
-
+// 整體背景
 .background {
   display: flex;
   justify-content: center;
+  width: 100%;
+  gap: 20px;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
+// 圖片樣式
+.menuItem img {
+  max-width: 200px;
+  height: 160px;
+  max-height: 200px;
+  border-radius: 4px;
+}
+
+// 每項餐點
+.menuItem {
+  width: calc(25% - 15px);
+  min-width: 200px;
+  text-align: left;
+  padding: 15px 15px 25px 15px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  box-sizing: border-box;
+  box-shadow: 0 4px 8px rgba(black, 0.2);
+}
+
+.menuItem:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 10px rgba(black, 0.3);
+}
+
+.menuItemsBox {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 10px 0;
+}
+
+// 客製化區塊容器
+.customizeBox {
+  width: 100%;
+  max-width: 310px;
+  background-color: #fff;
+  margin: 20px 30px;
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+}
+
+// 主標題
+.sectionTitle {
+  text-align: center;
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 10px;
+}
+
+// 選項容器
+.optionsBox {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+// 單個群組
+.optionGroup {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+// 群組小標題
+.groupTitle {
+  font-size: 15px;
+  font-weight: 500;
+  color: #444;
+  background-color: #f9f9f9;
+  padding: 5px 12px;
+  border-left: 4px solid #013c70;
+  border-radius: 0 4px 4px 0;
+}
+
+// 選項項目
+.radioItem {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 15px;
+  color: #555;
+  padding: 3px 8px;
+  border-radius: 4px;
+  margin-left: 5px;
+}
+
+// 價格標籤
+.priceTag {
+  background-color: #f2f2f2;
+  color: #fe6d13;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 2px 8px;
+  border-radius: 12px;
+  margin-left: auto;
+}
+
+.addProductCss {
+  background-color: #013c70;
+  cursor: pointer;
+  min-width: 200px;
+  text-align: left;
+  padding: 15px 15px 25px 15px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  box-sizing: border-box;
+  box-shadow: 0 4px 8px rgba(black, 0.2);
+}
+
+.addProductCss:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 10px rgba(black, 0.3);
+}
+
+.addContent {
+  color: white;
+  font-size: 18px;
+  font-weight: 500;
+}

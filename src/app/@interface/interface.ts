@@ -54,3 +54,39 @@ export interface timeLabel {
   display: string;
   hour: number;
 }
+
+
+// 菜單分類
+export interface categoryResponse {
+  code: number;
+  message: string;
+  categoryDto: categoryDto[];
+}
+
+export interface categoryDto {
+  categoryId: number;
+  categoryType: string;
+  workstationId: number;
+}
+
+
+// 產品列表回應
+export interface productListResponse {
+  code: number;
+  message: string;
+  categoryId: number;
+  productList: productDto[];
+}
+
+// 產品
+export interface productDto {
+  productId: number;
+  productName: string;
+  productPrice: number;
+  productActive: boolean;
+  productDescription: string;
+  imageUrl: string;
+  productNote: string;
+}
+
+

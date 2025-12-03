@@ -26,7 +26,7 @@
           </div>
         </div>
 
-        <div class="calendarGrid">
+        <div>
           <div class="dayNames">
             @for (dayName of dayNames; track $index) {
             <div class="dayName">
@@ -35,7 +35,7 @@
             }
           </div>
 
-          <div class="calendarCss">
+          <div>
             @for (week of monthWeeks; track $index) {
             <div class="calendarWeek">
               @for (day of week; track $index) {
@@ -62,7 +62,19 @@
 
       @if (selectedReservationDetail()) {
       <div class="reservationDetailPanel">
-        <h4 class="detailTitle">訂位詳細資訊</h4>
+        <div class="detailHeader">
+          <h4 class="detailTitle">訂位詳細資訊</h4>
+
+          @if (selectedReservationDetail() && !isReservationPast(selectedReservationDetail()!)) {
+          <div class="btnBox">
+            <mat-icon (click)="updateReserve()" class="updateBtn" aria-hidden="false" aria-label="Example edit icon"
+              fontIcon="edit"></mat-icon>
+            <mat-icon (click)="deleteReserve()" class="deleteBtn" aria-hidden="false" aria-label="Example delete icon"
+              fontIcon="delete"></mat-icon>
+          </div>
+          }
+
+        </div>
         <div class="detailContent">
           <p><strong>顧客姓名:</strong> {{ selectedReservationDetail()!.reservationName }}</p>
           <p><strong>聯絡電話:</strong> {{ selectedReservationDetail()!.reservationPhone }}</p>
@@ -83,12 +95,7 @@
           }
         </div>
 
-        @if (selectedReservationDetail() && !isReservationPast(selectedReservationDetail()!)) {
-        <div class="btnBox">
-          <button class="btn" (click)="updateReserve()">修改</button>
-          <button class="btn" (click)="deleteReserve()">刪除</button>
-        </div>
-        }
+
       </div>
       }
     </div>
@@ -103,9 +110,8 @@
           <h3 class="scheduleTitle">
             {{ selectedDay() | date: 'yyyy年 MM月 dd日' }} ({{ getDayName(selectedDay()) }})
           </h3>
+
         </div>
-
-
 
         <!-- 主要可滾動區：桌號 + 時間軸 + 訂位 -->
         <div class="scheduleScrollArea">
@@ -137,12 +143,20 @@
 
             <!-- 時間軸 -->
             @for (label of timeLabels; track label.time) {
-            <div class="timeLabelCell">{{ label.display }}</div>
+            <div class="timeLabelCell" [ngClass]="{ 'isNotAllowed': !isAllowedHour(label.hour),
+              'isPastDay': isPastDay() || (isToday(selectedDay()) && isPastHourSlot(label.hour))
+            }">
+              {{ label.display }}</div>
 
             @for (table of tables(); track table.table_id) {
-            <div class="hourSlot" [class.isUnavailable]="table.table_status !== true"
-              [class.is-not-allowed]="!isAllowedHour(label.hour)"
-              [class.is-past-day]="isPastDay() || (isToday(selectedDay()) && isPastHourSlot(label.hour))"
+            <div class="hourSlot"
+              [class.isUnavailable]="table.table_status !== true"
+              [class.isNotAllowed]="!isAllowedHour(label.hour)"
+              [class.isPastDay]="isPastDay() || (isToday(selectedDay()) && isPastHourSlot(label.hour))"
+              [title]="(table.table_status !== true) ? '桌位已關閉' :
+             (!isAllowedHour(label.hour)) ? '非預約時段' :
+             (isPastDay() || (isToday(selectedDay()) && isPastHourSlot(label.hour))) ? '時段已過' :
+             '點擊新增訂位'"
               (click)="!(isPastDay() || (isToday(selectedDay()) && isPastHourSlot(label.hour))) && addReservation(table.table_id, label.hour)">
             </div>
             }

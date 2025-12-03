@@ -1,0 +1,34 @@
+<!-- dialog標題 -->
+<div mat-dialog-title>新增餐點 - {{ categoryDto.categoryType }}</div>
+
+<!-- dialog內容 -->
+<mat-dialog-content>
+  <label>菜單分類</label>
+  <div>{{ categoryDto.categoryType }}</div>
+
+  <label>餐點名稱</label>
+  <input type="text" class="inputCss" [(ngModel)]="productDto.productName">
+
+  <label>餐點描述</label>
+  <textarea [(ngModel)]="productDto.productDescription"></textarea>
+
+  <label>價格</label>
+  <input type="number" class="inputCss" [(ngModel)]="productDto.productPrice">
+
+  <label>餐點圖片</label>
+  <input type="file" (change)="onFileSelected($event)" accept="image/*">
+
+  @if (selectedFile) {
+  <div style="font-size: 0.8em; color: green; margin-top: 5px;">
+    已選取檔案: **{{ selectedFile.name }}**
+  </div>
+  }
+</mat-dialog-content>
+
+<!-- dialog按鈕 -->
+<mat-dialog-actions>
+  <div>
+    <button (click)="onNoClick()" class="btn">取消</button>
+    <button (click)="onAddClick()" class="btn">確定</button>
+  </div>
+</mat-dialog-actions>

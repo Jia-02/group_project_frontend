@@ -1,156 +1,90 @@
 <div class="background">
 
-  <!-- 菜單分類 -->
-  <mat-tab-group>
-    <mat-tab label="套餐">
-      <label>鮮蔬雞肉開運套餐</label>
-      <label>南瓜鮮奶季節暖心套餐</label>
-      <label>春日野莓香草嫩煎豬排套餐</label>
-    </mat-tab>
+  <mat-tab-group (selectedTabChange)="onTabChange($event)">
+    <!-- 菜單分類 -->
+    @for (category of allCategoryDto; track $index) {
+    <mat-tab [label]="category.categoryType">
 
-    <mat-tab label="義大利麵">
-      <div class="menuItem">
-        <img src="/pasta/pasta (1).jpg">
-        <div>海鮮披薩</div>
-      </div>
+      <!-- 餐點 -->
+      <div class="menuItemsBox">
+        @for (product of productList; track $index) {
+        <div class="menuItem">
+          <img [src]="product.imageUrl || '/default/placeholder.png'">
+          <div>{{ product.productName }}</div>
+          <div>{{ product.productDescription }}</div>
+          <div>${{ product.productPrice }}</div>
+        </div>
+        }
 
-      <div class="menuItem">
-        <img src="/pasta/pasta (2).jpg">
-        <div>總匯披薩</div>
-      </div>
+        <!-- 新增餐點 -->
+        <div class="addProductCss" (click)="addProduct()">
+          <div class="addContent">
+            <div>新增餐點</div>
+            <div>+</div>
+          </div>
+        </div>
 
-      <div class="menuItem">
-        <img src="/pasta/pasta (3).jpg">
-        <div>瑪格麗特披薩</div>
-      </div>
 
-      <div class="menuItem">
-        <img src="/pasta/pasta (4).jpg">
-        <div>夏威夷披薩</div>
-      </div>
-
-      <div class="menuItem">
-        <img src="/pasta/pasta (5).jpg">
-        <div>夏威夷披薩</div>
-      </div>
-
-      <div class="menuItem">
-        <img src="/pasta/pasta (6).jpg">
-        <div>夏威夷披薩</div>
+        @if (productList.length == 0) {
+        <div>此分類目前沒有餐點唷~</div>
+        }
       </div>
     </mat-tab>
+    }
 
-    <mat-tab label="披薩">
-      <div class="menuItem">
-        <img src="/pizza/pizza (1).jpg">
-        <div>海鮮披薩</div>
-      </div>
 
-      <div class="menuItem">
-        <img src="/pizza/pizza (2).jpg">
-        <div>總匯披薩</div>
-      </div>
+    <!-- 新增分類 -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon>add_circle_outline</mat-icon>
+      </ng-template>
 
-      <div class="menuItem">
-        <img src="/pizza/pizza (3).jpg">
-        <div>瑪格麗特披薩</div>
-      </div>
+      <!-- 內容 -->
+      <div>新增分類</div>
+      <label>分類名稱</label>
+      <input type="text" [(ngModel)]="categoryDto.categoryType">
+      <label>工作檯安排</label>
+      <select [(ngModel)]="categoryDto.workstationId">
+        <option value="">--請選擇--</option>
+        <option [ngValue]="1">1號飲品區</option>
+        <option [ngValue]="2">2號熱食區</option>
+      </select>
 
-      <div class="menuItem">
-        <img src="/pizza/pizza (4).jpg">
-        <div>夏威夷披薩</div>
-      </div>
-    </mat-tab>
-
-    <mat-tab label="火鍋">
-      <div class="menuItem">
-        <img src="/hotpot/pot (1).jpg">
-        <div>海鮮披薩</div>
-      </div>
-
-      <div class="menuItem">
-        <img src="/hotpot/pot (2).jpg">
-        <div>總匯披薩</div>
-      </div>
-
-      <div class="menuItem">
-        <img src="/hotpot/pot (3).jpg">
-        <div>瑪格麗特披薩</div>
-      </div>
-
-      <div class="menuItem">
-        <img src="/hotpot/pot (4).jpg">
-        <div>夏威夷披薩</div>
-      </div>
-    </mat-tab>
-
-    <mat-tab label="炸物">
-      <div class="menuItem">
-        <img src="/fried/fried (1).jpg">
-        <div>海鮮披薩</div>
-      </div>
-
-      <div class="menuItem">
-        <img src="/fried/fried (2).jpg">
-        <div>總匯披薩</div>
-      </div>
-
-    </mat-tab>
-
-    <mat-tab label="甜點">
-      <div class="menuItem">
-        <img src="/snack/snack (1).jpg">
-        <div>提拉米蘇</div>
-      </div>
-
-      <div class="menuItem">
-        <img src="/snack/snack (2).jpg">
-        <div>老奶奶千層蛋糕</div>
-      </div>
-
-      <div class="menuItem">
-        <img src="/snack/snack (3).jpg">
-        <div>苦黑巧克力布朗尼</div>
-      </div>
-    </mat-tab>
-
-    <mat-tab label="飲料">
-      <div class="menuItem">
-        <img src="/drink/drink (1).jpg">
-        <div>海鮮披薩</div>
-      </div>
-
-      <div class="menuItem">
-        <img src="/drink/drink (2).jpg">
-        <div>總匯披薩</div>
-      </div>
-
-      <div class="menuItem">
-        <img src="/drink/drink (3).jpg">
-        <div>瑪格麗特披薩</div>
-      </div>
-
-      <div class="menuItem">
-        <img src="/drink/drink (4).jpg">
-        <div>夏威夷披薩</div>
-      </div>
-
-      <div class="menuItem">
-        <img src="/drink/drink (5).jpg">
-        <div>夏威夷披薩</div>
-      </div>
-
-      <div class="menuItem">
-        <img src="/drink/drink (6).jpg">
-        <div>夏威夷披薩</div>
-      </div>
-
+      <button (click)="addCategory()">確定</button>
     </mat-tab>
   </mat-tab-group>
 
 
   <!-- 客製化區 -->
   <div class="customizeBox">
-    客製化區
+    <div class="sectionTitle">客製化專區</div>
+
+    <div class="optionsBox">
+      <div class="optionGroup">
+        <div class="groupTitle">好醬汁 | SAUSE</div>
+        <label class="radioItem">
+          <input type="radio" name="sauce"> 奶油白醬
+        </label>
+        <label class="radioItem">
+          <input type="radio" name="sauce"> 茄汁紅醬
+        </label>
+        <label class="radioItem">
+          <input type="radio" name="sauce"> 粉紅醬
+        </label>
+        <label class="radioItem">
+          <input type="radio" name="sauce"> 羅勒青醬
+        </label>
+      </div>
+
+      <div class="optionGroup">
+        <div class="groupTitle">吃飽飽 | INCREASE</div>
+        <label class="radioItem">
+          <input type="radio" name="size" checked> 正常
+        </label>
+        <label class="radioItem">
+          <input type="radio" name="size"> 加麵
+          <span class="priceTag">+ $10</span>
+        </label>
+      </div>
+    </div>
   </div>
-</div>

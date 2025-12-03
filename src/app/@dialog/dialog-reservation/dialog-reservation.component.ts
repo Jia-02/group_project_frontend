@@ -74,9 +74,9 @@ export class DialogReservationComponent {
       // 修改訂位
       if (this.data.existingReservation) {
         Object.assign(this.reservation, this.data.existingReservation);
-        // 💡 修正 1：儲存原始日期
+        // 儲存原始日期
         this.originalReservationDate = this.reservation.reservationDate;
-        // 💡 修正 2：儲存原始電話
+        // 儲存原始電話
         this.originalReservationPhone = this.reservation.reservationPhone;
         this.updateAvailableTables(this.reservation.reservationDate, this.reservation.reservationTime);
         return;
@@ -110,7 +110,7 @@ export class DialogReservationComponent {
     this.currentDate = `${year}-${month}-${day}`;
   }
 
-  // 【修正】當日期或時間欄位改變時觸發
+  // 當日期或時間欄位改變時觸發
   onDateChange() {
     // 日期改變時，確保同時更新桌位過濾
     this.updateAvailableTables(this.reservation.reservationDate, this.reservation.reservationTime);
@@ -126,10 +126,10 @@ export class DialogReservationComponent {
     const startTimeInMinutes = this.timeToMinutes(timeStr);
     const endTimeInMinutes = startTimeInMinutes + DEFAULT_DURATION_MINUTES;
 
-    // 1. 確保從 DataService 取得最新的所有預約資料
+    // 確保從 DataService 取得最新的所有預約資料
     const allReservations = this.dataService.reservation;
 
-    // 2. 篩選出『目標日期』的排程
+    // 篩選出『目標日期』的排程
     const targetDaySchedule = allReservations
       .filter(r => r.reservationDate == this.reservation.reservationDate)
       .map(r => ({
@@ -139,7 +139,7 @@ export class DialogReservationComponent {
       }) as scheduleItem);
 
     for (let item of targetDaySchedule) {
-      // 【核心修正】: 排除自己 (修改模式)
+      // 排除自己(修改模式)
       // 使用 String() 強制轉型，避免數字(number)與字串(string)比對失敗導致錯誤判斷
       if (ignoreItem && String(item.id) === String(ignoreItem.id)) {
         continue; // 這是目前正在編輯的訂單，忽略它，視為該時段對自己是"空閒"的
@@ -169,7 +169,7 @@ export class DialogReservationComponent {
       return;
     }
 
-    // 1. 取得桌位清單
+    // 取得桌位清單
     const dayState = this.allTableStates.find(state => state.date == dateStr);
     let tableList: { table_id: string, table_status: boolean, capacity: number }[] = [];
 
@@ -180,13 +180,13 @@ export class DialogReservationComponent {
       tableList = this.defaultTables;
     }
 
-    // 2. 過濾
+    // 過濾
     const ignore = this.data.existingReservation ? this.reservation : undefined;
 
     const availableTables = tableList.filter(t => {
       // 檢查是否開放
       if (!t.table_status) {
-        // 修正點：如果當前桌位是正在編輯的舊桌位，則允許它顯示 (但會被 isSlotAvailable 檢查)
+        // 如果當前桌位是正在編輯的舊桌位，則允許它顯示 (但會被 isSlotAvailable 檢查)
         if (ignore && ignore.tableId == t.table_id) {
           // 如果舊桌位被設置為不開放 (table_status=false)，我們暫時跳過時段檢查，並返回 false
           return false;
@@ -198,10 +198,10 @@ export class DialogReservationComponent {
       return this.isSlotAvailable(t.table_id, timeStr, ignore);
     });
 
-    // 3. 更新顯示清單
+    // 更新顯示清單
     this.displayTableIds = availableTables.map(t => t.table_id);
 
-    // 4. 【關鍵修正點】：處理修改模式下舊桌號的保留邏輯
+    // 處理修改模式下舊桌號的保留邏輯
     const isEditMode = !!this.data.existingReservation;
     const oldTableId = isEditMode ? this.data.existingReservation.tableId : null; // 舊的 tableId
 
@@ -212,8 +212,7 @@ export class DialogReservationComponent {
         const oldTableStatus = tableList.find(t => t.table_id == oldTableId)?.table_status;
 
         if (oldTableStatus == true) {
-          // 舊桌號仍然開放，但因為時段衝突被過濾了
-          // 💡 我們應該重新將舊桌號加回 displayTableIds，並保持 this.reservation.tableId 不變
+          // 重新將舊桌號加回 displayTableIds，並保持 this.reservation.tableId 不變
           if (oldTableId && !this.displayTableIds.includes(oldTableId)) {
             this.displayTableIds.push(oldTableId);
           }
@@ -248,7 +247,7 @@ export class DialogReservationComponent {
       return;
     }
 
-    // 【新增檢查】: 再次確認時段是否可用 (防止選擇/點擊 API 送出前的最後檢查)
+    // 再次確認時段是否可用 (防止選擇/點擊 API 送出前的最後檢查)
     if (!this.isSlotAvailable(this.reservation.tableId, this.reservation.reservationTime, this.data.existingReservation ? this.reservation : undefined)) {
       alert('您選擇的桌位和時段已被佔用，請重新選擇！');
       return;
@@ -289,7 +288,7 @@ export class DialogReservationComponent {
 
     // 若為修改模式，則在 dataService 中找到原筆並更新
     if (this.data.existingReservation) {
-      // 這是修改模式：找到原資料並取代
+      // 修改模式：找到原資料並取代
       const index = this.dataService.reservation.findIndex(
         (r) => r.id == this.reservation.id
       );
@@ -304,19 +303,19 @@ export class DialogReservationComponent {
     }
 
     let apiUrl = 'http://localhost:8080/reservation/create';
-    let payload = { ...this.reservation }; // 預設使用 reservation 物件
+    let payload = { ...this.reservation }; // 預設使用 reservation
 
     if (this.data.existingReservation) {
       // 修改模式
       apiUrl = 'http://localhost:8080/reservation/update';
 
       payload = {
-        // 後端查找條件：使用原始日期
+        // 查找條件：使用原始日期
         reservationDate: this.originalReservationDate,
-        // 💡 修正 3：後端查找條件：使用原始電話號碼
+        // 查找條件：使用原始電話號碼
         reservationPhone: this.originalReservationPhone,
 
-        // 後端新增條件：使用使用者修改後的新日期
+        // 新增條件：使用使用者修改後的新日期
         newDate: this.reservation.reservationDate,
 
         // 其他欄位
@@ -371,7 +370,7 @@ export class DialogReservationComponent {
             }
           }
 
-          // 2. 更新 DataService (讓列表畫面同步)
+          // 更新 DataService (讓列表畫面同步)
           if (this.data.existingReservation) {
             // 修改模式：找到舊資料並取代
             const index = this.dataService.reservation.findIndex(
