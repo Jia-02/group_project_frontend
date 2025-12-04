@@ -11,141 +11,205 @@
     <div
       style="height: 800px; width:300px; border: 1px solid black; background-color: rgba(128,128,128,0.5); border-radius: 10px; padding: 10px;">
       <h3>準備中</h3>
-      @for(order of orderMealList;track order){
-      @if(order.orderStatus == "準備中"){
-      <div style="background-color: white; border: 1px solid black; border-radius: 5px; ">
-        @if(order.innerId){
+      @for(order of orderList;track order){
+      @if(order.status.includes("準備中")){
+      <div style="background-color: white; border:1px solid black; border-radius: 5px;">
         <div style="display: flex; padding: 10px; align-items: start;">
-          <div
-            style="border: 1px solid black; background-color: black; color: white; border-radius: 10px; padding: 5px;">
-            <span>桌號{{order.tableId}}</span>
+          <div class="divCss1">
+            <span>{{order.orderId}}</span>
           </div>
-          <span style="flex: 1 1 auto; "></span>
-          <div
-            style="border: 1px solid black; background-color: black; color: white; border-radius: 10px; padding: 5px;">
-            <span>訂單編號</span> <br>
-            <span>{{order.innerId}}</span>
+          <span style="flex: 1 1 auto;"></span>
+          @if(order.tableId){
+          <div class="divCss1">
+            <span>{{order.tableId}}</span>
           </div>
+          }@else if(order.orderId.includes("T")){
+          <div class="divCss1">
+            <span>外帶</span>
+          </div>
+          }@else {
+          <div class="divCss1">
+            <span>外送</span>
+          </div>
+          }
         </div>
-        @for(meal of order.optionsDetail;track meal){
+        @for(product of order.orderProductList;track product){
         <div>
           <ul>
-            <li>{{meal.productName}}&#40;
-              @for(detail of meal.detailList;track detail){
-              <span>{{detail.option}}</span>
-              @if(detail.id != meal.detailList.length){
+            @if(product.settingId > 0){
+            <li>{{product.settingId}}號餐</li>
+            <ul>
+              @for(detail of product.orderDetail;track detail){
+              @if(detail.productionStatus == "準備中"){
+              <li>{{detail.productName}}&#40;
+                @for(option of detail.detailList;track option){
+                {{option.option}}
+                @if(option.id != detail.detailList.length){
+                <span>，</span>
+                }
+                }
+                &#41;
+              </li>
+              }
+              }
+            </ul>
+            }@else {
+            @for(detail of product.orderDetail;track detail){
+            @if(detail.productionStatus == "準備中"){
+            <li>{{detail.productName}}&#40;
+              @for(option of detail.detailList;track option){
+              {{option.option}}
+              @if(option.id != detail.detailList.length){
               <span>，</span>
               }
               }
-              <span>&#41;</span>
+              &#41;
             </li>
+            }
+            }
+            }
           </ul>
-        </div>
-        <br>
+        </div> <br>
         }
-        }@else if(order.takeOutId){
-        {{order.takeOutId}}
-        }
-      </div>
+      </div> <br>
       }
       }
     </div>
     <span style="flex: 1 1 auto;"></span>
     <div
       style="height: 800px; width:300px; border: 1px solid black; background-color: yellow; border-radius: 10px; padding: 10px;">
-      <h3>待送餐點</h3>
-      @for(order of orderMealList;track order){
-      @if(order.orderStatus == "待送餐"){
-      <div style="background-color: white; border: 1px solid black; border-radius: 5px; ">
-        @if(order.innerId){
+      <h3>待送餐</h3>
+      @for(order of orderList;track order){
+      @if(order.status.includes("待送餐")){
+      <div style="background-color: white; border:1px solid black; border-radius: 5px;">
         <div style="display: flex; padding: 10px; align-items: start;">
-          <div
-            style="border: 1px solid black; background-color: black; color: white; border-radius: 10px; padding: 5px;">
-            <span>桌號A01</span>
+          <div class="divCss1">
+            <span>{{order.orderId}}</span>
           </div>
-          <span style="flex: 1 1 auto; "></span>
-          <div
-            style="border: 1px solid black; background-color: black; color: white; border-radius: 10px; padding: 5px;">
-            <span>訂單編號</span> <br>
-            <span>{{order.innerId}}</span>
+          <span style="flex: 1 1 auto;"></span>
+          @if(order.tableId){
+          <div class="divCss1">
+            <span>{{order.tableId}}</span>
           </div>
+          }@else if(order.orderId.includes("T")){
+          <div class="divCss1">
+            <span>外帶</span>
+          </div>
+          }@else {
+          <div class="divCss1">
+            <span>外送</span>
+          </div>
+          }
         </div>
-        @if(order.settingId){
-          <span style="margin-left: 10px;">{{order.settingId}}號餐</span>
-        }
-         @for(meal of order.optionsDetail;track meal){
+        @for(product of order.orderProductList;track product){
         <div>
           <ul>
-            <li>{{meal.productName}}&#40;
-              @for(detail of meal.detailList;track detail){
-              <span>{{detail.option}}</span>
-              @if(detail.id != meal.detailList.length){
+            @if(product.settingId > 0){
+            <li>{{product.settingId}}號餐</li>
+            <ul style="padding: 0;">
+              @for(detail of product.orderDetail;track detail){
+              @if(detail.productionStatus == "待送餐"){
+              <button (click)="delivery(order.orderId,product.orderDetailsId,detail.productId)">已送餐</button>
+              {{detail.productName}}&#40;
+              @for(option of detail.detailList;track option){
+              {{option.option}}
+              @if(detail.detailList.length != option.id){
               <span>，</span>
               }
               }
               <span>&#41;</span>
-            </li>
+              }
+              }
+            </ul>
+            }@else {
+            @for(detail of product.orderDetail;track detail){
+            @if(detail.productionStatus == "待送餐"){
+            <button (click)="delivery(order.orderId,product.orderDetailsId,detail.productId)">已送餐</button>
+            {{detail.productName}}&#40;
+            @for(option of detail.detailList;track option){
+            {{option.option}}
+            @if(detail.detailList.length != option.id){
+            <span>，</span>
+            }
+            }
+            <span>&#41;</span>
+            }
+            }
+            }
           </ul>
-        </div>
-        <br>
+        </div> <br>
         }
-        <div style="display: flex; padding: 10px;">
-          <span style="flex: 1 1 auto;"></span>
-          <button (click)="delivery()">已送餐</button>
-        </div>
-
-        }@else if(order.takeOutId){
-        {{order.takeOutId}}
-        }
-      </div>
+      </div> <br>
       }
-
       }
     </div>
     <span style="flex: 1 1 auto;"></span>
     <div
       style="height: 800px; width:300px; border: 1px solid black; background-color: rgba(128,128,128,0.5); border-radius: 10px; padding: 10px;">
       <h3>已送達</h3>
-      @for(order of orderMealList;track order){
-      @if(order.orderStatus == "已送達"){
-      <div style="background-color: white; border: 1px solid black; border-radius: 5px; ">
-        @if(order.innerId){
+      @for(order of orderList;track order){
+      @if(order.status.includes("已送達")){
+      <div style="background-color: white; border:1px solid black; border-radius: 5px;">
         <div style="display: flex; padding: 10px; align-items: start;">
-          <div
-            style="border: 1px solid black; background-color: black; color: white; border-radius: 10px; padding: 5px;">
-            <span>桌號A01</span>
+          <div class="divCss1">
+            <span>{{order.orderId}}</span>
           </div>
-          <span style="flex: 1 1 auto; "></span>
-          <div
-            style="border: 1px solid black; background-color: black; color: white; border-radius: 10px; padding: 5px;">
-            <span>訂單編號</span> <br>
-            <span>{{order.innerId}}</span>
+          <span style="flex: 1 1 auto;"></span>
+          @if(order.tableId){
+          <div class="divCss1">
+            <span>{{order.tableId}}</span>
           </div>
+          }@else if(order.orderId.includes("T")){
+          <div class="divCss1">
+            <span>外帶</span>
+          </div>
+          }@else {
+          <div class="divCss1">
+            <span>外送</span>
+          </div>
+          }
         </div>
-        @for(meal of order.optionsDetail;track meal){
+        @for(product of order.orderProductList;track product){
         <div>
           <ul>
-            <li>{{meal.productName}}&#40;
-              @for(detail of meal.detailList;track detail){
-              <span>{{detail.option}}</span>
-              @if(detail.id != meal.detailList.length){
-              <span>，</span>
+            @if(product.settingId > 0){
+            <li>{{product.settingId}}號餐</li>
+            <ul>
+              @for(detail of product.orderDetail;track detail){
+              @if(detail.productionStatus == "已送達"){
+              <li>{{detail.productName}}&#40;
+                @for(option of detail.detailList;track option){
+                {{option.option}}
+                @if(detail.detailList.length != option.id){
+                <span>，</span>
+                }
+                }
+                &#41;
+              </li>
               }
               }
-              <span>&#41;</span>
-            </li>
+            </ul>
+            }@else {
+            @for(detail of product.orderDetail;track detail){
+            @if(detail.productionStatus == "已送達"){
+            <li>{{detail.productName}}</li> &#40;
+            @for(option of detail.detailList;track option){
+            {{option.option}}
+            @if(detail.detailList.length != option.id){
+            <span>，</span>
+            }
+            }
+            &#41;
+            }
+            }
+            }
           </ul>
-        </div>
-        <br>
+        </div> <br>
         }
-        }@else if(order.takeOutId){
-        {{order.takeOutId}}
-        }
-      </div>
+      </div> <br>
       }
 
       }
-
     </div>
   </div>
 </div>
