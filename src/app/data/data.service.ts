@@ -147,7 +147,7 @@ export interface OrderProductList {
 
 // 一筆資料代表一個訂單的一個餐點的訊息
 export interface OrderDetail {
-  categoryId:number; //餐點類別
+  workStationId:number; //餐點類別
   productId: number; //餐點id
   productionStatus:string; //餐點狀態
   productName: string; // 餐點名稱

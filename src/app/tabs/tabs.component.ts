@@ -92,6 +92,33 @@ export class TabsComponent {
 
   }
 
+  waitDelivery(id: string, detailId: number, productId: number){
+    for (const order of this.orderList) {
+      this.status1 = [];
+      if (order.orderId == id) {
+        for (const product of order.orderProductList) {
+          if (detailId == product.orderDetailsId) {
+            for(let i = 0;i < product.orderDetail.length;i++){
+              if(product.orderDetail[i].productId == productId){
+                product.orderDetail[i].productionStatus = "待送餐";
+                this.count -- ;
+              }
+            }
+          }
+        }
+      }
+      for (const product of order.orderProductList) {
+        for (const detail of product.orderDetail) {
+          if (!this.status1.includes(detail.productionStatus)) {
+            this.status1.push(detail.productionStatus);
+          }
+        }
+      }
+      order.status = this.status1;
+    }
+    console.log(this.orderList)
+  }
+
   ngOnInit(): void {
     let url = "http://localhost:8080/workstation/list"
     this.service.getApi(url).subscribe((res: WorkTableListRes) => {
@@ -107,25 +134,25 @@ export class TabsComponent {
     this.orderProductOption3 = [{ id: 1, option: "加大", addprice: 10 }, { id: 2, option: "加辣", addprice: 0 }]
 
     this.orderProductDetail = [{
-      categoryId: 3, productId: 5, productionStatus: "準備中",
+      workStationId: 1, productId: 5, productionStatus: "準備中",
       productName: "起司牛肉漢堡", productPrice: 100, detailList: this.orderProductOption
     },
     {
-      categoryId: 2, productId: 8, productionStatus: "待送餐",
+      workStationId: 1, productId: 8, productionStatus: "準備中",
       productName: "薯條", productPrice: 30, detailList: this.orderProductOption1
     },
     {
-      categoryId: 1, productId: 3, productionStatus: "已送達",
+      workStationId: 1, productId: 3, productionStatus: "準備中",
       productName: "可樂", productPrice: 30, detailList: this.orderProductOption2
     }]
 
     this.orderProductDetail1 = [{
-      categoryId: 6, productId: 9, productionStatus: "待送餐",
+      workStationId: 6, productId: 9, productionStatus: "待送餐",
       productName: "炒麵", productPrice: 100, detailList: this.orderProductOption3
     }]
 
     this.orderProductDetail2 = [{
-      categoryId: 6, productId: 9, productionStatus: "待送餐",
+      workStationId: 6, productId: 9, productionStatus: "待送餐",
       productName: "炒麵", productPrice: 100, detailList: this.orderProductOption3
     }]
 

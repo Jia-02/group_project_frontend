@@ -8,34 +8,47 @@
         <ng-template mat-tab-label>
           <div class="mat-tab" style="display: flex; position: relative;">
             <span>{{link.workStationName}}</span>
-            <mat-icon aria-hidden="false" aria-label="Example home icon"
-             fontIcon="remove"
-             style="position: absolute; top: 0;right: 0; color: rgba(128, 128, 128, 0.5);" (click)="removeLink(link.workStationId)"></mat-icon>
+            <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="remove"
+              style="position: absolute; top: 0;right: 0; color: rgba(128, 128, 128, 0.5);"
+              (click)="removeLink(link.workStationId)"></mat-icon>
           </div>
         </ng-template>
-        <!-- 各工作檯 訂單 製作狀況 -->
-        <!-- @for(order of order;track order){
-        @if(order.workTableId == link.id){
+
+        @for(order of orderList;track order){
+        @if(order.status.includes("準備中")){
         <div
           style="height: auto; width: 300px; border: 1px solid black; margin: 20px  ; padding: 20px; border-radius: 10px;">
-          <span>訂單編號:{{order.id}}</span> <br> <br>
-          @if(!order.takeaway){
+          <span>訂單編號:{{order.orderId}}</span> <br> <br>
+          @if(order.tableId){
           <span>內用桌號:{{order.tableId}}</span> <br> <br>
+          <span>外帶:false</span> <br> <br>
+          }@else {
+          <span>外帶:true</span> <br> <br>
           }
-          <span>外帶:{{order.takeaway}}</span> <br> <br>
-          <span>餐點:</span> <br> <br>
-          @for(menu of order.meal;track menu){
-          <div style="width: auto; border: 1px solid black; border-radius: 10px; padding: 10px;">
-            {{menu.name}}
-          </div> <br>
+          <span>餐點:</span> <br>
+          <ul>
+          @for(product of order.orderProductList;track product){
+          @for(detail of product.orderDetail;track detail){
+          @if(detail.productionStatus == "準備中" && detail.workStationId == link.workStationId){
+          <button (click)="waitDelivery(order.orderId,product.orderDetailsId,detail.productId)">準備完成</button><span>{{detail.productName}} </span> &#40;
+          @for(option of detail.detailList;track option){
+          <span>{{option.option}}</span>
+          @if(option.id != detail.detailList.length){
+            <span>，</span>
           }
-          <div style="display: flex">
-            <span style="flex: 1 1 auto;"></span>
-            <span>金額:{{order.price}}</span> <br>
-          </div>
+          }
+          &#41;
+          <br>
+          }
+          }
+          }
+          </ul>
         </div>
         }
-        } -->
+
+
+        }
+
       </mat-tab>
       }
       }

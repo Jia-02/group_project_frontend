@@ -1,16 +1,18 @@
 import { Component } from '@angular/core';
-import { OrderProductList, Order, OrderDetail, Option } from '../data/data.service';
+import { DataService, Option, Order, OrderDetail, OrderProductList } from '../data/data.service';
 
 @Component({
-  selector: 'app-meal-status',
+  selector: 'app-meal-status-user',
   imports: [],
-  templateUrl: './meal-status.component.html',
-  styleUrl: './meal-status.component.scss'
+  templateUrl: './meal-status-user.component.html',
+  styleUrl: './meal-status-user.component.scss'
 })
-export class MealStatusComponent {
+export class MealStatusUserComponent {
 
+  constructor(private service:DataService){}
 
-  count!: number;
+  mealStatus!:MealStatus;
+
   orderList!: Order[];
 
   orderProductList!: OrderProductList[];
@@ -24,13 +26,13 @@ export class MealStatusComponent {
   orderProductOption1!: Option[];
   orderProductOption2!: Option[];
   orderProductOption3!: Option[];
+  test!:any;
 
   status1!: string[];
   status2!: string[];
 
   ngOnInit(): void {
 
-    this.count = 0;
 
     this.orderProductOption = [{ id: 1, option: "加蛋", addprice: 10 }, { id: 2, option: "不要洋蔥", addprice: 0 }]
     this.orderProductOption1 = [{ id: 1, option: "加大", addprice: 10 }, { id: 2, option: "番茄醬", addprice: 0 }]
@@ -85,56 +87,24 @@ export class MealStatusComponent {
     ];
     console.log(this.orderList)
 
-    for (const order of this.orderList) {
-      for (const product of order.orderProductList) {
-        for (const detail of product.orderDetail) {
-          if (detail.productionStatus == "待送餐") {
-            this.count++;
-          }
-        }
-      }
-    }
-
-
+    let url = "https://api.line.me/v2/profile";
+    this.service.getApi(url).subscribe((res:any)=>{
+      this.test = res;
+      console.log(res);
+    })
+    this.mealStatus = {orderId:"2511160326A01",orderTime:"2025-12-04 16:00",
+      estimatedTime:"2025-12-04 16:30",mealStatus:"製作中",paymentType:"現金",paid:"尚未付款",orderDetail:this.orderProductList}
 
   }
-
-  delivery(id: string, detailId: number, productId: number) {
-
-    console.log(id)
-    console.log(detailId);
-    console.log(productId);
-
-    for (const order of this.orderList) {
-      this.status1 = [];
-      if (order.orderId == id) {
-        for (const product of order.orderProductList) {
-          if (detailId == product.orderDetailsId) {
-            for(let i = 0;i < product.orderDetail.length;i++){
-              if(product.orderDetail[i].productId == productId){
-                product.orderDetail[i].productionStatus = "已送達";
-                this.count -- ;
-              }
-            }
-          }
-        }
-      }
-      for (const product of order.orderProductList) {
-        for (const detail of product.orderDetail) {
-          if (!this.status1.includes(detail.productionStatus)) {
-            this.status1.push(detail.productionStatus);
-          }
-        }
-      }
-      order.status = this.status1;
-    }
-
-    console.log(this.orderList)
-
-
-  }
-
 }
 
 
-
+interface MealStatus{
+  orderId:string; //訂單 id
+  orderTime:string; //訂單產生時間 2025-12-04 16:00
+  estimatedTime:string; //訂單預計完成時間 2025-12-04 16:30
+  mealStatus:string; // 製作中 待送餐 已取餐 外送中
+  paymentType:string; // 現金
+  paid:string; // 已付款 尚未付款
+  orderDetail:OrderProductList[]; //訂單明細
+}
