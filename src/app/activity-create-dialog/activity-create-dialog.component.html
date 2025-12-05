@@ -23,15 +23,15 @@
     }
 
     <label>活動時間：</label>
-    <input type="date" [(ngModel)]="data.calendarStartDate">
+    <input type="date" [(ngModel)]="data.calendarStartDate" [min]="todayDateString">
     ~
-    <input type="date" [(ngModel)]="data.calendarEndDate">
+    <input type="date" [(ngModel)]="data.calendarEndDate" [min]="data.calendarStartDate">
 
   </div>
 
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close>取消</button>
+  <button mat-button mat-dialog-close (click)="closeDialog()">取消</button>
   <button mat-button color="primary" (click)="submit()">下一步</button>
 </mat-dialog-actions>

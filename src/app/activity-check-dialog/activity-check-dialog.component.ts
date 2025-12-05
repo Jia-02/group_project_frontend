@@ -31,7 +31,7 @@ export class ActivityCheckDialogComponent {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private fb: FormBuilder,
     private dataService: DataService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.form = this.fb.group({
@@ -68,20 +68,31 @@ export class ActivityCheckDialogComponent {
   }
 
   private saveActivity(status: boolean) {
+    const startDateWithTime = this.form.value.calendarStartDate + ' 00:00:00';
+    const endDateWithTime = this.form.value.calendarEndDate + ' 00:00:00';
+
+    let photoName: string | null = null;
+    if (this.newPhotoFile) {
+        photoName = this.newPhotoFile.name;
+    } else if (this.data.calendarPhoto) {
+        const parts = this.data.calendarPhoto.split('/');
+        photoName = parts[parts.length - 1];
+    }
+
     const updatedActivityData = {
       calendarId: this.form.value.calendarId,
       calendarTitle: this.form.value.calendarTitle,
       calendarDescription: this.form.value.calendarDescription,
-      calendarStartDate: this.form.value.calendarStartDate,
-      calendarEndDate: this.form.value.calendarEndDate,
-      calendarPhoto: this.data.calendarPhoto,
+      calendarStartDate: startDateWithTime,
+      calendarEndDate: endDateWithTime,
+      calendarPhoto: photoName,
       calendarStatus: status
     };
 
     this.dataService.postApi('http://localhost:8080/calendar/update', updatedActivityData)
       .subscribe((res: any) => {
         console.log(res);
-        this.dialogRef.close({ action: status ? 'publish' : 'saveDraft', data: updatedActivityData, photoFile: this.newPhotoFile })
+        this.dialogRef.close({ action: status ? 'publish' : 'saveDraft', data: updatedActivityData, photoFile: this.newPhotoFile });
       });
   }
 
@@ -94,12 +105,21 @@ export class ActivityCheckDialogComponent {
   }
 
   onDeleteClick() {
-    const id = this.data.calendarId;
-    this.dataService.postApi('http://localhost:8080/calendar/del', { calendarId: id })
+    const id = this.data?.calendarId;
+
+    if (typeof id === 'undefined' || id === null) {
+        console.error('刪除錯誤：無法獲取有效的 calendarId，請確認數據已正確傳入。', this.data);
+        alert('刪除失敗：缺少活動ID。');
+        this.dialogRef.close();
+        return;
+    }
+    const deleteUrlWithParam = `http://localhost:8080/calendar/del?calendarId=${id}`;
+
+    this.dataService.postApi(deleteUrlWithParam, null)
       .subscribe((res: any) => {
-        console.log(res);
-        this.dialogRef.close({ action: 'delete', calendarId: id })
-      });
+          console.log(res);
+          this.dialogRef.close({ action: 'delete', calendarId: id });
+        });
   }
 
   onCancelClick(): void {

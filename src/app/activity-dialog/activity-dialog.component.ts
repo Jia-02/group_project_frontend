@@ -82,14 +82,21 @@ export class ActivityDialogComponent {
 
     this.dataService.postApi('http://localhost:8080/calendar/create', body)
       .subscribe((res: any) => {
-          console.log('活動已發布:', res);
-          this.activityData.calendarStatus = 'published';
+        console.log('活動已發布:', res);
 
-          this.dialogRef.close({
-            action: 'published',
-            data: { ...this.activityData } as Activity
-          });
+        const savedActivity = res.data || res.activity || res.calendar || res;
+
+        if (savedActivity.calendarId) {
+          this.activityData.calendarId = savedActivity.calendarId;
         }
+
+        this.activityData.calendarStatus = 'published';
+
+        this.dialogRef.close({
+          action: 'published',
+          data: { ...this.activityData } as Activity
+        });
+      }
       );
   }
 
@@ -98,14 +105,21 @@ export class ActivityDialogComponent {
 
     this.dataService.postApi('http://localhost:8080/calendar/create', body)
       .subscribe((res: any) => {
-          console.log('活動已暫存:', res);
-          this.activityData.calendarStatus = 'draft';
+        console.log('活動已暫存:', res);
 
-          this.dialogRef.close({
-            action: 'saveDraft',
-            data: { ...this.activityData } as Activity
-          });
+        const savedActivity = res.data || res.activity || res.calendar || res;
+
+        if (savedActivity.calendarId) {
+          this.activityData.calendarId = savedActivity.calendarId;
         }
+
+        this.activityData.calendarStatus = 'draft';
+
+        this.dialogRef.close({
+          action: 'saveDraft',
+          data: { ...this.activityData } as Activity
+        });
+      }
       );
   }
 }
