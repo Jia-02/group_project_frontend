@@ -7,16 +7,16 @@
   <div>{{ categoryDto.categoryType }}</div>
 
   <label>餐點名稱</label>
-  <input type="text" class="inputCss" [(ngModel)]="productDto.productName">
+  <input type="text" class="inputCss" [(ngModel)]="productList.productName">
 
   <label>餐點描述</label>
-  <textarea [(ngModel)]="productDto.productDescription"></textarea>
+  <textarea [(ngModel)]="productList.productDescription"></textarea>
 
   <label>內部備註</label>
-  <textarea [(ngModel)]="productDto.productNote"></textarea>
+  <textarea [(ngModel)]="productList.productNote"></textarea>
 
   <label>價格</label>
-  <input type="number" class="inputCss" [(ngModel)]="productDto.productPrice">
+  <input type="number" class="inputCss" [(ngModel)]="productList.productPrice">
 
   <label>餐點圖片</label>
   <input type="file" (change)="onFileSelected($event)" accept="image/*">

@@ -1,4 +1,4 @@
-import { categoryDto } from './../@interface/interface';
+import { categoryDto, productList, productListRes } from './../@interface/interface';
 import { Injectable } from '@angular/core';
 import { reservation, scheduleItem, tables } from '../@interface/interface';
 import { BehaviorSubject } from 'rxjs';
@@ -11,6 +11,10 @@ export class DataService {
   constructor() { }
 
   reservation: reservation[] = [];
+  allCategoryDto: categoryDto[] = [];
+  productList: productList[] = [];
+  productListRes!: productListRes;
+
 
     // 每天所有預約的 scheduleItem 列表
   dailyReservations: Map<string, scheduleItem[]> = new Map();
@@ -22,10 +26,6 @@ export class DataService {
   private category$ = new BehaviorSubject<categoryDto[]>([]);
   _catagory$ = this.category$.asObservable();
 
-  // 更新菜單分類
-  updateCategoryList(categories: categoryDto[]): void {
-    this.category$.next(categories);
-  }
 
 
 }

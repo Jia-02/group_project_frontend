@@ -57,12 +57,6 @@ export interface timeLabel {
 
 
 // 菜單分類
-export interface categoryResponse {
-  code: number;
-  message: string;
-  categoryDto: categoryDto[];
-}
-
 export interface categoryDto {
   categoryId: number;
   categoryType: string;
@@ -70,16 +64,16 @@ export interface categoryDto {
 }
 
 
-// 產品列表回應
-export interface productListResponse {
+// 產品列表api
+export interface productListRes {
   code: number;
   message: string;
   categoryId: number;
-  productList: productDto[];
+  productList: productList[];
 }
 
-// 產品
-export interface productDto {
+// 產品內容
+export interface productList {
   productId: number;
   productName: string;
   productPrice: number;
