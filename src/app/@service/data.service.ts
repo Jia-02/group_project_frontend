@@ -1,21 +1,21 @@
-<<<<<<< HEAD
+
 import { categoryDto } from './../@interface/interface';
 import { Injectable } from '@angular/core';
 import { reservation, scheduleItem, tables } from '../@interface/interface';
 import { BehaviorSubject } from 'rxjs';
-=======
+
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { catchError } from 'rxjs';
->>>>>>> calendar
+
+
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
 
-<<<<<<< HEAD
-  constructor() { }
+  constructor(private http: HttpClient) { }
+
 
   reservation: reservation[] = [];
 
@@ -34,11 +34,6 @@ export class DataService {
     this.category$.next(categories);
   }
 
-
-}
-=======
-  constructor(private http: HttpClient) { }
-
   getApi(url: string): any {
     return this.http.get(url);
   }
@@ -46,7 +41,11 @@ export class DataService {
   postApi(url: string, postData: any): any {
     return this.http.post(url, postData);
   }
+
+
 }
+
+
 
 export interface WorkTable {
   workStationId: number;
@@ -199,4 +198,4 @@ export interface Order{
   price:number;
 }
 
->>>>>>> calendar
+

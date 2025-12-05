@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { DataService, Option, Order, OrderDetail, OrderProductList } from '../data/data.service';
+import { DataService, Order, OrderProductList, OrderDetail, Option } from '../@service/data.service';
+
 
 @Component({
   selector: 'app-meal-status-user',

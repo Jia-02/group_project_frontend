@@ -14,8 +14,6 @@ html {
   ));
 }
 
-html, body { height: 100%;background-color: rbg(220,220,220); }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .mat-mdc-tab.mdc-tab{
   padding: 0;
@@ -49,12 +47,7 @@ body {
   overflow-x: hidden;
 }
 
-body {
-  margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
-}
 
-<<<<<<< HEAD
 
 // Tab 內容區域
 .mat-mdc-tab-body-active > .mat-mdc-tab-body-content {
@@ -74,7 +67,5 @@ mat-tab-group {
   flex-grow: 1;
 }
 
-=======
->>>>>>> calendar
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+

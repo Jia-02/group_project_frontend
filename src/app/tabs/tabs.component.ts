@@ -4,8 +4,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTabChangeEvent, MatTabsModule } from '@angular/material/tabs';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from './dialog/dialog.component';
-import { BasicRes, DataService, Option, Order, OrderDetail, OrderProductList, WorkTable, WorkTableListRes } from '../data/data.service';
+
 import { MatIcon } from "@angular/material/icon";
+import { DataService, WorkTable, Order, OrderProductList, OrderDetail, BasicRes, WorkTableListRes, Option } from '../@service/data.service';
 
 @Component({
   selector: 'app-tabs',

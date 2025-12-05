@@ -1,9 +1,10 @@
 import { Component, ErrorHandler, inject } from '@angular/core';
-import { DataService, Reservation, ReservationListTodayRes, Table } from '../../data/data.service';
+
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
 import { DialogComponent } from '../dialog/dialog.component';
 import { catchError, throwError } from 'rxjs';
+import { DataService, Reservation, ReservationListTodayRes, Table } from '../../@service/data.service';
 
 @Component({
   selector: 'app-add-table',

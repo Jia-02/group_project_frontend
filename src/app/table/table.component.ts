@@ -1,5 +1,5 @@
 import { Component, ElementRef, inject, ViewChild } from '@angular/core';
-import { BasicRes, DataService, Rect, Reservation, ReservationListRes, ReservationListTodayRes, ReservationNowList, ReservationNowListRes, ReservationToday, Table, TableRes, UpdateReservation } from '../data/data.service';
+import { DataService, WorkTable, Order, OrderProductList, OrderDetail, BasicRes, WorkTableListRes, Option, Rect, Reservation, ReservationListTodayRes, ReservationNowList, ReservationNowListRes, ReservationToday, Table, TableRes, UpdateReservation } from '../@service/data.service';
 import { MatDialog } from '@angular/material/dialog';
 import { TableEditComponent } from './tableEdit/tableEdit';
 import { catchError, min, of } from 'rxjs';
