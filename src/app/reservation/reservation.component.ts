@@ -258,6 +258,7 @@ export class ReservationComponent {
           if (apiRes.code == 200) {
             // 處理後端回傳的原始資料，轉換成前端 reservation 結構，並同時更新桌位狀態
             const allReservations = this.backendData(apiRes.reservationAndTableByDateList, selectedDateStr);
+            console.log(allReservations)
             for (const r of allReservations) {
               if (!this.dataService.reservation.find(existing => existing.id == r.id)) {
                 // 將該日期的預約加入到 DataService 的預約列表中
@@ -528,6 +529,8 @@ export class ReservationComponent {
     if (newDateStr === this.formatDateStr(this.selectedDay())) {
       this.selectedReservationDetail.set(updatedScheduleItem);
     } else {
+      console.log();
+
       this.selectedReservationDetail.set(null); // 如果移動到別天，則清空詳情
     }
   }

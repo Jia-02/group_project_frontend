@@ -87,6 +87,7 @@ export interface productDto {
   productDescription: string;
   imageUrl: string;
   productNote: string;
+  categoryId: number;
 }
 
 

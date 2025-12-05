@@ -12,15 +12,19 @@
   <label>餐點描述</label>
   <textarea [(ngModel)]="productDto.productDescription"></textarea>
 
+  <label>內部備註</label>
+  <textarea [(ngModel)]="productDto.productNote"></textarea>
+
   <label>價格</label>
   <input type="number" class="inputCss" [(ngModel)]="productDto.productPrice">
 
   <label>餐點圖片</label>
   <input type="file" (change)="onFileSelected($event)" accept="image/*">
 
+
   @if (selectedFile) {
   <div style="font-size: 0.8em; color: green; margin-top: 5px;">
-    已選取檔案: **{{ selectedFile.name }}**
+    已選取檔案: {{ selectedFile.name }}
   </div>
   }
 </mat-dialog-content>
