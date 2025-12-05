@@ -1,0 +1,90 @@
+<div class="background">
+
+  <mat-tab-group (selectedTabChange)="onTabChange($event)">
+    <!-- 菜單分類 -->
+    @for (category of allCategoryDto; track $index) {
+    <mat-tab [label]="category.categoryType">
+
+      <!-- 餐點 -->
+      <div class="menuItemsBox">
+        @for (product of productList; track $index) {
+        <div class="menuItem">
+          <img [src]="product.imageUrl" alt="{{ product.imageUrl }}">
+          <div>{{ product.productName }}</div>
+          <div>{{ product.productDescription }}</div>
+          <div>${{ product.productPrice }}</div>
+        </div>
+        }
+
+        <!-- 新增餐點 -->
+        <div class="addProductCss" (click)="addProduct()">
+          <div class="addContent">
+            <div>新增餐點</div>
+            <div>+</div>
+          </div>
+        </div>
+
+
+        @if (productList.length == 0) {
+        <div>此分類目前沒有餐點唷~</div>
+        }
+      </div>
+    </mat-tab>
+    }
+
+
+    <!-- 新增分類 -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon>add_circle_outline</mat-icon>
+      </ng-template>
+
+      <!-- 內容 -->
+      <div>新增分類</div>
+      <label>分類名稱</label>
+      <input type="text" [(ngModel)]="categoryDto.categoryType">
+      <label>工作檯安排</label>
+      <select [(ngModel)]="categoryDto.workstationId">
+        <option value="">--請選擇--</option>
+        <option [ngValue]="1">1號飲品區</option>
+        <option [ngValue]="2">2號熱食區</option>
+      </select>
+
+      <button (click)="addCategory()">確定</button>
+    </mat-tab>
+  </mat-tab-group>
+
+
+  <!-- 客製化區 -->
+  <div class="customizeBox">
+    <div class="sectionTitle">客製化專區</div>
+
+    <div class="optionsBox">
+      <div class="optionGroup">
+        <div class="groupTitle">好醬汁 | SAUSE</div>
+        <label class="radioItem">
+          <input type="radio" name="sauce"> 奶油白醬
+        </label>
+        <label class="radioItem">
+          <input type="radio" name="sauce"> 茄汁紅醬
+        </label>
+        <label class="radioItem">
+          <input type="radio" name="sauce"> 粉紅醬
+        </label>
+        <label class="radioItem">
+          <input type="radio" name="sauce"> 羅勒青醬
+        </label>
+      </div>
+
+      <div class="optionGroup">
+        <div class="groupTitle">吃飽飽 | INCREASE</div>
+        <label class="radioItem">
+          <input type="radio" name="size" checked> 正常
+        </label>
+        <label class="radioItem">
+          <input type="radio" name="size"> 加麵
+          <span class="priceTag">+ $10</span>
+        </label>
+      </div>
+    </div>
+  </div>
