@@ -1,0 +1,37 @@
+<h2 mat-dialog-title>新增活動</h2>
+
+<mat-dialog-content>
+
+  <div class="sidebar-card">
+
+    <label>活動標題:
+      <input type="text" [(ngModel)]="data.calendarTitle">
+    </label><br>
+
+    <label>活動內容：</label>
+    <textarea rows="3" [(ngModel)]="data.calendarDescription"></textarea><br>
+
+    <label>圖片：
+      <input type="file" (change)="onFileSelected($event)">
+      {{ selectedPhotoFile?.name || '未選擇檔案' }}
+    </label><br>
+
+    @if (photoUrl) {
+    <div>
+      <img [src]="photoUrl" alt="活動圖片預覽" style="max-width: 100%; max-height: 150px; margin-top: 10px;">
+    </div>
+    }
+
+    <label>活動時間：</label>
+    <input type="date" [(ngModel)]="data.calendarStartDate" [min]="todayDateString">
+    ~
+    <input type="date" [(ngModel)]="data.calendarEndDate" [min]="data.calendarStartDate">
+
+  </div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close (click)="closeDialog()">取消</button>
+  <button mat-button color="primary" (click)="submit()">下一步</button>
+</mat-dialog-actions>

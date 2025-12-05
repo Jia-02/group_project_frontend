@@ -1,0 +1,91 @@
+.store-announcement-container {
+  padding: 0;
+  max-width: 100vw;
+  max-height: 85vh; // 限制高度，超出則滾動
+  overflow-y: auto;
+  padding-bottom: 20px;
+
+  .dialog-header {
+    position: sticky; // 標題欄固定在頂部
+    top: 0;
+    z-index: 100;
+    text-align: center;
+    padding: 10px 0;
+    background-color: white; // 確保滾動時不透視
+    border-bottom: 1px solid #eee;
+
+    h3 {
+      margin: 0;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .close-button {
+      position: absolute;
+      top: 5px;
+      left: 10px;
+      color: #444;
+    }
+  }
+
+  .announcement-card {
+    margin: 15px 15px 0;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); // 輕微陰影，讓卡片浮起
+    overflow: hidden; // 確保圖片邊角圓潤
+
+    // 1. 圖片區域
+    .activity-photo {
+      width: 100%;
+      height: 270px;
+      background-size: cover;
+      background-position: center;
+      background-color: #f0f0f0; // 預設背景
+    }
+
+    .activity-info {
+      padding: 15px;
+
+      // 2. 標題
+      .activity-title {
+        font-size: 1.2em;
+        font-weight: bold;
+        margin-top: 0;
+        margin-bottom: 8px;
+        color: #333;
+      }
+
+      // 3. 內容
+      .activity-description {
+        font-size: 0.9em;
+        color: #555;
+        margin-bottom: 15px;
+        line-height: 1.5;
+        // 限制行數以保持整潔
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+      }
+
+      // 4. 時間
+      .activity-footer {
+        border-top: 1px solid #eee;
+        padding-top: 10px;
+
+        .activity-time {
+          font-size: 0.8em;
+          color: #888;
+          display: block;
+        }
+      }
+    }
+  }
+
+  .no-activity {
+    text-align: center;
+    padding: 50px;
+    color: #666;
+  }
+}

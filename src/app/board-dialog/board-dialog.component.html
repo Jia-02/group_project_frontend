@@ -1,0 +1,38 @@
+<mat-dialog-content class="store-announcement-container">
+
+  <div class="dialog-header">
+    <button mat-icon-button class="close-button" (click)="closeDialog()" mat-dialog-close>
+      <mat-icon>close</mat-icon>
+    </button>
+    <h3>店家公告</h3>
+  </div>
+
+  @for (activity of activities; track activity.calendarStartDate) {
+    <div class="announcement-card">
+
+      <div class="activity-photo"
+           [ngStyle]="{'background-image': getBackgroundStyle(activity.calendarPhoto)}">
+      </div>
+
+      <div class="activity-info">
+
+        <h4 class="activity-title">{{ activity.calendarTitle }}</h4>
+
+        <p class="activity-description">{{ activity.calendarDescription }}</p>
+
+        <div class="activity-footer">
+          <span class="activity-time">
+            🗓️ {{ activity.calendarStartDate | date: 'yyyy/MM/dd' }} ~ {{ activity.calendarEndDate | date: 'yyyy/MM/dd' }}
+          </span>
+        </div>
+
+      </div>
+
+    </div>
+  } @empty {
+    <div class="no-activity">
+      目前沒有即將開始或正在進行的公開活動。
+    </div>
+  }
+
+</mat-dialog-content>
