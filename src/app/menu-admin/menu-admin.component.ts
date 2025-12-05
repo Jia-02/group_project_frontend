@@ -95,7 +95,7 @@ export class MenuAdminComponent {
 
             return {
               ...p,
-              imageUrl: `public/${imageFolder}/${cleanFilename}`
+              imageUrl: `${imageFolder}/${cleanFilename}`
             };
           });
         }
