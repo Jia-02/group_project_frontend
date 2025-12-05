@@ -94,9 +94,6 @@ export class MealStatusComponent {
         }
       }
     }
-
-
-
   }
 
   delivery(id: string, detailId: number, productId: number) {

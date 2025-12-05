@@ -218,10 +218,13 @@ export class TableComponent {
   handleDown(event: MouseEvent) {
 
     const { offsetX, offsetY } = event;
+    if(!this.rects){
+      return
+    }
 
     // 清除選取
-    this.rects.forEach(r => r.selected = false);
-    this.activeRect = null;
+    // this.rects.forEach(r => r.selected = false);
+    // this.activeRect = null;
 
     // 1. 先檢查是否按到某個矩形的 corner
     for (const rect of [...this.rects].reverse()) {
@@ -538,6 +541,7 @@ export class TableComponent {
     url = "http://localhost:8080/reservation/now_time_list";
     this.service.getApi(url).subscribe((reservation: ReservationNowListRes) => {
       url = "http://localhost:8080/table/list"
+      console.log(reservation )
       this.reservationList = reservation.reservationAndTableByTimeList;
       console.log(this.reservationList)
       this.service.getApi(url).subscribe((tableRes: TableRes) => {
