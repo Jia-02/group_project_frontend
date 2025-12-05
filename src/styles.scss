@@ -3,7 +3,6 @@
 @use '@angular/material' as mat;
 
 html {
-<<<<<<< HEAD
   @include mat.theme((
     color: (
       theme-type: light,
@@ -30,7 +29,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     border: 1px solid black;
     margin-bottom: 5%;
     flex: 1 0 auto;
-=======
+
   @include mat.theme((color: (theme-type: light,
         primary: mat.$azure-palette,
         tertiary: mat.$blue-palette,
@@ -38,7 +37,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
       typography: Roboto,
       density: 0,
     ));
->>>>>>> reservation
+
 }
 
 /* You can add global styles to this file, and also import other style files */
