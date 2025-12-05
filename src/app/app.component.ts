@@ -15,3 +15,9 @@ export class AppComponent {
   }
 
 }
+
+// angular.json設定
+// "options": {
+//   "host": "0.0.0.0",
+//   "disableHostCheck": true
+// }
