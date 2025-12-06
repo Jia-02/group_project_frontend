@@ -240,7 +240,10 @@ export class CalendarComponent implements OnInit {
           ...activityData,
           calendarId: activityData.calendarId,
           calendarStartDate: new Date(activityData.calendarStartDate),
-          calendarEndDate: new Date(activityData.calendarEndDate)
+          calendarEndDate: new Date(activityData.calendarEndDate),
+          calendarTitle: activityData.calendarTitle,
+          calendarDescription: activityData.calendarDescription,
+          calendarPhoto: activityData.calendarPhoto,
         };
 
         this.activities.push(newActivity);
@@ -409,4 +412,5 @@ export interface CreateActivity {
   calendarEndDate: string;
   calendarPhoto?: string | null;
 }
+
 
