@@ -43,8 +43,6 @@ export class DialogMenuComponent {
     categoryId: 0
   };
 
-  productListRes!: productListRes;
-
   readonly dialogRef = inject(MatDialogRef<DialogMenuComponent>);
   readonly data = inject<any>(MAT_DIALOG_DATA);
 
@@ -52,7 +50,9 @@ export class DialogMenuComponent {
 
   ngOnInit(): void {
     //  從service抓分類的id
-    this.productListRes = this.dataService.productListRes;
+    this.productList.categoryId = this.data.categoryId;
+    this.categoryDto.categoryType = this.data.categoryType;
+    this.searchProduct(this.productList.categoryId);
   }
 
   // 取消
@@ -62,26 +62,65 @@ export class DialogMenuComponent {
 
   // 確定
   onAddClick() {
+    this.countNextProductId();
+    this.productList;
+    console.log(this.productList);
+
     // 檢查必填欄位
     if (!this.selectedFile || !this.productList.productName || !this.productList.productPrice || !this.productList.productDescription) {
       alert('必填沒填');
+      return;
     }
 
+    // 拼湊圖片路字串，組合結果: "/drink/drink (1).jpg"
+    const folderMap: { [key: string]: string } = {
+      '套餐': 'set',
+      '飲料': 'drink',
+      '義大利麵': 'pasta',
+      '點心': 'snack',
+      '披薩': 'pizza',
+      '火鍋': 'hotpot',
+      '炸物': 'fried'
+    };
+
+    const currentType = this.categoryDto.categoryType;
+    const folderName = folderMap[currentType];
+    this.productList.imageUrl = `/${folderName}/${this.selectedFile.name}`;
+
     this.httpClientService.postApi('http://localhost:8080/product/add', this.productList)
-      .subscribe((res) => {
-        if(this.productListRes.categoryId){
-
-        }
+      .subscribe((res: any) => {
         console.log(res);
-
-      })
+        if (res.code == 200) {
+          this.dialogRef.close(true);
+        }
+      });
   }
 
 
-
-  addProduct() {
-
+  searchProduct(categoryId: number) {
+    const apiUrl = `http://localhost:8080/product/list?categoryId=${categoryId}`;
+    this.httpClientService.getApi(apiUrl).subscribe((res: any) => {
+      if (res.code == 200) {
+        this.dataService.productListRes.productList = res.productList;
+        console.log('DataService 更新完成，目前數量:', this.dataService.productListRes.productList.length);
+      }
+    })
   }
+
+  countNextProductId() {
+    const allProducts = this.dataService.productListRes.productList;
+
+    let maxId = 0;
+    // 迴圈該分類下產品ID的最大值加1
+    for (let product of allProducts) {
+      if (product.productId && product.productId > maxId) {
+        maxId = product.productId;
+      }
+    }
+    this.productList.productId = maxId + 1;
+    console.log('算出來的新 ID 是:', this.productList.productId);
+  }
+
 
   // 處理檔案選取事件
   onFileSelected(event: any) {

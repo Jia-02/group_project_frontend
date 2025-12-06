@@ -14,9 +14,9 @@ export class DataService {
   allCategoryDto: categoryDto[] = [];
   productList: productList[] = [];
   productListRes!: productListRes;
+  tables = <tables[]>([]); // 儲存當前選中日期的桌位列表及其狀態
 
-
-    // 每天所有預約的 scheduleItem 列表
+  // 每天所有預約的 scheduleItem 列表
   dailyReservations: Map<string, scheduleItem[]> = new Map();
 
   // 用 Map 保存每個日期的桌位狀態，讓不同日期可以有獨立的桌位設定

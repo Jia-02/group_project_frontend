@@ -11,8 +11,8 @@ export interface tables {
 export interface reservation {
   id?: number; // 唯一 ID
   newDate?: string;
-  reservationDate: string; // "2025-11-29"
-  reservationTime: string; // "14:00:00"
+  reservationDate: string;
+  reservationTime: string;
   reservationPhone: string;
   reservationName: string;
   reservationCount: number;
@@ -24,15 +24,6 @@ export interface reservation {
   tableId: string;
 }
 
-
-// 單一桌位與該桌位預約列表（後端結構）
-export interface tableReservationByDate {
-  tableId: string;
-  capacity: number;
-  tableDailyStatus: boolean;
-  reservations: reservation[];
-}
-
 // 後端 API 的頂層回傳結構
 export interface apiResponse {
   code: number;
@@ -41,6 +32,13 @@ export interface apiResponse {
   reservationAndTableByDateList: tableReservationByDate[];
 }
 
+// 單一桌位與該桌位預約列表（後端結構）
+export interface tableReservationByDate {
+  tableId: string;
+  capacity: number;
+  tableDailyStatus: boolean;
+  reservations: reservation[];
+}
 
 // 繼承 (排程項目)
 export interface scheduleItem extends reservation {
@@ -55,14 +53,12 @@ export interface timeLabel {
   hour: number;
 }
 
-
-// 菜單分類
+// 分類
 export interface categoryDto {
   categoryId: number;
   categoryType: string;
   workstationId: number;
 }
-
 
 // 產品列表api
 export interface productListRes {

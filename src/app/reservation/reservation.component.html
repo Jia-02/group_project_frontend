@@ -41,8 +41,10 @@
               @for (day of week; track $index) {
               <div class="calendarDays" (click)="selectDay(day)">
 
-                <div class="dayContent" [class.is-selected]="isSameDate(day, selectedDay())"
-                  [class.is-today]="isToday(day)" [class.is-other-month]="!isSameMonth(day, currentMonth())">
+                <div class="dayContent"
+                  [class.is-selected]="isSameDate(day, selectedDay())"
+                  [class.is-today]="isToday(day)"
+                  [class.is-other-month]="!isSameMonth(day, currentMonth())">
 
                   <span class="dayNumber">{{ day | date: 'd' }}</span>
 

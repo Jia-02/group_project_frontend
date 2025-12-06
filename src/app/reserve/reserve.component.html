@@ -1,0 +1,55 @@
+<div class="background">
+  <div class="mainLayout">
+    <div class="leftPanel">
+
+      <div class="calendarPanel">
+
+        <!-- 行事曆 -->
+        <div class="header">
+          <h2 class="monthTitle">
+            {{ currentMonth | date: 'yyyy年 MM月' }}
+          </h2>
+          <div class="navButtons">
+            <button (click)="prevMonth()" class="navButton" aria-label="上個月">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <button (click)="nextMonth()" class="navButton" aria-label="下個月">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <!-- 星期迴圈 -->
+          <div class="dayNames">
+            @for (dayName of dayNames; track $index) {
+            <div class="dayName">
+              {{ dayName }}
+            </div>
+            }
+          </div>
+
+          <div>
+            <!-- 日曆跑迴圈找一週 -->
+            @for (week of monthWeeks; track $index) {
+            <div class="calendarWeek">
+              <!-- 一週迴圈找每一天 -->
+              @for (day of week; track $index) {
+              <div class="calendarDays">
+                <span class="dayNumber">{{ day | date: 'd' }}</span>
+              </div>
+              }
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

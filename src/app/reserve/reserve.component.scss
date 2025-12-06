@@ -1,0 +1,130 @@
+// 顏色變數
+$color-primary: #013c70; // 藍色 (Blue-600)
+$color-secondary: #fe6d13; // 淺橙色 (用於活動區塊, 類似圖片顏色)
+$color-text: #333; // 深灰色
+$color-card-bg: #ffffff; // 白色
+$color-page-bg: #F8F9FA; // 淺灰(背景色)
+$color-gray-bg: #cbcbcb; // 淺灰
+$color-muted: #9ca3af; // 灰色
+
+
+// 背景
+.background {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  font-family: 'Inter', sans-serif;
+  color: $color-text;
+}
+
+.mainLayout {
+  width: 100%;
+  height: 100vh;
+  max-width: 1600px;
+  display: flex;
+  overflow: hidden;
+}
+
+// 日曆
+.calendarPanel {
+  flex-shrink: 0;
+  height: 260px;
+  padding: 20px;
+  background-color: $color-card-bg;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+}
+
+// 日曆抬頭
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 5px;
+}
+
+.monthTitle {
+  font-size: 14px;
+  font-weight: 700;
+  color: $color-text;
+}
+
+.navButtons {
+  display: flex;
+  gap: 3px;
+}
+
+.navButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 9999px;
+  transition: background-color 0.3s; // 平滑過渡
+
+  &:hover {
+    background-color: $color-gray-bg;
+  }
+
+  svg {
+    color: $color-text;
+    display: block;
+  }
+}
+
+// 星期
+.dayNames {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-bottom: 5px;
+}
+
+.dayName {
+  text-align: center;
+  font-size: 13px;
+  font-weight: 500;
+  color: $color-text;
+  padding: 1px 0;
+}
+
+.calendarWeek {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+// 單日
+.calendarDays {
+  position: relative;
+  width: 100%;
+  padding: 15px 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50px;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: $color-gray-bg;
+  }
+}
+
+// 日期號碼
+.dayNumber {
+  font-size: 12px;
+}
+
+.activityDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 9999px;
+  margin-top: 2px;
+
+  &.dot-blue {
+    background-color: $color-secondary;
+  }
+
+  &.dot-white {
+    background-color: $color-card-bg;
+  }
+}

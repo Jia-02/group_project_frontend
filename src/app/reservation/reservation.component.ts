@@ -18,7 +18,6 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrl: './reservation.component.scss'
 })
 
-
 export class ReservationComponent {
 
   constructor(

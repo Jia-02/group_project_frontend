@@ -68,6 +68,8 @@ export class MenuAdminComponent {
           this.allCategoryDto = res.categoryDto; // 更新分類列表
           this.dataService.allCategoryDto = this.allCategoryDto; // 更新到service
         }
+        console.log(res);
+
       })
   }
 
@@ -105,8 +107,26 @@ export class MenuAdminComponent {
 
   // 新增餐點
   addProduct() {
-    const dialogRef = this.dialog.open(DialogMenuComponent);
+    // 找分類對應的飲料
+    let currentCategoryType = '';
+    for (let categoryData of this.dataService.allCategoryDto) {
+      if (this.dataService.productListRes.categoryId == categoryData.categoryId) {
+        currentCategoryType = categoryData.categoryType;
+      }
+    }
 
+    const dialogRef = this.dialog.open(DialogMenuComponent, {
+      data: {
+        categoryId: this.currentCategoryId,
+        categoryType: currentCategoryType,
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(res => {
+      if( res == true){
+        this.loadProducts(this.currentCategoryId);
+      }
+    });
   }
 
 

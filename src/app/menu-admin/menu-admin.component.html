@@ -16,20 +16,19 @@
         </div>
         }
 
+        @if (productList.length == 0) {
+        <div>此分類目前沒有餐點唷~</div>
+        }
+
         <!-- 新增餐點 -->
         <div class="addProductCss" (click)="addProduct()">
           <div class="addContent">
             <div>新增餐點</div>
-            <div>+</div>
+            <div class="addIcon">+</div>
           </div>
         </div>
 
 
-
-
-        @if (productList.length == 0) {
-        <div>此分類目前沒有餐點唷~</div>
-        }
       </div>
     </mat-tab>
     }
