@@ -30,7 +30,8 @@ export class TableEditComponent {
   lengthX!: number;
   lengthY!: number;
 
-  reservation!:Reservation[];
+
+  reservation!: Reservation[];
 
 
   ngOnInit(): void {
@@ -65,8 +66,8 @@ export class TableEditComponent {
       this.reservation = [];
       let url = "http://localhost:8080/reservation/date_list?reservationDate=" + reservation_date;
       this.service.getApi(url).subscribe((res: ReservationListTodayRes) => {
-        for(let i = 0;i < res.reservationAndTableByDateList.length; i++){
-          if(this.tableId == res.reservationAndTableByDateList[i].tableId){
+        for (let i = 0; i < res.reservationAndTableByDateList.length; i++) {
+          if (this.tableId == res.reservationAndTableByDateList[i].tableId) {
             this.reservation = res.reservationAndTableByDateList[i].reservations;
             console.log(this.reservation)
           }
@@ -118,10 +119,11 @@ export class TableEditComponent {
         //更新桌位----
       } else {
         let url = "http://localhost:8080/table/update";
+        let code = "http://localhost:4200/menu?tableId=" + this.tableId
         let table: Table = {
           tableId: this.tableId, tableStatus: this.tableStatus, tableCapacity: this.tableCapacity,
           tablePositionX: this.tablePositionX, tablePositionY: this.tablePositionY,
-          lengthX: this.lengthX, lengthY: this.lengthY
+          lengthX: this.lengthX, lengthY: this.lengthY,qrUrl:code
         }
         console.log(table);
         this.service.postApi(url, table).pipe(
@@ -153,11 +155,13 @@ export class TableEditComponent {
       //新增桌位----
     } else if (this.data.mod == "新增") {
       let url = "http://localhost:8080/table/add";
+      let code = "http://localhost:4200/menu?tableId=" + this.tableId
       let table: Table = {
         tableId: this.tableId, tableStatus: "可預約", tableCapacity: this.tableCapacity,
         tablePositionX: this.tablePositionX, tablePositionY: this.tablePositionY,
-        lengthX: this.lengthX, lengthY: this.lengthY
+        lengthX: this.lengthX, lengthY: this.lengthY, qrUrl:code
       }
+
       this.service.postApi(url, table).pipe(
         catchError((error) => {
           if (error.error.code == 400) {

@@ -19,7 +19,7 @@ export class DataService {
 
   reservation: reservation[] = [];
 
-    // 每天所有預約的 scheduleItem 列表
+  // 每天所有預約的 scheduleItem 列表
   dailyReservations: Map<string, scheduleItem[]> = new Map();
 
   // 用 Map 保存每個日期的桌位狀態，讓不同日期可以有獨立的桌位設定
@@ -66,6 +66,7 @@ export interface Table {
   tablePositionY: number;
   lengthX: number;
   lengthY: number;
+  qrUrl:string;
 }
 
 export interface Reservation {
@@ -168,34 +169,36 @@ export interface Rect {
 // 一筆資料代表一個訂單中的一份餐點/套餐
 export interface OrderProductList {
   orderDetailsId: number;
-  orderDetailsPrice:number;
-  settingId:number;
-  orderDetail:OrderDetail[];
+  orderDetailsPrice: number;
+  settingId: number;
+  orderDetail: OrderDetail[];
 }
 
 // 一筆資料代表一個訂單的一個餐點的訊息
 export interface OrderDetail {
-  workStationId:number; //餐點類別
+  workStationId: number; //餐點類別
   productId: number; //餐點id
-  productionStatus:string; //餐點狀態
+  productionStatus: string; //餐點狀態
   productName: string; // 餐點名稱
-  productPrice:number; //餐點價格
+  productPrice: number; //餐點價格
   detailList: Option[]; //這筆訂單的這一個餐點的客製化訊息
 }
 
 // 一筆資料代表一個餐點
 export interface Option {
-  id:number; // 客製化的id 當一個餐點有多個客製化時也是由1~n
+  id: number; // 客製化的id 當一個餐點有多個客製化時也是由1~n
   option: string; //選擇的客製化名稱
   addprice: number; //選擇的客製化的價格
 }
 
-export interface Order{
-  orderId:string;
-  orderProductList:OrderProductList[];
-  tableId:string;
-  status:string[];
-  price:number;
+export interface Order {
+  orderId: string;
+  orderProductList: OrderProductList[];
+  tableId: string;
+  status: string[];
+  workStationId:number[];
+  price: number;
 }
+
 
 

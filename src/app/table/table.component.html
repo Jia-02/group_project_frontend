@@ -93,15 +93,16 @@
   <div style="display: flex; align-items: center;">
     <span>y軸</span>
   </div>
-  <div style="display: flex; align-items: center; margin-bottom: 10px;">
+  <div style="display: flex; align-items: center; margin-top: -30px;">
     <div style="text-align: right; height: 500px;">
       @for(item of len;track item){
       @if(item == 500){
       <span>{{item}}</span>
       }@else {
-      <span>{{item}}</span> <br> <br> <br> <br> <br>
+      <p>{{item}}</p> <br> <br> <br>
       }
       }
+
     </div>
   </div>
 
@@ -151,7 +152,8 @@
     <div style="border: 1px solid black;">
       <span>{{currentTime}} </span>
     </div> <br>
-    <div style="border: 1px solid black;height: 90%; text-align: center; overflow: hidden;  position: relative; z-index: 1;">
+    <div
+      style="border: 1px solid black;height: 90%; text-align: center; overflow: hidden;  position: relative; z-index: 1;">
       <div id="progressBar"
         style="width: 100%; background-color: greenyellow; height: 10%;position: absolute; top: 0; left: 0; z-index: -1;">
       </div>

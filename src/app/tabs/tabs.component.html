@@ -15,7 +15,7 @@
         </ng-template>
 
         @for(order of orderList;track order){
-        @if(order.status.includes("準備中")){
+        @if(order.status.includes("準備中") && order.workStationId.includes(link.workStationId)){
         <div
           style="height: auto; width: 300px; border: 1px solid black; margin: 20px  ; padding: 20px; border-radius: 10px;">
           <span>訂單編號:{{order.orderId}}</span> <br> <br>

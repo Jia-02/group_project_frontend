@@ -39,6 +39,8 @@ export class TabsComponent {
 
   status1!: string[];
   status2!: string[];
+  workStationId1!: number[];
+  workStationId2!: number[];
 
 
   addLink(event: MouseEvent) {
@@ -93,16 +95,17 @@ export class TabsComponent {
 
   }
 
-  waitDelivery(id: string, detailId: number, productId: number){
+  waitDelivery(id: string, detailId: number, productId: number) {
     for (const order of this.orderList) {
       this.status1 = [];
+      this.workStationId1 = [];
       if (order.orderId == id) {
         for (const product of order.orderProductList) {
           if (detailId == product.orderDetailsId) {
-            for(let i = 0;i < product.orderDetail.length;i++){
-              if(product.orderDetail[i].productId == productId){
+            for (let i = 0; i < product.orderDetail.length; i++) {
+              if (product.orderDetail[i].productId == productId) {
                 product.orderDetail[i].productionStatus = "待送餐";
-                this.count -- ;
+                this.count--;
               }
             }
           }
@@ -113,9 +116,13 @@ export class TabsComponent {
           if (!this.status1.includes(detail.productionStatus)) {
             this.status1.push(detail.productionStatus);
           }
+          if (!this.workStationId1.includes(detail.workStationId) && detail.productionStatus != "待送餐") {
+            this.workStationId1.push(detail.workStationId)
+          }
         }
       }
       order.status = this.status1;
+      order.workStationId = this.workStationId1;
     }
     console.log(this.orderList)
   }
@@ -143,17 +150,17 @@ export class TabsComponent {
       productName: "薯條", productPrice: 30, detailList: this.orderProductOption1
     },
     {
-      workStationId: 1, productId: 3, productionStatus: "準備中",
+      workStationId: 2, productId: 3, productionStatus: "準備中",
       productName: "可樂", productPrice: 30, detailList: this.orderProductOption2
     }]
 
     this.orderProductDetail1 = [{
-      workStationId: 6, productId: 9, productionStatus: "待送餐",
+      workStationId: 3, productId: 9, productionStatus: "準備中",
       productName: "炒麵", productPrice: 100, detailList: this.orderProductOption3
     }]
 
     this.orderProductDetail2 = [{
-      workStationId: 6, productId: 9, productionStatus: "待送餐",
+      workStationId: 1, productId: 9, productionStatus: "準備中",
       productName: "炒麵", productPrice: 100, detailList: this.orderProductOption3
     }]
 
@@ -161,23 +168,37 @@ export class TabsComponent {
     { orderDetailsId: 2, orderDetailsPrice: 110, settingId: -1, orderDetail: this.orderProductDetail1 }]
 
     this.orderProductList1 = [{ orderDetailsId: 1, orderDetailsPrice: 110, settingId: -1, orderDetail: this.orderProductDetail2 }]
+
     this.status1 = [];
     this.status2 = [];
+    this.workStationId1 = [];
+    this.workStationId2 = [];
 
-    for (let i = 0; i < this.orderProductDetail.length; i++) {
-      if (!this.status1.includes(this.orderProductDetail[i].productionStatus)) {
-        this.status1.push(this.orderProductDetail[i].productionStatus);
+    for (let i = 0; i < this.orderProductList.length; i++) {
+      for (let j = 0; j < this.orderProductList[i].orderDetail.length; j++) {
+        if (!this.status1.includes(this.orderProductList[i].orderDetail[j].productionStatus)) {
+          this.status1.push(this.orderProductList[i].orderDetail[j].productionStatus);
+        }
+        if (!this.workStationId1.includes(this.orderProductList[i].orderDetail[j].workStationId)) {
+          this.workStationId1.push(this.orderProductList[i].orderDetail[j].workStationId)
+        }
       }
     }
-    for (let i = 0; i < this.orderProductDetail2.length; i++) {
-      if (!this.status2.includes(this.orderProductDetail2[i].productionStatus)) {
-        this.status2.push(this.orderProductDetail2[i].productionStatus);
+
+    for (let i = 0; i < this.orderProductList1.length; i++) {
+      for (let j = 0; j < this.orderProductList1[i].orderDetail.length; j++) {
+        if (!this.status2.includes(this.orderProductList1[i].orderDetail[j].productionStatus)) {
+          this.status2.push(this.orderProductList1[i].orderDetail[j].productionStatus);
+        }
+        if (!this.workStationId2.includes(this.orderProductList1[i].orderDetail[j].workStationId)) {
+          this.workStationId2.push(this.orderProductList1[i].orderDetail[j].workStationId)
+        }
       }
     }
 
 
-    this.orderList = [{ orderId: "2511160326A01", orderProductList: this.orderProductList, tableId: "A01", price: 290, status: this.status1 },
-    { orderId: "2511160326T01", orderProductList: this.orderProductList1, tableId: "", price: 100, status: this.status2 }
+    this.orderList = [{ orderId: "2511160326A01", orderProductList: this.orderProductList, tableId: "A01", price: 290, status: this.status1, workStationId: this.workStationId1 },
+    { orderId: "2511160326T01", orderProductList: this.orderProductList1, tableId: "", price: 100, status: this.status2, workStationId: this.workStationId2 }
     ];
     console.log(this.orderList)
 

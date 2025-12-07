@@ -138,11 +138,11 @@ export class TableComponent {
     console.log(this.reservationListToday[1])
     if (this.inputSearch) {
       this.searchRes = [];
-      for(const reservation of this.reservation){
-        if(reservation.reservationName.includes(this.inputSearch)){
+      for (const reservation of this.reservation) {
+        if (reservation.reservationName.includes(this.inputSearch)) {
           this.searchRes.push(reservation);
         }
-        if(reservation.reservationPhone.includes(this.inputSearch)){
+        if (reservation.reservationPhone.includes(this.inputSearch)) {
           this.searchRes.push(reservation);
         }
       }
@@ -218,7 +218,7 @@ export class TableComponent {
   handleDown(event: MouseEvent) {
 
     const { offsetX, offsetY } = event;
-    if(!this.rects){
+    if (!this.rects) {
       return
     }
 
@@ -541,13 +541,14 @@ export class TableComponent {
     url = "http://localhost:8080/reservation/now_time_list";
     this.service.getApi(url).subscribe((reservation: ReservationNowListRes) => {
       url = "http://localhost:8080/table/list"
-      console.log(reservation )
+      console.log(reservation)
       this.reservationList = reservation.reservationAndTableByTimeList;
       console.log(this.reservationList)
       this.service.getApi(url).subscribe((tableRes: TableRes) => {
+        console.log(tableRes)
+        this.rects = [];
         if (tableRes.tableList) {
           this.tableList = tableRes.tableList;
-          this.rects = [];
           for (let i = 0; i < tableRes.tableList.length; i++) {
             let reservationName;
             if (reservation.reservationAndTableByTimeList) {
