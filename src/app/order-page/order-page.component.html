@@ -1,1 +1,80 @@
-<p>order-page works!</p>
+<div class="boxCss">
+  <div class="selectBox">
+
+    <span class="labelCss">訂單類型：</span>
+    <select [(ngModel)]="type" class="inputCss">
+      <option value="all">全部</option>
+      <option value="內用">內用</option>
+      <option value="外帶">外帶</option>
+      <option value="外送">外送</option>
+    </select>
+
+    <span class="labelCss">付款方式：</span>
+    <select [(ngModel)]="paymentType" class="inputCss">
+      <option value="all">全部</option>
+      <option value="現金">現金</option>
+      <option value="信用卡">信用卡</option>
+      <option value="其他">其他</option>
+    </select>
+
+    <span class="labelCss">付款狀態：</span>
+    <select [(ngModel)]="paid" class="inputCss">
+      <option value="all">全部</option>
+      <option value="true">已付</option>
+      <option value="false">未付</option>
+    </select>
+
+    <span class="labelCss">日期：</span>
+    <input type="date" [(ngModel)]="date" class="inputCss">
+
+    <button class="buttonCss" (click)="searchOrders()">搜尋</button>
+  </div>
+</div>
+<div class="tableCss">
+  <div class="mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource">
+
+      <!-- code -->
+      <ng-container matColumnDef="code">
+        <th mat-header-cell *matHeaderCellDef> code </th>
+        <td mat-cell *matCellDef="let element"> {{element.code}} </td>
+      </ng-container>
+
+      <!-- type -->
+      <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef> type </th>
+        <td mat-cell *matCellDef="let element"> {{element.type}} </td>
+      </ng-container>
+
+      <!-- date -->
+      <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef> date </th>
+        <td mat-cell *matCellDef="let element"> {{element.date}} </td>
+      </ng-container>
+
+      <!-- paymentType -->
+      <ng-container matColumnDef="paymentType">
+        <th mat-header-cell *matHeaderCellDef> paymentType </th>
+        <td mat-cell *matCellDef="let element"> {{element.paymentType}} </td>
+      </ng-container>
+
+      <!-- paid -->
+      <ng-container matColumnDef="paid">
+        <th mat-header-cell *matHeaderCellDef> paid </th>
+        <td mat-cell *matCellDef="let element"> {{element.paid}} </td>
+      </ng-container>
+
+      <!-- 訂單細節 -->
+      <ng-container matColumnDef="details">
+        <th mat-header-cell *matHeaderCellDef> 訂單細節 </th>
+        <td mat-cell *matCellDef="let element" (click)="openDialog( element )"> {{ element.paid ? '訂單明細' : '結帳' }} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons aria-label="Select page of periodic elements">
+    </mat-paginator>
+  </div>
+</div>
