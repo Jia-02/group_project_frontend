@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { DataService, Order, OrderProductList, OrderDetail, Option } from '../@service/data.service';
+import { FormsModule } from '@angular/forms';
 
 
 @Component({
   selector: 'app-meal-status-user',
-  imports: [],
+  imports: [FormsModule],
   templateUrl: './meal-status-user.component.html',
   styleUrl: './meal-status-user.component.scss'
 })
@@ -27,7 +28,8 @@ export class MealStatusUserComponent {
   orderProductOption1!: Option[];
   orderProductOption2!: Option[];
   orderProductOption3!: Option[];
-  test!:any;
+  phone!:string;
+  mealStatusArray!:MealStatus[];
 
   status1!: string[];
   status2!: string[];
@@ -103,15 +105,19 @@ export class MealStatusUserComponent {
     ];
     console.log(this.orderList)
 
-    let url = "https://api.line.me/v2/profile";
-    this.service.getApi(url).subscribe((res:any)=>{
-      this.test = res;
-      console.log(res);
-    })
-    this.mealStatus = {orderId:"2511160326A01",orderTime:"2025-12-04 16:00",
+    this.mealStatus = {orderId:"2511160326A01",orderTime:"2025-12-04 16:00", phone:"0912345678",
       estimatedTime:"2025-12-04 16:30",mealStatus:"製作中",paymentType:"現金",paid:"尚未付款",orderDetail:this.orderProductList}
 
   }
+
+  searchOrder(){
+    this.mealStatusArray = [];
+    if(this.phone == this.mealStatus.phone){
+      this.mealStatusArray.push(this.mealStatus)
+    }
+  }
+
+
 }
 
 
@@ -119,6 +125,7 @@ interface MealStatus{
   orderId:string; //訂單 id
   orderTime:string; //訂單產生時間 2025-12-04 16:00
   estimatedTime:string; //訂單預計完成時間 2025-12-04 16:30
+  phone:string;
   mealStatus:string; // 製作中 待送餐 已取餐 外送中
   paymentType:string; // 現金
   paid:string; // 已付款 尚未付款

@@ -1,4 +1,36 @@
-<div>
-  <span>訂單id:</span><span>{{mealStatus.orderId}}</span>
-  <span>{{test}}</span>
+<div style="width: auto;height: 100%;">
+  <span style="flex: 1 1 auto;"></span>
+  <div style="display: flex; justify-content: center;">
+    <span style="flex: 1 1 auto;"></span>
+    <div style="width: auto; height: auto; border: 1px solid black; border-radius: 10px; padding: 3%;">
+      <span>請輸入手機號碼:</span>
+      <input type="text" style="margin-top: 3%; margin-bottom: 3%;" [(ngModel)]="phone"> <br>
+      <button (click)="searchOrder()">查詢訂單</button>
+    </div>
+    <span style="flex: 1 1 auto;"></span>
+  </div> <br>
+  <div style="display: flex;justify-content: center;">
+    <span style="flex: 1 1 auto;"></span>
+    @for(mealStatus of mealStatusArray;track mealStatus){
+    <div style="width: auto; height: auto; border: 1px solid black; border-radius: 10px; padding: 3%;">
+      <span style="font-size: 13px;">訂單編號:{{mealStatus.orderId}}</span> <br>
+      <span style="font-size: 12px;">訂單送出時間:{{mealStatus.orderTime}}</span> <br>
+      <span style="font-size: 12px;">預計完成時間:{{mealStatus.estimatedTime}}</span> <br>
+      <span>餐點狀態:{{mealStatus.mealStatus}}</span> <br>
+      <span>付款方式:{{mealStatus.paymentType}}</span> <br>
+      <span>付款狀態:{{mealStatus.paid}}</span> <br> <br>
+      @for(order of mealStatus.orderDetail;track order){
+        @if(order.settingId > 0){
+          <span>{{order.settingId}}號餐</span>
+          <ul style="padding-left: 20px; margin-top: 0px;">
+          @for(product of order.orderDetail;track product){
+            <li>{{product.productName}} </li>
+          }
+          </ul>
+        }
+      }
+    </div>
+    }
+    <span style="flex: 1 1 auto;"></span>
+  </div>
 </div>
