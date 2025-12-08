@@ -97,9 +97,9 @@ export interface OrderElement {
 }
 
 const ELEMENT_DATA: OrderElement[] = [
-  { code: '1', type: '內用', date: '2025-12-08', paymentType: '電子支付', paid: true, details: '' },
+  { code: '1', type: '外送', date: '2025-12-08', paymentType: '電子支付', paid: true, details: '' },
   { code: '2', type: '外帶', date: '2025-12-06', paymentType: '信用卡', paid: true, details: '' },
-  { code: '3', type: '外送', date: '2025-12-07', paymentType: '現金', paid: false, details: '' },
+  { code: '3', type: '內用', date: '2025-12-07', paymentType: '現金', paid: false, details: '' },
   { code: '4', type: '取消', date: '2025-12-09', paymentType: '現金', paid: false, details: '' },
 ];
 
