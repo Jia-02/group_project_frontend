@@ -107,6 +107,9 @@ export class ActivityDialogComponent {
       .subscribe((res: any) => {
         console.log('活動已暫存:', res);
 
+        const activityWithId = res.activity;
+        this.dialogRef.close({ action: 'saveDraft', data: activityWithId });
+
         const savedActivity = res.data || res.activity || res.calendar || res;
 
         if (savedActivity.calendarId) {

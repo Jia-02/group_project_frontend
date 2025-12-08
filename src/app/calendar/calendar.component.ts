@@ -231,6 +231,7 @@ export class CalendarComponent implements OnInit {
         if (!finalResult) return;
 
         let activityData = finalResult.data;
+
         if (activityData.calendarPhoto && typeof activityData.calendarPhoto === 'string') {
           const parts = activityData.calendarPhoto.split('/');
           activityData.calendarPhoto = parts[parts.length - 1];
@@ -244,17 +245,18 @@ export class CalendarComponent implements OnInit {
           calendarTitle: activityData.calendarTitle,
           calendarDescription: activityData.calendarDescription,
           calendarPhoto: activityData.calendarPhoto,
+          calendarStatus: 'draft'
         };
 
         this.activities.push(newActivity);
         this.activities = [...this.activities];
+        this.loadActivities();
 
         this.generateCalendar(this.currentMonth);
         if (this.selectedDay) {
           this.selectedDayActivities = this.getDayActivities(this.selectedDay);
         }
       });
-
     })
   }
 
