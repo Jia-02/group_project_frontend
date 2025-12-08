@@ -4,17 +4,18 @@
     <span class="labelCss">訂單類型：</span>
     <select [(ngModel)]="type" class="inputCss">
       <option value="all">全部</option>
-      <option value="內用">內用</option>
-      <option value="外帶">外帶</option>
-      <option value="外送">外送</option>
+      <option value="inner">內用</option>
+      <option value="takeOut">外帶</option>
+      <option value="delivery">外送</option>
+      <option value="cancel">取消</option>
     </select>
 
     <span class="labelCss">付款方式：</span>
     <select [(ngModel)]="paymentType" class="inputCss">
       <option value="all">全部</option>
-      <option value="現金">現金</option>
-      <option value="信用卡">信用卡</option>
-      <option value="其他">其他</option>
+      <option value="cash">現金</option>
+      <option value="creditCard">信用卡</option>
+      <option value="ecPay">電子支付</option>
     </select>
 
     <span class="labelCss">付款狀態：</span>
@@ -36,31 +37,31 @@
 
       <!-- code -->
       <ng-container matColumnDef="code">
-        <th mat-header-cell *matHeaderCellDef> code </th>
+        <th mat-header-cell *matHeaderCellDef> 訂單編號 </th>
         <td mat-cell *matCellDef="let element"> {{element.code}} </td>
       </ng-container>
 
       <!-- type -->
       <ng-container matColumnDef="type">
-        <th mat-header-cell *matHeaderCellDef> type </th>
+        <th mat-header-cell *matHeaderCellDef> 訂單類型 </th>
         <td mat-cell *matCellDef="let element"> {{element.type}} </td>
       </ng-container>
 
       <!-- date -->
       <ng-container matColumnDef="date">
-        <th mat-header-cell *matHeaderCellDef> date </th>
+        <th mat-header-cell *matHeaderCellDef> 日期 </th>
         <td mat-cell *matCellDef="let element"> {{element.date}} </td>
       </ng-container>
 
       <!-- paymentType -->
       <ng-container matColumnDef="paymentType">
-        <th mat-header-cell *matHeaderCellDef> paymentType </th>
+        <th mat-header-cell *matHeaderCellDef> 付款方式 </th>
         <td mat-cell *matCellDef="let element"> {{element.paymentType}} </td>
       </ng-container>
 
       <!-- paid -->
       <ng-container matColumnDef="paid">
-        <th mat-header-cell *matHeaderCellDef> paid </th>
+        <th mat-header-cell *matHeaderCellDef> 是否付款 </th>
         <td mat-cell *matCellDef="let element"> {{element.paid}} </td>
       </ng-container>
 
@@ -74,7 +75,7 @@
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
 
-    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons aria-label="Select page of periodic elements">
+    <mat-paginator [pageSizeOptions]="[10, 20, 50]" showFirstLastButtons aria-label="Select page of periodic elements">
     </mat-paginator>
   </div>
 </div>
