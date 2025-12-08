@@ -1,43 +1,31 @@
-<h2 mat-dialog-title>編輯活動：{{ data.calendarId }}{{ data.calendarTitle }}</h2>
+<h2 mat-dialog-title>編輯活動：{{ data.calendarTitle }}</h2>
 
-<mat-dialog-content class="mat-typography">
-  <form [formGroup]="form">
-    <mat-form-field appearance="outline">
-      <mat-label>活動標題</mat-label>
-      <input matInput formControlName="calendarTitle"> </mat-form-field>
-
-    <mat-form-field appearance="outline">
-      <mat-label>活動內容</mat-label>
-      <input matInput formControlName="calendarDescription"></mat-form-field><br>
-
-    <h3>活動圖片</h3>
-    <div class="activity-photo-container">
-      @if (newPhotoUrl) {
-      <img [src]="newPhotoUrl" alt="{{ data.calendarTitle }} 活動照片"
-        style="width: 200px; height: 200px; object-fit: cover;">
-      } @else {
-      <p>此活動沒有可顯示的圖片。</p>
-      }
-    </div>
-
-    <input type="file" (change)="onFileSelected($event)" accept="image/*">
-    <br><br>
-
-    <small>
-      原本時間:{{ data.calendarStartDate | date:'yyyy/MM/dd ' }}~{{ data.calendarEndDate | date:'yyyy/MM/dd ' }}
-    </small><br>
-    <input matInput type="date" formControlName="calendarStartDate">~<input matInput type="date"
-      formControlName="calendarEndDate">
-  </form>
+<mat-dialog-content>
+  <h3>活動標題:</h3><input type="text" [(ngModel)]="data.calendarTitle">
+  <h3>活動內容:</h3><input type="textarea" [(ngModel)]="data.calendarDescription">
+  <h3>活動圖片:</h3>
+  <div class="activity-photo-container">
+    @if (newPhotoUrl) {
+    <img [src]="newPhotoUrl" alt="{{ data.calendarTitle }} 活動照片"
+      style="width: 200px; height: 200px; object-fit: cover;">
+    } @else {
+    <p>此活動沒有可顯示的圖片。</p>
+    }
+  </div>
+  <input type="file" (change)="onFileSelected($event)" accept="image/*"><br>
+  <small>
+    原本時間:{{ data.calendarStartDate | date:'yyyy/MM/dd ' }}~{{ data.calendarEndDate | date:'yyyy/MM/dd ' }}
+  </small><br>
+  <input type="date" [(ngModel)]="data.calendarStartDate">~<input type="date" [(ngModel)]="data.calendarEndDate">
 </mat-dialog-content>
 
-<mat-dialog-actions align="end">
-  <button mat-raised-button color="warn" (click)="onDeleteClick()">刪除</button>
-  <button mat-button (click)="onCancelClick()">取消</button>
-  <button mat-raised-button color="primary" [disabled]="form.invalid" (click)="onSaveDraftClick()">
+<mat-dialog-actions>
+  <button (click)="onDeleteClick()">刪除</button>
+  <button (click)="onCancelClick()">取消</button>
+  <button [disabled]="form.invalid" (click)="onSaveDraftClick()">
     暫存
   </button>
-  <button mat-raised-button color="accent" [disabled]="form.invalid" (click)="onPublishClick()">
+  <button [disabled]="form.invalid" (click)="onPublishClick()">
     發布
   </button>
 </mat-dialog-actions>
