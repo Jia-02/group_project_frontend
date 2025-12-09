@@ -9,6 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { OrderDialogComponent } from '../order-dialog/order-dialog.component';
 import { CheckOutDialogComponent } from '../check-out-dialog/check-out-dialog.component';
 import { DataService } from '../data/data.service';
+import { A11yModule } from "@angular/cdk/a11y";
 
 @Component({
   selector: 'app-order-page',
@@ -19,12 +20,13 @@ import { DataService } from '../data/data.service';
     MatFormFieldModule,
     MatSelectModule,
     MatInputModule,
-  ],
+    A11yModule
+],
   templateUrl: './order-page.component.html',
   styleUrl: './order-page.component.scss'
 })
 export class OrderPageComponent {
-  displayedColumns: string[] = ['code', 'type', 'date', 'paymentType', 'paid', 'details'];
+  displayedColumns: string[] = ['code', 'type', 'date', 'time', 'paymentType', 'paid', 'details'];
   dataSource = new MatTableDataSource<OrderElement>(ELEMENT_DATA);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -43,11 +45,20 @@ export class OrderPageComponent {
   paymentType: string = 'all';
   paid: string = 'all';
 
-  // searchType(){
-  //   this.dataSource.data = this.dataService.filter(data =>
-  //     data.type == this.searchType
-  //   );
-  // }
+  getOrderList() {
+    this.dataService.getApi('http://localhost:8080/orders/list')
+      .subscribe((res: any) => {
+        const apiData: OrderElement[] = res.ordersList.map((item: any) => ({
+          code: item.ordersCode,
+          type: item.ordersType,
+          date: item.ordersDate,
+          time: item.ordersTime,
+          paymentType: item.paymentType,
+          paid: item.paid
+        }));
+      });
+  }
+
 
   searchOrders() {
     console.log('訂單類型:', this.type);
@@ -63,10 +74,10 @@ export class OrderPageComponent {
     };
 
     this.dataService.postApi('/api/orders/search', searchData)
-    .subscribe((res: any) => {
+      .subscribe((res: any) => {
         console.log('訂單查詢成功:', res);
       }
-    );
+      );
   }
 
   openDialog(element: OrderElement) {
@@ -91,16 +102,17 @@ export interface OrderElement {
   code: string;
   type: string;
   date: string;
+  time: string;
   paymentType: string;
   paid: boolean;
   details: string;
 }
 
 const ELEMENT_DATA: OrderElement[] = [
-  { code: '1', type: '外送', date: '2025-12-08', paymentType: '電子支付', paid: true, details: '' },
-  { code: '2', type: '外帶', date: '2025-12-06', paymentType: '信用卡', paid: true, details: '' },
-  { code: '3', type: '內用', date: '2025-12-07', paymentType: '現金', paid: false, details: '' },
-  { code: '4', type: '取消', date: '2025-12-09', paymentType: '現金', paid: false, details: '' },
+  { code: '2512081000D01', type: '外送', date: '2025-12-08', time: '10:00:00', paymentType: '電子支付', paid: true, details: '' },
+  { code: '2512061000T01', type: '外帶', date: '2025-12-06', time: '10:00:00', paymentType: '信用卡', paid: true, details: '' },
+  { code: '2512071000A01', type: '內用', date: '2025-12-07', time: '10:00:00', paymentType: '現金', paid: false, details: '' },
+  { code: '2512091000A03', type: '內用', date: '2025-12-09', time: '10:00:00', paymentType: '取消', paid: false, details: '' },
 ];
 
 export interface DetailOption {
