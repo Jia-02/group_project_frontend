@@ -50,11 +50,12 @@ export class CheckOutDialogComponent {
 
   saveChanges() {
     const updateData = {
-      ordersId: this.data.orderId,
-      ordersCode: this.data.orderCode,
+      ...this.data,
       totalPrice: this.data.totalPrice,
       orderDetailsList: this.data.order_detailsList,
     };
+    console.log(updateData);
+
 
     const apiUrl = 'http://localhost:8080/orders/update/nopaid';
 
@@ -92,6 +93,7 @@ export class CheckOutDialogComponent {
 
   checkOut() {
     this.data.paid = true;
+    this.saveChanges();
     console.log('訂單付款狀態已更新為：已付 (true)', this.data.paid);
     this.dialogRef.close();
   }
@@ -104,7 +106,6 @@ export class CheckOutDialogComponent {
     } else {
       this.isEditing = true;
     }
-    console.log();
 
   }
 }

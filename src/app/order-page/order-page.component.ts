@@ -164,29 +164,16 @@ export class OrderPageComponent {
 
     this.dataService.getApi(apiUrl).subscribe((fullOrderDetails: any) => {
       console.log('取得訂單詳細資料成功:', fullOrderDetails);
-      let typeText = '';
-
-      switch (fullOrderDetails.ordersType) {
-        case 'A':
-          typeText = '內用';
-          break;
-        case 'D':
-          typeText = '外送';
-          break;
-        case 'T':
-          typeText = '外帶';
-          break;
-      }
 
       const mappedDetail: FullOrderData = {
-        orderId: fullOrderDetails.ordersId,
-        orderType: fullOrderDetails.ordersType,
-        orderDate: fullOrderDetails.ordersDate,
-        orderTime: fullOrderDetails.ordersTime,
+        ordersId: fullOrderDetails.ordersId,
+        ordersType: fullOrderDetails.ordersType,
+        ordersDate: fullOrderDetails.ordersDate,
+        ordersTime: fullOrderDetails.ordersTime,
         totalPrice: fullOrderDetails.totalPrice,
-        paymentType: typeText,
+        paymentType: fullOrderDetails.paymentType,
         paid: fullOrderDetails.paid,
-        orderCode: fullOrderDetails.ordersCode,
+        ordersCode: fullOrderDetails.ordersCode,
         tableId: fullOrderDetails.tableId,
         customerName: fullOrderDetails.customerName,
         customerPhone: fullOrderDetails.customerPhone,
@@ -201,19 +188,28 @@ export class OrderPageComponent {
         isReadOnly: isPaid
       };
 
+      let dialogRef;
+
       if (isPaid) {
-        this.dialog.open(OrderDialogComponent, {
+        dialogRef = this.dialog.open(OrderDialogComponent, {
           width: '500px',
           height: '900px',
           data: dataToSendToDialog,
         });
       } else {
-        this.dialog.open(CheckOutDialogComponent, {
+        dialogRef = this.dialog.open(CheckOutDialogComponent, {
           width: '500px',
           height: '900px',
           data: dataToSendToDialog,
         });
       }
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result === true) {
+          console.log('對話框回傳成功狀態，正在刷新訂單列表...');
+          this.getOrderList();
+        }
+      });
     }
     );
   }
@@ -259,14 +255,14 @@ export interface OrderDetailsGroup {
 }
 
 export interface FullOrderData {
-  orderId: string | number;
-  orderType: string;
-  orderDate: string;
-  orderTime: string;
+  ordersId: string | number;
+  ordersType: string;
+  ordersDate: string;
+  ordersTime: string;
   totalPrice: number;
   paymentType: string;
   paid: boolean;
-  orderCode: string;
+  ordersCode: string;
   tableId: string | null;
   customerName: string | null;
   customerPhone: string | null;
@@ -275,11 +271,11 @@ export interface FullOrderData {
 }
 
 export const FULL_ORDER_DETAIL_MOCK: FullOrderData = {
-  orderId: 1001,
-  orderCode: 'A1001',
-  orderType: '內用',
-  orderDate: '2025-12-08',
-  orderTime: '10:30',
+  ordersId: 1001,
+  ordersCode: 'A1001',
+  ordersType: '內用',
+  ordersDate: '2025-12-08',
+  ordersTime: '10:30',
   totalPrice: 480,
   paymentType: '電子支付',
   paid: false,

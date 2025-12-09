@@ -1,19 +1,19 @@
 <h2 mat-dialog-title>訂單明細</h2>
 
 <mat-dialog-content style="height: 280px;">
-  <p>訂單編號:{{ data.orderCode }}</p>
-  <p>訂單類型:{{ data.orderType }}</p>
-  @if(data.orderType === 'A'){
+  <p>訂單編號:{{ data.ordersCode }}</p>
+  <p>訂單類型:{{ data.ordersType }}</p>
+  @if(data.ordersType === 'A'){
   <p>桌號:{{ data.tableId }}</p>
-  } @else if(data.orderType === 'T'){
+  } @else if(data.ordersType === 'T'){
   <p>顧客姓名:{{ data.customerName }}</p>
   <p>顧客電話:{{ data.customerPhone }}</p>
-  } @else if(data.orderType === 'D'){
+  } @else if(data.ordersType === 'D'){
   <p>顧客姓名:{{ data.customerName }}</p>
   <p>顧客電話:{{ data.customerPhone }}</p>
   <p>顧客地址:{{ data.customerAddress }}</p>
   }
-  <p>訂單時間:{{ data.orderTime }}</p>
+  <p>訂單時間:{{ data.ordersTime }}</p>
   <p>付款方式:{{ data.paymentType }}</p>
   <p>付款狀態: <span [style.color]="data.paid ? 'green' : 'red'">{{ data.paid ? '已付' : '未付' }}</span></p>
   <p>總金額:{{ data.totalPrice }}</p>
