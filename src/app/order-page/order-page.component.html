@@ -29,6 +29,7 @@
     <input type="date" [(ngModel)]="date" class="inputCss">
 
     <button class="buttonCss" (click)="searchOrders()">搜尋</button>
+    <button class="buttonCss" (click)="reset()">重置</button>
   </div>
 </div>
 <div class="tableCss">
@@ -74,7 +75,7 @@
       <!-- 訂單細節 -->
       <ng-container matColumnDef="details">
         <th mat-header-cell *matHeaderCellDef> 訂單細節 </th>
-        <td mat-cell *matCellDef="let element" (click)="openDialog( element )"> {{ element.paid ? '訂單明細' : '結帳' }} </td>
+        <td mat-cell *matCellDef="let element" (click)="openDialog( element )"> {{ element.paid === '已付' ? '訂單明細' : '結帳' }} </td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

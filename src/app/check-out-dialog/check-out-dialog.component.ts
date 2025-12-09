@@ -3,6 +3,7 @@ import { MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle, MAT_D
 import { FullOrderData } from '../order-page/order-page.component';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
+import { DataService } from '../data/data.service';
 
 @Component({
   selector: 'app-check-out-dialog',
@@ -20,25 +21,53 @@ export class CheckOutDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<CheckOutDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: FullOrderData,
-
+    private dataService: DataService,
   ) { }
 
   isEditing: boolean = false;
 
-  customerDetail(): string {
-    if (this.data.orderType === '內用') {
-      return `桌號: ${this.data.tableId}`;
+  calculateTotalPrice() {
+    let newTotal = 0;
+
+    for (const group of this.data.order_detailsList) {
+      let groupPrice = 0;
+
+      for (const item of group.orderDetails) {
+        groupPrice += item.productPrice;
+
+        for (const detail of item.detailList) {
+          groupPrice += detail.addPrice;
+        }
+      }
+
+      group.orderDetailsPrice = groupPrice;
+      newTotal += groupPrice;
     }
-    if (this.data.orderType === '外帶' || this.data.orderType === '外送') {
-      const name = this.data.customerName ? ` (${this.data.customerName})` : '';
-      const address = this.data.customerAddress ? ` / 地址: ${this.data.customerAddress}` : '';
-      return `${name}${address}`;
-    }
-    return '';
+
+    this.data.totalPrice = newTotal;
+    console.log('總金額已更新:', newTotal);
+  }
+
+  saveChanges() {
+    const updateData = {
+      ordersId: this.data.orderId,
+      ordersCode: this.data.orderCode,
+      totalPrice: this.data.totalPrice,
+      orderDetailsList: this.data.order_detailsList,
+    };
+
+    const apiUrl = 'http://localhost:8080/orders/update/nopaid';
+
+    this.dataService.postApi(apiUrl, updateData)
+      .subscribe((res: any) => {
+          console.log('訂單修改成功:', res);
+        }
+      );
   }
 
   deleteDetail(groupIndex: number){
     this.data.order_detailsList.splice(groupIndex, 1);
+    this.calculateTotalPrice();
   }
 
   changeDetail(groupIndex: number) {
@@ -47,8 +76,10 @@ export class CheckOutDialogComponent {
 
   deleteOptions(groupIndex: number, itemIndex: number, optionIndex: number){
     const detailList = this.data.order_detailsList[groupIndex].orderDetails[itemIndex].detailList;
-    const optionName = detailList[optionIndex].option;
-    detailList.splice(optionIndex, 1);
+    if (detailList) {
+        detailList.splice(optionIndex, 1);
+        this.calculateTotalPrice();
+    }
   }
 
   changeOptions(groupIndex: number, itemIndex: number, optionIndex: number) {
@@ -65,12 +96,15 @@ export class CheckOutDialogComponent {
     this.dialogRef.close();
   }
 
-  toggleEditMode(): void {
+  toggleEditMode() {
     if (this.isEditing) {
-      console.log('儲存訂單修改...');
+      this.calculateTotalPrice();
+      this.saveChanges();
+      this.isEditing = false;
+    } else {
+      this.isEditing = true;
     }
+    console.log();
 
-    this.isEditing = !this.isEditing;
-    console.log('目前編輯模式狀態:', this.isEditing);
   }
 }

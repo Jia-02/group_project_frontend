@@ -2,45 +2,60 @@
 
 <mat-dialog-content>
   <p>訂單類型:{{ data.orderType }}</p>
-  <p>客戶資訊:{{ customerDetail() }} </p>
+  @if(data.orderType === 'A'){
+  <p>桌號:{{ data.tableId }}</p>
+  } @else if(data.orderType === 'T'){
+  <p>顧客姓名:{{ data.customerName }}</p>
+  <p>顧客電話:{{ data.customerPhone }}</p>
+  } @else if(data.orderType === 'D'){
+  <p>顧客姓名:{{ data.customerName }}</p>
+  <p>顧客電話:{{ data.customerPhone }}</p>
+  <p>顧客地址:{{ data.customerAddress }}</p>
+  }
   <p>付款方式:{{ data.paymentType }}</p>
+
+  <hr>
   <h3>🛒 訂單細節</h3>
 
   @for(group of data.order_detailsList; track group.orderDetailsId; let i = $index){
+  @for(item of group.orderDetails; track item.productId){
   <div>
 
-    @for(data of group.orderDetails; track data.productId){
     <div>
+
       <span>
-        <button (click)="down(data)">-</button>
-        {{ data.quantity || 1 }} <button (click)="up(data)">+</button>
+        <button (click)="down(item, i)">-</button>
+        {{ item.quantity }}
+        <button (click)="up(item)">+</button>
       </span>
-      <span class="positionCss">單價:NT$ {{ data.productPrice }}</span>
+
+      <mat-icon aria-hidden="false" fontIcon="delete" (click)="deleteItem(item, i)"></mat-icon>
+
+      <span class="positionCss">NT$ {{ item.productPrice * item.quantity + (group.orderDetailsPrice - item.productPrice
+        * item.quantity) }}</span>
+    </div>
+
+    <div>
+      <span>{{ item.productName }}</span>
       <br>
-      <span>{{ data.productName }}</span>
-
-
     </div>
 
+    @if(item.detailList.length){
     <div>
-      <span>{{ data.description || '無備註' }}</span>
-    </div>
-
-    @if(data.detailList.length){
-    <div>
-      客製化選項: @for(detail of data.detailList; track detail.option){
+      客製化選項:
+      @for(detail of item.detailList; track detail.option){
       <span>{{ detail.option }} (+NT$ {{ detail.addPrice }})</span>
       }
     </div>
     }
-    }
-    <hr>
   </div>
+  <hr>
+  }
   }
 
   <div>
     <span>小計</span>
-    <span>NT$ {{ data.totalPrice }}**</span>
+    <span>NT$ {{ data.totalPrice }}</span>
   </div>
 </mat-dialog-content>
 

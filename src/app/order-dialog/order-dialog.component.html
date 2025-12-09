@@ -1,23 +1,30 @@
 <h2 mat-dialog-title>訂單明細</h2>
 
-<mat-dialog-content>
+<mat-dialog-content style="height: 355px;">
 <p>訂單編號:{{ data.orderCode }}</p>
 <p>訂單類型:{{ data.orderType }}</p>
-<p>客戶資訊:{{ customerDetail() }} </p>
+@if(data.orderType === 'A'){
+  <p>桌號:{{ data.tableId }}</p>
+} @else if(data.orderType === 'T'){
+  <p>顧客姓名:{{ data.customerName }}</p>
+  <p>顧客電話:{{ data.customerPhone }}</p>
+} @else if(data.orderType === 'D'){
+  <p>顧客姓名:{{ data.customerName }}</p>
+  <p>顧客電話:{{ data.customerPhone }}</p>
+  <p>顧客地址:{{ data.customerAddress }}</p>
+}
 <p>訂單時間:{{ data.orderTime }}</p>
 <p>付款狀態:{{ data.paid }}</p>
 <p>付款方式:{{ data.paymentType }}</p>
 <p>總金額:{{ data.totalPrice }}</p>
 </mat-dialog-content>
-
+<h3>訂單細節</h3>
 <mat-dialog-content>
-  <h3>訂單細節</h3>
   @for(group of data.order_detailsList; track group.orderDetailsId; let i = $index){
-    <p>明細{{ i + 1 }}</p>
-    <p>價格: NT${{ group.orderDetailsPrice }}</p>
+    <br><span>明細{{ i + 1 }}</span>
+    <span class="priceCss">價格: NT${{ group.orderDetailsPrice }}</span>
     @for(item of group.orderDetails; track item.productId){
       <p>{{ item.productName }} (NT$ {{ item.productPrice }})</p>
-      <p>狀態:{{ item.mealStatus }} | 工作臺ID: {{ item.workstationId }}</p>
       @if(item.detailList.length){
         <p>客製化選項</p>
         @for(detail of item.detailList; track detail.option){

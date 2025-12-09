@@ -21,7 +21,7 @@ import { A11yModule } from "@angular/cdk/a11y";
     MatSelectModule,
     MatInputModule,
     A11yModule
-],
+  ],
   templateUrl: './order-page.component.html',
   styleUrl: './order-page.component.scss'
 })
@@ -34,6 +34,9 @@ export class OrderPageComponent {
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
   }
+  ngOnInit(): void {
+    this.getOrderList();
+  }
 
   constructor(
     public dialog: MatDialog,
@@ -44,75 +47,194 @@ export class OrderPageComponent {
   type: string = 'all';
   paymentType: string = 'all';
   paid: string = 'all';
+  private originalData: OrderElement[] = [];
 
   getOrderList() {
     this.dataService.getApi('http://localhost:8080/orders/list')
       .subscribe((res: any) => {
-        const apiData: OrderElement[] = res.ordersList.map((item: any) => ({
-          code: item.ordersCode,
-          type: item.ordersType,
-          date: item.ordersDate,
-          time: item.ordersTime,
-          paymentType: item.paymentType,
-          paid: item.paid
-        }));
+        console.log(res);
+
+        const apiData: OrderElement[] = res.ordersList.map((item: any) => {
+          let typeText = '';
+          let paidText = '';
+
+          switch (item.ordersType) {
+            case 'A':
+              typeText = '內用';
+              break;
+            case 'D':
+              typeText = '外送';
+              break;
+            case 'T':
+              typeText = '外帶';
+              break;
+            default:
+              typeText = item.ordersType;
+          }
+
+          switch (item.paid) {
+            case true:
+            case 'true':
+              paidText = '已付';
+              break;
+            case false:
+            case 'false':
+              paidText = '未付';
+              break;
+          }
+
+          return {
+            id: item.ordersId,
+            code: item.ordersCode,
+            type: typeText,
+            date: item.ordersDate,
+            time: item.ordersTime,
+            paymentType: item.paymentType,
+            paid: paidText,
+            details: ''
+          };
+        });
+
+        this.originalData = apiData;
+        this.dataSource.data = apiData;
+
+        if (this.paginator) {
+          this.dataSource.paginator = this.paginator;
+        }
       });
   }
 
-
   searchOrders() {
-    console.log('訂單類型:', this.type);
-    console.log('付款方式:', this.paymentType);
-    console.log('付款狀態:', this.paid);
-    console.log('日期:', this.date);
+    let filteredData = this.originalData;
 
-    const searchData = {
-      type: this.type,
-      paymentType: this.paymentType,
-      paid: this.paid,
-      date: this.date,
-    };
-
-    this.dataService.postApi('/api/orders/search', searchData)
-      .subscribe((res: any) => {
-        console.log('訂單查詢成功:', res);
+    if (this.type !== 'all') {
+      let targetType = '';
+      switch (this.type) {
+        case 'inner': targetType = '內用'; break;
+        case 'takeOut': targetType = '外帶'; break;
+        case 'delivery': targetType = '外送'; break;
       }
-      );
+
+      filteredData = filteredData.filter(order => order.type === targetType);
+    }
+
+    if (this.paymentType !== 'all') {
+      let targetPaymentType = '';
+      switch (this.paymentType) {
+        case 'cash': targetPaymentType = '現金'; break;
+        case 'creditCard': targetPaymentType = '信用卡'; break;
+        case 'ecPay': targetPaymentType = '電子支付'; break;
+        case 'cancel': targetPaymentType = '取消'; break;
+        default: targetPaymentType = this.paymentType;
+      }
+      filteredData = filteredData.filter(order => order.paymentType === targetPaymentType);
+    }
+
+    if (this.paid !== 'all') {
+      const targetPaid = this.paid === 'true' ? '已付' : '未付';
+      filteredData = filteredData.filter(order => order.paid === targetPaid);
+    }
+
+    if (this.date) {
+      filteredData = filteredData.filter(order => order.date === this.date);
+    }
+
+    this.dataSource.data = filteredData;
+    if (this.paginator) {
+      this.paginator.firstPage();
+    }
+  }
+
+  reset() {
+    this.type = 'all';
+    this.paymentType = 'all';
+    this.paid = 'all';
+    this.date = '';
+
+    this.dataSource.data = this.originalData;
+
+    if (this.paginator) {
+      this.paginator.firstPage();
+    }
   }
 
   openDialog(element: OrderElement) {
-    const dataToSendToDialog = FULL_ORDER_DETAIL_MOCK;
-    if (element.paid) {
-      this.dialog.open(OrderDialogComponent, {
-        width: '500px',
-        height: '900px',
-        data: dataToSendToDialog,
-      });
-    } else {
-      this.dialog.open(CheckOutDialogComponent, {
-        width: '500px',
-        height: '900px',
-        data: dataToSendToDialog,
-      });
+    const id = element.id;
+    const apiUrl = `http://localhost:8080/orders/list/detail?ordersId=${id}`;
+
+    this.dataService.getApi(apiUrl).subscribe((fullOrderDetails: any) => {
+      console.log('取得訂單詳細資料成功:', fullOrderDetails);
+      let typeText = '';
+
+      switch (fullOrderDetails.ordersType) {
+        case 'A':
+          typeText = '內用';
+          break;
+        case 'D':
+          typeText = '外送';
+          break;
+        case 'T':
+          typeText = '外帶';
+          break;
+      }
+
+      const mappedDetail: FullOrderData = {
+        orderId: fullOrderDetails.ordersId,
+        orderType: fullOrderDetails.ordersType,
+        orderDate: fullOrderDetails.ordersDate,
+        orderTime: fullOrderDetails.ordersTime,
+        totalPrice: fullOrderDetails.totalPrice,
+        paymentType: typeText,
+        paid: fullOrderDetails.paid,
+        orderCode: fullOrderDetails.ordersCode,
+        tableId: fullOrderDetails.tableId,
+        customerName: fullOrderDetails.customerName,
+        customerPhone: fullOrderDetails.customerPhone,
+        customerAddress: fullOrderDetails.customerAddress,
+        order_detailsList: fullOrderDetails.orderDetailsList,
+      };
+
+      const isPaid = element.paid === '已付';
+
+      const dataToSendToDialog = {
+        ...mappedDetail,
+        isReadOnly: isPaid
+      };
+
+      if (isPaid) {
+        this.dialog.open(OrderDialogComponent, {
+          width: '500px',
+          height: '900px',
+          data: dataToSendToDialog,
+        });
+      } else {
+        this.dialog.open(CheckOutDialogComponent, {
+          width: '500px',
+          height: '900px',
+          data: dataToSendToDialog,
+        });
+      }
     }
+    );
   }
 }
 
 export interface OrderElement {
+  id: number;
   code: string;
   type: string;
   date: string;
   time: string;
   paymentType: string;
-  paid: boolean;
+  paid: string;
   details: string;
 }
 
 const ELEMENT_DATA: OrderElement[] = [
-  { code: '2512081000D01', type: '外送', date: '2025-12-08', time: '10:00:00', paymentType: '電子支付', paid: true, details: '' },
-  { code: '2512061000T01', type: '外帶', date: '2025-12-06', time: '10:00:00', paymentType: '信用卡', paid: true, details: '' },
-  { code: '2512071000A01', type: '內用', date: '2025-12-07', time: '10:00:00', paymentType: '現金', paid: false, details: '' },
-  { code: '2512091000A03', type: '內用', date: '2025-12-09', time: '10:00:00', paymentType: '取消', paid: false, details: '' },
+  { id: 1, code: '2512081000D01', type: '外送', date: '2025-12-08', time: '10:00:00', paymentType: '電子支付', paid: '已付', details: '' },
+  { id: 2, code: '2512061000T01', type: '外帶', date: '2025-12-06', time: '10:00:00', paymentType: '信用卡', paid: '已付', details: '' },
+  { id: 3, code: '2512071000A01', type: '內用', date: '2025-12-07', time: '10:00:00', paymentType: '現金', paid: '未付', details: '' },
+  { id: 4, code: '2512091000A03', type: '內用', date: '2025-12-09', time: '10:00:00', paymentType: '取消', paid: '未付', details: '' },
 ];
 
 export interface DetailOption {

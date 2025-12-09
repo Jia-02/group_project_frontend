@@ -21,18 +21,6 @@ export class OrderDialogComponent {
 
   ){}
 
-  customerDetail(): string {
-    if (this.data.orderType === '內用') {
-      return `桌號: ${this.data.tableId || 'N/A'}`;
-    }
-    if (this.data.orderType === '外帶' || this.data.orderType === '外送') {
-      const name = this.data.customerName ? ` (${this.data.customerName})` : '';
-      const address = this.data.customerAddress ? ` / 地址: ${this.data.customerAddress}` : '';
-      return `${name}${address}`;
-    }
-    return '';
-  }
-
   close(): void {
     this.dialogRef.close();
   }
