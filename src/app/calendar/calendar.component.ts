@@ -58,7 +58,6 @@ export class CalendarComponent implements OnInit {
       this.selectedDayActivities = this.getDayActivities(this.selectedDay);
     }
 
-
     this.calendarStartDate = new Date().toISOString().split('T')[0];
     this.calendarEndDate = this.calendarStartDate;
   }
@@ -99,9 +98,6 @@ export class CalendarComponent implements OnInit {
 
       this.activities = processedActivities;
       this.boardActivities = this.filterBoardActivities(processedActivities);
-
-      console.log('已從後端取得所有活動:', this.activities.length);
-      console.log('Board 活動數量:', this.boardActivities.length);
 
       this.generateCalendar(this.currentMonth);
       if (this.selectedDay) {
