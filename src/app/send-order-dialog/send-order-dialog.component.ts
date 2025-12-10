@@ -3,6 +3,7 @@ import { MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle, MAT_D
 import { CommonModule } from '@angular/common';
 import { CreateOrderData, OrderProductCreate } from '../test-page/test-page.component';
 import { MatIconModule } from '@angular/material/icon';
+import { DataService } from '../data/data.service';
 
 @Component({
   selector: 'app-send-order-dialog',
@@ -20,7 +21,7 @@ export class SendOrderDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<SendOrderDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: CreateOrderData,
-
+    public dataService: DataService,
   ) { }
 
   down(item: OrderProductCreate, groupIndex: number): void {
@@ -78,7 +79,57 @@ export class SendOrderDialogComponent {
   }
 
   sendOut() {
-    this.dialogRef.close();
+    const now = new Date();
+    const ordersDate = now.toISOString().slice(0, 10);
+    const ordersTime = now.toLocaleTimeString('en-US', { hour12: false });
+
+    let flatOrderDetails: any[] = [];
+
+    this.data.order_detailsList.forEach(group => {
+      const settingId = group.settingId;
+
+      group.orderDetails.forEach(item => {
+        const basePrice = item.productPrice;
+        const addPrice = item.detailList.reduce((sum, detail) => sum + detail.addPrice, 0);
+        const itemTotalPrice = basePrice + addPrice;
+
+        for (let i = 0; i < item.quantity; i++) {
+          flatOrderDetails.push({
+            productId: item.productId,
+            productPrice: item.productPrice,
+            quantity: 1,
+            totalPrice: itemTotalPrice,
+            mealStatus: item.mealStatus,
+            settingId: settingId,
+            detailList: item.detailList
+          });
+        }
+      });
+    });
+
+    const requestBody = {
+      ordersType: this.data.orderType,
+      ordersDate: ordersDate,
+      ordersTime: ordersTime,
+      totalPrice: this.data.totalPrice,
+      paymentType: this.data.paymentType,
+      paid: false,
+      ordersCode: null,
+      customerName: this.data.orderType === 'A' ? null : this.data.customerName,
+      customerPhone: this.data.orderType === 'A' ? null : this.data.customerPhone,
+      customerAddress: this.data.orderType === 'D' ? this.data.customerAddress : null,
+      tableId: this.data.orderType === 'A' ? this.data.tableId : null,
+      orderDetails: flatOrderDetails
+    };
+
+    console.log('API Request Body:', requestBody);
+
+    this.dataService.postApi('http://localhost:8080/orders/add', requestBody)
+      .subscribe((res: any) => {
+        console.log('下單成功', res);
+        this.dialogRef.close(true);
+      }
+      );
   }
 
 }

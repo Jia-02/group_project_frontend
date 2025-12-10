@@ -116,5 +116,5 @@ export const NEW_ORDER_DETAIL_MOCK: CreateOrderData = {
         },
       ],
     },
-  ],
-};
+  ]
+}
