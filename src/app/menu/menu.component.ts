@@ -38,15 +38,6 @@ export class MenuComponent {
               categoryType: item.categoryType
             }));
 
-          const settingCategory: Category = {
-            categoryId: 3,
-            categoryType: this.SETTING_TAB_LABEL,
-            workstationId: 0,
-            products: undefined,
-            isLoadingProducts: false
-          };
-          this.categories.push(settingCategory);
-
           this.isLoadingCategories = false;
 
           if (this.categories.length > 0) {
@@ -97,6 +88,7 @@ export class MenuComponent {
               productPrice: item.settingPrice
             }));
           }
+          console.log(res);
 
         } else {
           console.warn(`載入分類 ${category.categoryType} 失敗:`, res.message);
@@ -132,19 +124,21 @@ interface Product {
   productId: number;
   productName: string;
   productPrice: number;
+  imageUrl: string;
 }
 
 interface SettingItem {
   settingId: number;
   settingName: string;
   settingPrice: number;
+  // settingDetail: Product[];
 }
 
 interface Category {
   categoryId: number;
   categoryType: string;
   workstationId: number;
-  products?: (Product | SettingItem)[];
+  products?: (Product | { productId: number, productName: string, productPrice: number })[];
   isLoadingProducts?: boolean;
 }
 
