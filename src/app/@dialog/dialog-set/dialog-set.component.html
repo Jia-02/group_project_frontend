@@ -1,58 +1,62 @@
-<!-- dialog標題 -->
 <div mat-dialog-title>新增套餐</div>
 
-<!-- dialog內容 -->
 <mat-dialog-content>
   <label>菜單分類</label>
-  <div>{{ categoryDto.categoryType }}</div>
+  <div>{{ currentCategoryType }}</div>
 
-  <label>餐點名稱</label>
-  <input type="text" class="inputCss" [(ngModel)]="productList.productName">
+  <label>套餐名稱</label>
+  <input type="text" class="inputCss" [(ngModel)]="optionVo.settingName">
 
-  <!-- <label>主餐</label>
-  <select class="inputCss" [(ngModel)]="reservation.tableId">
-    <option value="">--請選擇--</option>
-    @for (data of tableIdList; track data) {
-    <option [value]="data">{{ data }}</option>
+  <label>主餐分類</label>
+  <select class="inputCss" [(ngModel)]="selections.mainCatId" (change)="onMainCategoryChange()">
+    <option [value]="0">--請選擇分類--</option>
+    @for (cat of categoryList; track cat.categoryId) {
+      @if (cat.categoryType !== '套餐' && cat.categoryType !== '炸物' && cat.categoryType !== '飲料') {
+        <option [value]="cat.categoryId">{{ cat.categoryType }}</option>
+      }
+    }
+  </select>
+
+  <label>主餐</label>
+  <select class="inputCss" [(ngModel)]="selections.mainId">
+    <option [value]="0">--請選擇主餐--</option>
+    @for (data of mainDishList; track data.productId) {
+      <option [value]="data.productId">{{ data.productName }}</option>
     }
   </select>
 
   <label>附餐</label>
-  <select class="inputCss" [(ngModel)]="reservation.tableId">
-    <option value="">--請選擇--</option>
-    @for (data of tableIdList; track data) {
-    <option [value]="data">{{ data }}</option>
+  <select class="inputCss" [(ngModel)]="selections.sideId">
+    <option [value]="0">--請選擇附餐--</option>
+    @for (data of sideDishList; track data.productId) {
+      <option [value]="data.productId">{{ data.productName }}</option>
     }
   </select>
 
   <label>飲品</label>
-  <select class="inputCss" [(ngModel)]="reservation.tableId">
-    <option value="">--請選擇--</option>
-    @for (data of tableIdList; track data) {
-    <option [value]="data">{{ data }}</option>
+  <select class="inputCss" [(ngModel)]="selections.drinkId">
+    <option [value]="0">--請選擇飲品--</option>
+    @for (data of drinkDishList; track data.productId) {
+      <option [value]="data.productId">{{ data.productName }}</option>
     }
-  </select> -->
-
-  <textarea [(ngModel)]="productList.productDescription"></textarea>
+  </select>
 
   <label>內部備註</label>
-  <textarea [(ngModel)]="productList.productNote"></textarea>
+  <textarea [(ngModel)]="optionVo.settingNote"></textarea>
 
-  <label>價格</label>
-  <input type="number" class="inputCss" [(ngModel)]="productList.productPrice">
+  <label>套餐價格</label>
+  <input type="number" class="inputCss" [(ngModel)]="optionVo.settingPrice">
 
   <label>餐點圖片</label>
   <input type="file" (change)="onFileSelected($event)" accept="image/*">
 
-
   @if (selectedFile) {
-  <div style="font-size: 0.8em; color: green; margin-top: 5px;">
-    已選取檔案: {{ selectedFile.name }}
-  </div>
+    <div style="font-size: 0.8em; color: green; margin-top: 5px;">
+      已選取檔案: {{ selectedFile.name }}
+    </div>
   }
 </mat-dialog-content>
 
-<!-- dialog按鈕 -->
 <mat-dialog-actions>
   <div>
     <button (click)="onNoClick()" class="btn">取消</button>

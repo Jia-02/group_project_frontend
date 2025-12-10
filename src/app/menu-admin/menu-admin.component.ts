@@ -52,7 +52,6 @@ export class MenuAdminComponent {
   optionList: any[] = []; // 用來儲存客製化選項的陣列
   setList: any[] = []; // 用來存套餐列表
 
-
   readonly dialog = inject(MatDialog);
 
   ngOnInit(): void {
@@ -297,28 +296,89 @@ export class MenuAdminComponent {
 
   // 新增套餐
   addSets() {
+    let sideCategoryId = 0; // 附餐
+    let drinkCategoryId = 0; // 飲品
+    let currentCategoryType = ''; // 該分類名稱
+    let sideDishList: any[] = [];
+    let drinkDishList: any[] = [];
 
-    // 找分類對應的飲料
-    let currentCategoryType = '';
-    for (let categoryData of this.dataService.allCategoryDto) {
-      if (this.dataService.productListRes.categoryId == categoryData.categoryId) {
-        currentCategoryType = categoryData.categoryType;
+    // 找出需要的 Category ID
+    for (let i = 0; i < this.allCategoryDto.length; i++) {
+      const c = this.allCategoryDto[i];
+
+      // 找當前分頁的分類名稱
+      if (c.categoryId == this.currentCategoryId) {
+        currentCategoryType = c.categoryType;
+      }
+      // 找附餐 ID
+      if (c.categoryType == '炸物') {
+        sideCategoryId = c.categoryId;
+      }
+      // 找飲料 ID
+      if (c.categoryType == '飲料') {
+        drinkCategoryId = c.categoryId;
       }
     }
 
-    const dialogRef = this.dialog.open(DialogSetComponent, {
-      data: {
-        // 當前分類資訊
-        categoryId: this.currentCategoryId,
-        categoryType: currentCategoryType,
-        // 傳入下拉選單需要的資料
-        optionLists: {
-          mainDishes: ['牛排', '豬排', '雞腿'],
-          sideDishes: ['沙拉', '濃湯'],
-          drinks: ['紅茶', '綠茶', '咖啡']
-        }
+    // 抓附餐
+    const findSide = (nextStep: () => void) => {
+      if (sideCategoryId > 0) {
+        this.httpClientService.getApi(`http://localhost:8080/product/list?categoryId=${sideCategoryId}`)
+          .subscribe((res: any) => {
+            if (res.code == 200 && res.productList) {
+              for (let data of res.productList) {
+                if (data.productActive == true) {
+                  sideDishList.push(data); // 這裡建議存整個 data 物件，不只是 productName，因為 Dialog 需要 ID
+                }
+              }
+            }
+            nextStep(); // 抓完後，執行下一步
+          });
+      } else {
+        nextStep(); // 沒 ID 也執行下一步
       }
-    })
+    };
+
+    // --- 第二層：抓飲料 ---
+    const findDrink = () => {
+      if (drinkCategoryId > 0) {
+        this.httpClientService.getApi(`http://localhost:8080/product/list?categoryId=${drinkCategoryId}`)
+          .subscribe((res: any) => {
+            if (res.code == 200 && res.productList) {
+              for (let data of res.productList) {
+                if (data.productActive == true) {
+                  drinkDishList.push(data);
+                }
+              }
+            }
+            // 飲料抓完後，執行最後一步：開啟 Dialog
+            openDialog();
+          });
+      } else {
+        openDialog(); // 沒 ID 直接開 Dialog
+      }
+    };
+
+    // 開啟 Dialog
+    const openDialog = () => {
+      const dialogRef = this.dialog.open(DialogSetComponent, {
+        data: {
+          allCategories: this.allCategoryDto,      // 所有分類
+          sideDishList: sideDishList,              // 剛剛抓到的附餐
+          drinkDishList: drinkDishList,            // 剛剛抓到的飲料
+          currentCategoryId: this.currentCategoryId,
+          categoryType: currentCategoryType        // 當前分類名稱
+        }
+      });
+
+      dialogRef.afterClosed().subscribe(res => {
+        if (res) {
+          this.loadSets(this.currentCategoryId);
+        }
+      });
+    };
+    // 先執行 findSide，它完成後會呼叫 findDrink
+    findSide(findDrink);
   }
 
 
