@@ -28,6 +28,7 @@ html {
     margin-bottom: 5%;
     flex: 1 0 auto;
 
+
   @include mat.theme((color: (theme-type: light,
         primary: mat.$azure-palette,
         tertiary: mat.$blue-palette,

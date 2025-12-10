@@ -66,7 +66,7 @@ export interface Table {
   tablePositionY: number;
   lengthX: number;
   lengthY: number;
-  qrUrl:string;
+  qrUrl: string;
 }
 
 export interface Reservation {
@@ -166,39 +166,84 @@ export interface Rect {
   selected?: boolean;
 }
 
-// 一筆資料代表一個訂單中的一份餐點/套餐
-export interface OrderProductList {
+export interface Order {
+  orderId: number;
+  orderCode: string;
+  orderProductList: OrderDetailsList[];
+  tableId: string;
+  status: string[];
+  workStationId: number[];
+  price: number;
+  paid: boolean;
+}
+
+
+export interface OrdersTodayRes {
+  code: number;
+  message: string;
+  orders: Orders[];
+}
+
+interface Orders {
+  ordersId: number;
+  ordersType: string;
+  ordersDate: string;
+  ordersTime: string;
+  totalPrice: number;
+  paymentType: string;
+  paid: boolean;
+  ordersCode: string;
+  customerName: null;
+  customerPhone: null;
+  customerAddress: null;
+  tableId: string;
+  orderDetailsList: OrderDetailsList[];
+}
+
+interface OrderDetailsList {
   orderDetailsId: number;
   orderDetailsPrice: number;
   settingId: number;
-  orderDetail: OrderDetail[];
-}
-
-// 一筆資料代表一個訂單的一個餐點的訊息
-export interface OrderDetail {
-  workStationId: number; //餐點類別
-  productId: number; //餐點id
-  productionStatus: string; //餐點狀態
-  productName: string; // 餐點名稱
-  productPrice: number; //餐點價格
-  detailList: Option[]; //這筆訂單的這一個餐點的客製化訊息
-}
-
-// 一筆資料代表一個餐點
-export interface Option {
-  id: number; // 客製化的id 當一個餐點有多個客製化時也是由1~n
-  option: string; //選擇的客製化名稱
-  addprice: number; //選擇的客製化的價格
-}
-
-export interface Order {
-  orderId: string;
-  orderProductList: OrderProductList[];
-  tableId: string;
   status: string[];
-  workStationId:number[];
-  price: number;
+  orderDetails: OrderDetails[];
 }
 
+interface OrderDetails {
+  categoryId: number;
+  workStationId: number;
+  productId: number;
+  productName: string;
+  productPrice: number;
+  mealStatus: string;
+  detailList: DetailList[];
+}
 
+interface DetailList {
+  id: number;
+  option: string;
+  addPrice: number;
+}
 
+export interface UpdateOrderReq {
+  ordersId: number;
+  orderDetails: OrderDetailList[];
+}
+
+export interface OrderDetailList {
+  orderDetailsId: number;
+  orderDetails: OrderDetail[];
+}
+
+export interface OrderDetail {
+  productId: number;
+  productName: string;
+  categoryId: number;
+  mealStatus: string;
+  productPrice: number;
+  detailList: Option[];
+}
+
+export interface Option {
+  option: string;
+  addPrice: number;
+}

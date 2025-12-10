@@ -6,30 +6,45 @@
       @for(link of links;track link){
       <mat-tab>
         <ng-template mat-tab-label>
-          <div class="mat-tab" style="display: flex; position: relative;">
+          <div class="mat-tab" style="display: flex; width: auto;">
             <span>{{link.workStationName}}</span>
-            <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="remove"
-              style="position: absolute; top: 0;right: 0; color: rgba(128, 128, 128, 0.5);"
-              (click)="removeLink(link.workStationId)"></mat-icon>
+            <div>
+              <div>
+              <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="remove"
+              style="color: rgba(128, 128, 128, 0.5);"
+              (click)="removeLink(link.workStationId,$event)"></mat-icon>
+            </div>
+            <div>
+              <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="edit"
+              style="color: rgba(128, 128, 128, 0.5);"
+              (click)="updateLink(link.workStationId,$event)"></mat-icon>
+            </div>
+            </div>
           </div>
         </ng-template>
 
-        @for(order of orderList;track order){
-        @if(order.status.includes("準備中") && order.workStationId.includes(link.workStationId)){
+        @for(order of orders;track order){
+        @if(order.status.includes("製作中") && order.workStationId.includes(link.workStationId)){
         <div
           style="height: auto; width: 300px; border: 1px solid black; margin: 20px  ; padding: 20px; border-radius: 10px;">
-          <span>訂單編號:{{order.orderId}}</span> <br> <br>
+          <span>訂單編號:{{order.orderCode}}</span> <br> <br>
           @if(order.tableId){
           <span>內用桌號:{{order.tableId}}</span> <br> <br>
-          <span>外帶:false</span> <br> <br>
+          }@else if(order.orderCode.includes("T")){
+          <span>外帶</span> <br> <br>
+          }@else if(order.orderCode.includes("D")){
+          <span>外送</span> <br> <br>
+          }
+          @if(order.paid){
+            <span>已付款</span> <br> <br>
           }@else {
-          <span>外帶:true</span> <br> <br>
+            <span>尚未付款</span> <br> <br>
           }
           <span>餐點:</span> <br>
-          <ul>
+          <ul style="padding: 10px; margin-top: 0px;">
           @for(product of order.orderProductList;track product){
-          @for(detail of product.orderDetail;track detail){
-          @if(detail.productionStatus == "準備中" && detail.workStationId == link.workStationId){
+          @for(detail of product.orderDetails;track detail){
+          @if(detail.mealStatus == "製作中" && detail.workStationId == link.workStationId){
           <button (click)="waitDelivery(order.orderId,product.orderDetailsId,detail.productId)">準備完成</button><span>{{detail.productName}} </span> &#40;
           @for(option of detail.detailList;track option){
           <span>{{option.option}}</span>
@@ -45,7 +60,6 @@
           </ul>
         </div>
         }
-
 
         }
 

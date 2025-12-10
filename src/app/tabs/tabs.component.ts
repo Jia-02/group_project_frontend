@@ -6,7 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from './dialog/dialog.component';
 
 import { MatIcon } from "@angular/material/icon";
-import { DataService, WorkTable, Order, OrderProductList, OrderDetail, BasicRes, WorkTableListRes, Option } from '../@service/data.service';
+import { DataService, WorkTable, Order, BasicRes, WorkTableListRes, OrdersTodayRes, UpdateOrderReq, OrderDetailList, Option, OrderDetail } from '../@service/data.service';
 
 @Component({
   selector: 'app-tabs',
@@ -22,26 +22,7 @@ export class TabsComponent {
   constructor(private service: DataService) { }
 
   links!: WorkTable[];
-  count!: number;
-  orderList!: Order[];
-
-  orderProductList!: OrderProductList[];
-  orderProductList1!: OrderProductList[];
-
-  orderProductDetail!: OrderDetail[];
-  orderProductDetail1!: OrderDetail[];
-  orderProductDetail2!: OrderDetail[];
-
-  orderProductOption!: Option[];
-  orderProductOption1!: Option[];
-  orderProductOption2!: Option[];
-  orderProductOption3!: Option[];
-
-  status1!: string[];
-  status2!: string[];
-  workStationId1!: number[];
-  workStationId2!: number[];
-
+  orders!: Order[];
 
   addLink(event: MouseEvent) {
 
@@ -64,14 +45,56 @@ export class TabsComponent {
             this.service.getApi(url).subscribe((res: WorkTableListRes) => {
               this.links = res.workStationList;
             })
+          } else {
+            this.dialog.open(DialogComponent, {
+              data: { mod: "報錯", message: res.message },
+              width: 'auto',
+              height: 'auto'
+            });
           }
         })
       }
     })
   }
 
-  removeLink(id: number) {
+  updateLink(id: number, event: MouseEvent) {
+    event.preventDefault();  // 阻止切換
+    event.stopPropagation(); // 阻止 mat-tab-group 處理事件
 
+    const dialgoRef = this.dialog.open(DialogComponent, {
+      data: { mod: "更新" },
+      width: 'auto',
+      height: 'auto'
+    });
+
+    dialgoRef.afterClosed().subscribe((res: any) => {
+      if (res && res.flag && res.name) {
+        let url = "http://localhost:8080/workstation/update"
+        let data: WorkTable = { workStationId: id, workStationName: res.name }
+        console.log(data)
+        this.service.postApi(url, data).subscribe((res: BasicRes) => {
+          if (res.code == 200) {
+            url = "http://localhost:8080/workstation/list"
+            this.service.getApi(url).subscribe((res: WorkTableListRes) => {
+              this.links = res.workStationList;
+            })
+          } else {
+            this.dialog.open(DialogComponent, {
+              data: { mod: "報錯", message: res.message },
+              width: 'auto',
+              height: 'auto'
+            });
+          }
+        })
+      }
+    })
+
+  }
+
+  removeLink(id: number, event: MouseEvent) {
+
+    event.preventDefault();  // 阻止切換
+    event.stopPropagation(); // 阻止 mat-tab-group 處理事件
     const dialgoRef = this.dialog.open(DialogComponent, {
       data: { mod: "刪除" },
       width: 'auto',
@@ -88,6 +111,12 @@ export class TabsComponent {
             this.service.getApi(url).subscribe((res: WorkTableListRes) => {
               this.links = res.workStationList;
             })
+          } else {
+            this.dialog.open(DialogComponent, {
+              data: { mod: "報錯", message: res.message },
+              width: 'auto',
+              height: 'auto'
+            });
           }
         })
       }
@@ -95,122 +124,129 @@ export class TabsComponent {
 
   }
 
-  waitDelivery(id: string, detailId: number, productId: number) {
-    for (const order of this.orderList) {
-      this.status1 = [];
-      this.workStationId1 = [];
+  waitDelivery(id: number, detailId: number, productId: number) {
+    let updateOrderReq!: UpdateOrderReq;
+    let productList!: OrderDetailList[];
+    let orderDetail!: OrderDetail[];
+    let options!: Option[];
+    for (const order of this.orders) {
       if (order.orderId == id) {
+        productList = [];
         for (const product of order.orderProductList) {
-          if (detailId == product.orderDetailsId) {
-            for (let i = 0; i < product.orderDetail.length; i++) {
-              if (product.orderDetail[i].productId == productId) {
-                product.orderDetail[i].productionStatus = "待送餐";
-                this.count--;
+          orderDetail = [];
+          for (const detail of product.orderDetails) {
+            options = [];
+            if (detail.productId == productId && product.orderDetailsId == detailId) {
+              detail.mealStatus = "待送餐";
+            }
+            for (const option of detail.detailList) {
+              options.push({ option: option.option, addPrice: option.addPrice });
+            }
+            orderDetail.push({
+              productId: detail.productId, productName: detail.productName,
+              productPrice: detail.productPrice, categoryId: detail.categoryId, mealStatus: detail.mealStatus, detailList: options
+            })
+          }
+          productList.push({ orderDetailsId: product.orderDetailsId, orderDetails: orderDetail })
+        }
+      }
+    }
+    updateOrderReq = { ordersId: id, orderDetails: productList }
+    console.log(updateOrderReq)
+
+    let url = "http://localhost:8080/orders/update/ispaid"
+    this.service.postApi(url, updateOrderReq).subscribe((res: any) => {
+      if (res.code == 400) {
+        this.dialog.open(DialogComponent, {
+          data: { mod: "報錯", message: res.message },
+          width: 'auto',
+          height: 'auto'
+        });
+      }
+      let today = new Date();
+      let year = today.getFullYear();
+      let month = String(today.getMonth() + 1).padStart(2, '0');
+      let day = String(today.getDate()).padStart(2, '0');
+      let todayStr = year + "-" + month + "-" + day
+      url = "http://localhost:8080/orders/meal/list?ordersDate=" + todayStr
+      this.service.getApi(url).subscribe((res: OrdersTodayRes) => {
+        console.log(res)
+        if (res.code == 200) {
+          this.orders = [];
+          for (const order of res.orders) {
+            let status: string[] = [];
+            let workstaionId: number[] = [];
+            for (const product of order.orderDetailsList) {
+              for (const detail of product.orderDetails) {
+                let optionId = 1;
+                if (detail.mealStatus == "製作中" && !workstaionId.includes(detail.workStationId)) {
+                  workstaionId.push(detail.workStationId);
+                }
+                if (!status.includes(detail.mealStatus)) {
+                  status.push(detail.mealStatus);
+                }
+                for (const option of detail.detailList) {
+                  option.id = optionId;
+                  optionId++;
+                }
               }
             }
+            this.orders.push({
+              orderId: order.ordersId, orderCode: order.ordersCode, tableId: order.tableId,
+              price: order.totalPrice, status: status, workStationId: workstaionId, orderProductList: order.orderDetailsList,paid:order.paid
+            })
           }
         }
-      }
-      for (const product of order.orderProductList) {
-        for (const detail of product.orderDetail) {
-          if (!this.status1.includes(detail.productionStatus)) {
-            this.status1.push(detail.productionStatus);
-          }
-          if (!this.workStationId1.includes(detail.workStationId) && detail.productionStatus != "待送餐") {
-            this.workStationId1.push(detail.workStationId)
-          }
-        }
-      }
-      order.status = this.status1;
-      order.workStationId = this.workStationId1;
-    }
-    console.log(this.orderList)
+        console.log(this.orders)
+      })
+
+    })
+
   }
 
   ngOnInit(): void {
     let url = "http://localhost:8080/workstation/list"
     this.service.getApi(url).subscribe((res: WorkTableListRes) => {
       this.links = res.workStationList;
-    })
+      let today = new Date();
+      let year = today.getFullYear();
+      let month = String(today.getMonth() + 1).padStart(2, '0');
+      let day = String(today.getDate()).padStart(2, '0');
+      let todayStr = year + "-" + month + "-" + day
 
-    this.count = 0;
+      let url = "http://localhost:8080/orders/meal/list?ordersDate=" + todayStr
 
-    this.orderProductOption = [{ id: 1, option: "加蛋", addprice: 10 }, { id: 2, option: "不要洋蔥", addprice: 0 }]
-    this.orderProductOption1 = [{ id: 1, option: "加大", addprice: 10 }, { id: 2, option: "番茄醬", addprice: 0 }]
-    this.orderProductOption2 = [{ id: 1, option: "加大", addprice: 10 }, { id: 2, option: "少冰", addprice: 0 }]
-
-    this.orderProductOption3 = [{ id: 1, option: "加大", addprice: 10 }, { id: 2, option: "加辣", addprice: 0 }]
-
-    this.orderProductDetail = [{
-      workStationId: 1, productId: 5, productionStatus: "準備中",
-      productName: "起司牛肉漢堡", productPrice: 100, detailList: this.orderProductOption
-    },
-    {
-      workStationId: 1, productId: 8, productionStatus: "準備中",
-      productName: "薯條", productPrice: 30, detailList: this.orderProductOption1
-    },
-    {
-      workStationId: 2, productId: 3, productionStatus: "準備中",
-      productName: "可樂", productPrice: 30, detailList: this.orderProductOption2
-    }]
-
-    this.orderProductDetail1 = [{
-      workStationId: 3, productId: 9, productionStatus: "準備中",
-      productName: "炒麵", productPrice: 100, detailList: this.orderProductOption3
-    }]
-
-    this.orderProductDetail2 = [{
-      workStationId: 1, productId: 9, productionStatus: "準備中",
-      productName: "炒麵", productPrice: 100, detailList: this.orderProductOption3
-    }]
-
-    this.orderProductList = [{ orderDetailsId: 1, orderDetailsPrice: 180, settingId: 3, orderDetail: this.orderProductDetail },
-    { orderDetailsId: 2, orderDetailsPrice: 110, settingId: -1, orderDetail: this.orderProductDetail1 }]
-
-    this.orderProductList1 = [{ orderDetailsId: 1, orderDetailsPrice: 110, settingId: -1, orderDetail: this.orderProductDetail2 }]
-
-    this.status1 = [];
-    this.status2 = [];
-    this.workStationId1 = [];
-    this.workStationId2 = [];
-
-    for (let i = 0; i < this.orderProductList.length; i++) {
-      for (let j = 0; j < this.orderProductList[i].orderDetail.length; j++) {
-        if (!this.status1.includes(this.orderProductList[i].orderDetail[j].productionStatus)) {
-          this.status1.push(this.orderProductList[i].orderDetail[j].productionStatus);
-        }
-        if (!this.workStationId1.includes(this.orderProductList[i].orderDetail[j].workStationId)) {
-          this.workStationId1.push(this.orderProductList[i].orderDetail[j].workStationId)
-        }
-      }
-    }
-
-    for (let i = 0; i < this.orderProductList1.length; i++) {
-      for (let j = 0; j < this.orderProductList1[i].orderDetail.length; j++) {
-        if (!this.status2.includes(this.orderProductList1[i].orderDetail[j].productionStatus)) {
-          this.status2.push(this.orderProductList1[i].orderDetail[j].productionStatus);
-        }
-        if (!this.workStationId2.includes(this.orderProductList1[i].orderDetail[j].workStationId)) {
-          this.workStationId2.push(this.orderProductList1[i].orderDetail[j].workStationId)
-        }
-      }
-    }
-
-
-    this.orderList = [{ orderId: "2511160326A01", orderProductList: this.orderProductList, tableId: "A01", price: 290, status: this.status1, workStationId: this.workStationId1 },
-    { orderId: "2511160326T01", orderProductList: this.orderProductList1, tableId: "", price: 100, status: this.status2, workStationId: this.workStationId2 }
-    ];
-    console.log(this.orderList)
-
-    for (const order of this.orderList) {
-      for (const product of order.orderProductList) {
-        for (const detail of product.orderDetail) {
-          if (detail.productionStatus == "待送餐") {
-            this.count++;
+      this.service.getApi(url).subscribe((res: OrdersTodayRes) => {
+        console.log(res)
+        if (res.code == 200) {
+          this.orders = [];
+          for (const order of res.orders) {
+            let status: string[] = [];
+            let workstaionId: number[] = [];
+            for (const product of order.orderDetailsList) {
+              for (const detail of product.orderDetails) {
+                let optionId = 1;
+                if (detail.mealStatus == "製作中" && !workstaionId.includes(detail.workStationId)) {
+                  workstaionId.push(detail.workStationId);
+                }
+                if (!status.includes(detail.mealStatus)) {
+                  status.push(detail.mealStatus);
+                }
+                for (const option of detail.detailList) {
+                  option.id = optionId;
+                  optionId++;
+                }
+              }
+            }
+            this.orders.push({
+              orderId: order.ordersId, orderCode: order.ordersCode, tableId: order.tableId,
+              price: order.totalPrice, status: status, workStationId: workstaionId, orderProductList: order.orderDetailsList,paid:order.paid
+            })
           }
         }
-      }
-    }
+        console.log(this.orders)
+      })
+    })
 
 
   }
