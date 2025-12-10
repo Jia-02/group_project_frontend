@@ -1,0 +1,48 @@
+<!-- dialog標題 -->
+<div mat-dialog-title>客製化餐點編輯</div>
+
+<!-- dialog內容 -->
+<mat-dialog-content>
+  <label>客製化主題</label>
+  <input type="text" placeholder="例：甜度、加料" [(ngModel)]="customizedData.optionName">
+
+
+  <div class="selectiongroup">
+    <button (click)="chooseBtn('S')">單選</button>
+    <button (click)="chooseBtn('M')">複選</button>
+    <br>
+    <label class="type-label">選項：</label>
+
+    @for (opt of customizedData.optionDetail; track $index; let i = $index) {
+
+    @if (currentType == 'S') {
+    <input type="radio" name="displayGroup" disabled>
+    } @else {
+    <input type="checkbox" disabled>
+    }
+
+    <input type="text" placeholder="選項名稱" [(ngModel)]="opt.option">
+    <label>加價</label>
+    <input type="number" [(ngModel)]="opt.addPrice">
+    }
+
+    <!-- 新增icon -->
+    <div class="add-btn-area" style="margin-top: 10px; cursor: pointer; display: flex; align-items: center;" (click)="addOption()">
+      <mat-icon fontIcon="add_circle"></mat-icon>
+      <span>新增選項</span>
+    </div>
+
+  </div>
+
+  <div class="divider"></div>
+</mat-dialog-content>
+
+
+
+<!-- dialog按鈕 -->
+<mat-dialog-actions>
+  <div>
+    <button (click)="onNoClick()">取消</button>
+    <button (click)="onAddClick()">確定</button>
+  </div>
+</mat-dialog-actions>

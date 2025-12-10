@@ -42,17 +42,24 @@ export class DialogMenuComponent {
     productNote: '',
     categoryId: 0
   };
+  isEditMode: boolean = false;
 
   readonly dialogRef = inject(MatDialogRef<DialogMenuComponent>);
   readonly data = inject<any>(MAT_DIALOG_DATA);
 
-  // 要先抓API商品的陣列中的商品內容 你必須要從商品的內容中抓到id最後面的那個 然後在+1
-
   ngOnInit(): void {
-    //  從service抓分類的id
-    this.productList.categoryId = this.data.categoryId;
+
     this.categoryDto.categoryType = this.data.categoryType;
-    this.searchProduct(this.productList.categoryId);
+    this.isEditMode = this.data.isEditMode || false;  // 判斷是否為編輯模式
+
+    if (this.isEditMode && this.data.product) {
+      this.productList = { ...this.data.product };
+      this.productList.categoryId = this.data.categoryId;
+    } else {
+      // 新增模式 初始化
+      this.productList.categoryId = this.data.categoryId;
+      this.searchProduct(this.productList.categoryId);
+    }
   }
 
   // 取消
@@ -62,30 +69,45 @@ export class DialogMenuComponent {
 
   // 確定
   onAddClick() {
-    this.countNextProductId();
-    this.productList;
-    console.log(this.productList);
-
-    // 檢查必填欄位
-    if (!this.selectedFile || !this.productList.productName || !this.productList.productPrice || !this.productList.productDescription) {
-      alert('必填沒填');
+    if (!this.productList.productName || !this.productList.productPrice || !this.productList.productDescription) {
+      alert('必填欄位(名稱、價格、描述)不可為空');
       return;
     }
 
-    // 拼湊圖片路字串，組合結果: "/drink/drink (1).jpg"
-    const folderMap: { [key: string]: string } = {
-      '套餐': 'set',
-      '飲料': 'drink',
-      '義大利麵': 'pasta',
-      '點心': 'snack',
-      '披薩': 'pizza',
-      '火鍋': 'hotpot',
-      '炸物': 'fried'
-    };
+    // 檢查圖片 (新增模式必填；編輯模式若沒選檔案代表不換圖，可以過)
+    if (!this.isEditMode && !this.selectedFile) {
+      alert('新增商品必須上傳圖片');
+      return;
+    }
 
-    const currentType = this.categoryDto.categoryType;
-    const folderName = folderMap[currentType];
-    this.productList.imageUrl = `/${folderName}/${this.selectedFile.name}`;
+    // 處理圖片路徑邏輯 (如果有選新檔案才處理)
+    if (this.selectedFile) {
+      const folderMap: { [key: string]: string } = {
+        '套餐': 'set',
+        '飲料': 'drink',
+        '義大利麵': 'pasta',
+        '點心': 'snack',
+        '披薩': 'pizza',
+        '火鍋': 'hotpot',
+        '炸物': 'fried'
+      };
+
+      const currentType = this.categoryDto.categoryType;
+      const folderName = folderMap[currentType]; // 加個預設避免報錯
+      this.productList.imageUrl = `/${folderName}/${this.selectedFile.name}`;
+    }
+
+    if (this.isEditMode) {
+      this.updateProduct(); // >更新
+    } else {
+      this.addProduct(); // >新增
+    }
+  }
+
+
+  // 新增商品
+  addProduct() {
+    this.countNextProductId();
 
     this.httpClientService.postApi('http://localhost:8080/product/add', this.productList)
       .subscribe((res: any) => {
@@ -96,7 +118,23 @@ export class DialogMenuComponent {
       });
   }
 
+  // 更新商品
+  updateProduct() {
+    this.httpClientService.postApi('http://localhost:8080/product/update', this.productList)
+      .subscribe((res: any) => {
+        if (res.code == 200) {
+          console.log(res);
 
+          this.dialogRef.close(true);
+        } else {
+          console.log(res);
+
+        }
+      });
+  }
+
+
+  // 找商品
   searchProduct(categoryId: number) {
     const apiUrl = `http://localhost:8080/product/list?categoryId=${categoryId}`;
     this.httpClientService.getApi(apiUrl).subscribe((res: any) => {
@@ -107,6 +145,7 @@ export class DialogMenuComponent {
     })
   }
 
+  // 計算商品id
   countNextProductId() {
     const allProducts = this.dataService.productListRes.productList;
 

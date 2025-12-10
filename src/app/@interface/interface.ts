@@ -1,15 +1,23 @@
 // 桌位列表
-export interface tables {
-  table_id: string;
-  table_status: boolean;
+export interface tableList {
+  tableId: string;
+  tableStatus: boolean;
   capacity: number;
   position_x: number;
   position_y: number;
 }
 
-// 訂位
+// 預約(api)
+export interface reservationResponse {
+  code: number;
+  message: string;
+  reservationDate: string;
+  reservationAndTableByDateList: reservationAndTableByDateList[];
+}
+
+// 預約
 export interface reservation {
-  id?: number; // 唯一 ID
+  reservationId?: number;
   newDate?: string;
   reservationDate: string;
   reservationTime: string;
@@ -24,16 +32,8 @@ export interface reservation {
   tableId: string;
 }
 
-// 後端 API 的頂層回傳結構
-export interface apiResponse {
-  code: number;
-  message: string;
-  reservationDate: string;
-  reservationAndTableByDateList: tableReservationByDate[];
-}
-
-// 單一桌位與該桌位預約列表（後端結構）
-export interface tableReservationByDate {
+// 單一桌位與該桌位預約列表
+export interface reservationAndTableByDateList {
   tableId: string;
   capacity: number;
   tableDailyStatus: boolean;
@@ -53,6 +53,11 @@ export interface timeLabel {
   hour: number;
 }
 
+export interface calendarDay {
+  date: Date;
+  hasEvent: boolean;
+}
+
 // 分類
 export interface categoryDto {
   categoryId: number;
@@ -60,7 +65,7 @@ export interface categoryDto {
   workstationId: number;
 }
 
-// 產品列表api
+// 產品列表 (api)
 export interface productListRes {
   code: number;
   message: string;
@@ -80,4 +85,52 @@ export interface productList {
   categoryId: number;
 }
 
+// 單個選項細節
+export interface optionDetail {
+  option: string;
+  addPrice: number;
+}
 
+// 客製化選項（新增 / 更新 / 查詢）
+export interface customizedOption {
+  optionId: number;
+  optionName: string;
+  maxSelect: number;
+  categoryId: number;
+  optionDetail: optionDetail[];
+}
+
+// API 回傳
+export interface optionListResponse {
+  code: number;
+  message: string;
+  categoryId: number;
+  optionVoList: customizedOption[];
+}
+
+// 套餐
+export interface setResponse {
+  code: number;
+  message: string;
+  categoryId: number;
+  optionVoList: optionVo[];
+}
+
+export interface optionVo {
+  settingId: number;
+  settingName: string;
+  settingPrice: number;
+  settingImg: string;
+  settingActive: boolean;
+  settingNote: string;
+  settingDetail: settingDetail[];
+}
+
+export interface settingDetail {
+  categoryId: number;
+  detailList: detailItem[];
+}
+
+export interface detailItem {
+  productId: number;
+}

@@ -23,7 +23,7 @@
       <label>桌號</label>
       <select class="inputCss" [(ngModel)]="reservation.tableId">
         <option value="">--請選擇--</option>
-        @for (data of displayTableIds; track data) {
+        @for (data of tableIdList; track data) {
         <option [value]="data">{{ data }}</option>
         }
       </select>
@@ -32,7 +32,7 @@
     <div class="inputBoxCss">
       <label>大人</label>
       <select class="inputCss" [(ngModel)]="reservation.reservationAdultCount" (change)="updateAdultChild()">
-        <option value="''">--請選擇--</option>
+        <option [ngValue]="0">--請選擇--</option>
         @for (data of adultList; track data) {
         <option [value]="data">{{ data }}</option>
         }
@@ -40,7 +40,7 @@
 
       <label>小孩</label>
       <select class="inputCss" [(ngModel)]="reservation.reservationChildCount" (change)="updateAdultChild()">
-        <option value="''">--請選擇--</option>
+        <option [ngValue]="0">--請選擇--</option>
         @for (data of childList; track data) {
         <option [value]="data">{{ data }}</option>
         }
@@ -48,7 +48,7 @@
 
       <label>兒童座椅</label>
       <select class="inputCss" [(ngModel)]="reservation.childSeat">
-        <option value="''">--請選擇--</option>
+        <option [ngValue]="0">--請選擇--</option>
         @for (data of childSeatList; track data) {
         <option [value]="data">{{ data }}</option>
         }
@@ -57,7 +57,7 @@
 
     <div class="inputBoxCss">
       <label>訂位日期</label>
-      <input type="date" class="inputCss" [(ngModel)]="reservation.reservationDate" (change)="onDateChange()" [min]="currentDate">
+      <input type="date" class="inputCss" [(ngModel)]="reservation.reservationDate"  [min]="currentDate">
       <label>訂位時間</label>
       <select class="inputCss" [(ngModel)]="reservation.reservationTime">
         <option value="">--請選擇--</option>
@@ -82,3 +82,4 @@
     </div>
   </mat-dialog-actions>
 </div>
+

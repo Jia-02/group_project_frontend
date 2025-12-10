@@ -1,0 +1,61 @@
+<!-- dialog標題 -->
+<div mat-dialog-title>新增套餐</div>
+
+<!-- dialog內容 -->
+<mat-dialog-content>
+  <label>菜單分類</label>
+  <div>{{ categoryDto.categoryType }}</div>
+
+  <label>餐點名稱</label>
+  <input type="text" class="inputCss" [(ngModel)]="productList.productName">
+
+  <!-- <label>主餐</label>
+  <select class="inputCss" [(ngModel)]="reservation.tableId">
+    <option value="">--請選擇--</option>
+    @for (data of tableIdList; track data) {
+    <option [value]="data">{{ data }}</option>
+    }
+  </select>
+
+  <label>附餐</label>
+  <select class="inputCss" [(ngModel)]="reservation.tableId">
+    <option value="">--請選擇--</option>
+    @for (data of tableIdList; track data) {
+    <option [value]="data">{{ data }}</option>
+    }
+  </select>
+
+  <label>飲品</label>
+  <select class="inputCss" [(ngModel)]="reservation.tableId">
+    <option value="">--請選擇--</option>
+    @for (data of tableIdList; track data) {
+    <option [value]="data">{{ data }}</option>
+    }
+  </select> -->
+
+  <textarea [(ngModel)]="productList.productDescription"></textarea>
+
+  <label>內部備註</label>
+  <textarea [(ngModel)]="productList.productNote"></textarea>
+
+  <label>價格</label>
+  <input type="number" class="inputCss" [(ngModel)]="productList.productPrice">
+
+  <label>餐點圖片</label>
+  <input type="file" (change)="onFileSelected($event)" accept="image/*">
+
+
+  @if (selectedFile) {
+  <div style="font-size: 0.8em; color: green; margin-top: 5px;">
+    已選取檔案: {{ selectedFile.name }}
+  </div>
+  }
+</mat-dialog-content>
+
+<!-- dialog按鈕 -->
+<mat-dialog-actions>
+  <div>
+    <button (click)="onNoClick()" class="btn">取消</button>
+    <button (click)="onAddClick()" class="btn">確定</button>
+  </div>
+</mat-dialog-actions>
