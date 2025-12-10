@@ -1,0 +1,45 @@
+<div class="menu-container">
+
+
+  <mat-tab-group>
+
+    @for (category of categories; track category.categoryId) {
+      <mat-tab [label]="category.categoryName">
+        <div class="product-list">
+          @for (product of category.products; track product.productId) {
+            <div class="product-item"
+                 (click)="openProductDetail(category.categoryId, product.productId)">
+
+              <span>{{ product.productName }}</span>
+              <span class="price">$NT{{ product.productPrice }}</span>
+
+            </div>
+          } @empty {
+            <p class="empty-message">此分類暫無商品。</p>
+          }
+        </div>
+      </mat-tab>
+    }
+
+    <!-- <mat-tab label='套餐'>
+      <div class="product-list">
+        @for (setting of settings; track setting.settingId) {
+          <div class="product-item"
+               (click)="openSettingDetail(setting.settingId)">
+
+            <span>{{ setting.settingName }}</span>
+            <span class="price">$NT{{ setting.settingPrice }}</span>
+
+          </div>
+        } @empty {
+          <p class="empty-message">暫無套餐資訊。</p>
+        }
+      </div>
+    </mat-tab> -->
+  </mat-tab-group>
+
+  <button mat-flat-button color="primary" class="checkout-button">
+    送出購物車 (檢視畫面)
+  </button>
+
+</div>

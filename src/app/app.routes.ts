@@ -6,6 +6,7 @@ import { TestPageComponent } from './test-page/test-page.component';
 import { InnerStartPageComponent } from './inner-start-page/inner-start-page.component';
 import { NonInnerStartPageComponent } from './non-inner-start-page/non-inner-start-page.component';
 import { CustomerInformationComponent } from './customer-information/customer-information.component';
+import { MenuComponent } from './menu/menu.component';
 
 
 export const routes: Routes = [
@@ -15,5 +16,6 @@ export const routes: Routes = [
   { path: 'test-page', component: TestPageComponent},
   { path: 'inner-start-page', component: InnerStartPageComponent},
   { path: 'non-inner-start-page', component: NonInnerStartPageComponent},
-  { path: 'customer-information', component: CustomerInformationComponent}
+  { path: 'customer-information', component: CustomerInformationComponent},
+  { path: 'menu', component:MenuComponent}
 ];
