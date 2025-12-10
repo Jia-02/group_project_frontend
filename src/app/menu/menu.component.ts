@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTabChangeEvent, MatTabsModule } from '@angular/material/tabs';
 import { DataService } from '../data/data.service';
+import { Observable, of } from 'rxjs';
 import { ProductDetailDialogComponent } from '../product-detail-dialog/product-detail-dialog.component';
 
 @Component({
@@ -13,10 +14,9 @@ import { ProductDetailDialogComponent } from '../product-detail-dialog/product-d
   styleUrl: './menu.component.scss'
 })
 export class MenuComponent {
-  private baseUrl = 'http://localhost:8080';
 
   public categories: Category[] = [];
-  public settings: Setting[] = [];
+  private SETTING_TAB_LABEL = '套餐';
   public isLoadingCategories = true;
 
   constructor(
@@ -29,22 +29,33 @@ export class MenuComponent {
   }
 
   loadInitialData(): void {
-    // 載入類別: http://localhost:8080/category/list
-    const categoryUrl = `${this.baseUrl}/category/list`;
-    this.dataService.getApi(categoryUrl).subscribe((categories: Category[]) => {
-        this.categories = categories;
-        this.isLoadingCategories = false;
+    this.dataService.getApi(`http://localhost:8080/category/list`).subscribe(
+      (res: any) => {
+        if (res.code === 200 && res.categoryDto) {
+          this.categories = res.categoryDto.map(
+            (item: any) => ({
+              ...item,
+              categoryType: item.categoryType
+            }));
 
-        if (this.categories.length > 0) {
-          this.loadProductsForCategory(0);
+          const settingCategory: Category = {
+            categoryId: 3,
+            categoryType: this.SETTING_TAB_LABEL,
+            workstationId: 0,
+            products: undefined,
+            isLoadingProducts: false
+          };
+          this.categories.push(settingCategory);
+
+          this.isLoadingCategories = false;
+
+          if (this.categories.length > 0) {
+            this.loadProductsForCategory(0);
+          }
+        } else {
+          console.error('API 返回錯誤或無效資料:', res);
+          this.isLoadingCategories = false;
         }
-      }
-    );
-
-    // 獨立載入套餐: http://localhost:8080/setting/list/user
-    const settingUrl = `${this.baseUrl}/setting/list/user`;
-    this.dataService.getApi(settingUrl).subscribe((settings: Setting[]) => {
-        this.settings = settings;
       }
     );
   }
@@ -58,40 +69,61 @@ export class MenuComponent {
   loadProductsForCategory(categoryIndex: number): void {
     const category = this.categories[categoryIndex];
 
-    if (category && !category.products) {
+    if (category && category.products === undefined) {
       const categoryId = category.categoryId;
       category.isLoadingProducts = true;
 
-      // 構建帶有查詢參數的 URL: http://localhost:8080/product/list/user?categoryId={id}
-      const productUrl = `${this.baseUrl}/product/list/user?categoryId=${categoryId}`;
+      let apiObservable: Observable<any>;
+      let dataKey: string;
 
-      this.dataService.getApi(productUrl).subscribe((products: Product[]) => {
-          category.products = products;
-          category.isLoadingProducts = false;
+      if (category.categoryType !== this.SETTING_TAB_LABEL) {
+        const productUrl = `http://localhost:8080/product/list/user?categoryId=${categoryId}`;
+        apiObservable = this.dataService.getApi(productUrl);
+        dataKey = 'productList';
+      } else {
+        const settingUrl = `http://localhost:8080/setting/list/user?categoryId=${categoryId}`;
+        apiObservable = this.dataService.getApi(settingUrl);
+        dataKey = 'optionVoList';
+      }
+
+      apiObservable.subscribe((res: any) => {
+        if (res.code === 200 && res[dataKey]) {
+          if (dataKey == 'productList') {
+            category.products = res[dataKey];
+          } else if (dataKey == 'optionVoList') {
+            category.products = res[dataKey].map((item: any) => ({
+              productId: item.settingId,
+              productName: item.settingName,
+              productPrice: item.settingPrice
+            }));
+          }
+
+        } else {
+          console.warn(`載入分類 ${category.categoryType} 失敗:`, res.message);
+          category.products = [];
         }
+        category.isLoadingProducts = false;
+      }
       );
     }
   }
 
   openProductDetail(categoryId: number, productId: number): void {
+    const isSetting = this.categories.some(c => c.categoryId === categoryId && c.categoryType === this.SETTING_TAB_LABEL);
+
     this.dialog.open(ProductDetailDialogComponent, {
       width: '400px',
       data: {
-        type: 'product',
+        type: isSetting ? 'setting' : 'product',
         categoryId: categoryId,
-        productId: productId
+        productId: productId,
+        settingId: isSetting ? productId : undefined
       }
     });
   }
 
   openSettingDetail(settingId: number): void {
-    this.dialog.open(ProductDetailDialogComponent, {
-      width: '400px',
-      data: {
-        type: 'setting',
-        settingId: settingId
-      }
-    });
+    // 暫時留空
   }
 
 }
@@ -100,10 +132,9 @@ interface Product {
   productId: number;
   productName: string;
   productPrice: number;
-  categoryId: number;
 }
 
-interface Setting {
+interface SettingItem {
   settingId: number;
   settingName: string;
   settingPrice: number;
@@ -111,7 +142,22 @@ interface Setting {
 
 interface Category {
   categoryId: number;
-  categoryName: string;
-  products?: Product[];
+  categoryType: string;
+  workstationId: number;
+  products?: (Product | SettingItem)[];
   isLoadingProducts?: boolean;
+}
+
+interface ProductApiResponse {
+  code: number;
+  message: string;
+  categoryId: number;
+  productList: Product[];
+}
+
+interface SettingApiResponse {
+  code: number;
+  message: string;
+  categoryId: number;
+  optionVoList: SettingItem[];
 }
