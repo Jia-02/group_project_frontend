@@ -204,3 +204,85 @@ export class MealStatusComponent {
 
 
 
+
+
+// {
+//   "ordersType": "D",
+//   "ordersDate":"2025-12-10",
+//   "ordersTime":"16:00:00",
+//   "totalPrice": 440,
+//   "paymentType": "現金",
+//   "paid": false,
+//   "ordersCode": null,
+//   "customerName":"測試",
+//   "customerPhone":"0912345678",
+//   "customerAddress":"高雄市",
+//   "tableId": null,
+//   "orderDetailsList": [
+//     {
+//       "orderDetailsId": 1,
+//       "orderDetailsPrice": 210,
+//       "settingId": 0,
+//       "orderDetails": [
+//         {
+//           "categoryId": 1,
+//           "productId": 1,
+//           "productName": "牛肉漢堡",
+//           "productPrice": 180,
+//           "mealStatus": "製作中",
+//           "detailList": [
+//             {
+//               "option": "起司蛋",
+//               "addPrice": 10
+//             },
+//             {
+//               "option": "一層肉",
+//               "addPrice": 20
+//             }
+//           ]
+//         }
+//       ]
+//     },
+//     {
+//       "orderDetailsId": 2,
+//       "orderDetailsPrice": 230,
+//       "settingId": 1,
+//       "orderDetails": [
+//         {
+//           "categoryId": 1,
+//           "productId": 2,
+//           "productName": "豬肉漢堡",
+//           "productPrice": 150,
+//           "mealStatus": "製作中",
+//           "detailList": [
+//             {
+//               "option": "起司蛋",
+//               "addPrice": 10
+//             },
+//             {
+//               "option": "一層肉",
+//               "addPrice": 20
+//             }
+//           ]
+//         },
+//         {
+//           "categoryId": 2,
+//           "productId": 1,
+//           "productName": "氣泡水",
+//           "productPrice": 50,
+//           "mealStatus": "製作中",
+//           "detailList": [
+//             {
+//               "option": "無糖",
+//               "addPrice": 0
+//             },
+//             {
+//               "option": "去冰",
+//               "addPrice": 0
+//             }
+//           ]
+//         }
+//       ]
+//     }
+//   ]
+// }
