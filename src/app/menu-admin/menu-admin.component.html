@@ -24,7 +24,7 @@
 
 
         <!-- 套餐 -->
-        @if (category.categoryType === '套餐') {
+        @if (category.categoryType == '套餐') {
         <div class="card-grid">
 
           @for (pkg of setList; track $index) {

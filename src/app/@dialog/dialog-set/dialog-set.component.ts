@@ -25,10 +25,10 @@ export class DialogSetComponent {
   readonly data = inject<any>(MAT_DIALOG_DATA);
 
   selectedFile: File | null = null; // 儲存使用者選中的檔案
-  categoryList: categoryDto[] = []; // 給「主餐分類」選單用
-  sideDishList: productList[] = []; // 給「附餐」選單用
-  drinkDishList: productList[] = []; // 給「飲料」選單用
-  mainDishList: productList[] = []; // 給「主餐」選單用
+  categoryList: categoryDto[] = []; // 給 主餐 分類選單用
+  sideDishList: productList[] = []; // 給 附餐 選單用
+  drinkDishList: productList[] = []; // 給 飲料 選單用
+  mainDishList: productList[] = []; // 給 主餐 選單用
   currentCategoryType: string = '';   // 用來顯示當前分類名稱
 
   categoryDto: categoryDto = {
@@ -64,7 +64,7 @@ export class DialogSetComponent {
   // 用來綁定使用者選了什麼 ID
   selections = {
     mainCatId: 0,
-    mainIds: [] as number[], // 這裡改成陣列，存多個 ProductID
+    mainIds: [] as number[], // 存多個 ProductID
     sideId: 0,
     drinkId: 0
   };
@@ -81,10 +81,7 @@ export class DialogSetComponent {
     // 判斷是否為編輯模式
     if (this.data.isEditMode && this.data.targetSet) {
       this.isEditMode = true;
-      // 深拷貝資料
-      this.optionVo = JSON.parse(JSON.stringify(this.data.targetSet));
-
-      // 解析函式
+      this.optionVo = JSON.parse(JSON.stringify(this.data.targetSet)); // 深拷貝資料
       this.existingDetails();
     }
   }
@@ -113,8 +110,8 @@ export class DialogSetComponent {
       this.optionVo.settingImg = `/${folderName}/${this.selectedFile.name}`;
     }
 
-    const sideCat = this.categoryList.find(c => c.categoryType.trim() === '炸物');
-    const drinkCat = this.categoryList.find(c => c.categoryType.trim() === '飲料');
+    const sideCat = this.categoryList.find(c => c.categoryType.trim() == '炸物');
+    const drinkCat = this.categoryList.find(c => c.categoryType.trim() == '飲料');
 
     // 如果找不到分類，預設為 0
     const realSideCatId = sideCat ? sideCat.categoryId : 0;
@@ -191,7 +188,7 @@ export class DialogSetComponent {
   }
 
   // 切換主餐分類，抓該分類的產品
-onMainCategoryChange() {
+  onMainCategoryChange() {
     this.mainDishList = [];
     this.selections.mainIds = []; // ★ 清空已選陣列
 
@@ -231,38 +228,42 @@ onMainCategoryChange() {
     const realSideCatId = sideCat ? sideCat.categoryId : -1;
     const realDrinkCatId = drinkCat ? drinkCat.categoryId : -1;
 
-    console.log(`Debug 分類: 炸物=${realSideCatId}, 飲料=${realDrinkCatId}`);
-    console.log(`Debug 選單長度: 附餐=${this.sideDishList.length}, 飲料=${this.drinkDishList.length}`);
-
     for (const group of this.optionVo.settingDetail) {
-
       const cId = Number(group.categoryId); // 這一組的分類 ID
-      if (!group.detailList) continue;
+      if (!group.detailList || group.detailList.length === 0) continue;
 
+      // 1. 檢查是否為附餐 (通常附餐只有一個選項，取第一個即可)
+      if (cId == realSideCatId) {
+        this.selections.sideId = Number(group.detailList[0].productId);
+        continue;
+      }
+
+      // 2. 檢查是否為飲料
+      if (cId == realDrinkCatId) {
+        this.selections.drinkId = Number(group.detailList[0].productId);
+        continue;
+      }
+
+      // 3. 剩下的就是主餐 (處理複選回填)
+      this.selections.mainCatId = cId;
+      this.selections.mainIds = []; // 先清空，確保乾淨
+
+      // 將該分類下的所有 productId 都推入 mainIds
       for (const item of group.detailList) {
-        const pIdNum = Number(item.productId);
-
-        if (cId == realSideCatId) {
-          this.selections.sideId = pIdNum;
-          continue;
-        }
-
-        if (cId == realDrinkCatId) {
-          this.selections.drinkId = pIdNum;
-          continue;
-        }
-        this.selections.mainCatId = cId;
-        this.selections.mainId = pIdNum;
+        this.selections.mainIds.push(Number(item.productId));
       }
     }
 
+    // 如果有抓到主餐分類，就去後端撈該分類的所有產品列表 (為了顯示 Checkbox)
     if (this.selections.mainCatId > 0) {
-      this.loadMainDishForEdit(this.selections.mainCatId, this.selections.mainId);
+      this.loadMainDishForEdit(this.selections.mainCatId);
     }
   }
 
-  // 專門給編輯模式用的讀取主餐
-  loadMainDishForEdit(categoryId: number, productIdToSelect: number) {
+
+
+  // 編輯模式 > 讀取主餐 > 抓產品分類
+  loadMainDishForEdit(categoryId: number) {
     this.httpClientService.getApi(`http://localhost:8080/product/list?categoryId=${categoryId}`)
       .subscribe((res: any) => {
         if (res.code == 200) {
@@ -275,7 +276,6 @@ onMainCategoryChange() {
               this.mainDishList.push(p);
             }
           }
-          this.selections.mainId = productIdToSelect;
         }
       });
   }

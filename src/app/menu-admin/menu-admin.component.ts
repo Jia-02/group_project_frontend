@@ -37,11 +37,17 @@ export class MenuAdminComponent {
     private dataService: DataService
   ) { }
 
+  readonly dialog = inject(MatDialog);
+
   allCategoryDto: categoryDto[] = []; // 儲存從後端獲取的所有分類
   productList: productList[] = []; // 儲存當前分類的餐點列表
   currentCategoryId: number = 0; // 儲存當前選中的分類 ID
   selectedTabIndex: number = 0; // 目前選中的分類
   isEditMode: boolean = false; // 是否為編輯模式
+  optionList: any[] = []; // 用來儲存客製化選項的陣列
+  setList: any[] = []; // 用來存套餐列表
+  sideDishList: any[] = [];   // 用於儲存附餐列表
+  drinkDishList: any[] = [];  // 用於儲存飲料列表
 
   // 新增單個分類
   categoryDto: categoryDto = {
@@ -49,12 +55,7 @@ export class MenuAdminComponent {
     categoryType: '',
     workstationId: 0,
   };
-  optionList: any[] = []; // 用來儲存客製化選項的陣列
-  setList: any[] = []; // 用來存套餐列表
-  sideDishList: any[] = [];   // 用於儲存附餐列表
-  drinkDishList: any[] = [];  // 用於儲存飲料列表
 
-  readonly dialog = inject(MatDialog);
 
   ngOnInit(): void {
     this.loadCategories();
@@ -70,12 +71,12 @@ export class MenuAdminComponent {
       this.productList = [];
       this.optionList = [];
       this.setList = []; // 清空套餐
-      return;
     }
     const selectedCategory = this.allCategoryDto[selectedCategoryIndex];
 
     if (selectedCategory) {
       this.currentCategoryId = selectedCategory.categoryId;
+      this.optionList = []; // 切換時先清空選項
 
       // 判斷是否為套餐分類
       if (selectedCategory.categoryType == '套餐') {
@@ -98,7 +99,6 @@ export class MenuAdminComponent {
   loadCategories(): void {
     this.httpClientService.getApi('http://localhost:8080/category/list')
       .subscribe((res: any) => {
-        // 成功收到api
         if (res.code == 200) {
           this.allCategoryDto = res.categoryDto; // 更新分類列表
           this.dataService.allCategoryDto = this.allCategoryDto; // 更新到service
@@ -181,6 +181,7 @@ export class MenuAdminComponent {
   }
 
 
+
   // =================== 餐點 =====================
 
   // 抓取餐點列表
@@ -190,7 +191,7 @@ export class MenuAdminComponent {
       .subscribe((res: any) => {
         // 成功收到api
         if (res.code == 200) {
-          this.dataService.productListRes = res;
+          // this.dataService.productListRes = res;
           // 如果api的分類 = tab的分頁
           if (res.categoryId == this.currentCategoryId) {
             this.productList = res.productList || [];
@@ -206,9 +207,9 @@ export class MenuAdminComponent {
     // 找分類對應的飲料
     let currentCategoryType = '';
     for (let categoryData of this.dataService.allCategoryDto) {
-      if (this.dataService.productListRes.categoryId == categoryData.categoryId) {
-        currentCategoryType = categoryData.categoryType;
-      }
+      // if (this.dataService.productListRes.categoryId == categoryData.categoryId) {
+      //   currentCategoryType = categoryData.categoryType;
+      // }
     }
 
     const dialogRef = this.dialog.open(DialogMenuComponent, {
@@ -277,8 +278,8 @@ export class MenuAdminComponent {
         this.loadProducts(this.currentCategoryId);
       }
     });
-    this.loadProducts(this.currentCategoryId);
   }
+
 
   // =================== 套餐 =====================
 
@@ -383,7 +384,6 @@ export class MenuAdminComponent {
         currentCategoryType = c.categoryType;
       }
 
-      // 3. 直接把 pkg 傳進去！
       const dialogRef = this.dialog.open(DialogSetComponent, {
         data: {
           allCategories: this.allCategoryDto,
@@ -410,13 +410,6 @@ export class MenuAdminComponent {
   // 是否上架餐點
   launchSet(pkg: any) {
     pkg.categoryId = this.currentCategoryId;
-    console.log('準備更新套餐狀態:', {
-      name: pkg.settingName,
-      active: pkg.settingActive,
-      categoryId: pkg.categoryId, // 這裡必須有值，且不能是 0
-      fullPkg: pkg
-    });
-
     let cleanDetail = [];
     // 確保有資料才跑迴圈
     if (pkg.settingDetail && Array.isArray(pkg.settingDetail)) {
@@ -468,11 +461,6 @@ export class MenuAdminComponent {
 
   // 刪除套餐
   delSet(pkg: any) {
-    let currentSetId = 0;
-    for (let data of this.setList) {
-      currentSetId = data.settingId;
-    }
-
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       data: {
         deleteType: 'set',
@@ -493,7 +481,7 @@ export class MenuAdminComponent {
     if (!this.allCategoryDto || this.allCategoryDto.length == 0) {
       return '';
     }
-    // 強制轉成 Number 再比較，避免 "2" != 2 的問題
+    // 強制轉成 Number
     const id = Number(categoryId);
     const category = this.allCategoryDto.find(c => c.categoryId == id);
     return category ? category.categoryType : '未知分類';
@@ -503,11 +491,16 @@ export class MenuAdminComponent {
 
   // 客製化列表
   customizedList(categoryId: number) {
+
     const apiUrl = `http://localhost:8080/option/list?categoryId=${categoryId}`;
     this.httpClientService.getApi(apiUrl)
       .subscribe((res: any) => {
         if (res.code == 200) {
           this.optionList = res.optionVoList || [];
+          // this.dataService.optionsCache.push({
+          //   categoryId: categoryId,
+          //   data: this.optionList
+          // });
         } else {
           this.optionList = []; // 失敗或沒資料時清空
         }
@@ -567,6 +560,9 @@ export class MenuAdminComponent {
   }
 
 
+  // ================ 輔助 ===================
+
+
   // 重製分類
   resetForm() {
     this.categoryDto = {
@@ -575,7 +571,6 @@ export class MenuAdminComponent {
       workstationId: 0
     };
   }
-
 
 
   // 轉成 base64
