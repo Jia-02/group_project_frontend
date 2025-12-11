@@ -247,3 +247,17 @@ export interface Option {
   option: string;
   addPrice: number;
 }
+
+export interface MealStatusRes {
+  code: number;
+  message: string;
+  mealStatus: MealStatus;
+}
+
+export interface MealStatus {
+  mealStatusId: number;
+  mealStatus: string;
+  estimatedTime: number;
+  finishTime: string;
+  ordersId: number;
+}
