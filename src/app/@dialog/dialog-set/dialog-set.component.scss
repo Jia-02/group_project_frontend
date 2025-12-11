@@ -1,0 +1,212 @@
+// --- 變數定義 ---
+$primary-color: #013c70;   // 主色：深藍
+$secondary-color: #fe6d13; // 輔色：亮橙
+$text-color: #333;         // 文字：深灰
+$border-color: #ccc;       // 邊框灰
+$bg-input: #fff;           // 輸入框底色
+$bg-hover: #f9f9f9;
+
+// --- Header 樣式 ---
+.dialog-header {
+  background-color: $primary-color;
+  padding: 16px 20px;
+  // 為了抵銷 MatDialog 預設的 padding
+  margin: -24px -24px 20px -24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  h2 {
+    color: white;
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 500;
+  }
+
+  .category-tag {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+  }
+}
+
+// --- 表單容器 ---
+.custom-content {
+  min-width: 500px;
+  padding-bottom: 10px;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px; // 上下間距
+}
+
+// 橫排佈局 (Grid/Flex)
+.form-row {
+  display: flex;
+  gap: 15px;
+
+  .flex-1 { flex: 1; }
+  .flex-2 { flex: 2; }
+
+  .form-group {
+    flex: 1; // 預設平分寬度
+  }
+}
+
+// 分隔線
+.divider {
+  display: flex;
+  align-items: center;
+  margin: 5px 0;
+
+  span {
+    font-size: 0.85rem;
+    color: $primary-color;
+    font-weight: bold;
+    background: #fff;
+    padding-right: 10px;
+  }
+
+  &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background-color: #eee;
+  }
+}
+
+// --- 通用 Form Group 樣式 ---
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px; // Label 與 Input 的距離
+
+  label {
+    font-size: 0.9rem;
+    color: $text-color;
+    font-weight: 500;
+  }
+}
+
+// --- Input & Select 共同樣式 ---
+.custom-input, .custom-select {
+  padding: 8px 12px;
+  border: 1px solid $border-color;
+  border-radius: 4px;
+  font-size: 1rem;
+  color: $text-color;
+  background-color: $bg-input;
+  transition: border-color 0.2s;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box; // 確保 padding 不會撐開寬度
+
+  // Focus 時變成主色
+  &:focus {
+    border-color: $primary-color;
+    box-shadow: 0 0 0 2px rgba($primary-color, 0.1);
+  }
+
+  // Disabled 樣式
+  &:disabled {
+    background-color: #eee;
+    cursor: not-allowed;
+  }
+}
+
+// 價格前綴特殊處理
+.input-with-prefix {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  .prefix {
+    position: absolute;
+    left: 10px;
+    color: #666;
+    font-weight: bold;
+  }
+
+  input {
+    padding-left: 25px; // 留位置給 $ 符號
+  }
+}
+
+// --- 檔案上傳樣式 ---
+.file-upload-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  border: 1px dashed $border-color;
+  border-radius: 4px;
+  background-color: $bg-hover;
+
+  .upload-btn {
+    background-color: white;
+    border: 1px solid $primary-color;
+    color: $primary-color;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+      background-color: $primary-color;
+      color: white;
+    }
+  }
+
+  .file-name {
+    color: $text-color;
+    font-size: 0.9rem;
+  }
+
+  .no-file {
+    color: #999;
+    font-size: 0.85rem;
+  }
+}
+
+// --- 按鈕區塊 ---
+.custom-actions {
+  padding: 16px 24px 16px 0; // 右邊留點空隙
+  border-top: 1px solid #eee;
+
+  .btn {
+    padding: 8px 20px;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    border: none;
+    margin-left: 10px;
+    transition: background-color 0.2s;
+  }
+
+  // 取消按鈕
+  .btn-cancel {
+    background-color: white;
+    border: 1px solid $border-color;
+    color: #666;
+
+    &:hover {
+      background-color: #f0f0f0;
+    }
+  }
+
+  // 確定按鈕 (使用輔色)
+  .btn-confirm {
+    background-color: $secondary-color;
+    color: white;
+    font-weight: bold;
+
+    &:hover {
+      background-color: darken($secondary-color, 10%);
+    }
+  }
+}

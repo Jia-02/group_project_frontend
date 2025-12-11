@@ -7,6 +7,8 @@
       刪除餐點
     } @else if (data.deleteType == 'option') {
       刪除客製化項目
+    } @else if (data.deleteType == 'set') {
+      刪除套餐
     }
   </div>
 
@@ -18,6 +20,8 @@
         確定是否刪掉此餐點? (刪除後將無法復原)
       } @else if (data.deleteType == 'option'){
         確定是否刪掉此筆客製化?
+      } @else if (data.deleteType == 'set'){
+        確定是否刪掉此套餐?
       }
     </div>
   </mat-dialog-content>

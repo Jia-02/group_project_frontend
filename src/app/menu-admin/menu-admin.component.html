@@ -1,59 +1,74 @@
-<div class="background">
+<div class="page">
 
-  <mat-tab-group [(selectedIndex)]="selectedTabIndex" (selectedTabChange)="onTabChange($event)">
+  <!-- 左側：分類與餐點 -->
+  <div class="content">
 
-    @for (category of allCategoryDto; track $index) {
-    <mat-tab [label]="category.categoryType">
+    <mat-tab-group class="category-tabs" [(selectedIndex)]="selectedTabIndex" (selectedTabChange)="onTabChange($event)">
 
-      <mat-icon aria-hidden="false" aria-label="Example remove icon" fontIcon="remove"
-        (click)="delCategory(category)"></mat-icon>
-      <mat-icon aria-hidden="false" aria-label="Example edit icon" fontIcon="edit"
-        (click)="updateCategory(category)"></mat-icon>
+      @for (category of allCategoryDto; track $index) {
+      <mat-tab>
 
-      @if (category.categoryType === '套餐') {
-        <div class="menuItemsBox package-box">
+        <ng-template mat-tab-label>
+          <div class="tab-label">
+            <span>{{ category.categoryType }}</span>
+
+            <button mat-icon-button (click)="updateCategory(category); $event.stopPropagation()">
+              <mat-icon>edit</mat-icon>
+            </button>
+
+            <button mat-icon-button color="warn" (click)="delCategory(category); $event.stopPropagation()">
+              <mat-icon>remove</mat-icon>
+            </button>
+          </div>
+        </ng-template>
+
+
+        <!-- 套餐 -->
+        @if (category.categoryType === '套餐') {
+        <div class="card-grid">
 
           @for (pkg of setList; track $index) {
-          <div class="menuItem packageItem"
-            style="border: 1px solid #ddd; padding: 10px; margin-bottom: 10px; border-radius: 8px;">
-            <img [src]="pkg.settingImg || 'assets/default-package.jpg'" alt="套餐圖片"
-              style="width: 100px; height: 100px; object-fit: cover;">
+          <div class="card package-card">
 
-            <div class="item-header" style="display: flex; justify-content: space-between; font-weight: bold;">
-              <div class="item-title">{{ pkg.settingName }}</div>
-              <div class="item-price" style="color: red;">${{ pkg.settingPrice }}</div>
-            </div>
+            <img [src]="pkg.settingImg || 'assets/default-package.jpg'">
 
-            <div class="item-note" style="color: gray; font-size: 0.9em;">{{ pkg.settingNote }}</div>
+            <div class="card-body">
+              <div class="card-title">{{ pkg.settingName }}</div>
+              <div class="price">${{ pkg.settingPrice }}</div>
 
-            <div class="package-content-list"
-              style="background: #f5f5f5; padding: 5px; margin-top: 5px; border-radius: 4px;">
-              <small>內容物：</small>
-              @for (group of pkg.settingDetail; track $index) {
-              <div class="content-group">
-                <span
-                  style="background: #e0e0e0; padding: 2px 5px; border-radius: 3px; font-size: 0.8em; margin-right: 5px;">
-                  分類ID: {{ group.categoryId }}
-                </span>
-                @for (item of group.detailList; track $index) {
-                <span style="font-size: 0.8em;"> [產品ID:{{ item.productId }}] </span>
+              <div class="note">{{ pkg.settingNote }}</div>
+
+              <div class="package-detail">
+                @for (group of pkg.settingDetail; track $index) {
+                <div class="detail-row">
+                  <span class="tag category">
+                    {{ getCategoryName(group.categoryId) }}
+                  </span>
+                  @for (item of group.detailList; track $index) {
+                  <span class="tag product">
+                    {{ item.productName || item.productId }}
+                  </span>
+                  }
+                </div>
                 }
               </div>
-              }
             </div>
 
-            <div class="action-footer" style="margin-top: 10px; display: flex; justify-content: space-between;">
-              <mat-slide-toggle [(ngModel)]="pkg.settingActive">上架</mat-slide-toggle>
+            <div class="card-footer">
+              <mat-slide-toggle [(ngModel)]="pkg.settingActive" (change)="launchSet(pkg)">
+                上架
+              </mat-slide-toggle>
 
               <button mat-icon-button [matMenuTriggerFor]="pkgMenu">
                 <mat-icon>more_vert</mat-icon>
               </button>
+
               <mat-menu #pkgMenu="matMenu">
-                <button mat-menu-item>
-                  <mat-icon>edit</mat-icon><span>編輯套餐</span>
+                <button mat-menu-item (click)="updateSet(pkg)">
+                  <mat-icon>edit</mat-icon> 編輯
                 </button>
-                <button mat-menu-item>
-                  <mat-icon>delete</mat-icon><span>刪除套餐</span>
+                <button mat-menu-item (click)="delSet(pkg)">
+                  <mat-icon>delete</mat-icon> 刪除
                 </button>
               </mat-menu>
             </div>
@@ -61,124 +76,111 @@
           </div>
           }
 
-          @if (setList.length == 0) {
-          <div class="empty-msg" style="padding: 20px; text-align: center; color: gray;">
-            目前沒有設定任何套餐
-          </div>
-          }
-
-          <div class="addProductCss"  (click)="addSets()">
-            <div class="addContent">
-              <div>新增套餐</div>
-              <div class="addIcon">+</div>
-            </div>
-          </div>
-
+          <div class="card add-card" (click)="addSets()">＋ 新增套餐</div>
         </div>
-      }
+        }
 
-      @else {
-        <div class="menuItemsBox">
+        <!-- 一般餐點 -->
+        @else {
+        <div class="card-grid">
+
           @for (product of productList; track $index) {
-          <div class="menuItem">
-            <img [src]="product.imageUrl" alt="{{ product.imageUrl }}">
-            <div>{{ product.productName }}</div>
-            <div>{{ product.productDescription }}</div>
-            <div>${{ product.productPrice }}</div>
+          <div class="card">
 
-            <p><mat-slide-toggle [(ngModel)]="product.productActive"
-                (click)="launchProduct(product)">是否上架</mat-slide-toggle></p>
+            <img [src]="product.imageUrl">
 
-            <button matIconButton [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
-              <mat-icon>more_vert</mat-icon>
-            </button>
-            <mat-menu #menu="matMenu">
-              <button mat-menu-item (click)="delProduct(product)">
-                <mat-icon>remove</mat-icon>
-                <span>刪除餐點</span>
-              </button>
-
-              <button mat-menu-item (click)="updateProduct(product)">
-                <mat-icon>edit</mat-icon>
-                <span>編輯</span>
-              </button>
-            </mat-menu>
-
-          </div>
-          }
-
-          @if (productList.length == 0) {
-          <div>此分類目前沒有餐點唷~</div>
-          }
-
-          <div class="addProductCss" (click)="addProduct()">
-            <div class="addContent">
-              <div>新增餐點</div>
-              <div class="addIcon">+</div>
+            <div class="card-body">
+              <div class="card-title">{{ product.productName }}</div>
+              <div class="note">{{ product.productDescription }}</div>
+              <div class="price">${{ product.productPrice }}</div>
             </div>
-          </div>
 
+            <div class="card-footer">
+              <mat-slide-toggle [(ngModel)]="product.productActive" (change)="launchProduct(product)">
+                上架
+              </mat-slide-toggle>
+
+              <button mat-icon-button [matMenuTriggerFor]="menu">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="updateProduct(product)">
+                  <mat-icon>edit</mat-icon> 編輯
+                </button>
+                <button mat-menu-item (click)="delProduct(product)">
+                  <mat-icon>delete</mat-icon> 刪除
+                </button>
+              </mat-menu>
+            </div>
+
+          </div>
+          }
+
+          <div class="card add-card" (click)="addProduct()">＋ 新增餐點</div>
         </div>
+        }
+
+      </mat-tab>
       }
 
-    </mat-tab>
+      <!-- 新增分類 Tab -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon>add</mat-icon>
+        </ng-template>
+
+        <div class="add-category-form">
+          <h3>新增分類</h3>
+
+          <label>分類名稱</label>
+          <input [(ngModel)]="categoryDto.categoryType">
+
+          <label>工作檯</label>
+          <select [(ngModel)]="categoryDto.workstationId">
+            <option value="">請選擇</option>
+            <option [ngValue]="1">飲品區</option>
+            <option [ngValue]="2">熱食區</option>
+          </select>
+
+          <button (click)="addCategory()">建立分類</button>
+        </div>
+      </mat-tab>
+
+    </mat-tab-group>
+  </div>
+
+  <!-- 右側：客製化 -->
+  @if (currentCategoryId > 0) {
+  <aside class="customize-sidebar">
+
+    <div class="sidebar-title">客製化選項</div>
+
+    @for (option of optionList; track $index) {
+    <div class="customize-group">
+
+      <div class="customize-header">
+        <span>{{ option.optionName }}</span>
+        <div>
+          <mat-icon (click)="updateCustomized(option)">edit</mat-icon>
+          <mat-icon (click)="delCustomized(option)">delete</mat-icon>
+        </div>
+      </div>
+
+      @for (detail of option.optionDetail; track $index) {
+      <label class="customize-item">
+        <input type="radio">
+        {{ detail.option }}
+        @if (detail.addPrice > 0) {
+        <span class="extra">+ ${{ detail.addPrice }}</span>
+        }
+      </label>
+      }
+    </div>
     }
 
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <mat-icon>add_circle_outline</mat-icon>
-      </ng-template>
-
-      <div>新增分類</div>
-      <label>分類名稱</label>
-      <input type="text" [(ngModel)]="categoryDto.categoryType">
-      <label>工作檯安排</label>
-      <select [(ngModel)]="categoryDto.workstationId">
-        <option value="">--請選擇--</option>
-        <option [ngValue]="1">1號飲品區</option>
-        <option [ngValue]="2">2號熱食區</option>
-      </select>
-
-      <button (click)="addCategory()">確定</button>
-    </mat-tab>
-  </mat-tab-group>
-
-
-  @if (currentCategoryId > 0){
-  <div class="customizeBox">
-    <div class="sectionTitle">客製化專區</div>
-
-    <div class="optionsBox">
-
-      @for (option of optionList; track $index) {
-      <div class="optionGroup">
-        <div class="groupTitle">{{ option.optionName }}</div>
-        <mat-icon aria-hidden="false" aria-label="Example remove icon" fontIcon="remove"
-          (click)="delCustomized(option)"></mat-icon>
-        <mat-icon aria-hidden="false" aria-label="Example edit icon" fontIcon="edit"
-          (click)="updateCustomized(option)"></mat-icon>
-
-        @for (detail of option.optionDetail; track $index) {
-        <label class="radioItem">
-          <input type="radio" [name]="'option' + option.optionId" [value]="detail.option">
-          {{ detail.option }}
-
-          @if (detail.addPrice > 0) {
-          <span class="priceTag">+ ${{ detail.addPrice }}</span>
-          }
-        </label>
-        }
-      </div>
-      }
-
-      <mat-icon aria-hidden="false" aria-label="Example add icon" fontIcon="add" (click)="addCustomized()"></mat-icon>
-
-      @if (optionList.length == 0) {
-      <div style="padding: 20px; color: gray;">此分類目前沒有客製化選項</div>
-      }
-
-    </div>
-  </div>
+    <button class="add-customize" (click)="addCustomized()">＋ 新增客製化</button>
+  </aside>
   }
 
 </div>

@@ -29,7 +29,7 @@ export class DialogDeleteComponent {
 
   onCheckClick() {
 
-    // A：刪除預約
+    // 刪除預約
     if (this.data.deleteType == 'reservation') {
       const payload = {
         reservationDate: this.data.reservationDate,
@@ -46,7 +46,7 @@ export class DialogDeleteComponent {
     }
 
 
-    // B：刪除餐點
+    // 刪除餐點
     else if (this.data.deleteType == 'product') {
       const payload = {
         categoryId: this.data.categoryId,
@@ -65,7 +65,7 @@ export class DialogDeleteComponent {
     }
 
 
-    // C：刪除客製化
+    // 刪除客製化
     else if (this.data.deleteType == 'option') {
       const payload = {
         categoryId: this.data.categoryId,
@@ -81,8 +81,26 @@ export class DialogDeleteComponent {
             console.log('刪除失敗', res);
           }
         });
-
-
     }
+
+    // 刪除套餐
+    else if (this.data.deleteType == 'set') {
+      const payload = {
+        categoryId: this.data.categoryId,
+        settingId: this.data.settingId
+      };
+
+      this.httpClientService.postApi('http://localhost:8080/setting/del', payload)
+        .subscribe((res: any) => {
+          if (res.code == 200) {
+            console.log('餐點刪除成功', res);
+            this.dialogRef.close(true);
+          } else {
+            console.log('刪除失敗', res);
+          }
+        });
+    }
+
+
   }
 }

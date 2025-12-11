@@ -136,6 +136,14 @@ export class DialogReserveComponent {
     if (!this.reservation.reservationDate || !this.reservation.reservationTime || !this.reservation.tableId) {
       return;
     }
+
+    //判斷電話需7-10碼
+    const phone = this.reservation.reservationPhone;
+    if (phone.length < 7 || phone.length > 10) {
+      alert('電話號碼需為 7 到 10 碼');
+      return; // 不送出
+    }
+
     this.httpClientService.postApi('http://localhost:8080/reservation/create', this.reservation)
       .subscribe((res: any) => {
         if (res.code == 200) {
@@ -207,5 +215,12 @@ export class DialogReserveComponent {
     let month = (date.getMonth() + 1).toString().padStart(2, '0'); // padStart: 若只有 1 位數，前面補 0
     let day = date.getDate().toString().padStart(2, '0');
     return year + "-" + month + "-" + day;
+  }
+
+  // 電話輸入限制 只允許數字
+  onPhoneInput(event: any) {
+    const input = event.target as HTMLInputElement;
+    input.value = input.value.replace(/[^0-9]/g, '');
+    this.reservation.reservationPhone = input.value;
   }
 }
