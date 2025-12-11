@@ -1,83 +1,125 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { DataService } from '../data/data.service'; // 導入 DataService
+import { CommonModule } from '@angular/common';
+import { MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle, MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { MatIcon } from '@angular/material/icon';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-product-detail-dialog',
+  imports: [
+    MatDialogTitle,
+    MatDialogContent,
+    MatDialogActions,
+    CommonModule,
+    MatIcon,
+    FormsModule,
+  ],
   templateUrl: './product-detail-dialog.component.html',
   styleUrl: './product-detail-dialog.component.scss'
 })
-export class ProductDetailDialogComponent implements OnInit {
-
-  private baseUrl = 'http://localhost:8080';
-
-  public itemDetail: DetailItem | null = null;
-  public purchaseQuantity: number = 1;
-  public isLoading = true;
-
+export class ProductDetailDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<ProductDetailDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData,
-    private dataService: DataService
+    @Inject(MAT_DIALOG_DATA) public data: FullProductDetail,
   ) { }
 
+  public quantity: number = 1;
+  public currentPrice: number = 0;
+  public currentSelections: Map<number, Set<string>> = new Map();
+
   ngOnInit(): void {
-    this.loadItemDetail();
+    this.data.optionList.forEach(group => {
+      this.currentSelections.set(group.optionId, new Set<string>());
+    });
+
+    this.calculateTotalPrice();
   }
 
-  loadItemDetail(): void {
-    let detailUrl: string;
+  calculateTotalPrice(): void {
+    let optionsPrice = 0;
 
-    if (this.data.type === 'product' && this.data.categoryId && this.data.productId) {
-      // 單點詳細查詢 getApi：http://localhost:8080/product/detail
-      // 雙 key：categoryId , productId
-      detailUrl = `${this.baseUrl}/product/detail?categoryId=${this.data.categoryId}&productId=${this.data.productId}`;
-    } else if (this.data.type === 'setting' && this.data.settingId) {
-      // 套餐詳細查詢 getApi：http://localhost:8080/setting/detail
-      // key：settingId
-      detailUrl = `${this.baseUrl}/setting/detail?settingId=${this.data.settingId}`;
-    } else {
-      console.error('彈窗資料無效或缺少必要的 ID。');
-      this.isLoading = false;
+    this.data.optionList.forEach(group => {
+      const selectedOptions = this.currentSelections.get(group.optionId);
+
+      if (selectedOptions) {
+        group.optionDetail.forEach(item => {
+          if (selectedOptions.has(item.option)) {
+            optionsPrice += item.addPrice;
+          }
+        });
+      }
+    });
+
+    this.currentPrice = (this.data.productPrice + optionsPrice) * this.quantity;
+  }
+
+  incrementQuantity(): void {
+    this.quantity++;
+    this.calculateTotalPrice();
+  }
+
+  decrementQuantity(): void {
+    if (this.quantity > 1) {
+      this.quantity--;
+      this.calculateTotalPrice();
+    }
+  }
+
+  handleOptionChange(group: OptionDetail, optionItem: Option, isChecked: boolean): void {
+    const selectedOptions = this.currentSelections.get(group.optionId);
+
+    if (!selectedOptions) {
       return;
     }
 
-    this.dataService.getApi(detailUrl).subscribe((detail: DetailItem) => {
-        this.itemDetail = detail;
-        this.isLoading = false;
-      }
-    );
-  }
+    selectedOptions.clear();
 
-  adjustQuantity(delta: number): void {
-    const newQuantity = this.purchaseQuantity + delta;
-    if (newQuantity >= 1) {
-      this.purchaseQuantity = newQuantity;
-    }
+    selectedOptions.add(optionItem.option);
+
+    this.calculateTotalPrice();
   }
 
   addToCart(): void {
-    if (this.itemDetail) {
-      console.log('加入購物車:', this.itemDetail.name, '數量:', this.purchaseQuantity);
-      this.dialogRef.close();
+    const selectedOptionsMap: { [key: number]: string[] } = {};
+    this.currentSelections.forEach((options, optionId) => {
+      selectedOptionsMap[optionId] = Array.from(options);
+    });
+
+    const itemToAdd = {
+      price: this.currentPrice,
+      quantity: this.quantity,
+      selectedOptions: selectedOptionsMap
     }
+
+    this.dialogRef.close(itemToAdd);
   }
 
-  onNoClick(): void {
-    this.dialogRef.close();
-  }
 }
 
-interface DetailItem {
-  name: string;
-  price: number;
-  image: string;
-  customizations: { name: string, options: string[] }[];
+interface Option {
+  option: string;
+  addPrice: number;
 }
 
-interface DialogData {
-  type: 'product' | 'setting';
-  categoryId?: number;
-  productId?: number;
-  settingId?: number;
+interface OptionDetail {
+  optionId: number;
+  optionName: string;
+  maxSelect: number;
+  optionDetail: Option[];
 }
+
+interface FullProductDetail {
+  categoryId: number;
+  productId: number;
+  productName: string;
+  productPrice: number;
+  categoryType: string;
+  productDescription: string;
+  productNote: string;
+  imageUrl: string;
+  productActive: boolean;
+  workstationId: number;
+  quantity: number,
+  optionList: OptionDetail[];
+}
+

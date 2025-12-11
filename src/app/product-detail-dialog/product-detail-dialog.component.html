@@ -1,1 +1,56 @@
-<p>product-detail-dialog works!</p>
+<h2 mat-dialog-title>
+    {{ data.productName }}
+  <button (click)="dialogRef.close()">
+    <mat-icon>close</mat-icon>
+  </button>
+</h2>
+
+<mat-dialog-content>
+  <img [src]="data.imageUrl" alt="{{ data.productName }}">
+  <span>NT$ {{ data.productPrice }}</span>
+  <p>{{ data.productDescription }}</p>
+  <h3>客製化選項</h3>
+  @if (data.optionList.length) {
+    @for (optionGroup of data.optionList; track optionGroup.optionId) {
+      {{ optionGroup.optionName }}    最多選擇 {{ optionGroup.maxSelect }} 項<br>
+      @for (optionItem of optionGroup.optionDetail; track optionItem.option) {
+        @if (currentSelections.get(optionGroup.optionId); as selectedSet) {
+          @if (optionGroup.maxSelect > 1) {
+            <input
+              type="checkbox"
+              [checked]="selectedSet.has(optionItem.option)"
+              [disabled]="!selectedSet.has(optionItem.option) && selectedSet.size >= optionGroup.maxSelect"
+              (change)="selectedSet.clear();selectedSet.add(optionItem.option);calculateTotalPrice();">
+          } @else {
+            <input
+              type="radio"
+              [name]="'optionGroup_' + optionGroup.optionId"
+              [checked]="selectedSet.has(optionItem.option)"
+              (change)="
+                selectedSet.clear();
+                selectedSet.add(optionItem.option);
+                calculateTotalPrice();
+              ">
+          }
+
+          {{ optionItem.option }} (+NT$ {{ optionItem.addPrice }})<br>
+        }
+      }
+    }
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button (click)="decrementQuantity()"><mat-icon>remove</mat-icon></button>
+  <input type="number" [(ngModel)]="quantity" min="1" class="numberCss">
+  <button (click)="incrementQuantity()"><mat-icon>add</mat-icon></button>
+</mat-dialog-actions>
+
+<mat-dialog-actions>
+  <h3>總價格:{{ currentPrice }}</h3>
+  <button [disabled]="!quantity || quantity <= 0" (click)="addToCart()" class="buttonCss">
+    加入購物車
+  </button>
+</mat-dialog-actions>
+
+

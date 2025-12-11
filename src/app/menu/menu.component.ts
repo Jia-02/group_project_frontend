@@ -4,6 +4,7 @@ import { MatTabChangeEvent, MatTabsModule } from '@angular/material/tabs';
 import { DataService } from '../data/data.service';
 import { Observable, of } from 'rxjs';
 import { ProductDetailDialogComponent } from '../product-detail-dialog/product-detail-dialog.component';
+import { SettingDetailDialogComponent } from '../setting-detail-dialog/setting-detail-dialog.component';
 
 @Component({
   selector: 'app-menu',
@@ -100,24 +101,43 @@ export class MenuComponent {
     }
   }
 
-  openProductDetail(categoryId: number, productId: number): void {
-    const isSetting = this.categories.some(c => c.categoryId === categoryId && c.categoryType === this.SETTING_TAB_LABEL);
+  openProductDetail(categoryId: number, itemId: number): void {
+    const isSetting = this.categories.some(c =>
+      c.categoryId === categoryId && c.categoryType === this.SETTING_TAB_LABEL
+    );
 
-    this.dialog.open(ProductDetailDialogComponent, {
-      width: '400px',
-      data: {
-        type: isSetting ? 'setting' : 'product',
-        categoryId: categoryId,
-        productId: productId,
-        settingId: isSetting ? productId : undefined
+    let detailUrl: string;
+
+    if (isSetting) {
+      detailUrl = `http://localhost:8080/setting/detail?settingId=${itemId}`;
+      console.log('準備載入套餐詳情:', detailUrl);
+    } else {
+      detailUrl = `http://localhost:8080/product/detail?categoryId=${categoryId}&productId=${itemId}`;
+      console.log('準備載入單點詳情:', detailUrl);
+    }
+
+    this.dataService.getApi(detailUrl).subscribe((res: any) => {
+
+      if (res.code == 200) {
+
+        console.log('獲取詳情成功:', res);
+
+        if (isSetting) {
+          this.dialog.open(SettingDetailDialogComponent, {
+            width: '400px',
+            height: '900px',
+            data: res
+          })
+        } else {
+          this.dialog.open(ProductDetailDialogComponent, {
+            width: '400px',
+            height: '900px',
+            data: res
+          })
+        }
       }
-    });
+    })
   }
-
-  openSettingDetail(settingId: number): void {
-    // 暫時留空
-  }
-
 }
 
 interface Product {
@@ -125,13 +145,6 @@ interface Product {
   productName: string;
   productPrice: number;
   imageUrl: string;
-}
-
-interface SettingItem {
-  settingId: number;
-  settingName: string;
-  settingPrice: number;
-  // settingDetail: Product[];
 }
 
 interface Category {
@@ -142,16 +155,4 @@ interface Category {
   isLoadingProducts?: boolean;
 }
 
-interface ProductApiResponse {
-  code: number;
-  message: string;
-  categoryId: number;
-  productList: Product[];
-}
 
-interface SettingApiResponse {
-  code: number;
-  message: string;
-  categoryId: number;
-  optionVoList: SettingItem[];
-}
