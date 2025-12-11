@@ -5,6 +5,8 @@ import { DataService } from '../data/data.service';
 import { Observable, of } from 'rxjs';
 import { ProductDetailDialogComponent } from '../product-detail-dialog/product-detail-dialog.component';
 import { SettingDetailDialogComponent } from '../setting-detail-dialog/setting-detail-dialog.component';
+import { OrderService } from '../order.service';
+import { SendOrderDialogComponent } from '../send-order-dialog/send-order-dialog.component';
 
 @Component({
   selector: 'app-menu',
@@ -15,6 +17,12 @@ import { SettingDetailDialogComponent } from '../setting-detail-dialog/setting-d
   styleUrl: './menu.component.scss'
 })
 export class MenuComponent {
+  ordersType: string = '';
+  tableId: string = '';
+  currentCart: any[] = [];
+
+  displayOrderType: string = '';
+  displayTableId: string = '';
 
   public categories: Category[] = [];
   private SETTING_TAB_LABEL = '套餐';
@@ -22,11 +30,25 @@ export class MenuComponent {
 
   constructor(
     private dataService: DataService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private orderService: OrderService
   ) { }
 
   ngOnInit(): void {
+    this.loadOrderDataFromService();
     this.loadInitialData();
+  }
+
+  loadOrderDataFromService(): void {
+    const order = this.orderService.currentOrder;
+
+    this.ordersType = order.ordersType;
+    this.tableId = order.tableId || '';
+
+    this.displayOrderType = ORDER_TYPE_MAP[this.ordersType] || '未知模式';
+    this.displayTableId = this.tableId;
+
+    this.currentCart = order.orderDetailsList;
   }
 
   loadInitialData(): void {
@@ -110,32 +132,75 @@ export class MenuComponent {
 
     if (isSetting) {
       detailUrl = `http://localhost:8080/setting/detail?settingId=${itemId}`;
-      console.log('準備載入套餐詳情:', detailUrl);
     } else {
       detailUrl = `http://localhost:8080/product/detail?categoryId=${categoryId}&productId=${itemId}`;
-      console.log('準備載入單點詳情:', detailUrl);
     }
 
     this.dataService.getApi(detailUrl).subscribe((res: any) => {
-
       if (res.code == 200) {
-
         console.log('獲取詳情成功:', res);
+        let dialogRef;
 
         if (isSetting) {
-          this.dialog.open(SettingDetailDialogComponent, {
+          dialogRef = this.dialog.open(SettingDetailDialogComponent, {
             width: '400px',
             height: '900px',
             data: res
-          })
+          });
         } else {
-          this.dialog.open(ProductDetailDialogComponent, {
+          dialogRef = this.dialog.open(ProductDetailDialogComponent, {
             width: '400px',
             height: '900px',
             data: res
-          })
+          });
         }
+
+        dialogRef.afterClosed().subscribe((result: any) => {
+          if (result && result.itemDetail) {
+            this.addOrderDetailItemToCart(result);
+          }
+        });
       }
+    });
+  }
+
+  addOrderDetailItemToCart(item: any): void {
+    const quantity = item.itemDetail.quantity;
+
+    if (!quantity || quantity < 1) return;
+
+    for (let i = 0; i < quantity; i++) {
+      const newDetailItem = {
+        ...item,
+        orderDetailsId: this.orderService.currentOrder.orderDetailsList.length + 1 + i,
+        orderDetailsPrice: item.itemDetail.pricePerUnit,
+
+        orderDetails: item.itemDetail.orderDetails,
+        settingOptions: item.itemDetail.settingOptions,
+      };
+
+      this.orderService.currentOrder.orderDetailsList.push(newDetailItem);
+    }
+
+    this.currentCart = this.orderService.currentOrder.orderDetailsList;
+
+    console.log('已加入購物車。當前總項數:', this.currentCart.length);
+  }
+
+  submitCart() {
+    if (this.currentCart.length === 0) {
+      alert('請至少選擇一個商品！');
+      return;
+    }
+
+    const finalOrder = this.orderService.currentOrder;
+
+    console.log(finalOrder);
+
+    this.dialog.open(SendOrderDialogComponent, {
+      width: '500px',
+      height: '900px',
+      data: finalOrder,
     })
   }
 }
@@ -155,4 +220,8 @@ interface Category {
   isLoadingProducts?: boolean;
 }
 
-
+const ORDER_TYPE_MAP: { [key: string]: string } = {
+  'A': '內用', // A: In-store / Dine-in
+  'T': '外帶', // T: Take-out
+  'D': '外送', // D: Delivery
+};

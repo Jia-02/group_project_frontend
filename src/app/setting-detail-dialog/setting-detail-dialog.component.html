@@ -12,10 +12,10 @@
   @if (data.settingDetail.length) {
     @for (categoryGroup of data.settingDetail; track categoryGroup.categoryId) {
       @for (productGroup of categoryGroup.detailList; track productGroup.productId){
-        <input type="radio"  [name]="'mainProduct_' + categoryGroup.categoryId"
+        <h4><input type="radio"  [name]="'mainProduct_' + categoryGroup.categoryId"
         [checked]="selectedMainProduct.get(categoryGroup.categoryId) === productGroup.productId"
         (change)="handleMainProductChange(categoryGroup, productGroup)">
-        {{ productGroup.productName }} (單點價格: {{ productGroup.productPrice }})<br>
+        {{ productGroup.productName }} (單點價格: {{ productGroup.productPrice }})  可能過敏原:{{ productGroup.productNote }}</h4>
       }
       @for (optionGroup of categoryGroup.optionList; track optionGroup.optionId) {
         {{ optionGroup.optionName }} 最多選擇 {{ optionGroup.maxSelect }} 項<br>

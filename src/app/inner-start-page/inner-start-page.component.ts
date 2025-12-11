@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { OrderService } from '../order.service';
 
 @Component({
   selector: 'app-inner-start-page',
@@ -7,5 +9,22 @@ import { Component } from '@angular/core';
   styleUrl: './inner-start-page.component.scss'
 })
 export class InnerStartPageComponent {
-  // 桌號抓table的qrcode的資料，之後會包在傳出訂單時到send-order-dialog
+  tableId!: string;
+
+  constructor(
+    private router: Router,
+    private orderService: OrderService
+  ) {}
+
+  startDineInOrder(){
+    this.orderService.currentOrder.ordersType = 'A';
+    this.orderService.currentOrder.tableId = this.tableId;
+
+    this.enterMenu();
+  }
+
+  enterMenu() {
+    console.log(this.orderService.currentOrder);
+    this.router.navigate(['/menu']);
+  }
 }

@@ -1,3 +1,8 @@
+@if(ordersType == 'A'){
+  <h2>{{ displayOrderType }} 桌號: {{ displayTableId }}</h2>
+} @else {
+  <h2>{{ displayOrderType }}</h2>
+}
 <div>
   @if (!isLoadingCategories) {
   <mat-tab-group (selectedTabChange)="onTabChange($event)">
@@ -23,4 +28,4 @@
   </mat-tab-group>
   }
 </div>
-<button class="buttonCss">送出購物車</button>
+<button class="buttonCss" (click)="submitCart()">送出購物車</button>

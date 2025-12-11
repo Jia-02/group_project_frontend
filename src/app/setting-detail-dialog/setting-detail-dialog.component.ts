@@ -112,24 +112,66 @@ export class SettingDetailDialogComponent {
   }
 
   addToCart(): void {
-    const selectedOptionsMap: { [key: number]: string[] } = {};
-    this.currentSelections.forEach((options, optionId) => {
-      selectedOptionsMap[optionId] = Array.from(options);
+    const settingDetailList: DetailOption[] = [];
+    let settingOptionsPrice = 0;
+
+    this.settingOptionList.forEach(group => {
+      const selectedOptions = this.currentSelections.get(group.optionId);
+      if (selectedOptions) {
+        group.optionDetail.forEach(optionItem => {
+          if (selectedOptions.has(optionItem.option)) {
+            settingDetailList.push({
+              option: optionItem.option,
+              addPrice: optionItem.addPrice
+            });
+            settingOptionsPrice += optionItem.addPrice;
+          }
+        });
+      }
     });
 
-    const selectedMainProducts: { [key: number]: number } = {};
-    this.selectedMainProduct.forEach((productId, categoryId) => {
-      selectedMainProducts[categoryId] = productId;
+    const orderDetails: OrderDetailProduct[] = [];
+    let mainProductTotalAddPrice = 0;
+
+    this.data.settingDetail.forEach(categoryGroup => {
+      const selectedProductId = this.selectedMainProduct.get(categoryGroup.categoryId);
+
+      if (selectedProductId) {
+        const selectedProduct = categoryGroup.detailList.find(d => d.productId === selectedProductId);
+
+        if (selectedProduct) {
+          const productAddPrice = this.selectedMainProductPrice.get(categoryGroup.categoryId) || 0;
+          mainProductTotalAddPrice += productAddPrice;
+
+          orderDetails.push({
+            categoryId: categoryGroup.categoryId,
+            productId: selectedProduct.productId,
+            productName: selectedProduct.productName,
+            productPrice: selectedProduct.productPrice,
+            detailList: []
+          });
+        }
+      }
     });
 
-    const itemToAdd = {
-      price: this.currentPrice,
-      quantity: this.quantity,
-      selectedOptions: selectedOptionsMap,
-      selectedMainProducts: selectedMainProducts
-    }
+    const itemPricePerUnit = this.data.settingPrice + settingOptionsPrice + mainProductTotalAddPrice;
+    const orderDetailsPrice = itemPricePerUnit * this.quantity;
 
-    this.dialogRef.close(itemToAdd);
+    const orderDetailItem = {
+      orderDetailsId: 0,
+      orderDetailsPrice: orderDetailsPrice,
+      settingId: this.data.settingId,
+
+      itemDetail: {
+        orderDetails: orderDetails,
+        settingOptions: settingDetailList,
+
+        quantity: this.quantity,
+        pricePerUnit: itemPricePerUnit
+      }
+    };
+
+    this.dialogRef.close(orderDetailItem);
   }
 }
 
@@ -173,3 +215,22 @@ interface Detail {
   imageUrl: string;
 }
 
+interface OrderDetailItem {
+  orderDetailsId: number;
+  orderDetailsPrice: number;
+  settingId: number;
+  orderDetails: OrderDetailProduct[];
+}
+
+interface OrderDetailProduct {
+  categoryId: number;
+  productId: number;
+  productName: string;
+  productPrice: number;
+  detailList: DetailOption[];
+}
+
+interface DetailOption {
+  option: string;
+  addPrice: number;
+}

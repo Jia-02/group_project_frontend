@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-non-inner-start-page',
@@ -7,13 +8,15 @@ import { Component } from '@angular/core';
   styleUrl: './non-inner-start-page.component.scss'
 })
 export class NonInnerStartPageComponent {
+  constructor(private router: Router) {}
+
   takeOut() {
-    // 外帶 (Takeout) - 附加參數 ?ordersType=T
-    window.location.href = '/customer-information?ordersType=T';
+    // 導航到顧客資訊頁，並使用**查詢參數**傳遞訂單類型
+    this.router.navigate(['/customer-information'], { queryParams: { ordersType: 'T' } });
   }
 
   delivery() {
-    // 外送 (Delivery) - 附加參數 ?ordersType=D
-    window.location.href = '/customer-information?ordersType=D';
+    // 導航到顧客資訊頁，並使用**查詢參數**傳遞訂單類型
+    this.router.navigate(['/customer-information'], { queryParams: { ordersType: 'D' } });
   }
 }

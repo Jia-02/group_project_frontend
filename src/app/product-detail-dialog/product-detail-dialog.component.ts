@@ -80,19 +80,49 @@ export class ProductDetailDialogComponent {
   }
 
   addToCart(): void {
-    const selectedOptionsMap: { [key: number]: string[] } = {};
-    this.currentSelections.forEach((options, optionId) => {
-      selectedOptionsMap[optionId] = Array.from(options);
+    const detailList: DetailOption[] = [];
+    let optionsPrice = 0;
+
+    this.data.optionList.forEach(group => {
+        const selectedOptions = this.currentSelections.get(group.optionId);
+
+        if (selectedOptions) {
+            group.optionDetail.forEach(optionItem => {
+                if (selectedOptions.has(optionItem.option)) {
+                    detailList.push({
+                        option: optionItem.option,
+                        addPrice: optionItem.addPrice
+                    });
+                    optionsPrice += optionItem.addPrice;
+                }
+            });
+        }
     });
 
-    const itemToAdd = {
-      price: this.currentPrice,
-      quantity: this.quantity,
-      selectedOptions: selectedOptionsMap
-    }
+    const itemPricePerUnit = this.data.productPrice + optionsPrice;
+    const orderDetailsPrice = itemPricePerUnit * this.quantity;
 
-    this.dialogRef.close(itemToAdd);
-  }
+    const orderDetailItem = {
+        orderDetailsId: 0,
+        orderDetailsPrice: orderDetailsPrice,
+        settingId: 0,
+        itemDetail: {
+            orderDetails: [
+                {
+                    categoryId: this.data.categoryId,
+                    productId: this.data.productId,
+                    productName: this.data.productName,
+                    productPrice: this.data.productPrice,
+                    detailList: detailList
+                }
+            ],
+            quantity: this.quantity,
+            pricePerUnit: itemPricePerUnit
+        }
+    };
+
+    this.dialogRef.close(orderDetailItem);
+}
 
 }
 
@@ -123,3 +153,22 @@ interface FullProductDetail {
   optionList: OptionDetail[];
 }
 
+interface OrderDetailItem {
+  orderDetailsId: number;
+  orderDetailsPrice: number;
+  settingId: number;
+  orderDetails: OrderDetailProduct[];
+}
+
+interface OrderDetailProduct {
+  categoryId: number;
+  productId: number;
+  productName: string;
+  productPrice: number;
+  detailList: DetailOption[];
+}
+
+interface DetailOption {
+  option: string;
+  addPrice: number;
+}

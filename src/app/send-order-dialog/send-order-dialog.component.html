@@ -1,13 +1,13 @@
 <h2 mat-dialog-title>點餐資訊</h2>
 
 <mat-dialog-content>
-  <p>訂單類型:{{ data.orderType }}</p>
-  @if(data.orderType === 'A'){
+  <p>訂單類型:{{ data.ordersType }}</p>
+  @if(data.ordersType === 'A'){
   <p>桌號:{{ data.tableId }}</p>
-  } @else if(data.orderType === 'T'){
+  } @else if(data.ordersType === 'T'){
   <p>顧客姓名:{{ data.customerName }}</p>
   <p>顧客電話:{{ data.customerPhone }}</p>
-  } @else if(data.orderType === 'D'){
+  } @else if(data.ordersType === 'D'){
   <p>顧客姓名:{{ data.customerName }}</p>
   <p>顧客電話:{{ data.customerPhone }}</p>
   <p>顧客地址:{{ data.customerAddress }}</p>
@@ -18,36 +18,30 @@
   <h3>🛒 訂單細節</h3>
 
   @for(group of data.order_detailsList; track group.orderDetailsId; let i = $index){
+
+  <div style="text-align: right; font-weight: bold;">
+    細項總價: <span class="positionCss">NT$ {{ group.orderDetailsPrice }}</span>
+  </div>
+
   @for(item of group.orderDetails; track item.productId){
   <div>
-
     <div>
-
       <span>
         <button (click)="down(item, i)">-</button>
         {{ item.quantity }}
         <button (click)="up(item)">+</button>
       </span>
-
       <mat-icon aria-hidden="false" fontIcon="delete" (click)="deleteItem(item, i)"></mat-icon>
-
-      <span class="positionCss">NT$ {{ item.productPrice * item.quantity + (group.orderDetailsPrice - item.productPrice
-        * item.quantity) }}</span>
     </div>
 
     <div>
       <span>{{ item.productName }}</span>
+      <span class="positionCss">
+        NT$ {{ getItemTotalPrice(item) }}
+      </span>
       <br>
     </div>
 
-    @if(item.detailList.length){
-    <div>
-      客製化選項:
-      @for(detail of item.detailList; track detail.option){
-      <span>{{ detail.option }} (+NT$ {{ detail.addPrice }})</span>
-      }
-    </div>
-    }
   </div>
   <hr>
   }
