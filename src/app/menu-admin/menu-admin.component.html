@@ -2,26 +2,6 @@
 
   <div class="content">
 
-<<<<<<< HEAD
-      <!-- 餐點 -->
-      <div class="menuItemsBox">
-        @for (product of productList; track $index) {
-        <div class="menuItem">
-          <img [src]="product.imageUrl" alt="{{ product.imageUrl }}">
-          <div>{{ product.productName }}</div>
-          <div>{{ product.productDescription }}</div>
-          <div>${{ product.productPrice }}</div>
-        </div>
-
-        }
-
-
-        <!-- 新增餐點 -->
-        <div class="addProductCss" (click)="addProduct()">
-          <div class="addContent">
-            <div>新增餐點</div>
-            <div>+</div>
-=======
     <mat-tab-group class="categoryTabs" [(selectedIndex)]="selectedTabIndex" (selectedTabChange)="onTabChange($event)">
 
       @for (category of allCategoryDto; track $index) {

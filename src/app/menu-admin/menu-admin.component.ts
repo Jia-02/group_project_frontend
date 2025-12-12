@@ -111,57 +111,10 @@ export class MenuAdminComponent {
             this.handleCategoryChange(this.dataService.allCategoryDto[0]);
           }
         }
-<<<<<<< HEAD
-        const firstCategoryId = this.allCategoryDto[0].categoryId; // 載入第一個分類的產品
-        this.currentSelectedCategoryId = firstCategoryId; // 當前選中的 ID
-        this.loadProducts(firstCategoryId); // 呼叫菜單
       })
   }
 
   // 抓取餐點列表
-  loadProducts(categoryId: number) {
-    const apiUrl = `http://localhost:8080/product/list?categoryId=${categoryId}`;
-    // 取得當前分類的 categoryType
-    const currentCategory = this.allCategoryDto.find(c => c.categoryId === categoryId);
-    const categoryType = currentCategory ? currentCategory.categoryType : '';
-
-    this.httpClientService.getApi(apiUrl)
-      .subscribe((res) => {
-        let response = res as productListResponse;
-        console.log(res);
-
-        // 定義資料夾對應
-        const folderMap: Record<string, string> = {
-          '披薩': 'pizza',
-          '飲料': 'drink',
-          '火鍋': 'hotpot',
-          '義大利麵': 'pasta',
-          '炸物': 'fried',
-          '甜點': 'snack',
-          '套餐': 'set',
-        };
-
-        const imageFolder = folderMap[categoryType] || 'default';
-
-        if (response && response.productList) {
-          this.productList = response.productList.map(p => {
-
-            const rawFilename = p.imageUrl;
-            const cleanFilename = rawFilename.includes('/')
-              ? rawFilename.split('/').pop()
-              : rawFilename;
-
-            return {
-              ...p,
-              imageUrl: `${imageFolder}/${cleanFilename}`
-            };
-          });
-        }
-      })
-=======
-      });
->>>>>>> reserve
-  }
 
   // 新增分類
   addCategory() {

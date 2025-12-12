@@ -1,9 +1,6 @@
-<<<<<<< HEAD
 
-import { categoryDto } from './../@interface/interface';
-=======
-import { categoryDto, productList } from './../@interface/interface';
->>>>>>> reserve
+import { categoryDto, productList, scheduleItem } from './../@interface/interface';
+
 import { Injectable } from '@angular/core';
 import { reservation } from '../@interface/interface';
 
@@ -29,13 +26,13 @@ export class DataService {
   // 預約資料
   reservation: reservation[] = [];
 
-<<<<<<< HEAD
+
   // 每天所有預約的 scheduleItem 列表
   dailyReservations: Map<string, scheduleItem[]> = new Map();
-=======
+
   // 套餐列表
   setList: any[] = [];
->>>>>>> reserve
+
 
   // 客製化選項列表
   optionList: any[] = [];
@@ -44,7 +41,7 @@ export class DataService {
   sideDishList: productList[] = [];
   drinkDishList: productList[] = [];
 
-<<<<<<< HEAD
+
   getApi(url: string): any {
     return this.http.get(url);
   }
@@ -53,10 +50,10 @@ export class DataService {
     return this.http.post(url, postData);
   }
 
-=======
+
   // 桌位列表
   tableIdList: any[] = [];
->>>>>>> reserve
+
 
 }
 
