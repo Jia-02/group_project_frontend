@@ -157,7 +157,7 @@ export class MenuComponent {
         }
 
         dialogRef.afterClosed().subscribe((result: any) => {
-          if (result && result.itemDetail) {
+          if (result && result.quantity) {
             this.addOrderDetailItemToCart(result);
           }
         });
@@ -166,20 +166,18 @@ export class MenuComponent {
   }
 
   addOrderDetailItemToCart(item: any): void {
-    const quantity = item.itemDetail.quantity;
+    const quantity = item.quantity;
 
     if (!quantity || quantity < 1) return;
 
-    for (let i = 0; i < quantity; i++) {
-      const newDetailItem = {
-        ...item,
-        orderDetailsId: this.orderService.currentOrder.orderDetailsList.length + 1 + i,
-        orderDetailsPrice: item.itemDetail.pricePerUnit,
-        settingOptions: undefined,
-      };
+    const newId = this.orderService.currentOrder.orderDetailsList.length + 1;
 
-      this.orderService.currentOrder.orderDetailsList.push(newDetailItem);
-    }
+    const newDetailItem = {
+      ...item,
+      orderDetailsId: newId,
+    };
+
+    this.orderService.currentOrder.orderDetailsList.push(newDetailItem);
 
     this.currentCart = this.orderService.currentOrder.orderDetailsList;
 

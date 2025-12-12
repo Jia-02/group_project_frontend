@@ -64,7 +64,6 @@ export class SendOrderDialogComponent {
     let customerPhone: string | null = null;
     let customerAddress: string | null = null;
     let tableId: string | null = null;
-    let paymentType: string;
 
     switch (this.data.ordersType) {
       case 'A': tableId = this.data.tableId || null; break;
@@ -79,13 +78,19 @@ export class SendOrderDialogComponent {
         break;
     }
 
+    if( this.paymentType != '現金'){
+      this.data.paid == true;
+    } else {
+      this.data.paid == false;
+    }
+
     const finalPayload: TargetOrderData = {
       ordersType: this.data.ordersType,
       ordersDate: dateStr,
       ordersTime: timeStr,
       totalPrice: this.calculateTotalPrice(this.data.orderDetailsList),
       paymentType: this.paymentType,
-      paid: false,
+      paid: this.data.paid,
       ordersCode: null,
       customerName: customerName,
       customerPhone: customerPhone,
@@ -96,15 +101,13 @@ export class SendOrderDialogComponent {
 
     console.log('準備送出的資料 (已修正價格和結構轉換):', finalPayload);
 
-    this.dataService.postApi('http://localhost:8080/api/orders', finalPayload)
+    this.dataService.postApi('http://localhost:8080/orders/add', finalPayload)
       .subscribe((res: any) => {
         console.log('下單成功', res);
         const orderId = res?.orderId
         this.dialogRef.close(finalPayload);
       }
       );
-
-    alert('訂單已模擬送出，請查看 Console！');
     this.dialogRef.close(finalPayload);
   }
 
@@ -136,6 +139,7 @@ interface RawOrderData {
   orderDetailsList: RawOrderDetailItem[];
   totalPrice: number;
   paymentType: string;
+  paid: boolean;
 }
 
 

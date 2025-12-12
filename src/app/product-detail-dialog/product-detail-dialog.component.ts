@@ -29,7 +29,13 @@ export class ProductDetailDialogComponent {
 
   ngOnInit(): void {
     this.data.optionList.forEach(group => {
-      this.currentSelections.set(group.optionId, new Set<string>());
+      const selectedSet = new Set<string>();
+
+      if (group.optionDetail.length > 0) {
+        selectedSet.add(group.optionDetail[0].option);
+      }
+
+      this.currentSelections.set(group.optionId, selectedSet);
     });
 
     this.calculateTotalPrice();
@@ -65,20 +71,6 @@ export class ProductDetailDialogComponent {
     }
   }
 
-  handleOptionChange(group: OptionDetail, optionItem: Option, isChecked: boolean): void {
-    const selectedOptions = this.currentSelections.get(group.optionId);
-
-    if (!selectedOptions) {
-      return;
-    }
-
-    selectedOptions.clear();
-
-    selectedOptions.add(optionItem.option);
-
-    this.calculateTotalPrice();
-  }
-
   addToCart(): void {
     const detailList: DetailOption[] = [];
     let optionsPrice = 0;
@@ -105,19 +97,17 @@ export class ProductDetailDialogComponent {
     const orderDetailItem = {
         orderDetailsPrice: orderDetailsPrice,
         settingId: 0,
-        itemDetail: {
-            orderDetails: [
-                {
-                    categoryId: this.data.categoryId,
-                    productId: this.data.productId,
-                    productName: this.data.productName,
-                    productPrice: this.data.productPrice,
-                    detailList: detailList
-                }
-            ],
-            quantity: this.quantity,
-            pricePerUnit: itemPricePerUnit
-        }
+        quantity: this.quantity,
+        orderDetails: [
+            {
+                categoryId: this.data.categoryId,
+                productId: this.data.productId,
+                productName: this.data.productName,
+                productPrice: this.data.productPrice,
+                detailList: detailList
+            }
+        ],
+        // mealStatus: "製作中"
     };
 
     this.dialogRef.close(orderDetailItem);
@@ -152,10 +142,12 @@ interface FullProductDetail {
   optionList: OptionDetail[];
 }
 
-interface OrderDetailItem {
+interface CartItemPayload {
   orderDetailsPrice: number;
   settingId: number;
+  quantity: number;
   orderDetails: OrderDetailProduct[];
+  // mealStatus?: string;
 }
 
 interface OrderDetailProduct {
