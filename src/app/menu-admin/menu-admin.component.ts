@@ -60,6 +60,7 @@ export class MenuAdminComponent {
 
   ngOnInit(): void {
     this.loadCategories();
+
   }
 
   // Mat Tab 切換到哪個分頁
@@ -276,6 +277,8 @@ export class MenuAdminComponent {
   prepareSetData(callback: () => void) {
     this.dataService.sideDishList = [];
     this.dataService.drinkDishList = [];
+    this.sideDishList = [];
+    this.drinkDishList = [];
     let sideCategoryId = 0;
     let drinkCategoryId = 0;
 
@@ -297,6 +300,7 @@ export class MenuAdminComponent {
                 if (p.productActive == true) {
                   this.dataService.drinkDishList.push(p);
                 }
+                this.drinkDishList = [...this.dataService.drinkDishList];
               }
             }
             callback();
@@ -317,6 +321,7 @@ export class MenuAdminComponent {
               if (p.productActive == true) {
                 this.dataService.sideDishList.push(p);
               }
+              this.sideDishList = [...this.dataService.sideDishList];
             }
           }
           findDrink(); // 接著抓飲料

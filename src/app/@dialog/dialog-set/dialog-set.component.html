@@ -1,87 +1,92 @@
-<h2 mat-dialog-title>{{ isEditMode ? '編輯套餐' : '新增套餐' }}</h2>
+<h2 mat-dialog-title class="dialogTitle">
+  @if (isEditMode) {
+    編輯套餐
+  } @else {
+    新增套餐
+  }
+</h2>
 
-<mat-dialog-content>
-  <div class="row">
-    <div class="col-md-6 mb-3">
-      <label class="form-label">套餐名稱</label>
-      <input type="text" class="form-control" [(ngModel)]="optionVo.settingName">
+<mat-dialog-content class="dialogContent">
+
+  <div class="formRow">
+    <div class="formField">
+      <label>套餐名稱</label>
+      <input type="text" class="styledInput" [(ngModel)]="optionVo.settingName" placeholder="輸入套餐名稱">
     </div>
-    <div class="col-md-6 mb-3">
-      <label class="form-label">套餐價格</label>
-      <input type="number" class="form-control" [(ngModel)]="optionVo.settingPrice">
+    <div class="formField">
+      <label>套餐價格</label>
+      <input type="number" class="styledInput" [(ngModel)]="optionVo.settingPrice" placeholder="0">
     </div>
   </div>
 
-  <div class="mb-3">
-    <label class="form-label">圖片</label>
-    <input type="file" class="form-control" (change)="onFileSelected($event)">
+  <label>套餐圖片</label>
+  <div class="fileInputWrapper">
+    <input type="file" (change)="onFileSelected($event)">
   </div>
 
-  <hr>
-
-  <div class="mb-3">
-    <label class="form-label fw-bold">選擇主餐分類</label>
-    <select class="form-select mb-2" [(ngModel)]="selections.mainCatId" (change)="onMainCategoryChange()">
-      <option [value]="0">請選擇分類</option>
-      @for (cat of categoryList; track cat.categoryId) {
-        @if (cat.categoryType !== '炸物' && cat.categoryType !== '飲料' && cat.categoryType !== '套餐') {
-          <option [value]="cat.categoryId">{{ cat.categoryType }}</option>
-        }
+  <label>選擇主餐分類</label>
+  <select class="styledInput" [(ngModel)]="selections.mainCatId" (change)="onMainCategoryChange()">
+    <option [value]="0">請選擇分類</option>
+    @for (cat of categoryList; track cat.categoryId) {
+      @if (cat.categoryType !== '炸物' && cat.categoryType !== '飲料' && cat.categoryType !== '套餐') {
+        <option [value]="cat.categoryId">{{ cat.categoryType }}</option>
       }
-    </select>
-
-    @if (mainDishList.length > 0) {
-      <label class="form-label">勾選可提供的主餐選項 (可複選)</label>
-      <div class="card p-2" style="max-height: 200px; overflow-y: auto;">
-        @for (p of mainDishList; track p.productId) {
-          <div class="form-check">
-            <input class="form-check-input"
-                   type="checkbox"
-                   [id]="'product-' + p.productId"
-                   [checked]="isMainSelected(p.productId)"
-                   (change)="toggleMainSelection(p.productId, $event)">
-            <label class="form-check-label d-flex justify-content-between" [for]="'product-' + p.productId">
-              <span>{{ p.productName }}</span>
-              <span class="text-muted">${{ p.productPrice }}</span>
-            </label>
-          </div>
-        }
-      </div>
-    } @else if (selections.mainCatId > 0) {
-      <p class="text-muted">此分類目前無上架商品</p>
     }
-  </div>
+  </select>
 
-  <hr>
-
-  <div class="mb-3">
-    <label class="form-label fw-bold">選擇附餐</label>
-    <select class="form-select" [(ngModel)]="selections.sideId">
-      <option [value]="0">無</option>
-      @for (p of sideDishList; track p.productId) {
-        <option [value]="p.productId">{{ p.productName }} (+{{ p.productPrice }})</option>
+  @if (mainDishList.length > 0) {
+    <label>勾選可提供的主餐選項 (可複選)</label>
+    <div class="scrollableList styledInput">
+      @for (p of mainDishList; track p.productId) {
+        <div class="checkboxItem">
+          <input type="checkbox"
+                 [id]="'product-' + p.productId"
+                 [checked]="isMainSelected(p.productId)"
+                 (change)="toggleMainSelection(p.productId, $event)">
+          <label [for]="'product-' + p.productId">
+            <span class="itemName">{{ p.productName }}</span>
+            <span class="itemPrice">${{ p.productPrice }}</span>
+          </label>
+        </div>
       }
-    </select>
+    </div>
+  } @else if (selections.mainCatId > 0) {
+    <div class="emptyState">此分類目前無上架商品</div>
+  }
+
+  <div class="formRow">
+    <div class="formField">
+      <label>選擇附餐</label>
+      <select class="styledInput" [(ngModel)]="selections.sideId">
+        <option [value]="0">無</option>
+        @for (p of sideDishList; track p.productId) {
+          <option [value]="p.productId">{{ p.productName }} (+{{ p.productPrice }})</option>
+        }
+      </select>
+    </div>
+
+    <div class="formField">
+      <label>選擇飲料</label>
+      <select class="styledInput" [(ngModel)]="selections.drinkId">
+        <option [value]="0">無</option>
+        @for (p of drinkDishList; track p.productId) {
+          <option [value]="p.productId">{{ p.productName }} (+{{ p.productPrice }})</option>
+        }
+      </select>
+    </div>
   </div>
 
-  <div class="mb-3">
-    <label class="form-label fw-bold">選擇飲料</label>
-    <select class="form-select" [(ngModel)]="selections.drinkId">
-      <option [value]="0">無</option>
-      @for (p of drinkDishList; track p.productId) {
-        <option [value]="p.productId">{{ p.productName }} (+{{ p.productPrice }})</option>
-      }
-    </select>
-  </div>
-
-  <div class="form-check form-switch mb-3">
-    <input class="form-check-input" type="checkbox" role="switch" id="activeSwitch" [(ngModel)]="optionVo.settingActive">
-    <label class="form-check-label" for="activeSwitch">上架狀態</label>
+  <div class="switchWrapper">
+    <label class="switch">
+      <input type="checkbox" [(ngModel)]="optionVo.settingActive">
+      <span class="slider round"></span>
+    </label>
+    <span class="switchLabel">上架狀態</span>
   </div>
 
 </mat-dialog-content>
 
-<mat-dialog-actions>
-  <button mat-button (click)="onNoClick()">取消</button>
-  <button mat-button color="primary" (click)="onAddClick()">確定</button>
+<mat-dialog-actions class="dialogActions">
+  <button (click)="onNoClick()" class="dialogBtn cancelBtn">取消</button>
+  <button (click)="onAddClick()" class="dialogBtn confirmBtn">確定</button>
 </mat-dialog-actions>

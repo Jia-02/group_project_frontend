@@ -1,0 +1,245 @@
+/* --- Dialog 標題區域 --- */
+.dialogTitle {
+  margin: 0;
+  padding: 16px 24px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #013c70; /* 主色藍 */
+  border-bottom: 1px solid #eee;
+  background: #fff;
+}
+
+/* --- Dialog 內容區域 --- */
+.dialogContent {
+  display: flex;
+  flex-direction: column;
+  gap: 12px; /* 每個區塊間的距離 */
+  padding: 24px !important;
+  min-width: 450px; /* 確保視窗不會太窄 */
+  max-width: 600px;
+}
+
+/* 所有標籤文字 */
+.dialogContent label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 4px;
+  display: block;
+}
+
+/* --- 排版容器 --- */
+/* 橫向並排容器 (用於名稱/價格、附餐/飲料) */
+.formRow {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+}
+
+/* 單一欄位容器 */
+.formField {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- 輸入元件樣式 --- */
+/* 通用輸入框 (Input, Select, List容器) */
+.styledInput {
+  padding: 10px 12px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  outline: none;
+  background: #fff;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  width: 100%;
+  box-sizing: border-box; /* 確保 padding 不會撐大寬度 */
+}
+
+.styledInput:focus {
+  border-color: #013c70;
+  box-shadow: 0 0 0 3px rgba(1, 60, 112, 0.1);
+}
+
+/* 檔案上傳區塊微調 */
+.fileInputWrapper {
+  margin-bottom: 4px;
+}
+.fileInputWrapper input[type="file"] {
+  font-size: 14px;
+}
+
+/* --- 主餐勾選列表 (Scrollable List) --- */
+/* 讓列表看起來像是一個大的輸入框，但可以捲動 */
+div.styledInput.scrollableList {
+  height: auto;
+  max-height: 220px;
+  overflow-y: auto;
+  padding: 0; /* 內部項目自己有 padding */
+}
+
+/* 列表中的單一選項 */
+.checkboxItem {
+  display: flex;
+  align-items: center;
+  padding: 10px 12px;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.2s;
+}
+
+.checkboxItem:last-child {
+  border-bottom: none;
+}
+
+.checkboxItem:hover {
+  background-color: #f8fbff; /* 滑鼠經過變成淡淡的藍色 */
+}
+
+/* Checkbox 本體 */
+.checkboxItem input[type="checkbox"] {
+  margin-right: 12px;
+  transform: scale(1.2);
+  cursor: pointer;
+  accent-color: #013c70;
+}
+
+/* 選項文字與價格 */
+.checkboxItem label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  cursor: pointer;
+  margin: 0;
+  font-weight: 500; /* 比標題輕一點 */
+  color: #333;
+}
+
+.itemPrice {
+  color: #888;
+  font-size: 0.9em;
+  font-weight: 400;
+  background: #f5f5f5;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+/* 空狀態提示 */
+.emptyState {
+  padding: 16px;
+  text-align: center;
+  color: #999;
+  background: #f9f9f9;
+  border-radius: 4px;
+  border: 1px dashed #ddd;
+  font-size: 14px;
+}
+
+/* --- 上架狀態開關 (Switch) --- */
+.switchWrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+  padding-top: 16px;
+  border-top: 1px solid #eee; /* 上方加一條分隔線 */
+}
+
+.switchLabel {
+  font-size: 15px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Switch 結構 */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 26px;
+  margin-bottom: 0; /* 覆蓋全域 label margin */
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+input:checked + .slider {
+  background-color: #013c70; /* 開啟顏色 */
+}
+
+input:checked + .slider:before {
+  transform: translateX(22px);
+}
+
+/* --- 底部按鈕區域 --- */
+.dialogActions {
+  padding: 16px 24px !important;
+  border-top: 1px solid #eee;
+  gap: 12px;
+  display: flex;
+  justify-content: flex-end; /* 靠右對齊 */
+}
+
+.dialogBtn {
+  padding: 8px 24px;
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+  min-width: 80px;
+}
+
+/* 取消按鈕 */
+.cancelBtn {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  color: #666;
+}
+
+.cancelBtn:hover {
+  background-color: #f5f5f5;
+  color: #333;
+  border-color: #ccc;
+}
+
+/* 確定按鈕 */
+.confirmBtn {
+  background-color: #013c70;
+  color: #fff;
+}
+
+.confirmBtn:hover {
+  background-color: #fe6d13; /* 懸停變成橘色 */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}

@@ -60,6 +60,7 @@ export class DialogDeleteComponent {
             this.dialogRef.close(true);
           } else {
             console.log('刪除失敗', res);
+            alert('商品販售中，不可以刪除!!!');
           }
         });
     }
@@ -97,6 +98,7 @@ export class DialogDeleteComponent {
             this.dialogRef.close(true);
           } else {
             console.log('刪除失敗', res);
+            alert('商品販售中，不可以刪除!!!');
           }
         });
     }

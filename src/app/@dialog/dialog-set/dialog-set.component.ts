@@ -82,6 +82,7 @@ export class DialogSetComponent {
     if (this.data.isEditMode && this.data.targetSet) {
       this.isEditMode = true;
       this.optionVo = JSON.parse(JSON.stringify(this.data.targetSet)); // 深拷貝資料
+      this.optionVo.categoryId = this.data.currentCategoryId;
       this.existingDetails();
     }
   }

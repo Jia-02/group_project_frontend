@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -8,4 +9,34 @@ import { Component } from '@angular/core';
 })
 export class HeaderComponent {
 
+  constructor(private router: Router){}
+
+  menu() {
+
+  }
+
+  menuAdmin() {
+    this.router.navigateByUrl('reserve');
+  }
+
+  reservation() {
+    this.router.navigateByUrl('menuAdmin');
+  }
+
+  table() {
+
+  }
+
+
+  order() {
+
+  }
+
+  workStation() {
+
+  }
+
+  calander() {
+
+  }
 }
