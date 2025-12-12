@@ -215,14 +215,6 @@ export class MenuAdminComponent {
   // 更新餐點
   updateProduct(product: productList) {
 
-    // 找出目前的分類名稱
-    // let currentCategoryType = '';
-    // for (let categoryData of this.dataService.allCategoryDto) {
-    //   if (this.currentCategoryId == categoryData.categoryId) {
-    //     currentCategoryType = categoryData.categoryType;
-    //   }
-    // }
-
     const dialogRef = this.dialog.open(DialogMenuComponent, {
       data: {
         categoryId: this.currentCategoryId,
@@ -340,7 +332,7 @@ export class MenuAdminComponent {
           sideDishList: this.sideDishList,
           drinkDishList: this.drinkDishList,
           currentCategoryId: this.currentCategoryId,
-          categoryType: this.currentCategory.categoryType
+          categoryType: this.currentCategory.categoryType,
         }
       });
 

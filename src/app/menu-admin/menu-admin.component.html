@@ -45,11 +45,11 @@
                 @for (group of pkg.settingDetail; track $index) {
                 <div class="detailRow">
                   <span class="tag category">
-                    {{ group.categoryId }}
+                    {{ group.categoryType }}
                   </span>
                   @for (item of group.detailList; track $index) {
                   <span class="tag product">
-                    {{ item.productName || item.productId }}
+                    {{ item.productName }}
                   </span>
                   }
                 </div>

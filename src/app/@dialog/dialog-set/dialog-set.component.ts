@@ -114,14 +114,18 @@ export class DialogSetComponent {
     // 找出炸物 與 飲料 的 Category ID
     let realSideCatId = 0;
     let realDrinkCatId = 0;
+    let realSideCatType = '';
+    let realDrinkCatType = '';
 
     for (const cat of this.categoryList) {
       const typeName = cat.categoryType.trim();
       if (typeName == '炸物') {
         realSideCatId = cat.categoryId;
+        realSideCatType = cat.categoryType;
       }
       if (typeName == '飲料') {
         realDrinkCatId = cat.categoryId;
+        realDrinkCatType = cat.categoryType;
       }
     }
 
@@ -130,6 +134,15 @@ export class DialogSetComponent {
     // 主餐
     if (this.selections.mainCatId > 0 && this.selections.mainIds.length > 0) {
       const selectedProducts = [];
+
+      // 找主餐分類名稱
+      let mainCatName = '';
+      for(const cat of this.categoryList) {
+        if (cat.categoryId == this.selections.mainCatId) {
+          mainCatName = cat.categoryType;
+          break;
+        }
+      }
 
       // 所有主餐清單，找出被勾選的項目
       for (const p of this.mainDishList) {
@@ -145,7 +158,8 @@ export class DialogSetComponent {
       if (selectedProducts.length > 0) {
         details.push({
           categoryId: this.selections.mainCatId,
-          detailList: selectedProducts
+          detailList: selectedProducts,
+          categoryType: mainCatName,
         });
       }
     }
@@ -162,6 +176,7 @@ export class DialogSetComponent {
 
       details.push({
         categoryId: realSideCatId,
+        categoryType: realSideCatType,
         detailList: [{
           productId: this.selections.sideId,
           productName: sideName
@@ -179,7 +194,8 @@ export class DialogSetComponent {
       }
 
       details.push({
-        categoryId: Number(realDrinkCatId),
+        categoryId: realDrinkCatId,
+        categoryType: realDrinkCatType,
         detailList: [{
           productId: Number(this.selections.drinkId),
           productName: drinkName
@@ -191,10 +207,13 @@ export class DialogSetComponent {
     this.optionVo.settingDetail = details;
 
     const handleSuccess = (res: any) => {
+      console.log(res);
+
       if (res.code == 200) {
         if (res.settingId) {
           this.optionVo.settingId = res.settingId;
         }
+        alert('儲存成功');
         this.dialogRef.close(this.optionVo);
       }
     };

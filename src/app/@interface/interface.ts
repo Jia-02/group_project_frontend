@@ -128,9 +128,11 @@ export interface optionVo {
 
 export interface settingDetail {
   categoryId: number;
+  categoryType: string;
   detailList: detailItem[];
 }
 
 export interface detailItem {
   productId: number;
+  productName: string;
 }
