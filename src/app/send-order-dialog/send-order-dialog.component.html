@@ -12,45 +12,63 @@
   <p>顧客電話:{{ data.customerPhone }}</p>
   <p>顧客地址:{{ data.customerAddress }}</p>
   }
-  <p>付款方式:{{ data.paymentType }}</p>
+  <span class="labelCss">付款方式：</span>
+    <select [(ngModel)]="paymentType" class="inputCss">
+      <option value="cash">現金</option>
+      <option value="creditCard">信用卡</option>
+      <option value="ecPay">電子支付</option>
+    </select>
 
   <hr>
   <h3>🛒 訂單細節</h3>
-
-  @for(group of data.order_detailsList; track group.orderDetailsId; let i = $index){
-
-  <div style="text-align: right; font-weight: bold;">
-    細項總價: <span class="positionCss">NT$ {{ group.orderDetailsPrice }}</span>
-  </div>
-
-  @for(item of group.orderDetails; track item.productId){
-  <div>
+  @for (item of data.orderDetailsList; track item.orderDetailsId) {
     <div>
-      <span>
-        <button (click)="down(item, i)">-</button>
-        {{ item.quantity }}
-        <button (click)="up(item)">+</button>
-      </span>
-      <mat-icon aria-hidden="false" fontIcon="delete" (click)="deleteItem(item, i)"></mat-icon>
-    </div>
+      <div>
+        <span>
+          @if(item.settingId > 0){
+            [套餐]
+          } @else {
+            [單點]
+          }
+        </span>
+        <span>NT$ {{ item.orderDetailsPrice }}</span>
+      </div>
+      @if (item.orderDetails && item.orderDetails.length > 0) {
+        @if(item.settingId > 0) {
+          <div>
+            <div>
+              {{ item.settingName || '套餐' }} 內容:
+            </div>
+          </div>
+        } @else {}
+      }
 
-    <div>
-      <span>{{ item.productName }}</span>
-      <span class="positionCss">
-        NT$ {{ getItemTotalPrice(item) }}
-      </span>
-      <br>
-    </div>
+      @for (product of item.orderDetails; track product.productId) {
+        <div>
+          -{{ product.productName }}
+          @if(item.settingId > 0){
+            (NT$ {{ product.productPrice }})
+          }
 
-  </div>
+          @if (product.detailList && product.detailList.length > 0) {
+            <div>
+              客製化:
+              @for(detail of product.detailList; track detail.option) {
+                {{ detail.option }} (+NT${{ detail.addPrice }})
+              }
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+
   <hr>
-  }
-  }
-
   <div>
-    <span>小計</span>
+    <span>總金額 (小計)</span>
     <span>NT$ {{ data.totalPrice }}</span>
   </div>
+
 </mat-dialog-content>
 
 <mat-dialog-actions>

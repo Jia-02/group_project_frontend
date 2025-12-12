@@ -174,9 +174,7 @@ export class MenuComponent {
         ...item,
         orderDetailsId: this.orderService.currentOrder.orderDetailsList.length + 1 + i,
         orderDetailsPrice: item.itemDetail.pricePerUnit,
-
-        orderDetails: item.itemDetail.orderDetails,
-        settingOptions: item.itemDetail.settingOptions,
+        settingOptions: undefined,
       };
 
       this.orderService.currentOrder.orderDetailsList.push(newDetailItem);
@@ -193,14 +191,24 @@ export class MenuComponent {
       return;
     }
 
-    const finalOrder = this.orderService.currentOrder;
+    const originalOrder = this.orderService.currentOrder;
 
-    console.log(finalOrder);
+    const cleanedOrderDetailsList = originalOrder.orderDetailsList.map(item => {
+      const { itemDetail, ...rest } = item;
+      return rest;
+    });
+
+    const finalPayload = {
+      ...originalOrder,
+      orderDetailsList: cleanedOrderDetailsList
+    };
+
+    console.log(finalPayload);
 
     this.dialog.open(SendOrderDialogComponent, {
       width: '500px',
       height: '900px',
-      data: finalOrder,
+      data: finalPayload,
     })
   }
 }
@@ -221,7 +229,7 @@ interface Category {
 }
 
 const ORDER_TYPE_MAP: { [key: string]: string } = {
-  'A': '內用', // A: In-store / Dine-in
-  'T': '外帶', // T: Take-out
-  'D': '外送', // D: Delivery
+  'A': '內用',
+  'T': '外帶',
+  'D': '外送',
 };

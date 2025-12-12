@@ -103,7 +103,6 @@ export class ProductDetailDialogComponent {
     const orderDetailsPrice = itemPricePerUnit * this.quantity;
 
     const orderDetailItem = {
-        orderDetailsId: 0,
         orderDetailsPrice: orderDetailsPrice,
         settingId: 0,
         itemDetail: {
@@ -154,7 +153,6 @@ interface FullProductDetail {
 }
 
 interface OrderDetailItem {
-  orderDetailsId: number;
   orderDetailsPrice: number;
   settingId: number;
   orderDetails: OrderDetailProduct[];

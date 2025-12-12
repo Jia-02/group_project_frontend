@@ -45,7 +45,7 @@
 
 <mat-dialog-actions>
   <h3>總價格:{{ currentPrice }}</h3>
-  <button [disabled]="!quantity || quantity <= 0" (click)="addToCart()" class="buttonCss">
+  <button [disabled]="!quantity || quantity <= 0|| !isSelectionComplete" (click)="addToCart()" class="buttonCss">
     加入購物車
   </button>
 </mat-dialog-actions>

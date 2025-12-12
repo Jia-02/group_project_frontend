@@ -22,4 +22,21 @@
   right: 34%;
   border-radius: 30px;
   border-style: dashed;
+  font-size: 20px;
 }
+
+.countCss{
+  position: absolute;
+  right:10%;
+  background-color: red;   /* 圓形背景顏色 */
+  color: white;            /* 裡面字的顏色 */
+  padding: 4px 4px;        /* 內距，讓圓看起來比較大 */
+  border-radius: 50%;      /* 變圓形重點 */
+  display: inline-flex;    /* 讓內容置中 */
+  justify-content: center; /* 水平置中 */
+  align-items: center;     /* 垂直置中 */
+  min-width: 35px;         /* 最小寬度，避免數字小時太擠 */
+  height: 35px;            /* 高度 */
+  font-size: 25px;         /* 字體大小 */
+}
+

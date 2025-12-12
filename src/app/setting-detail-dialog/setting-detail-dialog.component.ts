@@ -31,6 +31,7 @@ export class SettingDetailDialogComponent {
   public currentSelections: Map<number, Set<string>> = new Map();
   public selectedMainProduct: Map<number, number> = new Map();
   public selectedMainProductPrice: Map<number, number> = new Map();
+  public isSelectionComplete: boolean = false;
 
   public settingOptionList: OptionDetail[] = [];
 
@@ -59,8 +60,17 @@ export class SettingDetailDialogComponent {
         });
       }
     });
+    const totalCategoryGroups = this.data.settingDetail.length;
+    const selectedProductCount = this.selectedMainProduct.size;
 
-    this.currentPrice = (this.data.settingPrice + optionsPrice) * this.quantity;
+    this.isSelectionComplete = totalCategoryGroups > 0 && totalCategoryGroups === selectedProductCount;
+
+    // 套餐原價
+    const basePrice = this.data.settingPrice;
+    // 一套餐總價
+    const pricePerUnit = basePrice + optionsPrice;
+    // 填入總價格
+    this.currentPrice = pricePerUnit * this.quantity;
   }
 
   incrementQuantity(): void {
@@ -131,7 +141,6 @@ export class SettingDetailDialogComponent {
     });
 
     const orderDetails: OrderDetailProduct[] = [];
-    let mainProductTotalAddPrice = 0;
 
     this.data.settingDetail.forEach(categoryGroup => {
       const selectedProductId = this.selectedMainProduct.get(categoryGroup.categoryId);
@@ -140,9 +149,6 @@ export class SettingDetailDialogComponent {
         const selectedProduct = categoryGroup.detailList.find(d => d.productId === selectedProductId);
 
         if (selectedProduct) {
-          const productAddPrice = this.selectedMainProductPrice.get(categoryGroup.categoryId) || 0;
-          mainProductTotalAddPrice += productAddPrice;
-
           orderDetails.push({
             categoryId: categoryGroup.categoryId,
             productId: selectedProduct.productId,
@@ -154,20 +160,24 @@ export class SettingDetailDialogComponent {
       }
     });
 
-    const itemPricePerUnit = this.data.settingPrice + settingOptionsPrice + mainProductTotalAddPrice;
+    if (orderDetails.length > 0) {
+      orderDetails[0].detailList.push(...settingDetailList);
+    }
+
+
+    const itemPricePerUnit = this.data.settingPrice + settingOptionsPrice;
     const orderDetailsPrice = itemPricePerUnit * this.quantity;
 
     const orderDetailItem = {
-      orderDetailsId: 0,
       orderDetailsPrice: orderDetailsPrice,
       settingId: this.data.settingId,
 
-      itemDetail: {
-        orderDetails: orderDetails,
-        settingOptions: settingDetailList,
+      orderDetails: orderDetails,
 
+      itemDetail: {
         quantity: this.quantity,
-        pricePerUnit: itemPricePerUnit
+        pricePerUnit: itemPricePerUnit,
+        orderDetails: orderDetails
       }
     };
 
@@ -216,7 +226,6 @@ interface Detail {
 }
 
 interface OrderDetailItem {
-  orderDetailsId: number;
   orderDetailsPrice: number;
   settingId: number;
   orderDetails: OrderDetailProduct[];
