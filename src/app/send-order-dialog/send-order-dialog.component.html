@@ -1,0 +1,77 @@
+<h2 mat-dialog-title>點餐資訊</h2>
+
+<mat-dialog-content>
+  <p>訂單類型:{{ data.ordersType }}</p>
+  @if(data.ordersType === 'A'){
+  <p>桌號:{{ data.tableId }}</p>
+  } @else if(data.ordersType === 'T'){
+  <p>顧客姓名:{{ data.customerName }}</p>
+  <p>顧客電話:{{ data.customerPhone }}</p>
+  } @else if(data.ordersType === 'D'){
+  <p>顧客姓名:{{ data.customerName }}</p>
+  <p>顧客電話:{{ data.customerPhone }}</p>
+  <p>顧客地址:{{ data.customerAddress }}</p>
+  }
+  <span class="labelCss">付款方式：</span>
+    <select [(ngModel)]="paymentType" class="inputCss">
+      <option value="cash">現金</option>
+      <option value="creditCard">信用卡</option>
+      <option value="ecPay">電子支付</option>
+    </select>
+
+  <hr>
+  <h3>🛒 訂單細節</h3>
+  @for (item of data.orderDetailsList; track item.orderDetailsId) {
+    <div>
+      <div>
+        <span>
+          @if(item.settingId > 0){
+            [套餐]
+          } @else {
+            [單點]
+          }
+        </span>
+        <span>NT$ {{ item.orderDetailsPrice }}</span>
+      </div>
+      @if (item.orderDetails && item.orderDetails.length > 0) {
+        @if(item.settingId > 0) {
+          <div>
+            <div>
+              {{ item.settingName || '套餐' }} 內容:
+            </div>
+          </div>
+        } @else {}
+      }
+
+      @for (product of item.orderDetails; track product.productId) {
+        <div>
+          -{{ product.productName }}
+          @if(item.settingId > 0){
+            (NT$ {{ product.productPrice }})
+          }
+
+          @if (product.detailList && product.detailList.length > 0) {
+            <div>
+              客製化:
+              @for(detail of product.detailList; track detail.option) {
+                {{ detail.option }} (+NT${{ detail.addPrice }})
+              }
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+
+  <hr>
+  <div>
+    <span>總金額 (小計)</span>
+    <span>NT$ {{ data.totalPrice }}</span>
+  </div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button (click)="addOrder()">加點</button>
+  <button (click)="sendOut()">立刻下單</button>
+</mat-dialog-actions>

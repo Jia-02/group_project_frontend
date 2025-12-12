@@ -1,0 +1,58 @@
+<h2 mat-dialog-title>訂單明細</h2>
+
+<mat-dialog-content style="height: 280px;">
+  <p>訂單編號:{{ data.ordersCode }}</p>
+  <p>訂單類型:{{ data.ordersType }}</p>
+  @if(data.ordersType === 'A'){
+  <p>桌號:{{ data.tableId }}</p>
+  } @else if(data.ordersType === 'T'){
+  <p>顧客姓名:{{ data.customerName }}</p>
+  <p>顧客電話:{{ data.customerPhone }}</p>
+  } @else if(data.ordersType === 'D'){
+  <p>顧客姓名:{{ data.customerName }}</p>
+  <p>顧客電話:{{ data.customerPhone }}</p>
+  <p>顧客地址:{{ data.customerAddress }}</p>
+  }
+  <p>訂單時間:{{ data.ordersTime }}</p>
+  <p>付款方式:{{ data.paymentType }}</p>
+  <p>付款狀態: <span [style.color]="data.paid ? 'green' : 'red'">{{ data.paid ? '已付' : '未付' }}</span></p>
+  <p>總金額:{{ data.totalPrice }}</p>
+</mat-dialog-content>
+<h3>🛒訂單細節</h3>
+<mat-dialog-content>
+  @for(group of data.order_detailsList; track group.orderDetailsId; let i = $index){
+  <br><span>
+    明細{{ i + 1 }}
+    @if(isEditing) {
+    <mat-icon aria-hidden="false" fontIcon="delete" (click)="deleteDetail(i)"></mat-icon>
+    <mat-icon aria-hidden="false" fontIcon="edit" (click)="changeDetail(i)"></mat-icon>
+    }
+
+  </span>
+  <span class="priceCss">價格: NT${{ group.orderDetailsPrice }}</span>
+  @for(item of group.orderDetails; track item.productId; let j = $index){
+  <p>{{ item.productName }} (NT$ {{ item.productPrice }})</p>
+  @if(item.detailList.length){
+  <p>客製化選項</p>
+  @for(detail of item.detailList; track detail.option; let k = $index){
+  {{detail.option}} (+NT$ {{detail.addPrice}})
+  @if(isEditing) {
+  <mat-icon aria-hidden="false" fontIcon="delete" (click)="deleteOptions(i, j, k)"></mat-icon>
+  <mat-icon aria-hidden="false" fontIcon="edit" (click)="changeOptions(i, j, k)"></mat-icon>
+  }
+  }
+  }
+  }
+  }
+  @if(isEditing){
+    <br><br>
+    <!-- 要新增其他餐點，要到菜單畫面 -->
+    <button class="bigButton">+</button>
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button (click)="close()">關閉</button>
+  <button (click)="checkOut()" [disabled]="isEditing">結帳</button>
+  <button (click)="toggleEditMode()">{{ isEditing ? '儲存修改' : '修改訂單' }}</button>
+</mat-dialog-actions>

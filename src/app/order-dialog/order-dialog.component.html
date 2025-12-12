@@ -1,0 +1,40 @@
+<h2 mat-dialog-title>訂單明細</h2>
+
+<mat-dialog-content style="height: 355px;">
+<p>訂單編號:{{ data.ordersCode }}</p>
+<p>訂單類型:{{ data.ordersType }}</p>
+@if(data.ordersType === 'A'){
+  <p>桌號:{{ data.tableId }}</p>
+} @else if(data.ordersType === 'T'){
+  <p>顧客姓名:{{ data.customerName }}</p>
+  <p>顧客電話:{{ data.customerPhone }}</p>
+} @else if(data.ordersType === 'D'){
+  <p>顧客姓名:{{ data.customerName }}</p>
+  <p>顧客電話:{{ data.customerPhone }}</p>
+  <p>顧客地址:{{ data.customerAddress }}</p>
+}
+<p>訂單時間:{{ data.ordersTime }}</p>
+<p>付款狀態:已付</p>
+<p>付款方式:{{ data.paymentType }}</p>
+<p>總金額:{{ data.totalPrice }}</p>
+</mat-dialog-content>
+<h3>訂單細節</h3>
+<mat-dialog-content>
+  @for(group of data.order_detailsList; track group.orderDetailsId; let i = $index){
+    <br><span>明細{{ i + 1 }}</span>
+    <span class="priceCss">價格: NT${{ group.orderDetailsPrice }}</span>
+    @for(item of group.orderDetails; track item.productId){
+      <p>{{ item.productName }} (NT$ {{ item.productPrice }})</p>
+      @if(item.detailList.length){
+        <p>客製化選項</p>
+        @for(detail of item.detailList; track detail.option){
+          {{detail.option}} (+NT$ {{detail.addPrice}})
+        }
+      }
+    }
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button (click)="close()">關閉</button>
+</mat-dialog-actions>

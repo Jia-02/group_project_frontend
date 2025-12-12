@@ -1,0 +1,31 @@
+@if(ordersType == 'A'){
+  <h2>{{ displayOrderType }} 桌號: {{ displayTableId }}</h2>
+} @else {
+  <h2>{{ displayOrderType }}</h2>
+}
+<div>
+  @if (!isLoadingCategories) {
+  <mat-tab-group (selectedTabChange)="onTabChange($event)">
+    @for (category of categories; track category.categoryId) {
+    <mat-tab [label]="category.categoryType">
+      <div>
+        @if (category.products && !category.isLoadingProducts) {
+        @for (item of category.products; track item.productId) {
+        <div (click)="openProductDetail(category.categoryId, item.productId)" class="productCss">
+          <span>{{ item.productName }}<br>
+            <span class="priceCss">$NT{{ item.productPrice }}</span></span>
+
+        </div>
+        } @empty {
+        <p>此分類暫無商品。</p>
+        }
+        } @else {
+        <p>商品載入中...</p>
+        }
+      </div>
+    </mat-tab>
+    }
+  </mat-tab-group>
+  }
+</div>
+<button class="buttonCss" (click)="submitCart()">送出購物車<span class="countCss">{{ this.currentCart.length }}</span></button>
