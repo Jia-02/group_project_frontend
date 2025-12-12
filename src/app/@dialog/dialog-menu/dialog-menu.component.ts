@@ -1,9 +1,11 @@
+import { DataService } from './../../@service/data.service';
 import { HttpClientService } from './../../@service/http-client.service';
 import { Component, inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogTitle } from '@angular/material/dialog';
-import { categoryDto, productDto, productListResponse } from '../../@interface/interface';
+import { productList } from '../../@interface/interface';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-dialog-menu',
@@ -12,7 +14,8 @@ import { CommonModule } from '@angular/common';
     MatDialogContent,
     MatDialogTitle,
     FormsModule,
-    CommonModule
+    CommonModule,
+    MatIconModule
   ],
   templateUrl: './dialog-menu.component.html',
   styleUrl: './dialog-menu.component.scss'
@@ -20,16 +23,16 @@ import { CommonModule } from '@angular/common';
 export class DialogMenuComponent {
 
   constructor(
-    private httpClientService: HttpClientService
-  ) { }
+    private httpClientService: HttpClientService,
+    private dataService: DataService) { }
 
-  categoryDto: categoryDto = {
-    categoryId: 0,
-    categoryType: '',
-    workstationId: 2
-  };
+  readonly dialogRef = inject(MatDialogRef<DialogMenuComponent>);
+  readonly data = inject<any>(MAT_DIALOG_DATA);
 
-  productDto: productDto = {
+  selectedFile: File | null = null; // 儲存使用者選中的檔案
+  categoryType: string = '';
+
+  productList: productList = {
     productId: 0,
     productName: '',
     productPrice: 0,
@@ -39,71 +42,22 @@ export class DialogMenuComponent {
     productNote: '',
     categoryId: 0
   };
+  isEditMode: boolean = false;
 
-  // 儲存計算出的下一個產品 ID (預設從 1 開始)
-  nextProductId: number = 1;
-  // 標記 ID 是否正在計算中。初始為 true
-  isIdCalculating: boolean = true;
-  categoryPathMap: { [key: string]: string } = {
-    '套餐': '/set/',
-    '飲品': '/drink/',
-    '義大利麵': '/pasta/',
-    '披薩': '/pizza/',
-    '火鍋': '/hotpot/',
-  };
 
-  selectedFile: File | null = null; // 儲存使用者選中的檔案
-
-  readonly dialogRef = inject(MatDialogRef<DialogMenuComponent>);
-  readonly data = inject<any>(MAT_DIALOG_DATA);
 
   ngOnInit(): void {
-    if (this.data && this.data.categoryType) {
-      this.categoryDto.categoryType = this.data.categoryType;
-      this.categoryDto.categoryId = this.data.categoryId;
+    this.categoryType = this.data.categoryType;
+    this.productList.categoryId = this.data.categoryId;
+    this.isEditMode = this.data.isEditMode || false;  // 判斷是否為編輯模式
 
+    if (this.isEditMode && this.data.product) {
+      this.productList = { ...this.data.product }; // 深入拷貝
+      this.productList.categoryId = this.data.categoryId;
+    } else {
+      // 新增模式
+      this.countNextProductId();
     }
-  }
-
-  countNextProductId(): void {
-    const targetCategoryId = Number(this.categoryDto.categoryId);
-    const apiUrl = `http://localhost:8080/product/list?categoryId=${targetCategoryId}`;
-
-    this.httpClientService.getApi(apiUrl)
-      .subscribe({
-        next: (res) => {
-          const response = res as productListResponse;
-          if (response && response.productList && response.productList.length > 0) {
-
-            // 要先抓API商品的陣列中的商品內容 你必須要從商品的內容中抓到id最後面的那個 然後在+1
-
-            // 【修正點 3】過濾時兩邊都轉成 Number，確保過濾成功
-            const productsInCurrentCategory = response.productList.filter(
-              p => Number(p.categoryId) === targetCategoryId
-            );
-
-            console.log(productsInCurrentCategory);
-
-            if (productsInCurrentCategory.length > 0) {
-              const maxId = productsInCurrentCategory.reduce((max, p) =>
-                p.productId > max ? p.productId : max, 0);
-              this.nextProductId = maxId + 1;
-            } else {
-              this.nextProductId = 1;
-            }
-          } else {
-            this.nextProductId = 1;
-          }
-
-          this.isIdCalculating = false;
-          this.addProduct();
-          console.log(`類別 ${targetCategoryId} 計算完成，下一個 ID 為: ${this.nextProductId}`);
-        },
-        error: (err) => {
-          console.error('Failed to retrieve product list:', err);
-          this.isIdCalculating = false; // 發生錯誤也要解鎖
-        }
-      });
   }
 
   // 取消
@@ -113,56 +67,97 @@ export class DialogMenuComponent {
 
   // 確定
   onAddClick() {
-    // 如果 API 還沒回傳，禁止送出表單
-    // if (this.isIdCalculating) {
-    //   alert('系統正在計算產品編號，請稍候...');
-    //   return;
-    // }
-
-    // 檢查必填欄位
-    if (!this.selectedFile || !this.productDto.productName || !this.productDto.productPrice) {
+    if (!this.productList.productName || !this.productList.productPrice || !this.productList.productDescription) {
+      alert('必填欄位(名稱、價格、描述)不可為空');
       return;
     }
 
-    this.countNextProductId();
-
-  }
-
-  addProduct() {
-    // 如果 ID 仍為 0 或更小，強制設為 1
-    if (this.nextProductId <= 0) {
-      this.nextProductId = 1;
+    // 檢查圖片 (新增模式必填；編輯模式若沒選檔案代表不換圖，可以過)
+    if (!this.isEditMode && !this.selectedFile) {
+      alert('新增商品必須上傳圖片');
+      return;
     }
 
-    let imagePathString: string = '';
-    const fileName = this.selectedFile?.name; // 取得檔案名稱
+    // 處理圖片路徑邏輯 (如果有選新檔案才處理)
+    if (this.selectedFile) {
+      const folderMap: { [key: string]: string } = {
+        '套餐': 'set',
+        '飲料': 'drink',
+        '義大利麵': 'pasta',
+        '點心': 'snack',
+        '披薩': 'pizza',
+        '火鍋': 'hotpot',
+        '炸物': 'fried'
+      };
 
-    // 將檔案名與 Angular 專案的靜態資源路徑
-    const categoryType = this.categoryDto.categoryType;
-    const imagePrefix = this.categoryPathMap[categoryType] || '/default/'; // 如果找不到，使用 /default/ 作為安全預設值
-    imagePathString = imagePrefix + fileName;
-    console.log('即將送出的 ID:', this.nextProductId);
-    // console.log('給後端的路徑字串:', imagePathString);
+      const folderName = folderMap[this.categoryType]; // 加個預設避免報錯
+      this.productList.imageUrl = `/${folderName}/${this.selectedFile.name}`;
+    }
 
-    let finalProductDto = {
-      productId: this.nextProductId,
-      productName: this.productDto.productName,
-      productPrice: this.productDto.productPrice,
-      productActive: this.productDto.productActive,
-      productDescription: this.productDto.productDescription,
-      productNote: this.productDto.productNote,
-      imageUrl: imagePathString,
-      categoryId: this.categoryDto.categoryId
-    };
+    if (this.isEditMode) {
+      this.updateProduct(); // >更新
+    } else {
+      this.addProduct(); // >新增
+    }
+  }
 
-    console.log(finalProductDto);
 
-    this.httpClientService.postApi('http://localhost:8080/product/add', finalProductDto)
-      .subscribe((res) => {
-        console.log(res);
-        this.dialogRef.close();
+  // 新增商品
+  addProduct() {
+    this.countNextProductId();
+
+    this.httpClientService.postApi('http://localhost:8080/product/add', this.productList)
+      .subscribe((res: any) => {
+        if (res.code == 200) {
+          this.dialogRef.close(true);
+        }
       });
   }
+
+  // 更新商品
+  updateProduct() {
+    this.httpClientService.postApi('http://localhost:8080/product/update', this.productList)
+      .subscribe((res: any) => {
+        if (res.code == 200) {
+          this.dialogRef.close(true);
+        }
+      });
+  }
+
+
+  // 計算商品id
+countNextProductId() {
+    const categories = this.dataService.allCategoryDto;
+
+    // 如果完全沒分類，就從 1 開始
+    if (!categories || categories.length == 0) {
+      this.productList.productId = 1;
+      return;
+    }
+
+    let maxId = 0;
+    let completedCount = 0;
+    const totalCount = categories.length;
+
+    for (const cat of categories) {
+      this.httpClientService.getApi(`http://localhost:8080/product/list?categoryId=${cat.categoryId}`)
+        .subscribe((res: any) => {
+          if (res.code == 200 && res.productList) {
+            for (const p of res.productList) {
+              const pid = Number(p.productId);
+              if (pid > maxId) {
+                maxId = pid; // 更新最大值
+              }
+            }
+          }
+          completedCount++;
+          if (completedCount == totalCount) {
+            this.productList.productId = maxId + 1;
+          }
+        });
+    }
+  }
+
 
   // 處理檔案選取事件
   onFileSelected(event: any) {
@@ -174,6 +169,3 @@ export class DialogMenuComponent {
     }
   }
 }
-
-// 輸入完內容 > 確定 > 東西丟給api叫他產生商品id > 等待api回應你商品id > 取得商品id之後去新增商品
-

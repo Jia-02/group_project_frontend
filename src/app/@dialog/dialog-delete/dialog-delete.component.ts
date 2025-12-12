@@ -1,3 +1,4 @@
+import { reservation } from './../../@interface/interface';
 import { HttpClientService } from './../../@service/http-client.service';
 import { Component, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
@@ -20,39 +21,88 @@ export class DialogDeleteComponent {
   ) { }
 
   readonly dialogRef = inject(MatDialogRef<DialogDeleteComponent>);
-  readonly data = inject<scheduleItem>(MAT_DIALOG_DATA);
+  readonly data = inject(MAT_DIALOG_DATA);
 
   onNoClick() {
     this.dialogRef.close();
   }
 
   onCheckClick() {
-    // 準備 API URL
-    const url = `http://localhost:8080/reservation/delete`;
 
-    // 準備傳給後端的 Body (JSON 物件)
-    const body = {
-      reservationDate: this.data.reservationDate,
-      reservationPhone: this.data.reservationPhone
-    };
+    // 刪除預約
+    if (this.data.deleteType == 'reservation') {
+      const payload = {
+        reservationDate: this.data.reservationDate,
+        reservationPhone: this.data.reservationPhone
+      };
 
-    console.log('Deleting reservation:', body); // 除錯用
+      this.httpClientService.postApi('http://localhost:8080/reservation/delete', payload)
+        .subscribe((res: any) => {
+          if (res.code == 200) {
+            console.log('預約刪除成功', res);
+            this.dialogRef.close(true);
+          }
+        });
+    }
 
-    // 發送 POST 請求
-    this.httpClientService.postApi(url, body).subscribe({
-      next: (res: any) => {
-        // 假設後端回傳 code 200 代表成功
-        if (res.code === 200 || res.message === 'Success') {
-          // 關閉視窗，並回傳 'success' 給父元件
-          this.dialogRef.close('success');
-        } else {
-          alert('刪除失敗：' + (res.message || '未知錯誤'));
-        }
-      },
-      error: (err) => {
-        console.error('API Error:', err);
-        alert('刪除發生錯誤，請稍後再試');
-      }
-    });
+
+    // 刪除餐點
+    else if (this.data.deleteType == 'product') {
+      const payload = {
+        categoryId: this.data.categoryId,
+        productId: this.data.productId
+      };
+
+      this.httpClientService.postApi('http://localhost:8080/product/del', payload)
+        .subscribe((res: any) => {
+          if (res.code == 200) {
+            console.log('餐點刪除成功', res);
+            this.dialogRef.close(true);
+          } else {
+            console.log('刪除失敗', res);
+            alert('商品販售中，不可以刪除!!!');
+          }
+        });
+    }
+
+
+    // 刪除客製化
+    else if (this.data.deleteType == 'option') {
+      const payload = {
+        categoryId: this.data.categoryId,
+        optionId: this.data.optionId
+      };
+
+      this.httpClientService.postApi('http://localhost:8080/option/del', payload)
+        .subscribe((res: any) => {
+          if (res.code == 200) {
+            console.log('餐點刪除成功', res);
+            this.dialogRef.close(true);
+          } else {
+            console.log('刪除失敗', res);
+          }
+        });
+    }
+
+    // 刪除套餐
+    else if (this.data.deleteType == 'set') {
+      const payload = {
+        categoryId: this.data.categoryId,
+        settingId: this.data.settingId
+      };
+
+      this.httpClientService.postApi('http://localhost:8080/setting/del', payload)
+        .subscribe((res: any) => {
+          if (res.code == 200) {
+            console.log('餐點刪除成功', res);
+            this.dialogRef.close(true);
+          } else {
+            console.log('刪除失敗', res);
+            alert('商品販售中，不可以刪除!!!');
+          }
+        });
+    }
+
+
   }
 }

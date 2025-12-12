@@ -1,0 +1,182 @@
+<div class="background">
+
+  <div class="leftPanel">
+
+    <div class="calendarPanel">
+      <!-- 行事曆 -->
+      <div class="header">
+        <h2 class="monthTitle">
+          {{ currentMonth | date: 'yyyy年 MM月' }}
+        </h2>
+
+        <!-- 切換上個月/下個月的按鈕 -->
+        <div class="navButtons">
+          <button (click)="prevMonth()" class="navButton" aria-label="上個月">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <button (click)="nextMonth()" class="navButton" aria-label="下個月">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div>
+        <!-- 星期迴圈 -->
+        <div class="dayNames">
+          @for (dayName of dayNames; track $index) {
+          <div class="dayName">{{ dayName }}</div>
+          }
+        </div>
+
+        <div>
+          <!-- 日曆跑迴圈找一週 -->
+          @for (week of monthWeeks; track $index) {
+          <div class="calendarWeek">
+            <!-- 一週迴圈找每一天 -->
+            @for (day of week; track $index) {
+            <div class="calendarDays" (click)="selectDate(day.date)">
+              <span class="dayNumber" [class.selected]="isSameDate(day.date, selectedDay)">{{ day.date | date: 'd'
+                }}</span>
+
+              @if (day.hasEvent) {
+              <div class="activityDot"></div>
+              }
+            </div>
+            }
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="reservationDetailPanel">
+      <div class="detailHeader">
+        <h4 class="detailTitle">訂位詳細資訊</h4>
+        <div class="btnBox">
+          <!-- 編輯icon -->
+          <mat-icon [class.disabled-btn]="isPastDate()" (click)="!isPastDate() && updateReserve()" class="updateBtn"
+            aria-hidden="false" aria-label="Example edit icon" fontIcon="edit">
+          </mat-icon>
+
+          <!-- 刪除icon -->
+          <mat-icon [class.disabled-btn]="isPastDate()" (click)="!isPastDate() && deleteReserve()" class="deleteBtn"
+            aria-hidden="false" aria-label="Example delete icon" fontIcon="delete">
+          </mat-icon>
+        </div>
+      </div>
+
+      @if (selectedReservationData) {
+      <div class="detailContent">
+        <p><strong>顧客姓名:</strong> {{ selectedReservationData.reservationName }}</p>
+        <p><strong>聯絡電話:</strong> {{ selectedReservationData.reservationPhone }}</p>
+        <hr>
+        <p><strong>預約日期:</strong> {{ selectedReservationData.reservationDate }}</p>
+        <p><strong>預約時段:</strong> {{ selectedReservationData.reservationTime | slice:0:5 }} ~ {{ selectedReservationData.endTime }}</p>
+        <p><strong>桌位編號:</strong> {{ selectedReservationData.tableId }}</p>
+        <hr>
+        <p><strong>總人數:</strong> {{ selectedReservationData.reservationCount }} 人</p>
+        <p><strong>&nbsp;&nbsp; - 成人:</strong> {{ selectedReservationData.reservationAdultCount }} 人</p>
+        <p><strong>&nbsp;&nbsp; - 兒童:</strong> {{ selectedReservationData.reservationChildCount }} 人</p>
+        <p><strong>&nbsp;&nbsp; - 兒童座椅:</strong> {{ selectedReservationData.childSeat }} 張</p>
+        <p class="note"><strong>備註:</strong> {{ selectedReservationData.reservationNote || "無" }}</p>
+
+      </div>
+      } @else {
+      <div class="detailContent" style="text-align: center; color: gray; padding-top: 20px;">
+        <p>請點擊右側排程圖<br>查看訂位詳情</p>
+      </div>
+      }
+
+    </div>
+  </div>
+
+
+
+  <!-- 右側當日狀態 -->
+  <div class="schedulePanel">
+
+    <!-- 固定日期區 -->
+    <h3 class="scheduleTitle">
+      <!-- 如果使用者選擇日期，顯示在排程表上方 -->
+      @if(selectedDay) {
+      {{ selectedDay | date: 'yyyy年 MM月 dd日' }}
+      }
+    </h3>
+
+
+    <!-- 主要可滾動區：桌號 + 時間軸 + 訂位 -->
+    <div class="scheduleScrollArea">
+
+      <div class="tableHeaderRow"
+        [style.grid-template-columns]="'var(--time-label-width) repeat(' + reservationAndTableByDateList.length + ', minmax(110px, 1fr))'">
+
+        <div class="timeLabelSpacer"></div>
+
+        @for (table of reservationAndTableByDateList; track $index) {
+        <div class="tableHeader">
+          <span class="tableName">
+            {{ table.tableId }}
+            <span>({{ table.capacity }}人)</span>
+          </span>
+
+          <!-- 桌位開關按鈕 -->
+          <label class="toggleSwitch" [title]="(table.reservations && table.reservations.length > 0) ? '已有預約不可關閉' : '切換開放狀態'">
+            <input type="checkbox"
+            [checked]="table.tableDailyStatus == true"
+            [disabled]="table.reservations && table.reservations.length > 0"
+            (change)="tableAvailabe(table)">
+
+            <span class="slider round"></span>
+          </label>
+        </div>
+        }
+      </div>
+
+
+      <!-- 時間網格 + 訂位圖層 -->
+      <div class="timeGrid"
+        [style.grid-template-columns]="'var(--time-label-width) repeat(' + reservationAndTableByDateList.length + ', minmax(110px, 1fr))'">
+
+        <!-- 時間軸 -->
+        @for (label of timeLabel; track label.time) {
+        <div class="timeLabelCell">{{ label.display }}</div>
+
+        <!-- 活動底層網格 -->
+        @for (table of reservationAndTableByDateList; track table.tableId) {
+        <div class="hourSlot"
+          [class.isUnavailable]="table.tableDailyStatus == false"
+          [class.allowedSlot]="isAllowedTime(label.display)"
+          [class.isPast]="isPastTime(label.display)"
+          (click)="isAllowedTime(label.display) ? addReservation(table.tableId, label.display) : null">
+
+        </div>
+        }
+        }
+
+        <!-- 活動層 -->
+        <div class="activitiesLayer"
+          [style.grid-template-columns]="'var(--time-label-width) repeat(' + reservationAndTableByDateList.length + ', minmax(110px, 1fr))'">
+
+          @for (reservationData of reservations; track $index) {
+          <div class="activityBlock" [style.top.px]="getTopPosition(reservationData.reservationTime)"
+            [style.height.px]="getHeight(reservationData.useTime)"
+            [style.grid-column]="getTableGridColumn(reservationData)" (click)="onSelectReservation(reservationData)">
+
+            <div class="activityContent">
+              <span class="customerName">{{ reservationData.reservationName }}</span>
+              <span class="customerName">{{ reservationData.reservationPhone }}</span>
+              <span class="tableTime">{{ reservationData.reservationTime | slice:0:5 }} - {{ reservationData.endTime }}</span>
+            </div>
+          </div>
+          }
+        </div>
+
+      </div>
+    </div>
+  </div>

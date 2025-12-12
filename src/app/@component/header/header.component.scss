@@ -9,6 +9,16 @@
   color: white;
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  padding: 18px;
   box-sizing: border-box; /* 確保 padding 不會撐大寬度 */
+}
+
+
+.titleCss{
+  font-size: 12px;
+}
+
+.iconBox{
+  margin-top: 30px;
+  text-align: center;
 }

@@ -1,0 +1,138 @@
+.dialogTitle {
+  margin: 0;
+  padding: 14px 24px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #013c70;
+  border-bottom: 1px solid #eee;
+}
+
+/* 內容區域排版 */
+.dialogContent {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 28px !important;
+  min-width: 400px;
+}
+
+/* 標籤樣式 */
+.dialogContent label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+  margin-top: 4px;
+}
+
+/* 新增：橫向排版容器 */
+.formRow {
+  display: flex;
+  gap: 45px;
+  width: 100%;
+}
+
+/* 新增：單一欄位容器 */
+.formField {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 為了讓對齊更整齊，微調 formField 裡面的 label 間距 */
+.formField label {
+  margin-top: 0;
+}
+
+/* 純文字顯示區域 (分類名稱) */
+.staticText {
+  padding: 8px 12px;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  color: #333;
+  font-weight: 500;
+}
+
+/* 輸入框與文字區域 styledInput */
+.styledInput {
+  padding: 10px 12px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  outline: none;
+  background: #fff;
+  transition: border-color 0.2s;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* 輸入框 Focus 效果 */
+.styledInput:focus {
+  border-color: #013c70;
+  background-color: #fdfdfd;
+}
+
+/* 針對 textarea 特別調整 */
+textarea.styledInput {
+  resize: vertical;
+  min-height: 50px;
+}
+
+/* 檔案選取狀態 */
+.fileStatus {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #2e7d32;
+  background: #e8f5e9;
+  padding: 8px;
+  border-radius: 4px;
+  margin-top: 4px;
+}
+
+.fileStatus mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+/* 按鈕區域 */
+.dialogActions {
+  padding: 16px 24px !important;
+  border-top: 1px solid #eee;
+  gap: 12px;
+}
+
+/* 按鈕通用樣式 dialogBtn */
+.dialogBtn {
+  padding: 10px 24px;
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+}
+
+/* 取消按鈕 cancelBtn */
+.cancelBtn {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  color: #666;
+}
+
+.cancelBtn:hover {
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+/* 確定按鈕 confirmBtn */
+.confirmBtn {
+  background-color: #013c70;
+  color: #fff;
+}
+
+.confirmBtn:hover {
+  background-color: #fe6d13;
+  box-shadow: 0 2px 4px rgba(1, 60, 112, 0.2);
+}

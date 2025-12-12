@@ -1,17 +1,31 @@
 <div class="background">
 
-  <!-- dialog標題 -->
-  <div mat-dialog-title class="diaTitle">刪除訂位</div>
-
-  <!-- dialog內容 -->
-  <mat-dialog-content>
-
-  <div>
-    確定是否刪掉此筆訂位?
+  <div mat-dialog-title class="diaTitle">
+    @if (data.deleteType == 'reservation') {
+      刪除訂位
+    } @else if (data.deleteType == 'product') {
+      刪除餐點
+    } @else if (data.deleteType == 'option') {
+      刪除客製化項目
+    } @else if (data.deleteType == 'set') {
+      刪除套餐
+    }
   </div>
+
+  <mat-dialog-content>
+    <div>
+      @if (data.deleteType == 'reservation') {
+        確定是否刪掉此筆訂單?
+      } @else if (data.deleteType == 'product') {
+        確定是否刪掉此餐點? (刪除後將無法復原)
+      } @else if (data.deleteType == 'option'){
+        確定是否刪掉此筆客製化?
+      } @else if (data.deleteType == 'set'){
+        確定是否刪掉此套餐?
+      }
+    </div>
   </mat-dialog-content>
 
-  <!-- dialog按鈕 -->
   <mat-dialog-actions>
     <div class="btnBox">
       <button (click)="onNoClick()" class="btn">取消</button>
@@ -19,4 +33,3 @@
     </div>
   </mat-dialog-actions>
 </div>
-

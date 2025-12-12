@@ -1,0 +1,124 @@
+/* 標題 */
+.diaTitle {
+  margin: 0;
+  padding: 20px 24px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #013c70;
+  border-bottom: 1px solid #eee;
+}
+
+/* 內容區域 */
+.dialogContent {
+  padding: 24px !important;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;              /* 每一排之間的距離 */
+  min-width: 500px;       /* 設定最小寬度，避免欄位擠在一起 */
+}
+
+/* 每一排的容器 (formRow) */
+.formRow {
+  display: flex;
+  gap: 16px;              /* 左右欄位之間的距離 */
+  width: 100%;
+}
+
+/* 單一欄位包裝 (formField) */
+.formField {
+  flex: 1;                /* 關鍵：讓該排的所有欄位平均分配寬度 */
+  display: flex;
+  flex-direction: column; /* Label 在上，Input 在下 */
+}
+
+/* Label 樣式 */
+.formField label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 6px;     /* Label 與 Input 的距離 */
+}
+
+/* 輸入框通用樣式 (styledInput) */
+.styledInput {
+  padding: 10px 12px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  outline: none;
+  background-color: #fff;
+  transition: all 0.2s;
+  width: 100%;            /* 填滿父容器 */
+  box-sizing: border-box; /* 確保 padding 不會撐大寬度 */
+}
+
+/* 輸入框 Focus */
+.styledInput:focus {
+  border-color: #013c70;
+  background-color: #fdfdfd;
+}
+
+/* 針對 select 的微調 */
+select.styledInput {
+  cursor: pointer;
+  background-color: #fff;
+}
+
+/* 針對 Disabled 的欄位 (例如兒童椅) */
+select.styledInput:disabled {
+  background-color: #f0f0f0;
+  color: #999;
+  cursor: not-allowed;
+}
+
+/* 針對 Textarea */
+textarea.styledInput {
+  resize: vertical;       /* 只允許垂直拉伸 */
+  min-height: 80px;
+}
+
+/* 備註欄位可能需要強制滿版 (雖然上面 flex:1 已經處理了，但保留這個 class 以備不時之需) */
+.fullWidth {
+  width: 100%;
+}
+
+/* 按鈕區域 */
+.dialogActions {
+  padding: 16px 24px !important;
+  border-top: 1px solid #eee;
+  gap: 12px;
+}
+
+/* 通用按鈕樣式 */
+.dialogBtn {
+  padding: 10px 28px;
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+}
+
+/* 取消按鈕 */
+.cancelBtn {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  color: #666;
+}
+
+.cancelBtn:hover {
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+/* 確定按鈕 */
+.confirmBtn {
+  background-color: #013c70;
+  color: #fff;
+}
+
+.confirmBtn:hover {
+  background-color: #fe6d13;
+  box-shadow: 0 2px 4px rgba(1, 60, 112, 0.25);
+}

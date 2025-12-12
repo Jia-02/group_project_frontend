@@ -1,8 +1,11 @@
+<<<<<<< HEAD
 
 import { categoryDto } from './../@interface/interface';
+=======
+import { categoryDto, productList } from './../@interface/interface';
+>>>>>>> reserve
 import { Injectable } from '@angular/core';
-import { reservation, scheduleItem, tables } from '../@interface/interface';
-import { BehaviorSubject } from 'rxjs';
+import { reservation } from '../@interface/interface';
 
 import { HttpClient } from '@angular/common/http';
 
@@ -17,23 +20,31 @@ export class DataService {
   constructor(private http: HttpClient) { }
 
 
+  // 分類列表
+  allCategoryDto: categoryDto[] = [];
+
+  // 產品列表(單點)
+  productList: productList[] = [];
+
+  // 預約資料
   reservation: reservation[] = [];
 
+<<<<<<< HEAD
   // 每天所有預約的 scheduleItem 列表
   dailyReservations: Map<string, scheduleItem[]> = new Map();
+=======
+  // 套餐列表
+  setList: any[] = [];
+>>>>>>> reserve
 
-  // 用 Map 保存每個日期的桌位狀態，讓不同日期可以有獨立的桌位設定
-  tableAvailableByDate: Map<string, tables[]> = new Map();
+  // 客製化選項列表
+  optionList: any[] = [];
 
-  // 觀察菜單分類
-  private category$ = new BehaviorSubject<categoryDto[]>([]);
-  _catagory$ = this.category$.asObservable();
+  // 附餐與飲料列表
+  sideDishList: productList[] = [];
+  drinkDishList: productList[] = [];
 
-  // 更新菜單分類
-  updateCategoryList(categories: categoryDto[]): void {
-    this.category$.next(categories);
-  }
-
+<<<<<<< HEAD
   getApi(url: string): any {
     return this.http.get(url);
   }
@@ -42,6 +53,10 @@ export class DataService {
     return this.http.post(url, postData);
   }
 
+=======
+  // 桌位列表
+  tableIdList: any[] = [];
+>>>>>>> reserve
 
 }
 

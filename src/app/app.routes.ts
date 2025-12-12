@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { TabsComponent } from './tabs/tabs.component';
+<<<<<<< HEAD
 
 import { TableComponent } from './table/table.component';
 import { MealStatusComponent } from './meal-status/meal-status.component';
@@ -20,4 +21,13 @@ export const routes: Routes = [
 
 
 
+=======
+import { MenuAdminComponent } from './menu-admin/menu-admin.component';
+import { ReserveComponent } from './reserve/reserve.component';
+
+export const routes: Routes = [
+  { path: 'tabs', component: TabsComponent },
+  { path: 'menuAdmin', component: MenuAdminComponent},
+  { path: 'reserve', component: ReserveComponent},
+>>>>>>> reserve
 
