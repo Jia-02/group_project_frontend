@@ -12,18 +12,26 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class MealStatusUserComponent {
 
-  constructor(private service:DataService,private activatedRoute:ActivatedRoute){}
-  orderId!:any;
-  mealStatus!:MealStatus;
+  constructor(private service: DataService, private activatedRoute: ActivatedRoute) { }
+  orderId!: any;
+  mealStatus!: MealStatus;
 
   ngOnInit(): void {
     console.log(this.activatedRoute.snapshot.queryParamMap.get('orderId'))
     this.orderId = this.activatedRoute.snapshot.queryParamMap.get('orderId')
+    if (this.orderId) {
+      let url = "http://localhost:8080/meal/status?orderId=" + this.orderId;
+      this.service.getApi(url).subscribe((res: MealStatusRes) => {
+        this.mealStatus = res.mealStatus;
+      })
+    }
+  }
+
+  search() {
     let url = "http://localhost:8080/meal/status?orderId=" + this.orderId;
-    this.service.getApi(url).subscribe((res:MealStatusRes)=>{
+    this.service.getApi(url).subscribe((res: MealStatusRes) => {
       this.mealStatus = res.mealStatus;
     })
-
   }
 
 }
