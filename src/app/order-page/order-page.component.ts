@@ -8,8 +8,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDialog } from '@angular/material/dialog';
 import { OrderDialogComponent } from '../order-dialog/order-dialog.component';
 import { CheckOutDialogComponent } from '../check-out-dialog/check-out-dialog.component';
-import { DataService } from '../data/data.service';
+
 import { A11yModule } from "@angular/cdk/a11y";
+import { DataService } from '../@service/data.service';
 
 @Component({
   selector: 'app-order-page',

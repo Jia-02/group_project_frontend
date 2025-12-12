@@ -1,9 +1,10 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { DataService } from '../data/data.service';
+
 import { CommonModule } from '@angular/common';
 import { MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { MatIcon } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
+import { DataService } from '../@service/data.service';
 
 @Component({
   selector: 'app-setting-detail-dialog',

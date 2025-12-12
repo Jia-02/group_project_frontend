@@ -3,7 +3,8 @@ import { MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle, MAT_D
 import { FullOrderData } from '../order-page/order-page.component';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
-import { DataService } from '../data/data.service';
+import { DataService } from '../@service/data.service';
+
 
 @Component({
   selector: 'app-check-out-dialog',

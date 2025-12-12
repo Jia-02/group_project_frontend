@@ -2,8 +2,9 @@ import { Component, Inject } from '@angular/core';
 import { MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
-import { DataService } from '../data/data.service';
+
 import { FormsModule } from '@angular/forms';
+import { DataService } from '../@service/data.service';
 
 @Component({
   selector: 'app-send-order-dialog',

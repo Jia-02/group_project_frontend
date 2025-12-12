@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTabChangeEvent, MatTabsModule } from '@angular/material/tabs';
-import { DataService } from '../data/data.service';
+
 import { Observable, of } from 'rxjs';
 import { ProductDetailDialogComponent } from '../product-detail-dialog/product-detail-dialog.component';
 import { SettingDetailDialogComponent } from '../setting-detail-dialog/setting-detail-dialog.component';
 import { OrderService } from '../order.service';
 import { SendOrderDialogComponent } from '../send-order-dialog/send-order-dialog.component';
+import { DataService } from '../@service/data.service';
 
 @Component({
   selector: 'app-menu',
