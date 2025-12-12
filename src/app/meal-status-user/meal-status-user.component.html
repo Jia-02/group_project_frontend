@@ -1,6 +1,5 @@
 <div>
   <div style="display: flex; ">
-
     <span style="flex: 1 1 auto;"></span>
     @if(mealStatus){
     <div style="border: 1px solid black; border-radius: 10px; padding: 5%;">
@@ -8,7 +7,6 @@
       <span>訂單狀態:{{mealStatus.mealStatus}}</span> <br> <br>
       <span>完成時間剩餘:{{mealStatus.estimatedTime}}分鐘</span> <br> <br>
       <span>預計訂單送達時間:{{mealStatus.finishTime}}</span> <br> <br>
-
     </div>
     }@else {
     <span>訂單編號:</span>
@@ -16,7 +14,5 @@
     <button (click)="search()">查詢</button>
     }
     <span style="flex: 1 1 auto;"></span>
-
   </div>
-
 </div>
