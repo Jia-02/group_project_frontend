@@ -1,9 +1,8 @@
 import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { CommonModule, DatePipe } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
 import { DataService } from '../@service/data.service';
 
 @Component({
@@ -13,10 +12,10 @@ import { DataService } from '../@service/data.service';
     CommonModule,
     MatInputModule,
     FormsModule,
-    MatButtonModule,
     MatDialogContent,
     MatDialogActions,
     ReactiveFormsModule,
+    MatDialogTitle,
   ],
   templateUrl: './activity-check-dialog.component.html',
   styleUrl: './activity-check-dialog.component.scss'

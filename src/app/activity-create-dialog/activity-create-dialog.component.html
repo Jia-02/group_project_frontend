@@ -31,7 +31,7 @@
 
 </mat-dialog-content>
 
-<mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close (click)="closeDialog()">取消</button>
-  <button mat-button color="primary" (click)="submit()">下一步</button>
+<mat-dialog-actions>
+  <button (click)="closeDialog()">取消</button>
+  <button (click)="submit()">下一步</button>
 </mat-dialog-actions>

@@ -1,22 +1,20 @@
-<mat-dialog-content>
-  <h2 mat-dialog-title>{{ activity.calendarTitle }}</h2>
+<h2 mat-dialog-title>{{ activity.calendarTitle }}</h2>
 
-  <div mat-dialog-content>
-    <p>{{ activity.calendarDescription }}</p>
-    <div class="activity-photo-container">
-      @if (activity.calendarPhoto) {
-        <img [src]="activity.calendarPhoto" alt="{{ activity.calendarTitle }} 活動照片" style="width: 200px; height: 200px;">
-      } @else {
-        <p>此活動沒有可顯示的圖片。</p>
-      }
-    </div>
-    <small>
-      {{ activity.calendarStartDate | date:'yyyy/MM/dd ' }}~{{ activity.calendarEndDate | date:'yyyy/MM/dd ' }}
-    </small>
+<mat-dialog-content>
+  <p>{{ activity.calendarDescription }}</p>
+  <div class="activity-photo-container">
+    @if (activity.calendarPhoto) {
+    <img [src]="activity.calendarPhoto" alt="{{ activity.calendarTitle }} 活動照片" style="width: 200px; height: 200px;">
+    } @else {
+    <p>此活動沒有可顯示的圖片。</p>
+    }
   </div>
+  <small>
+    {{ activity.calendarStartDate | date:'yyyy/MM/dd ' }}~{{ activity.calendarEndDate | date:'yyyy/MM/dd ' }}
+  </small>
 </mat-dialog-content>
 
 
-<div mat-dialog-actions align="end">
-  <button mat-button (click)="close()">關閉</button>
-</div>
+<mat-dialog-actions>
+  <button (click)="close()">關閉</button>
+</mat-dialog-actions>

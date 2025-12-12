@@ -1,5 +1,6 @@
+<h2 mat-dialog-title>活動標題:{{ activityData.calendarTitle }}</h2>
+
 <mat-dialog-content>
-  <h4>活動標題:</h4> {{ activityData.calendarTitle }} <br>
   <h4>活動時間:</h4> {{ activityData.calendarStartDate | date:'yyyy/MM/dd'}} ~ {{ activityData.calendarEndDate | date:'yyyy/MM/dd'}} <br>
   <h4>活動內容:</h4> {{ activityData.calendarDescription }}
 
@@ -10,8 +11,8 @@
   }
 </mat-dialog-content>
 
-<mat-dialog-actions align="end">
-  <button mat-button (click)="onPublishClick()">發布</button>
-  <button mat-button (click)="onSaveClick()">暫存</button>
-  <button mat-button (click)="onCancelClick()">取消</button>
+<mat-dialog-actions>
+  <button (click)="onPublishClick()">發布</button>
+  <button (click)="onSaveClick()">暫存</button>
+  <button (click)="onCancelClick()">取消</button>
 </mat-dialog-actions>

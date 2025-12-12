@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatDialogActions, MatDialogContent, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 
@@ -11,10 +10,10 @@ import { MatInputModule } from '@angular/material/input';
     MatFormFieldModule,
     MatInputModule,
     FormsModule,
-    MatButtonModule,
     MatDialogContent,
     MatDialogActions,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatDialogTitle,
   ],
   templateUrl: './activity-create-dialog.component.html',
   styleUrl: './activity-create-dialog.component.scss'
