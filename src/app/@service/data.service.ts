@@ -1,4 +1,4 @@
-import { categoryDto, productList, productListRes } from './../@interface/interface';
+import { categoryDto, productList } from './../@interface/interface';
 import { Injectable } from '@angular/core';
 import { reservation } from '../@interface/interface';
 

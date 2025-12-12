@@ -1,51 +1,69 @@
 .background {
-  text-align: left;
-  padding: 30px 30PX;
+  padding: 8px 0;
+  text-align: center;
 }
 
+/* 標題 diaTitle */
 .diaTitle {
   font-size: 18px;
-  font-weight: 500;
-  margin-bottom: 20px;
-  text-align: center;
-  letter-spacing: 2px;
+  font-weight: 600;
+  color: #fe6d13;
+  margin: 0 0 16px 0;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #eee;
 }
 
+/* 內容區域 (自動對應 mat-dialog-content) */
+mat-dialog-content {
+  font-size: 16px;
+  color: #444;
+  line-height: 1.5;
+  min-height: 60px;
 
-.btn {
-  width: 100px;
-  height: 35px;
-  border-radius: 20px;
-  background: #971D10;
-  border: 2px solid #971D10;
-  color: #fafafa;
-  font-size: 14px;
-  font-weight: 500;
-  letter-spacing: 2px;
-  cursor: pointer;
-
-  &:hover {
-    color: #971D10;
-    background: #fafafa;
-  }
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
+/* 按鈕容器 btnBox */
 .btnBox {
   display: flex;
   justify-content: center;
-  gap: 30px;
+  gap: 16px;
   width: 100%;
+  margin-top: 8px;
 }
 
-.inputBoxCss {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 20px;
+/* 通用按鈕樣式 btn */
+.btn {
+  padding: 10px 28px;
+  font-size: 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
 }
 
-label {
-  white-space: nowrap; /* 確保標籤文字不會換行 */
-  font-weight: 500;
+/* 第一個按鈕：取消 (白底灰框) */
+.btn:first-child {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  color: #666;
 }
 
+.btn:first-child:hover {
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+/* 第二個按鈕：確定 (紅底白字) */
+.btn:last-child {
+  background-color: #fe6d13;
+  color: #fff;
+  font-weight: bold;
+  box-shadow: 0 2px 5px rgba(211, 47, 47, 0.3);
+}
+
+.btn:last-child:hover {
+  background-color: #fe6d13;
+}

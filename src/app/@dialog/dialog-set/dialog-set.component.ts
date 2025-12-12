@@ -110,21 +110,27 @@ export class DialogSetComponent {
       this.optionVo.settingImg = `/${folderName}/${this.selectedFile.name}`;
     }
 
-    const sideCat = this.categoryList.find(c => c.categoryType.trim() == '炸物');
-    const drinkCat = this.categoryList.find(c => c.categoryType.trim() == '飲料');
+    // 找出炸物 與 飲料 的 Category ID
+    let realSideCatId = 0;
+    let realDrinkCatId = 0;
 
-    // 如果找不到分類，預設為 0
-    const realSideCatId = sideCat ? sideCat.categoryId : 0;
-    const realDrinkCatId = drinkCat ? drinkCat.categoryId : 0;
+    for (const cat of this.categoryList) {
+      const typeName = cat.categoryType.trim();
+      if (typeName == '炸物') {
+        realSideCatId = cat.categoryId;
+      }
+      if (typeName == '飲料') {
+        realDrinkCatId = cat.categoryId;
+      }
+    }
 
     const details = []; // 組裝 settingDetail
 
-    // 主餐 (使用選單綁定的 mainCatId)
+    // 主餐
     if (this.selections.mainCatId > 0 && this.selections.mainIds.length > 0) {
-
       const selectedProducts = [];
 
-      // 遍歷所有主餐清單，找出被勾選的項目
+      // 所有主餐清單，找出被勾選的項目
       for (const p of this.mainDishList) {
         if (this.selections.mainIds.includes(p.productId)) {
           selectedProducts.push({
@@ -134,32 +140,48 @@ export class DialogSetComponent {
         }
       }
 
-      details.push({
-        categoryId: Number(this.selections.mainCatId),
-        detailList: selectedProducts // 這裡放入陣列
-      });
+      // 加入主餐細節
+      if (selectedProducts.length > 0) {
+        details.push({
+          categoryId: this.selections.mainCatId,
+          detailList: selectedProducts
+        });
+      }
     }
 
     // 抓取附餐
     if (this.selections.sideId > 0 && realSideCatId > 0) {
-      const target = this.sideDishList.find(p => p.productId == this.selections.sideId);
+      let sideName = '';
+
+      for (const side of this.sideDishList) {
+        if (side.productId == this.selections.sideId) {
+          sideName = side.productName;
+        }
+      }
+
       details.push({
-        categoryId: Number(realSideCatId),
+        categoryId: realSideCatId,
         detailList: [{
-          productId: Number(this.selections.sideId),
-          productName: target ? target.productName : ''
+          productId: this.selections.sideId,
+          productName: sideName
         }]
       });
     }
 
     // 抓取飲料
     if (this.selections.drinkId > 0 && realDrinkCatId > 0) {
-      const target = this.drinkDishList.find(p => p.productId == this.selections.drinkId);
+      let drinkName = '';
+      for (const drink of this.drinkDishList) {
+        if (drink.productId == this.selections.drinkId) {
+          drinkName = drink.productName;
+        }
+      }
+
       details.push({
-        categoryId: realDrinkCatId,
+        categoryId: Number(realDrinkCatId),
         detailList: [{
           productId: Number(this.selections.drinkId),
-          productName: target ? target.productName : ''
+          productName: drinkName
         }]
       });
     }
@@ -167,7 +189,6 @@ export class DialogSetComponent {
     // 將組裝好的內容放進 Payload
     this.optionVo.settingDetail = details;
 
-    // 定義一個處理函式：成功後把資料 (this.optionVo) 丟回給父層
     const handleSuccess = (res: any) => {
       if (res.code == 200) {
         if (res.settingId) {
@@ -190,29 +211,41 @@ export class DialogSetComponent {
   // 切換主餐分類，抓該分類的產品
   onMainCategoryChange() {
     this.mainDishList = [];
-    this.selections.mainIds = []; // ★ 清空已選陣列
+    this.selections.mainIds = [];
 
     if (this.selections.mainCatId > 0) {
       this.httpClientService.getApi(`http://localhost:8080/product/list?categoryId=${this.selections.mainCatId}`)
         .subscribe((res: any) => {
-          if (res.code == 200 && res.productList) {
-            this.mainDishList = res.productList.filter((p: any) => p.productActive === true);
+          if (res.code == 200) {
+            for (const p of res.productList) {
+              if (p.productActive == true) {
+                this.mainDishList.push(p);
+              }
+            }
           }
         });
     }
   }
 
-  // ★ 新增方法: 處理主餐勾選/取消勾選
+  // 處理主餐勾選/取消勾選
   toggleMainSelection(productId: number, event: any) {
     const isChecked = event.target.checked;
+
+    // 如果是勾選 -> 加入陣列
     if (isChecked) {
       this.selections.mainIds.push(productId);
     } else {
-      this.selections.mainIds = this.selections.mainIds.filter(id => id !== productId);
+      for (let i = 0; i < this.selections.mainIds.length; i++) {
+        // 比對 ID
+        if (this.selections.mainIds[i] == productId) {
+          this.selections.mainIds.splice(i, 1); // 移除該項目
+          break;
+        }
+      }
     }
   }
 
-  // ★ 新增方法: 判斷是否已勾選 (給 HTML 顯示用)
+  // 判斷是否已勾選
   isMainSelected(productId: number): boolean {
     return this.selections.mainIds.includes(productId);
   }
@@ -220,41 +253,58 @@ export class DialogSetComponent {
 
   // 解析既有的 Detail 資料並回填
   existingDetails() {
-    if (!this.optionVo.settingDetail || this.optionVo.settingDetail.length === 0) return;
+    // 檢查資料是否存在
+    if (!this.optionVo.settingDetail || this.optionVo.settingDetail.length == 0) {
+      return;
+    }
 
-    // 找出分類 ID
-    const sideCat = this.categoryList.find(c => c.categoryType.trim() == '炸物');
-    const drinkCat = this.categoryList.find(c => c.categoryType.trim() == '飲料');
-    const realSideCatId = sideCat ? sideCat.categoryId : -1;
-    const realDrinkCatId = drinkCat ? drinkCat.categoryId : -1;
+    // 找炸物與飲料的分類ID (設一個絕對不可能存在於資料庫的 ID)
+    let realSideCatId = -1;
+    let realDrinkCatId = -1;
 
-    for (const group of this.optionVo.settingDetail) {
-      const cId = Number(group.categoryId); // 這一組的分類 ID
-      if (!group.detailList || group.detailList.length === 0) continue;
+    for (const cat of this.categoryList) {
+      const typeName = cat.categoryType.trim();
 
-      // 1. 檢查是否為附餐 (通常附餐只有一個選項，取第一個即可)
-      if (cId == realSideCatId) {
-        this.selections.sideId = Number(group.detailList[0].productId);
-        continue;
+      if (typeName == '炸物') {
+        realSideCatId = cat.categoryId;
       }
 
-      // 2. 檢查是否為飲料
-      if (cId == realDrinkCatId) {
-        this.selections.drinkId = Number(group.detailList[0].productId);
-        continue;
-      }
-
-      // 3. 剩下的就是主餐 (處理複選回填)
-      this.selections.mainCatId = cId;
-      this.selections.mainIds = []; // 先清空，確保乾淨
-
-      // 將該分類下的所有 productId 都推入 mainIds
-      for (const item of group.detailList) {
-        this.selections.mainIds.push(Number(item.productId));
+      if (typeName == '飲料') {
+        realDrinkCatId = cat.categoryId;
       }
     }
 
-    // 如果有抓到主餐分類，就去後端撈該分類的所有產品列表 (為了顯示 Checkbox)
+    for (const group of this.optionVo.settingDetail) {
+      const cId = group.categoryId; // 這一組的分類 ID
+
+      // 如果沒有 detailList 或長度為 0
+      if (!group.detailList || group.detailList.length == 0) {
+        continue;
+      }
+
+      // 檢查是否為附餐
+      if (cId == realSideCatId) {
+        const firstItem = group.detailList[0];
+        this.selections.sideId = firstItem.productId;
+      }
+
+      // 檢查是否為飲料
+      if (cId == realDrinkCatId) {
+        const firstItem = group.detailList[0];
+        this.selections.drinkId = firstItem.productId;
+      }
+
+      // 剩下的就是主餐
+      this.selections.mainCatId = cId;
+      this.selections.mainIds = [];
+
+      // 將該分類下的所有 productId 都推入 mainIds
+      for (const item of group.detailList) {
+        this.selections.mainIds.push(item.productId);
+      }
+    }
+
+    // 如果有抓到主餐分類，就去後端抓該分類的所有產品列表
     if (this.selections.mainCatId > 0) {
       this.loadMainDishForEdit(this.selections.mainCatId);
     }

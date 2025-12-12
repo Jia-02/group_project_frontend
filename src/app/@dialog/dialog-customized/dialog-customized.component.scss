@@ -1,0 +1,191 @@
+.dialogTitle {
+  margin: 0;
+  padding: 14px 24px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #013c70;
+  border-bottom: 1px solid #eee;
+}
+
+/* 內容區域排版 */
+.dialogContent {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 28px !important;
+  min-width: 400px;
+}
+
+.dialogContent label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+  margin-top: 4px;
+}
+
+.styledInput {
+  padding: 10px 12px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  outline: none;
+  background: #fff;
+  transition: border-color 0.2s;
+}
+
+.styledInput:focus {
+  border-color: #013c70;
+}
+
+/* --- 本頁面專用樣式 --- */
+
+/* 單選/複選區塊 */
+.selectionGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.toggleButtons {
+  display: flex;
+  gap: 12px;
+}
+
+/* 切換按鈕樣式 */
+.typeBtn {
+  flex: 1; /* 兩個按鈕平分寬度 */
+  padding: 10px;
+  border: 1px solid #ddd;
+  background: #f9f9f9;
+  color: #666;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+/* 按鈕被選中時的樣式 (active) */
+.typeBtn.active {
+  background: #013c70; /* 主色背景 */
+  color: #fff;         /* 白字 */
+  border-color: #013c70;
+}
+
+/* 分隔線 */
+.divider {
+  height: 1px;
+  background: #eee;
+  margin: 8px 0;
+}
+
+.sectionLabel {
+  margin-bottom: 4px;
+}
+
+/* 選項列表容器 */
+.optionsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 300px; /* 如果選項太多可以捲動 */
+  overflow-y: auto;
+  padding-right: 4px; /* 預留捲軸空間 */
+}
+
+/* 單一選項列 (Row) */
+.optionRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/*前面的 radio/checkbox icon */
+.iconPlaceholder mat-icon {
+  font-size: 20px;
+  color: #ccc;
+  display: flex; /* 修正對齊 */
+}
+
+/* 選項名稱輸入框 */
+.nameInput {
+  flex: 1; /* 佔據剩餘空間 */
+}
+
+/* 價格輸入區塊 */
+.priceGroup {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.priceGroup label {
+  margin: 0;
+  color: #888;
+  font-weight: normal;
+}
+
+/* 價格輸入框 (寬度固定小一點) */
+.priceInput {
+  width: 80px;
+  text-align: right;
+}
+
+/* 新增選項按鈕區域 */
+.addBtnArea {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* 置中比較好看 */
+  gap: 6px;
+  margin-top: 12px;
+  padding: 10px;
+  border: 2px dashed #013c70; /* 虛線框 */
+  border-radius: 6px;
+  color: #013c70;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.addBtnArea:hover {
+  background: #f0f6ff;
+}
+
+.addBtnArea mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+/* --- 按鈕區域 (沿用) --- */
+.dialogActions {
+  padding: 16px 24px !important;
+  border-top: 1px solid #eee;
+  gap: 12px;
+}
+
+.dialogBtn {
+  padding: 10px 24px;
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  border: none;
+}
+
+.cancelBtn {
+  background: #fff;
+  border: 1px solid #ddd;
+  color: #666;
+}
+
+.confirmBtn {
+  background: #013c70;
+  color: #fff;
+}
+
+.confirmBtn:hover {
+  background-color: #fe6d13;
+  box-shadow: 0 2px 4px rgba(1, 60, 112, 0.2);
+}

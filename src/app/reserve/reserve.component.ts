@@ -177,7 +177,7 @@ export class ReserveComponent {
 
     // 監聽關閉，若更新成功刷新畫面
     dialogRef.afterClosed().subscribe(res => {
-      console.log('Dialog result:'+  res);
+      console.log('Dialog result:' + res);
       if (res) {
         this.selectedReservationData = null!;
         this.loadingReservation();
@@ -324,6 +324,8 @@ export class ReserveComponent {
     }
 
     const dialogRef = this.dialog.open(DialogReserveComponent, {
+      width: '80%',        // 設定寬一點 (原本預設約 50vw)
+      height: 'auto',        // 讓高度自動適應內容
       data: {
         tableId: currentTableId,
         reservationDate: this.selectedDay,
@@ -331,8 +333,6 @@ export class ReserveComponent {
         defaultTableId: targetTableId,
         defaultTime: targetTime,
       },
-      height: '490px',
-      maxWidth: '900px',
     });
 
     // 新增後也要重新載入全覽

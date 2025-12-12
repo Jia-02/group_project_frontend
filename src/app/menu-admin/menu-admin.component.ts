@@ -1,5 +1,5 @@
 import { DataService } from './../@service/data.service';
-import { categoryDto, productList } from './../@interface/interface';
+import { categoryDto, optionVo, productList } from './../@interface/interface';
 import { HttpClientService } from './../@service/http-client.service';
 import { Component, inject } from '@angular/core';
 import { MatTabChangeEvent, MatTabsModule } from '@angular/material/tabs';
@@ -48,6 +48,7 @@ export class MenuAdminComponent {
   setList: any[] = []; // 用來存套餐列表
   sideDishList: any[] = [];   // 用於儲存附餐列表
   drinkDishList: any[] = [];  // 用於儲存飲料列表
+  currentCategory!: categoryDto;
 
   // 新增單個分類
   categoryDto: categoryDto = {
@@ -63,32 +64,33 @@ export class MenuAdminComponent {
 
   // Mat Tab 切換到哪個分頁
   onTabChange(event: MatTabChangeEvent): void {
-    const selectedCategoryIndex = event.index; // 取得使用者點的分頁
-    // 判斷是否點擊了最後一個「新增分類」按鈕
-    if (selectedCategoryIndex == this.allCategoryDto.length) {
-      // 這是「新增分類」的分頁
+    const index = event.index;
+    const targetCategory = this.dataService.allCategoryDto[index];  // 是否為最後一個新增分類按鈕
+    this.handleCategoryChange(targetCategory); // 如果是 undefined > 點到新增分類
+  }
+
+  // 分類核心邏輯合併
+  handleCategoryChange(category: categoryDto) {
+    // 清空 Service 資料
+    this.dataService.productList = [];
+    this.dataService.setList = [];
+    this.dataService.optionList = [];
+
+    // 判斷是否為新增分類模式
+    if (!category) {
       this.currentCategoryId = 0;
-      this.productList = [];
-      this.optionList = [];
-      this.setList = []; // 清空套餐
+      return;
     }
-    const selectedCategory = this.allCategoryDto[selectedCategoryIndex];
 
-    if (selectedCategory) {
-      this.currentCategoryId = selectedCategory.categoryId;
-      this.optionList = []; // 切換時先清空選項
+    this.currentCategory = category;
+    this.currentCategoryId = category.categoryId;
 
-      // 判斷是否為套餐分類
-      if (selectedCategory.categoryType == '套餐') {
-        this.productList = []; // 清空普通產品
-        this.setList = [];
-        this.loadSets(this.currentCategoryId);
-
-      } else {
-        this.setList = []; // 清空套餐
-        this.loadProducts(this.currentCategoryId);
-        this.customizedList(this.currentCategoryId);
-      }
+    // 一般分類模式
+    if (category.categoryType == '套餐') {
+      this.loadSets(this.currentCategoryId);
+    } else {
+      this.loadProducts(this.currentCategoryId);
+      this.customizedList(this.currentCategoryId);
     }
   }
 
@@ -103,23 +105,12 @@ export class MenuAdminComponent {
           this.allCategoryDto = res.categoryDto; // 更新分類列表
           this.dataService.allCategoryDto = this.allCategoryDto; // 更新到service
 
-          // 如果有抓到分類，預設抓第一筆分類的產品與客製化選項
-          if (this.allCategoryDto.length > 0) {
-            const firstCategory = this.allCategoryDto[0];
-            this.currentCategoryId = firstCategory.categoryId;
-
-            if (firstCategory.categoryType == '套餐') {
-              this.loadSets(this.currentCategoryId);
-              // 確保其他列表清空
-              this.productList = [];
-            } else {
-              this.loadProducts(this.currentCategoryId);
-              this.customizedList(this.currentCategoryId);
-              this.setList = [];
-            }
+          // 預設載入第一筆
+          if (this.dataService.allCategoryDto.length > 0) {
+            this.handleCategoryChange(this.dataService.allCategoryDto[0]);
           }
         }
-      })
+      });
   }
 
   // 新增分類
@@ -133,7 +124,7 @@ export class MenuAdminComponent {
             this.isEditMode = false; // 回復成新增模式
             this.selectedTabIndex = 0; // (選項) 更新完跳回第一個分頁
           }
-        })
+        });
     } else {
       this.httpClientService.postApi('http://localhost:8080/category/add', this.categoryDto)
         .subscribe((res: any) => {
@@ -144,7 +135,6 @@ export class MenuAdminComponent {
           }
         });
     }
-
   }
 
   // 更新分類
@@ -155,10 +145,8 @@ export class MenuAdminComponent {
       categoryType: targetCategory.categoryType,
       workstationId: targetCategory.workstationId
     };
-
     this.selectedTabIndex = this.allCategoryDto.length;
   }
-
 
 
   // 刪除分類
@@ -191,7 +179,6 @@ export class MenuAdminComponent {
       .subscribe((res: any) => {
         // 成功收到api
         if (res.code == 200) {
-          // this.dataService.productListRes = res;
           // 如果api的分類 = tab的分頁
           if (res.categoryId == this.currentCategoryId) {
             this.productList = res.productList || [];
@@ -204,23 +191,15 @@ export class MenuAdminComponent {
 
   // 新增餐點
   addProduct() {
-    // 找分類對應的飲料
-    let currentCategoryType = '';
-    for (let categoryData of this.dataService.allCategoryDto) {
-      // if (this.dataService.productListRes.categoryId == categoryData.categoryId) {
-      //   currentCategoryType = categoryData.categoryType;
-      // }
-    }
-
     const dialogRef = this.dialog.open(DialogMenuComponent, {
       data: {
-        categoryId: this.currentCategoryId,
-        categoryType: currentCategoryType,
+        categoryId: this.currentCategory.categoryId,
+        categoryType: this.currentCategory.categoryType,
       }
     });
 
     dialogRef.afterClosed().subscribe(res => {
-      if (res == true) {
+      if (res) {
         this.loadProducts(this.currentCategoryId);
       }
     });
@@ -229,28 +208,24 @@ export class MenuAdminComponent {
   // 是否上架餐點
   launchProduct(product: productList) {
     product.categoryId = this.currentCategoryId;
-    this.httpClientService.postApi('http://localhost:8080/product/update', product)
-      .subscribe((res: any) => {
-        if (res.code == 200) {
-        }
-      })
+    this.httpClientService.postApi('http://localhost:8080/product/update', product).subscribe();
   }
 
   // 更新餐點
   updateProduct(product: productList) {
 
     // 找出目前的分類名稱
-    let currentCategoryType = '';
-    for (let categoryData of this.dataService.allCategoryDto) {
-      if (this.currentCategoryId == categoryData.categoryId) {
-        currentCategoryType = categoryData.categoryType;
-      }
-    }
+    // let currentCategoryType = '';
+    // for (let categoryData of this.dataService.allCategoryDto) {
+    //   if (this.currentCategoryId == categoryData.categoryId) {
+    //     currentCategoryType = categoryData.categoryType;
+    //   }
+    // }
 
     const dialogRef = this.dialog.open(DialogMenuComponent, {
       data: {
         categoryId: this.currentCategoryId,
-        categoryType: currentCategoryType,
+        categoryType: this.currentCategory.categoryType,
         product: product,
         isEditMode: true
       }
@@ -288,39 +263,41 @@ export class MenuAdminComponent {
     const apiUrl = `http://localhost:8080/setting/list?categoryId=${categoryId}`;
     this.httpClientService.getApi(apiUrl)
       .subscribe((res: any) => {
-        // 成功收到api
         if (res.code == 200) {
-          console.log(res);
           this.setList = res.optionVoList || [];
-
+          this.dataService.setList = this.setList;
         } else {
-          this.setList = []; // 失敗或沒資料時清空
+          this.dataService.setList = [];
         }
       });
   }
 
-  // 準備抓套餐
+  // 準備套餐的資料 -> 存 Service -> 開 Dialog 然後再傳入 Data
   prepareSetData(callback: () => void) {
-    // 先清空舊資料
-    this.sideDishList = [];
-    this.drinkDishList = [];
+    this.dataService.sideDishList = [];
+    this.dataService.drinkDishList = [];
     let sideCategoryId = 0;
     let drinkCategoryId = 0;
 
     // 找出附餐和飲料的 Category ID
-    for (let c of this.allCategoryDto) {
-      const typeName = c.categoryType.trim();
-      if (typeName == '炸物') sideCategoryId = c.categoryId;
-      if (typeName == '飲料') drinkCategoryId = c.categoryId;
+    for (let catgoryData of this.dataService.allCategoryDto) {
+      if (catgoryData.categoryType == '炸物') sideCategoryId = catgoryData.categoryId;
+      if (catgoryData.categoryType == '飲料') drinkCategoryId = catgoryData.categoryId;
     }
 
     // 抓飲料
-    const fetchDrink = () => {
+    const findDrink = () => {
+      // 如果有飲料id
       if (drinkCategoryId > 0) {
         this.httpClientService.getApi(`http://localhost:8080/product/list?categoryId=${drinkCategoryId}`)
           .subscribe((res: any) => {
-            if (res.code == 200 && res.productList) {
-              this.drinkDishList = res.productList.filter((p: any) => p.productActive == true);
+            if (res.code == 200) {
+              for (const p of res.productList) {
+                // 且有上架
+                if (p.productActive == true) {
+                  this.dataService.drinkDishList.push(p);
+                }
+              }
             }
             callback();
           });
@@ -330,43 +307,41 @@ export class MenuAdminComponent {
     };
 
     // 抓附餐 > 成功後去抓飲料
+    // 如果有附餐
     if (sideCategoryId > 0) {
       this.httpClientService.getApi(`http://localhost:8080/product/list?categoryId=${sideCategoryId}`)
         .subscribe((res: any) => {
-          if (res.code == 200 && res.productList) {
-            this.sideDishList = res.productList.filter((p: any) => p.productActive == true);
+          if (res.code == 200) {
+            for (const p of res.productList) {
+              // 且有上架
+              if (p.productActive == true) {
+                this.dataService.sideDishList.push(p);
+              }
+            }
           }
-          fetchDrink(); // 接著抓飲料
+          findDrink(); // 接著抓飲料
         });
     } else {
-      fetchDrink();
+      findDrink();
     }
   }
 
   // 新增套餐
   addSets() {
     this.prepareSetData(() => {
-      // 找出目前的分類名稱
-      let currentCategoryType = '';
-      const c = this.allCategoryDto.find(c => c.categoryId === this.currentCategoryId);
-      if (c) {
-        currentCategoryType = c.categoryType;
-      }
-
       const dialogRef = this.dialog.open(DialogSetComponent, {
-
         data: {
           allCategories: this.allCategoryDto,
           sideDishList: this.sideDishList,
           drinkDishList: this.drinkDishList,
           currentCategoryId: this.currentCategoryId,
-          categoryType: currentCategoryType
+          categoryType: this.currentCategory.categoryType
         }
       });
 
-      dialogRef.afterClosed().subscribe((newSet: any) => {
-        if (newSet) {
-          this.setList.push(newSet);
+      dialogRef.afterClosed().subscribe((res: any) => {
+        if (res) {
+          this.loadSets(this.currentCategoryId);
         }
       });
     });
@@ -376,32 +351,21 @@ export class MenuAdminComponent {
   updateSet(pkg: any) {
     // 附餐與飲料的選項清單
     this.prepareSetData(() => {
-
-      // 找出目前的分類名稱 (顯示用)
-      let currentCategoryType = '';
-      const c = this.allCategoryDto.find(c => c.categoryId == this.currentCategoryId);
-      if (c) {
-        currentCategoryType = c.categoryType;
-      }
-
       const dialogRef = this.dialog.open(DialogSetComponent, {
         data: {
           allCategories: this.allCategoryDto,
-          sideDishList: this.sideDishList,   // 附餐選單來源
-          drinkDishList: this.drinkDishList, // 飲料選單來源
+          sideDishList: this.sideDishList,
+          drinkDishList: this.drinkDishList,
           currentCategoryId: this.currentCategoryId,
-          categoryType: currentCategoryType,
+          categoryType: this.currentCategory.categoryType,
           targetSet: pkg,
           isEditMode: true
         }
       });
 
-      dialogRef.afterClosed().subscribe((updatedSet: any) => {
-        if (updatedSet) {
-          const index = this.setList.findIndex(x => x.settingId == pkg.settingId);
-          if (index !== -1) {
-            this.setList[index] = updatedSet;
-          }
+      dialogRef.afterClosed().subscribe((res: any) => {
+        if (res) {
+          this.loadSets(this.currentCategoryId);
         }
       });
     });
@@ -446,21 +410,20 @@ export class MenuAdminComponent {
       settingImg: pkg.settingImg,
       settingActive: pkg.settingActive,
       settingNote: pkg.settingNote,
-      categoryId: Number(this.currentCategoryId),
+      categoryId: this.currentCategoryId,
       settingDetail: cleanDetail
     };
 
     this.httpClientService.postApi('http://localhost:8080/setting/update', payload)
       .subscribe((res: any) => {
         if (res.code == 200) {
-          console.log(res);
           this.loadSets(this.currentCategoryId);
         }
       })
   }
 
   // 刪除套餐
-  delSet(pkg: any) {
+  delSet(pkg: optionVo) {
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       data: {
         deleteType: 'set',
@@ -476,44 +439,26 @@ export class MenuAdminComponent {
     });
   }
 
-  // 取得分類名稱
-  getCategoryName(categoryId: number | string): string {
-    if (!this.allCategoryDto || this.allCategoryDto.length == 0) {
-      return '';
-    }
-    // 強制轉成 Number
-    const id = Number(categoryId);
-    const category = this.allCategoryDto.find(c => c.categoryId == id);
-    return category ? category.categoryType : '未知分類';
-  }
-
   // =================== 客製化 =====================
 
   // 客製化列表
   customizedList(categoryId: number) {
-
     const apiUrl = `http://localhost:8080/option/list?categoryId=${categoryId}`;
     this.httpClientService.getApi(apiUrl)
       .subscribe((res: any) => {
         if (res.code == 200) {
-          this.optionList = res.optionVoList || [];
-          // this.dataService.optionsCache.push({
-          //   categoryId: categoryId,
-          //   data: this.optionList
-          // });
-        } else {
-          this.optionList = []; // 失敗或沒資料時清空
+          this.dataService.optionList = res.optionVoList || [];
+          this.optionList = this.dataService.optionList;
         }
-      })
+      });
   }
-
 
   // 新增客製化
   addCustomized() {
     const dialogRef = this.dialog.open(DialogCustomizedComponent, {
       data: {
         categoryId: this.currentCategoryId, // 傳入當前的分類 ID
-        existingOptions: this.optionList // 目前的選項列表
+        existingOptions: this.dataService.optionList // 目前的選項列表
       }
     });
 
@@ -529,7 +474,7 @@ export class MenuAdminComponent {
     const dialogRef = this.dialog.open(DialogCustomizedComponent, {
       data: {
         categoryId: this.currentCategoryId,
-        existingOptions: this.optionList,
+        existingOptions: this.dataService.optionList,
         targetOption: targetOption,
         isEditMode: true
       }
@@ -562,6 +507,58 @@ export class MenuAdminComponent {
 
   // ================ 輔助 ===================
 
+  // 當點擊套餐時
+  onSetSelected(pkg: optionVo) {
+    this.optionList = [];
+    this.dataService.optionList = [];
+
+    // 檢查套餐是否有內容
+    if (!pkg.settingDetail || pkg.settingDetail.length == 0) {
+      return;
+    }
+
+    // 找出附餐和飲料的 Category ID
+    let sideCatId = 0;
+    let drinkCatId = 0;
+
+    for (const cat of this.allCategoryDto) {
+      if (cat.categoryType.trim() == '炸物') sideCatId = cat.categoryId;
+      if (cat.categoryType.trim() == '飲料') drinkCatId = cat.categoryId;
+    }
+
+    // 收集所有不重複的 CategoryId
+    const categoryIds: number[] = [];
+    for (const group of pkg.settingDetail) {
+      const cId = group.categoryId;
+
+      // 判斷 ID 有效，且陣列裡沒有這個id
+      if (cId > 0 && !categoryIds.includes(cId)) {
+        categoryIds.push(cId);
+      }
+    }
+
+    // 暫存陣列
+    const mainOptions: any[] = [];  // 主餐選項
+    const sideOptions: any[] = [];  // 附餐選項
+    const drinkOptions: any[] = []; // 飲料選項
+
+    for (const categoryId of categoryIds) {
+      this.httpClientService.getApi(`http://localhost:8080/option/list?categoryId=${categoryId}`)
+        .subscribe((res: any) => {
+          if (res.code == 200) {
+            if (categoryId == sideCatId) {
+              sideOptions.push(...res.optionVoList);
+            } else if (categoryId == drinkCatId) {
+              drinkOptions.push(...res.optionVoList);
+            } else {
+              mainOptions.push(...res.optionVoList);
+            }
+            this.optionList = [...mainOptions, ...sideOptions, ...drinkOptions];
+            this.dataService.optionList = this.optionList;
+          }
+        });
+    }
+  }
 
   // 重製分類
   resetForm() {

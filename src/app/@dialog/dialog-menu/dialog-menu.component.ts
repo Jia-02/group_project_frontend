@@ -1,11 +1,11 @@
-import { productListRes } from './../../@interface/interface';
 import { DataService } from './../../@service/data.service';
 import { HttpClientService } from './../../@service/http-client.service';
 import { Component, inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogTitle } from '@angular/material/dialog';
-import { categoryDto, productList } from '../../@interface/interface';
+import { productList } from '../../@interface/interface';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-dialog-menu',
@@ -14,7 +14,8 @@ import { CommonModule } from '@angular/common';
     MatDialogContent,
     MatDialogTitle,
     FormsModule,
-    CommonModule
+    CommonModule,
+    MatIconModule
   ],
   templateUrl: './dialog-menu.component.html',
   styleUrl: './dialog-menu.component.scss'
@@ -25,12 +26,11 @@ export class DialogMenuComponent {
     private httpClientService: HttpClientService,
     private dataService: DataService) { }
 
+  readonly dialogRef = inject(MatDialogRef<DialogMenuComponent>);
+  readonly data = inject<any>(MAT_DIALOG_DATA);
+
   selectedFile: File | null = null; // 儲存使用者選中的檔案
-  categoryDto: categoryDto = {
-    categoryId: 0,
-    categoryType: '',
-    workstationId: 2
-  };
+  categoryType: string = '';
 
   productList: productList = {
     productId: 0,
@@ -44,21 +44,19 @@ export class DialogMenuComponent {
   };
   isEditMode: boolean = false;
 
-  readonly dialogRef = inject(MatDialogRef<DialogMenuComponent>);
-  readonly data = inject<any>(MAT_DIALOG_DATA);
+
 
   ngOnInit(): void {
-
-    this.categoryDto.categoryType = this.data.categoryType;
+    this.categoryType = this.data.categoryType;
+    this.productList.categoryId = this.data.categoryId;
     this.isEditMode = this.data.isEditMode || false;  // 判斷是否為編輯模式
 
     if (this.isEditMode && this.data.product) {
-      this.productList = { ...this.data.product };
+      this.productList = { ...this.data.product }; // 深入拷貝
       this.productList.categoryId = this.data.categoryId;
     } else {
-      // 新增模式 初始化
-      this.productList.categoryId = this.data.categoryId;
-      this.searchProduct(this.productList.categoryId);
+      // 新增模式
+      this.countNextProductId();
     }
   }
 
@@ -92,8 +90,7 @@ export class DialogMenuComponent {
         '炸物': 'fried'
       };
 
-      const currentType = this.categoryDto.categoryType;
-      const folderName = folderMap[currentType]; // 加個預設避免報錯
+      const folderName = folderMap[this.categoryType]; // 加個預設避免報錯
       this.productList.imageUrl = `/${folderName}/${this.selectedFile.name}`;
     }
 
@@ -111,7 +108,6 @@ export class DialogMenuComponent {
 
     this.httpClientService.postApi('http://localhost:8080/product/add', this.productList)
       .subscribe((res: any) => {
-        console.log(res);
         if (res.code == 200) {
           this.dialogRef.close(true);
         }
@@ -123,41 +119,43 @@ export class DialogMenuComponent {
     this.httpClientService.postApi('http://localhost:8080/product/update', this.productList)
       .subscribe((res: any) => {
         if (res.code == 200) {
-          console.log(res);
-
           this.dialogRef.close(true);
-        } else {
-          console.log(res);
-
         }
       });
   }
 
 
-  // 找商品
-  searchProduct(categoryId: number) {
-    const apiUrl = `http://localhost:8080/product/list?categoryId=${categoryId}`;
-    this.httpClientService.getApi(apiUrl).subscribe((res: any) => {
-      if (res.code == 200) {
-        this.dataService.productListRes.productList = res.productList;
-        console.log('DataService 更新完成，目前數量:', this.dataService.productListRes.productList.length);
-      }
-    })
-  }
-
   // 計算商品id
-  countNextProductId() {
-    const allProducts = this.dataService.productListRes.productList;
+countNextProductId() {
+    const categories = this.dataService.allCategoryDto;
+
+    // 如果完全沒分類，就從 1 開始
+    if (!categories || categories.length == 0) {
+      this.productList.productId = 1;
+      return;
+    }
 
     let maxId = 0;
-    // 迴圈該分類下產品ID的最大值加1
-    for (let product of allProducts) {
-      if (product.productId && product.productId > maxId) {
-        maxId = product.productId;
-      }
+    let completedCount = 0;
+    const totalCount = categories.length;
+
+    for (const cat of categories) {
+      this.httpClientService.getApi(`http://localhost:8080/product/list?categoryId=${cat.categoryId}`)
+        .subscribe((res: any) => {
+          if (res.code == 200 && res.productList) {
+            for (const p of res.productList) {
+              const pid = Number(p.productId);
+              if (pid > maxId) {
+                maxId = pid; // 更新最大值
+              }
+            }
+          }
+          completedCount++;
+          if (completedCount == totalCount) {
+            this.productList.productId = maxId + 1;
+          }
+        });
     }
-    this.productList.productId = maxId + 1;
-    console.log('算出來的新 ID 是:', this.productList.productId);
   }
 
 

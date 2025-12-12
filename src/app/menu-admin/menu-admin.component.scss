@@ -8,7 +8,43 @@
   flex: 1;
 }
 
-.card-grid {
+.tabLabel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.labelText {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.actionIcons {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* 覆寫 mat-icon-button 的預設大小，做成迷你版 */
+.mini-btn {
+  width: 24px !important;
+  height: 24px !important;
+  line-height: 20px !important;
+  padding: 0 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 調整 Icon 本身的大小以配合迷你按鈕 */
+.mini-btn mat-icon {
+  font-size: 18px !important; /* Icon 縮小 */
+  width: 18px !important;
+  height: 18px !important;
+}
+
+.cardGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
@@ -25,16 +61,16 @@
 }
 
 .card img {
-  height: 150px;
-  object-fit: cover;
+  height: 170px;
+  object-fit: cover;  // 保持原始比例的情況下，填滿整個容器
 }
 
-.card-body {
-  padding: 12px;
+.cardBody {
+  padding: 20px;
   flex: 1;
 }
 
-.card-title {
+.cardTitle {
   font-weight: 600;
   margin-bottom: 6px;
 }
@@ -47,17 +83,19 @@
 .price {
   margin-top: 8px;
   font-weight: bold;
-  color: #013c70;
+  color: #fe6d13;
 }
 
-.card-footer {
-  padding: 10px 12px;
+
+.cardFooter {
+  padding: 10px 20px;
   display: flex;
   justify-content: space-between;
   border-top: 1px solid #eee;
 }
 
-.add-card {
+
+.addCard {
   border: 2px dashed #013c70;
   color: #013c70;
   display: flex;
@@ -67,40 +105,69 @@
   cursor: pointer;
 }
 
-.add-card:hover {
+.addCard:hover {
   background: #f0f6ff;
 }
 
 /* 客製化 Sidebar */
-.customize-sidebar {
+.customizeSidebar {
   width: 300px;
   background: #fff;
   border-radius: 10px;
-  padding: 16px;
+  padding: 35px;
   box-shadow: 0 2px 6px rgba(0,0,0,.12);
+  display: flex;
+  flex-direction: column;
 }
 
-.sidebar-title {
+/* sidebar-title -> sidebarTitle */
+.sidebarTitle {
   font-weight: bold;
   text-align: center;
   border-bottom: 1px solid #eee;
   padding-bottom: 8px;
 }
 
-.customize-group {
+/* customize-group -> customizeGroup */
+.customizeGroup {
   margin-top: 16px;
+  margin-bottom: 20px;
 }
 
-.customize-header {
+/* customize-header -> customizeHeader */
+.customizeHeader {
   display: flex;
   justify-content: space-between;
   font-weight: 500;
 }
 
-.customize-item {
+/* customize-item -> customizeItem */
+.customizeItem {
   display: flex;
   align-items: center;
-  margin: 6px 0;
+  margin: 10px 0;
+}
+
+.addCustomize {
+  margin-top: 16px;
+  width: 100%;
+  height: 40px;
+  background: #fff;
+  border: 2px dashed #013c70;
+  color: #013c70;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+  box-shadow: none;
+}
+
+/* 滑鼠移過去的效果 */
+.addCustomize:hover {
+  background: #f0f6ff;
 }
 
 .extra {
@@ -109,3 +176,70 @@
   font-weight: bold;
 }
 
+/* 新增分類表單容器：設計成一張置中的卡片 */
+.addCategoryForm {
+  max-width: 500px;
+  margin: 50px auto;
+  padding: 32px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* 標題樣式 */
+.addCategoryForm h3 {
+  text-align: center;
+  color: #013c70;
+  margin: 0 0 8px 0;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+/* 標籤文字 */
+.addCategoryForm label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: -8px;
+}
+
+/* 輸入框與選單通用樣式 */
+.addCategoryForm input,
+.addCategoryForm select {
+  padding: 10px 12px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  outline: none;
+  transition: border-color 0.2s;
+  background-color: #fafafa;
+}
+
+/* 輸入框 Focus 狀態 (點擊時變色) */
+.addCategoryForm input:focus,
+.addCategoryForm select:focus {
+  border-color: #013c70;      /* 變成主色 */
+  background-color: #fff;
+}
+
+/* 按鈕樣式 */
+.addCategoryForm button {
+  margin-top: 12px;
+  padding: 12px;
+  background-color: #013c70;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.addCategoryForm button:hover {
+  background-color: #fe6d13;
+}

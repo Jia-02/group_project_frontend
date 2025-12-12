@@ -1,70 +1,124 @@
-.background {
-  text-align: left;
-  padding: 30px 30PX;
-}
-
+/* 標題 */
 .diaTitle {
+  margin: 0;
+  padding: 20px 24px;
   font-size: 18px;
-  font-weight: 500;
-  margin-bottom: 20px;
-  text-align: center;
-  letter-spacing: 2px;
+  font-weight: 600;
+  color: #013c70;
+  border-bottom: 1px solid #eee;
 }
 
-
-.btn {
-  width: 100px;
-  height: 35px;
-  border-radius: 20px;
-  background: #971D10;
-  border: 2px solid #971D10;
-  color: #fafafa;
-  font-size: 14px;
-  font-weight: 500;
-  letter-spacing: 2px;
-  cursor: pointer;
-
-  &:hover {
-    color: #971D10;
-    background: #fafafa;
-  }
-}
-
-.btnBox {
+/* 內容區域 */
+.dialogContent {
+  padding: 24px !important;
   display: flex;
-  justify-content: center;
-  gap: 30px;
+  flex-direction: column;
+  gap: 16px;              /* 每一排之間的距離 */
+  min-width: 500px;       /* 設定最小寬度，避免欄位擠在一起 */
+}
+
+/* 每一排的容器 (formRow) */
+.formRow {
+  display: flex;
+  gap: 16px;              /* 左右欄位之間的距離 */
   width: 100%;
 }
 
-.inputBoxCss {
+/* 單一欄位包裝 (formField) */
+.formField {
+  flex: 1;                /* 關鍵：讓該排的所有欄位平均分配寬度 */
   display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 20px;
+  flex-direction: column; /* Label 在上，Input 在下 */
 }
 
-label {
-  white-space: nowrap; /* 確保標籤文字不會換行 */
+/* Label 樣式 */
+.formField label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 6px;     /* Label 與 Input 的距離 */
+}
+
+/* 輸入框通用樣式 (styledInput) */
+.styledInput {
+  padding: 10px 12px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  outline: none;
+  background-color: #fff;
+  transition: all 0.2s;
+  width: 100%;            /* 填滿父容器 */
+  box-sizing: border-box; /* 確保 padding 不會撐大寬度 */
+}
+
+/* 輸入框 Focus */
+.styledInput:focus {
+  border-color: #013c70;
+  background-color: #fdfdfd;
+}
+
+/* 針對 select 的微調 */
+select.styledInput {
+  cursor: pointer;
+  background-color: #fff;
+}
+
+/* 針對 Disabled 的欄位 (例如兒童椅) */
+select.styledInput:disabled {
+  background-color: #f0f0f0;
+  color: #999;
+  cursor: not-allowed;
+}
+
+/* 針對 Textarea */
+textarea.styledInput {
+  resize: vertical;       /* 只允許垂直拉伸 */
+  min-height: 80px;
+}
+
+/* 備註欄位可能需要強制滿版 (雖然上面 flex:1 已經處理了，但保留這個 class 以備不時之需) */
+.fullWidth {
+  width: 100%;
+}
+
+/* 按鈕區域 */
+.dialogActions {
+  padding: 16px 24px !important;
+  border-top: 1px solid #eee;
+  gap: 12px;
+}
+
+/* 通用按鈕樣式 */
+.dialogBtn {
+  padding: 10px 28px;
+  font-size: 15px;
   font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
 }
 
-.inputBoxCss:last-child {
-  /* 備註和電話放在同一行，讓備註欄位寬度拉開 */
-  align-items: flex-start;  /* 電話號碼頂部對齊 */
+/* 取消按鈕 */
+.cancelBtn {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  color: #666;
 }
 
-.inputCss, textarea {
-  height: 30px; /* 增加輸入框高度，更易點擊 */
-  padding: 4px 5px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-  flex-grow: 1; /* 讓輸入框佔滿剩餘寬度 */
-  margin-right: 5px;
+.cancelBtn:hover {
+  background-color: #f5f5f5;
+  color: #333;
 }
 
-textarea {
-  height: 80px; /* 備註欄位的高度 */
-  resize: vertical; /* 允許用戶垂直調整大小 */
+/* 確定按鈕 */
+.confirmBtn {
+  background-color: #013c70;
+  color: #fff;
+}
+
+.confirmBtn:hover {
+  background-color: #fe6d13;
+  box-shadow: 0 2px 4px rgba(1, 60, 112, 0.25);
 }

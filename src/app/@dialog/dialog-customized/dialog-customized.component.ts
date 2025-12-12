@@ -59,6 +59,8 @@ export class DialogCustomizedComponent {
       } else {
         this.currentType = 'S';
       }
+    } else {
+      this.countNextGlobalOptionId();
     }
   }
 
@@ -79,8 +81,6 @@ export class DialogCustomizedComponent {
       option: '',
       addPrice: 0
     });
-
-
   }
 
   // 取消
@@ -105,14 +105,11 @@ export class DialogCustomizedComponent {
 
   // 新增
   createCheck() {
-    this.nextOptionId();
+    this.countNextGlobalOptionId();
     this.httpClientService.postApi('http://localhost:8080/option/add', this.customizedData)
       .subscribe((res: any) => {
         if (res.code == 200) {
-          console.log(res);
           this.dialogRef.close(true);
-        } else {
-          console.log(res);
         }
       })
   }
@@ -122,28 +119,49 @@ export class DialogCustomizedComponent {
     this.httpClientService.postApi('http://localhost:8080/option/update', this.customizedData)
       .subscribe((res: any) => {
         if (res.code == 200) {
-          console.log(res);
           this.dialogRef.close(true);
-        } else {
-          console.log(res);
         }
       });
   }
 
   // 計算下一個 ID
-  nextOptionId() {
-    const optionlist = this.data.existingOptions || [];
-    let maxId = 0;
+  countNextGlobalOptionId() {
+    // 取得所有分類
+    const categories = this.dataService.allCategoryDto;
 
-    // 跑迴圈找出目前最大的 optionId
-    for (let opt of optionlist) {
-      // 如果是同一個 categoryId
-      const currentId = Number(opt.optionId);
-      if (currentId > maxId) {
-        maxId = currentId;
-      }
+    // 如果完全沒分類，就從 1 開始
+    if (!categories || categories.length == 0) {
+      this.customizedData.optionId = 1;
+      return;
     }
-    this.customizedData.optionId = maxId + 1; // 新的 ID 為 最大值 + 1
+
+    let maxId = 0;
+    let completedCount = 0;
+    const totalCount = categories.length;
+
+    // 針對每一個分類發送 API
+    for (const cat of categories) {
+      this.httpClientService.getApi(`http://localhost:8080/option/list?categoryId=${cat.categoryId}`)
+        .subscribe((res: any) => {
+
+          if (res.code == 200 && res.optionVoList) {
+            const list = res.optionVoList;
+            // 所有選項
+            for (const opt of list) {
+              const oid = Number(opt.optionId);
+              if (oid > maxId) {
+                maxId = oid;
+              }
+            }
+          }
+          completedCount++;
+
+          // 判斷是否全部跑完
+          if (completedCount == totalCount) {
+            this.customizedData.optionId = maxId + 1;
+          }
+        });
+    }
   }
 
 }
