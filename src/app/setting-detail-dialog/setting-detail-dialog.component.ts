@@ -205,7 +205,6 @@ export class SettingDetailDialogComponent {
       const product = categoryGroup.detailList.find(p => p.productId === selectedProductId);
       if (!product) return;
 
-      // ⭐ 只拿「這個餐點」的客製化
       const options = this.getOptionsByCategory(categoryGroup.categoryId);
 
       options.forEach(o => totalOptionPrice += o.addPrice);
@@ -222,6 +221,7 @@ export class SettingDetailDialogComponent {
     const pricePerUnit = this.data.settingPrice + totalOptionPrice;
 
     const orderDetailItem = {
+      pricePerUnit: pricePerUnit,
       settingId: this.data.settingId,
       quantity: this.quantity,
       orderDetailsPrice: pricePerUnit * this.quantity,

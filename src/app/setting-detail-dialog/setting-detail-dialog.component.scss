@@ -1,9 +1,157 @@
-.buttonCss{
-  width: 400px;
-  height: 50px;
+@media screen and (max-width: 768px) {
+  .mat-mdc-dialog-container .mat-mdc-dialog-surface {
+    width: 95vw !important;
+    max-height: 95vh;
+    max-width: none !important;
+  }
+
+  .mat-mdc-dialog-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    margin: 0;
+    font-size: 1.3em;
+    border-bottom: 1px solid #eee;
+  }
+
+  mat-dialog-content {
+    padding: 0 20px 150px 20px !important;
+    overflow-y: auto;
+    flex-grow: 1;
+  }
+
+  mat-dialog-content img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 10px;
+  }
+
+  mat-dialog-content > span {
+    font-weight: bold;
+    font-size: 1.2em;
+    display: block;
+    margin-bottom: 15px;
+  }
 }
 
-.numberCss{
-  width: 265px;
-  height: 30px;
+@media screen and (max-width: 768px) {
+  mat-step h3 {
+    font-size: 1.2em;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    color: #007bff;
+  }
+
+  mat-step h4 {
+    display: flex;
+    align-items: flex-start;
+    font-size: 1em;
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+  }
+
+  mat-step h4 input[type="radio"] {
+    min-width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    margin-top: 2px;
+  }
+
+  .option-group {
+    padding: 10px;
+    border: 1px solid #f0f0f0;
+    border-radius: 8px;
+    margin-top: 15px;
+  }
+
+  .option-group label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 1em;
+    padding: 8px 0;
+    cursor: pointer;
+  }
+
+  .option-group label input[type="checkbox"],
+  .option-group label input[type="radio"] {
+    min-width: 20px;
+    height: 20px;
+    margin-right: 10px;
+  }
+
+  .stepper-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+  }
+
+  .stepper-actions button {
+    padding: 8px 15px;
+    font-size: 1em;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .mat-mdc-dialog-actions {
+    padding: 10px 20px;
+    margin: 0;
+    position: fixed;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background-color: white;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+  }
+
+  .mat-mdc-dialog-actions:nth-last-of-type(2) {
+    bottom: 65px;
+    justify-content: center;
+    gap: 15px;
+  }
+
+  .mat-mdc-dialog-actions:last-of-type {
+    bottom: 0;
+    justify-content: space-between;
+  }
+
+  .mat-mdc-dialog-actions h3 {
+    font-size: 1.3em;
+    color: green;
+    margin: 0;
+    white-space: nowrap;
+  }
+
+  .buttonCss {
+    width: 60%;
+    max-width: 200px;
+    height: 45px;
+    font-size: 1.1em;
+  }
+
+  .numberCss {
+    width: 50px;
+    height: 35px;
+    font-size: 1.1em;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+
+  .mat-mdc-dialog-actions button:not(.buttonCss) {
+    width: 35px;
+    height: 35px;
+    min-width: 35px;
+    border-radius: 50%;
+    background-color: #f0f0f0;
+    line-height: 35px;
+  }
 }

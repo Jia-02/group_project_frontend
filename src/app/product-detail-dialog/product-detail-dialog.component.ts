@@ -95,6 +95,7 @@ export class ProductDetailDialogComponent {
     const orderDetailsPrice = itemPricePerUnit * this.quantity;
 
     const orderDetailItem = {
+        itemPricePerUnit: itemPricePerUnit,
         orderDetailsPrice: orderDetailsPrice,
         settingId: 0,
         quantity: this.quantity,

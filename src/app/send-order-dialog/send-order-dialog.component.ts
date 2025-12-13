@@ -46,18 +46,35 @@ export class SendOrderDialogComponent {
     const dateStr = now.toISOString().split('T')[0];
     const timeStr = now.toTimeString().split(' ')[0];
 
-    const targetDetailsList: TargetOrderDetailItem[] = this.data.orderDetailsList.map(rawItem => {
-      const targetOrderDetails: TargetProductDetail[] = rawItem.orderDetails.map(product => ({
-        ...product,
-        mealStatus: "製作中"
-      }));
+    const expandedDetailsList: RawOrderDetailItem[] = this.data.orderDetailsList.flatMap(rawItem => {
+        const quantity = rawItem.quantity && rawItem.quantity > 0 ? rawItem.quantity : 1;
+        return Array.from({ length: quantity }, (_, index) => ({
+            ...rawItem,
+            quantity: undefined as any
+        })) as RawOrderDetailItem[];
+    });
 
-      return {
-        orderDetailsId: rawItem.orderDetailsId,
-        orderDetailsPrice: rawItem.orderDetailsPrice,
-        settingId: rawItem.settingId,
-        orderDetails: targetOrderDetails
-      };
+    const targetDetailsList: TargetOrderDetailItem[] = expandedDetailsList.map((rawItem, index) => {
+        const targetOrderDetails: TargetProductDetail[] = rawItem.orderDetails.map(product => ({
+            ...product,
+            mealStatus: "製作中"
+        }));
+
+        let finalPricePerUnit: number;
+        const defaultProductPrice = rawItem.orderDetails[0]?.productPrice || 0;
+
+        if (rawItem.settingId === 0) {
+            finalPricePerUnit = (rawItem as any).itemPricePerUnit || defaultProductPrice;
+        } else {
+            finalPricePerUnit = (rawItem as any).pricePerUnit || defaultProductPrice;
+        }
+
+        return {
+            orderDetailsId: (rawItem.orderDetailsId * 1000 + index) * 1,
+            orderDetailsPrice: finalPricePerUnit,
+            settingId: rawItem.settingId,
+            orderDetails: targetOrderDetails
+        };
     });
 
     let customerName: string | null = null;
@@ -78,17 +95,17 @@ export class SendOrderDialogComponent {
         break;
     }
 
-    if( this.paymentType != '現金'){
-      this.data.paid == true;
+    if( this.paymentType !== '現金'){
+      this.data.paid = true;
     } else {
-      this.data.paid == false;
+      this.data.paid = false;
     }
 
     const finalPayload: TargetOrderData = {
       ordersType: this.data.ordersType,
       ordersDate: dateStr,
       ordersTime: timeStr,
-      totalPrice: this.calculateTotalPrice(this.data.orderDetailsList),
+      totalPrice: this.data.totalPrice || this.calculateTotalPrice(this.data.orderDetailsList),
       paymentType: this.paymentType,
       paid: this.data.paid,
       ordersCode: null,
@@ -108,7 +125,6 @@ export class SendOrderDialogComponent {
         this.dialogRef.close(finalPayload);
       }
       );
-    this.dialogRef.close(finalPayload);
   }
 
 }
@@ -128,6 +144,7 @@ interface RawOrderDetailItem {
   settingName: string;
   orderDetails: RawProductDetail[];
   settingOptions: any;
+  quantity?: number;
 }
 
 interface RawOrderData {
