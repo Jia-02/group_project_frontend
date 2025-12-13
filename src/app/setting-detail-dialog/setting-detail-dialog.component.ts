@@ -1,8 +1,8 @@
 import { Component, OnInit, Inject, inject } from '@angular/core';
-import {FormBuilder, Validators, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {MatInputModule} from '@angular/material/input';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatStepperModule} from '@angular/material/stepper';
+import { FormBuilder, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatStepperModule } from '@angular/material/stepper';
 import { CommonModule } from '@angular/common';
 import { MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { MatIcon } from '@angular/material/icon';
@@ -36,7 +36,7 @@ export class SettingDetailDialogComponent {
   public quantity: number = 1;
   public currentPrice: number = 0;
 
-  public currentSelections: Map<number, Set<string>> = new Map();
+  public currentSelections: Map<number, Map<number, Set<string>>> = new Map();
   public selectedMainProduct: Map<number, number> = new Map();
   public selectedMainProductPrice: Map<number, number> = new Map();
   public isSelectionComplete: boolean = false;
@@ -56,14 +56,14 @@ export class SettingDetailDialogComponent {
       }
     });
 
-    this.allOptionGroups.forEach(group => {
-      const selectedSet = new Set<string>();
+    this.data.settingDetail.forEach(category => {
+      const optionMap = new Map<number, Set<string>>();
 
-      if (group.optionDetail.length > 0) {
-        selectedSet.add(group.optionDetail[0].option);
-      }
+      category.optionList.forEach(optionGroup => {
+        optionMap.set(optionGroup.optionId, new Set<string>());
+      });
 
-      this.currentSelections.set(group.optionId, selectedSet);
+      this.currentSelections.set(category.categoryId, optionMap);
     });
 
     this.calculateTotalPrice();
@@ -83,40 +83,69 @@ export class SettingDetailDialogComponent {
     return this.selectedMainProduct.has(categoryId);
   }
 
-toggleSelection(selectedSet: Set<string>, option: string): void {
-  if (selectedSet.has(option)) {
-    selectedSet.delete(option);
-  } else {
-    selectedSet.add(option);
+  isOptionGroupValid(optionGroup: OptionDetail): boolean {
+    const selectedSet = this.currentSelections.get(optionGroup.optionId);
+    return !!selectedSet && selectedSet.size > 0;
   }
-}
+
+  toggleOption(categoryId: number, optionId: number, option: string) {
+    const set = this.currentSelections.get(categoryId)?.get(optionId);
+    if (!set) return;
+
+    set.has(option) ? set.delete(option) : set.add(option);
+    this.calculateTotalPrice();
+  }
+
+  selectRadio(categoryId: number, optionId: number, option: string) {
+    const set = this.currentSelections.get(categoryId)?.get(optionId);
+    if (!set) return;
+
+    set.clear();
+    set.add(option);
+    this.calculateTotalPrice();
+  }
 
   calculateTotalPrice(): void {
     let optionsPrice = 0;
 
-    this.allOptionGroups.forEach(group => {
-      const selectedOptions = this.currentSelections.get(group.optionId);
-      if (selectedOptions) {
-        group.optionDetail.forEach(item => {
-          if (selectedOptions.has(item.option)) {
+    // 逐一跑每個餐點
+    this.data.settingDetail.forEach(category => {
+
+      const optionMap = this.currentSelections.get(category.categoryId);
+      if (!optionMap) return;
+
+      // 跑該餐點底下的每個 optionGroup
+      category.optionList.forEach(optionGroup => {
+
+        const selectedSet = optionMap.get(optionGroup.optionId);
+        if (!selectedSet) return;
+
+        optionGroup.optionDetail.forEach(item => {
+          if (selectedSet.has(item.option)) {
             optionsPrice += item.addPrice;
           }
         });
-      }
+      });
     });
 
+    // 套餐選擇完整度（只檢查主餐）
     const totalCategoryGroups = this.data.settingDetail.length;
     const selectedProductCount = this.selectedMainProduct.size;
 
-    this.isSelectionComplete = totalCategoryGroups > 0 && totalCategoryGroups === selectedProductCount;
+    this.isSelectionComplete =
+      totalCategoryGroups > 0 &&
+      totalCategoryGroups === selectedProductCount;
 
     // 套餐原價
     const basePrice = this.data.settingPrice;
-    // 一套餐總價 (套餐價 + 所有選項價)
+
+    // 一套餐總價
     const pricePerUnit = basePrice + optionsPrice;
-    // 填入總價格
+
+    // 總價格
     this.currentPrice = pricePerUnit * this.quantity;
   }
+
 
   incrementQuantity(): void {
     this.quantity++;
@@ -136,61 +165,67 @@ toggleSelection(selectedSet: Set<string>, option: string): void {
     this.calculateTotalPrice();
   }
 
-  addToCart(): void {
-    const settingDetailList: DetailOption[] = [];
-    let settingOptionsPrice = 0;
+  private getOptionsByCategory(categoryId: number): DetailOption[] {
+    const result: DetailOption[] = [];
+    const optionMap = this.currentSelections.get(categoryId);
+    if (!optionMap) return result;
 
-    this.allOptionGroups.forEach(group => {
-      const selectedOptions = this.currentSelections.get(group.optionId);
-      if (selectedOptions) {
-        group.optionDetail.forEach(optionItem => {
-          if (selectedOptions.has(optionItem.option)) {
-            settingDetailList.push({
-              option: optionItem.option,
-              addPrice: optionItem.addPrice
-            });
-            settingOptionsPrice += optionItem.addPrice;
-          }
-        });
-      }
+    const category = this.data.settingDetail.find(c => c.categoryId === categoryId);
+    if (!category) return result;
+
+    category.optionList.forEach(group => {
+      const selectedSet = optionMap.get(group.optionId);
+      if (!selectedSet) return;
+
+      group.optionDetail.forEach(opt => {
+        if (selectedSet.has(opt.option)) {
+          result.push({
+            option: opt.option,
+            addPrice: opt.addPrice
+          });
+        }
+      });
     });
+
+    return result;
+  }
+
+
+
+  addToCart(): void {
 
     const orderDetails: OrderDetailProduct[] = [];
-    let isFirstProduct = true;
+    let totalOptionPrice = 0;
 
     this.data.settingDetail.forEach(categoryGroup => {
+
       const selectedProductId = this.selectedMainProduct.get(categoryGroup.categoryId);
+      if (!selectedProductId) return;
 
-      if (selectedProductId) {
-        const selectedProduct = categoryGroup.detailList.find(d => d.productId === selectedProductId);
+      const product = categoryGroup.detailList.find(p => p.productId === selectedProductId);
+      if (!product) return;
 
-        if (selectedProduct) {
-          const productDetail: OrderDetailProduct = {
-            categoryId: categoryGroup.categoryId,
-            productId: selectedProduct.productId,
-            productName: selectedProduct.productName,
-            productPrice: selectedProduct.productPrice,
-            detailList: []
-          };
+      // ⭐ 只拿「這個餐點」的客製化
+      const options = this.getOptionsByCategory(categoryGroup.categoryId);
 
-          if (isFirstProduct) {
-            productDetail.detailList.push(...settingDetailList);
-            isFirstProduct = false;
-          }
+      options.forEach(o => totalOptionPrice += o.addPrice);
 
-          orderDetails.push(productDetail);
-        }
-      }
+      orderDetails.push({
+        categoryId: categoryGroup.categoryId,
+        productId: product.productId,
+        productName: product.productName,
+        productPrice: product.productPrice,
+        detailList: options
+      });
     });
 
-    const itemPricePerUnit = this.data.settingPrice + settingOptionsPrice;
-    const orderDetailsPrice = itemPricePerUnit * this.quantity;
+    const pricePerUnit = this.data.settingPrice + totalOptionPrice;
 
     const orderDetailItem = {
-      orderDetailsPrice: orderDetailsPrice,
       settingId: this.data.settingId,
       quantity: this.quantity,
-      orderDetails: orderDetails,
+      orderDetailsPrice: pricePerUnit * this.quantity,
+      orderDetails
     };
 
     this.dialogRef.close(orderDetailItem);

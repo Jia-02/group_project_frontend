@@ -38,16 +38,17 @@
               <div class="option-group">
                 <p>{{ optionGroup.optionName }} 最多選擇 {{ optionGroup.maxSelect }} 項</p>
                 @for (optionItem of optionGroup.optionDetail; track optionItem.option) {
-                  @if (currentSelections.get(optionGroup.optionId); as selectedSet) {
+                  @if (currentSelections.get(categoryGroup.categoryId)?.get(optionGroup.optionId); as selectedSet) {
                     <label>
                       @if (optionGroup.maxSelect > 1) {
                         <input type="checkbox" [checked]="selectedSet.has(optionItem.option)"
-                               [disabled]="!selectedSet.has(optionItem.option) && selectedSet.size >= optionGroup.maxSelect"
-                               (change)="toggleSelection(selectedSet, optionItem.option); calculateTotalPrice();">
+                        [disabled]="!selectedSet.has(optionItem.option) && selectedSet.size >= optionGroup.maxSelect"
+                        (change)="toggleOption(categoryGroup.categoryId, optionGroup.optionId, optionItem.option)">
+
                       } @else {
-                        <input type="radio" [name]="'optionGroup_' + optionGroup.optionId"
-                               [checked]="selectedSet.has(optionItem.option)"
-                               (change)="selectedSet.clear(); selectedSet.add(optionItem.option); calculateTotalPrice();">
+                        <input type="radio" [name]="'opt_' + categoryGroup.categoryId + '_' + optionGroup.optionId"
+                        [checked]="selectedSet.has(optionItem.option)"
+                        (change)="selectRadio(categoryGroup.categoryId, optionGroup.optionId, optionItem.option)">
                       }
                       {{ optionItem.option }} (+NT$ {{ optionItem.addPrice }})
                     </label>
