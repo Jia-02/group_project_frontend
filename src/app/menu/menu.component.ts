@@ -8,6 +8,8 @@ import { SettingDetailDialogComponent } from '../setting-detail-dialog/setting-d
 import { OrderService } from '../order.service';
 import { SendOrderDialogComponent } from '../send-order-dialog/send-order-dialog.component';
 import { DataService } from '../@service/data.service';
+import { BoardDialogComponent } from '../board-dialog/board-dialog.component';
+import { Activity } from '../calendar/calendar.component';
 
 @Component({
   selector: 'app-menu',
@@ -38,6 +40,7 @@ export class MenuComponent {
   ngOnInit(): void {
     this.loadOrderDataFromService();
     this.loadInitialData();
+    this.openBoard();
   }
 
   loadOrderDataFromService(): void {
@@ -73,6 +76,48 @@ export class MenuComponent {
         }
       }
     );
+  }
+
+  openBoard() {
+    const apiUrl = 'http://localhost:8080/calendar/selectDate';
+
+    this.dataService.getApi(apiUrl)
+      .subscribe((res: any) => {
+        let rawActivities: any[] = [];
+        if (Array.isArray(res)) {
+          rawActivities = res;
+        } else if (res && (res.activities || res.calendarList)) {
+          rawActivities = res.activities || res.calendarList;
+        }
+
+        if (!Array.isArray(rawActivities)) {
+          console.error('API 返回的數據結構不符合預期，無法提取活動列表。');
+          rawActivities = [];
+        }
+
+        const processedActivities: Activity[] = rawActivities.map((act: any) => {
+          return {
+            ...act,
+            calendarStartDate: new Date(act.calendarStartDate),
+            calendarEndDate: new Date(act.calendarEndDate)
+          };
+        });
+
+        const hasActivities = processedActivities.length > 0;
+
+        if (hasActivities) {
+          console.log(`活動資料載入成功: 共 ${processedActivities.length} 筆`);
+        } else {
+          console.log('API 呼叫完成，但目前沒有公告活動。');
+        }
+
+        this.dialog.open(BoardDialogComponent, {
+          data: { activities: processedActivities },
+          width: '300px',
+          height: '90vh',
+          panelClass: 'full-screen-dialog'
+        });
+      });
   }
 
   onTabChange(event: MatTabChangeEvent): void {
