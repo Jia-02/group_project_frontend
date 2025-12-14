@@ -1,3 +1,4 @@
+import { OrderDetailList } from './../@service/data.service';
 import { Component, Inject } from '@angular/core';
 import { MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { CommonModule } from '@angular/common';
@@ -30,7 +31,52 @@ export class SendOrderDialogComponent {
     }
   }
 
-  paymentType: string = 'creditCard';
+  paymentType: string = '信用卡';
+
+  reduce(item: RawOrderDetailItem): void {
+    if (item.quantity > 1) {
+      item.quantity--;
+      this.recalculateItemPriceAndTotal(item);
+    } else if (item.quantity === 1) {
+      const index = this.data.orderDetailsList.indexOf(item);
+      if (index > -1) {
+        this.data.orderDetailsList.splice(index, 1);
+        this.data.totalPrice = this.calculateTotalPrice(this.data.orderDetailsList); // 重新計算總額
+      }
+    }
+  }
+
+  add(item: RawOrderDetailItem): void {
+    item.quantity++;
+    this.recalculateItemPriceAndTotal(item);
+  }
+
+  private recalculateItemPriceAndTotal(item: RawOrderDetailItem): void {
+    let pricePerUnit = 0;
+
+    if (item.settingId > 0) {
+      pricePerUnit = item.orderDetails.reduce((productSum, product) => {
+        let productPrice = product.productPrice;
+        const customizationPrice = product.detailList.reduce((detailSum, detail) => detailSum + detail.addPrice, 0);
+        return productSum + productPrice + customizationPrice;
+      }, 0);
+
+
+    } else {
+      if (item.orderDetails && item.orderDetails.length > 0) {
+        const product = item.orderDetails[0];
+        pricePerUnit = product.productPrice;
+        pricePerUnit += product.detailList.reduce((detailSum, detail) => detailSum + detail.addPrice, 0);
+      }
+    }
+
+    item.orderDetailsPrice = pricePerUnit * item.quantity;
+
+    this.data.totalPrice = this.calculateTotalPrice(this.data.orderDetailsList);
+
+    (item as any).unitPriceForCalculation = pricePerUnit;
+  }
+
 
   private calculateTotalPrice(list: RawOrderDetailItem[]): number {
     return list.reduce((sum, item) => sum + item.orderDetailsPrice, 0);
@@ -70,7 +116,7 @@ export class SendOrderDialogComponent {
         }
 
         return {
-            orderDetailsId: (rawItem.orderDetailsId * 1000 + index) * 1,
+            orderDetailsId: (rawItem.orderDetailsId * 1 + index) * 1,
             orderDetailsPrice: finalPricePerUnit,
             settingId: rawItem.settingId,
             orderDetails: targetOrderDetails
@@ -99,6 +145,10 @@ export class SendOrderDialogComponent {
       this.data.paid = true;
     } else {
       this.data.paid = false;
+    }
+
+    if(this.data.totalPrice == 0){
+      alert("訂單不得為空");
     }
 
     const finalPayload: TargetOrderData = {
@@ -144,7 +194,7 @@ interface RawOrderDetailItem {
   settingName: string;
   orderDetails: RawProductDetail[];
   settingOptions: any;
-  quantity?: number;
+  quantity: number;
 }
 
 interface RawOrderData {

@@ -31,7 +31,7 @@
             [單點]
           }
         </span>
-        <span>NT$ {{ item.orderDetailsPrice }}</span>
+        <span><button (click)="reduce(item)">-</button><button (click)="add(item)">+</button>{{ item.quantity }}項 合計{{ item.orderDetailsPrice }}元</span>
       </div>
       @if (item.orderDetails && item.orderDetails.length > 0) {
         @if(item.settingId > 0) {
