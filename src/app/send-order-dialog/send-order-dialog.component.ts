@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 
 import { FormsModule } from '@angular/forms';
 import { DataService } from '../@service/data.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-send-order-dialog',
@@ -24,7 +25,8 @@ export class SendOrderDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<SendOrderDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: RawOrderData,
-    public dataService: DataService
+    public dataService: DataService,
+    private router: Router
   ) {
     if (!data.totalPrice) {
       this.data.totalPrice = this.calculateTotalPrice(data.orderDetailsList);
@@ -93,34 +95,34 @@ export class SendOrderDialogComponent {
     const timeStr = now.toTimeString().split(' ')[0];
 
     const expandedDetailsList: RawOrderDetailItem[] = this.data.orderDetailsList.flatMap(rawItem => {
-        const quantity = rawItem.quantity && rawItem.quantity > 0 ? rawItem.quantity : 1;
-        return Array.from({ length: quantity }, (_, index) => ({
-            ...rawItem,
-            quantity: undefined as any
-        })) as RawOrderDetailItem[];
+      const quantity = rawItem.quantity && rawItem.quantity > 0 ? rawItem.quantity : 1;
+      return Array.from({ length: quantity }, (_, index) => ({
+        ...rawItem,
+        quantity: undefined as any
+      })) as RawOrderDetailItem[];
     });
 
     const targetDetailsList: TargetOrderDetailItem[] = expandedDetailsList.map((rawItem, index) => {
-        const targetOrderDetails: TargetProductDetail[] = rawItem.orderDetails.map(product => ({
-            ...product,
-            mealStatus: "製作中"
-        }));
+      const targetOrderDetails: TargetProductDetail[] = rawItem.orderDetails.map(product => ({
+        ...product,
+        mealStatus: "製作中"
+      }));
 
-        let finalPricePerUnit: number;
-        const defaultProductPrice = rawItem.orderDetails[0]?.productPrice || 0;
+      let finalPricePerUnit: number;
+      const defaultProductPrice = rawItem.orderDetails[0]?.productPrice || 0;
 
-        if (rawItem.settingId === 0) {
-            finalPricePerUnit = (rawItem as any).itemPricePerUnit || defaultProductPrice;
-        } else {
-            finalPricePerUnit = (rawItem as any).pricePerUnit || defaultProductPrice;
-        }
+      if (rawItem.settingId === 0) {
+        finalPricePerUnit = (rawItem as any).itemPricePerUnit || defaultProductPrice;
+      } else {
+        finalPricePerUnit = (rawItem as any).pricePerUnit || defaultProductPrice;
+      }
 
-        return {
-            orderDetailsId: (rawItem.orderDetailsId * 1 + index) * 1,
-            orderDetailsPrice: finalPricePerUnit,
-            settingId: rawItem.settingId,
-            orderDetails: targetOrderDetails
-        };
+      return {
+        orderDetailsId: (rawItem.orderDetailsId * 1 + index) * 1,
+        orderDetailsPrice: finalPricePerUnit,
+        settingId: rawItem.settingId,
+        orderDetails: targetOrderDetails
+      };
     });
 
     let customerName: string | null = null;
@@ -141,13 +143,13 @@ export class SendOrderDialogComponent {
         break;
     }
 
-    if( this.paymentType !== '現金'){
+    if (this.paymentType !== '現金') {
       this.data.paid = true;
     } else {
       this.data.paid = false;
     }
 
-    if(this.data.totalPrice == 0){
+    if (this.data.totalPrice == 0) {
       alert("訂單不得為空");
     }
 
@@ -171,12 +173,16 @@ export class SendOrderDialogComponent {
     this.dataService.postApi('http://localhost:8080/orders/add', finalPayload)
       .subscribe((res: any) => {
         console.log('下單成功', res);
-        const orderId = res?.orderId
+        const orderId = res.ordersId
         this.dialogRef.close(finalPayload);
+        this.goToPage(orderId);
       }
       );
   }
 
+  goToPage(orderId: number) {
+    this.router.navigateByUrl(`/meal/status/user${orderId}`);
+  }
 }
 
 interface RawProductDetail {
