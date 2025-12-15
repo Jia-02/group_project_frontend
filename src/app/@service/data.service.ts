@@ -43,10 +43,14 @@ export class DataService {
 
 
   getApi(url: string): any {
+    let baseUrl = 'http://localhost:8080/';
+    url = baseUrl + url;
     return this.http.get(url);
   }
 
   postApi(url: string, postData: any): any {
+    let baseUrl = 'http://localhost:8080/';
+    url = baseUrl + url;
     return this.http.post(url, postData);
   }
 

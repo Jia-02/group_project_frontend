@@ -24,7 +24,7 @@ export class MealStatusComponent {
     let month = String(today.getMonth() + 1).padStart(2, '0');
     let day = String(today.getDate()).padStart(2, '0');
     let todayStr = year + "-" + month + "-" + day
-    let url = "http://localhost:8080/orders/meal/list?ordersDate=" + todayStr
+    let url = "orders/meal/list?ordersDate=" + todayStr
     this.service.getApi(url).subscribe((res: OrdersTodayRes) => {
       console.log(res)
       if (res.code == 200) {
@@ -96,7 +96,7 @@ export class MealStatusComponent {
       let month = String(today.getMonth() + 1).padStart(2, '0');
       let day = String(today.getDate()).padStart(2, '0');
       let todayStr = year + "-" + month + "-" + day
-      let url = "http://localhost:8080/orders/meal/list?ordersDate=" + todayStr
+      let url = "orders/meal/list?ordersDate=" + todayStr
       this.service.getApi(url).subscribe((res: OrdersTodayRes) => {
         console.log(res)
         if (res.code == 200) {
@@ -228,7 +228,7 @@ export class MealStatusComponent {
     updateOrderReq = { ordersId: id, orderDetails: productList }
     console.log(updateOrderReq)
 
-    let url = "http://localhost:8080/orders/update/ispaid"
+    let url = "orders/update/ispaid"
     this.service.postApi(url, updateOrderReq).subscribe((res: any) => {
       if (res.code == 200) {
         let today = new Date();
@@ -236,7 +236,7 @@ export class MealStatusComponent {
         let month = String(today.getMonth() + 1).padStart(2, '0');
         let day = String(today.getDate()).padStart(2, '0');
         let todayStr = year + "-" + month + "-" + day
-        url = "http://localhost:8080/orders/meal/list?ordersDate=" + todayStr
+        url = "orders/meal/list?ordersDate=" + todayStr
         this.service.getApi(url).subscribe((res: OrdersTodayRes) => {
           console.log(res)
           this.orders = [];

@@ -56,7 +56,7 @@ export class MenuComponent {
   }
 
   loadInitialData(): void {
-    this.dataService.getApi(`http://localhost:8080/category/list`).subscribe(
+    this.dataService.getApi(`category/list`).subscribe(
       (res: any) => {
         if (res.code === 200 && res.categoryDto) {
           this.categories = res.categoryDto.map(
@@ -79,7 +79,7 @@ export class MenuComponent {
   }
 
   openBoard() {
-    const apiUrl = 'http://localhost:8080/calendar/selectDate';
+    const apiUrl = 'calendar/selectDate';
 
     this.dataService.getApi(apiUrl)
       .subscribe((res: any) => {
@@ -137,11 +137,11 @@ export class MenuComponent {
       let dataKey: string;
 
       if (category.categoryType !== this.SETTING_TAB_LABEL) {
-        const productUrl = `http://localhost:8080/product/list/user?categoryId=${categoryId}`;
+        const productUrl = `product/list/user?categoryId=${categoryId}`;
         apiObservable = this.dataService.getApi(productUrl);
         dataKey = 'productList';
       } else {
-        const settingUrl = `http://localhost:8080/setting/list/user?categoryId=${categoryId}`;
+        const settingUrl = `setting/list/user?categoryId=${categoryId}`;
         apiObservable = this.dataService.getApi(settingUrl);
         dataKey = 'optionVoList';
       }
@@ -177,9 +177,9 @@ export class MenuComponent {
     let detailUrl: string;
 
     if (isSetting) {
-      detailUrl = `http://localhost:8080/setting/detail?settingId=${itemId}`;
+      detailUrl = `setting/detail?settingId=${itemId}`;
     } else {
-      detailUrl = `http://localhost:8080/product/detail?categoryId=${categoryId}&productId=${itemId}`;
+      detailUrl = `product/detail?categoryId=${categoryId}&productId=${itemId}`;
     }
 
     this.dataService.getApi(detailUrl).subscribe((res: any) => {
