@@ -22,7 +22,7 @@ export class MealStatusUserComponent {
     this.orderId = this.activatedRoute.snapshot.queryParamMap.get('orderId')
 
     if (this.orderId) {
-      let url = "http://localhost:8080/meal/status?orderId=" + this.orderId;
+      let url = "meal/status?orderId=" + this.orderId;
       this.service.getApi(url).subscribe((res: MealStatusRes) => {
         this.mealStatus = {
           mealStatusId: res.mealStatus.mealStatusId
@@ -37,7 +37,7 @@ export class MealStatusUserComponent {
     if (this.orderId) {
       this.timerId = setInterval(() => {
         this.orderId = this.activatedRoute.snapshot.queryParamMap.get('orderId')
-        let url = "http://localhost:8080/meal/status?orderId=" + this.orderId;
+        let url = "meal/status?orderId=" + this.orderId;
         this.service.getApi(url).subscribe((res: MealStatusRes) => {
           this.mealStatus = {
             mealStatusId: res.mealStatus.mealStatusId
@@ -58,7 +58,7 @@ export class MealStatusUserComponent {
   }
 
   search() {
-    let url = "http://localhost:8080/meal/status?orderId=" + this.orderId;
+    let url = "meal/status?orderId=" + this.orderId;
     this.service.getApi(url).subscribe((res: MealStatusRes) => {
       if (res.code == 200) {
         url = '/meal/status/user?orderId=' + this.orderId;

@@ -100,7 +100,7 @@ export class TableComponent {
     dialogRef.afterClosed().subscribe(res => {
       //確認報到則執行更新訂位資訊
       if (res) {
-        let url = "http://localhost:8080/reservation/update";
+        let url = "reservation/update";
         let updateRes: UpdateReservation = {
           reservationDate: this.reservation_date,
           reservationPhone: phone,
@@ -120,7 +120,7 @@ export class TableComponent {
         this.service.postApi(url, updateRes).subscribe((res: BasicRes) => {
           //更新訂位資訊結束後執行查詢當日訂位api
           if (res.code == 200) {
-            url = "http://localhost:8080/reservation/date_list?reservationDate=" + this.reservation_date;
+            url = "reservation/date_list?reservationDate=" + this.reservation_date;
             this.service.getApi(url).subscribe((reservationListRes: ReservationListTodayRes) => {
               this.reservationListToday = reservationListRes.reservationAndTableByDateList;
               this.screenRefreshMinute();
@@ -409,7 +409,7 @@ export class TableComponent {
   handleUp() {
     this.mouseUpTime = new Date().getTime();
     if (this.isEdit && this.mouseUpTime - this.mouseDownTime > 100) {
-      let url = "http://localhost:8080/table/update";
+      let url = "table/update";
       for (const rect of this.rects) {
         if (rect.tableId == this.editTable.tableId) {
           this.editTable.tablePositionX = rect.x;
@@ -436,7 +436,7 @@ export class TableComponent {
       }
     }
     if (this.isResize) {
-      let url = "http://localhost:8080/table/update";
+      let url = "table/update";
       for (const rect of this.rects) {
         if (rect.tableId == this.editTable.tableId) {
           this.editTable.lengthX = rect.w;
@@ -469,7 +469,7 @@ export class TableComponent {
 
   // edit(flag: boolean) {
   // this.admin = flag;
-  // let url = "http://localhost:8080/table/list";
+  // let url = "table/list";
   // this.service.getApi(url).subscribe((res: any) => {
   //   this.draw();
   // })
@@ -500,7 +500,7 @@ export class TableComponent {
     } else {
       myDiv.style.height = "0%"
     }
-    let url = "http://localhost:8080/reservation/date_list?reservationDate=" + this.reservation_date;
+    let url = "reservation/date_list?reservationDate=" + this.reservation_date;
     this.service.getApi(url).subscribe((reservationListToday: ReservationListTodayRes) => {
       this.reservationListToday = reservationListToday.reservationAndTableByDateList;
       this.reservation = [];
@@ -538,9 +538,9 @@ export class TableComponent {
       console.log(this.reservationListToday)
     })
 
-    url = "http://localhost:8080/reservation/now_time_list";
+    url = "reservation/now_time_list";
     this.service.getApi(url).subscribe((reservation: ReservationNowListRes) => {
-      url = "http://localhost:8080/table/list"
+      url = "table/list"
       console.log(reservation)
       this.reservationList = reservation.reservationAndTableByTimeList;
       console.log(this.reservationList)

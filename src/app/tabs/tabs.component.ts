@@ -38,11 +38,11 @@ export class TabsComponent {
 
     dialgoRef.afterClosed().subscribe((res: any) => {
       if (res && res.name) {
-        let url = "http://localhost:8080/workstation/add?workStationName=" + res.name
+        let url = "workstation/add?workStationName=" + res.name
         let data
         this.service.postApi(url, data).subscribe((res: BasicRes) => {
           if (res.code == 200) {
-            url = "http://localhost:8080/workstation/list"
+            url = "workstation/list"
             this.service.getApi(url).subscribe((res: WorkTableListRes) => {
               this.links = res.workStationList;
             })
@@ -70,12 +70,12 @@ export class TabsComponent {
 
     dialgoRef.afterClosed().subscribe((res: any) => {
       if (res && res.flag && res.name) {
-        let url = "http://localhost:8080/workstation/update"
+        let url = "workstation/update"
         let data: WorkTable = { workStationId: id, workStationName: res.name }
         console.log(data)
         this.service.postApi(url, data).subscribe((res: BasicRes) => {
           if (res.code == 200) {
-            url = "http://localhost:8080/workstation/list"
+            url = "workstation/list"
             this.service.getApi(url).subscribe((res: WorkTableListRes) => {
               this.links = res.workStationList;
             })
@@ -104,11 +104,11 @@ export class TabsComponent {
 
     dialgoRef.afterClosed().subscribe((res: any) => {
       if (res && res.flag) {
-        let url = "http://localhost:8080/workstation/delete?workStationId=" + id
+        let url = "workstation/delete?workStationId=" + id
         let data
         this.service.postApi(url, data).subscribe((res: BasicRes) => {
           if (res.code == 200) {
-            url = "http://localhost:8080/workstation/list"
+            url = "workstation/list"
             this.service.getApi(url).subscribe((res: WorkTableListRes) => {
               this.links = res.workStationList;
             })
@@ -155,7 +155,7 @@ export class TabsComponent {
     updateOrderReq = { ordersId: id, orderDetails: productList }
     console.log(updateOrderReq)
 
-    let url = "http://localhost:8080/orders/update/ispaid"
+    let url = "orders/update/ispaid"
     this.service.postApi(url, updateOrderReq).subscribe((res: any) => {
       if (res.code == 400) {
         this.dialog.open(DialogComponent, {
@@ -169,7 +169,7 @@ export class TabsComponent {
       let month = String(today.getMonth() + 1).padStart(2, '0');
       let day = String(today.getDate()).padStart(2, '0');
       let todayStr = year + "-" + month + "-" + day
-      url = "http://localhost:8080/orders/meal/list?ordersDate=" + todayStr
+      url = "orders/meal/list?ordersDate=" + todayStr
       this.service.getApi(url).subscribe((res: OrdersTodayRes) => {
         console.log(res)
         if (res.code == 200) {
@@ -207,7 +207,7 @@ export class TabsComponent {
 
   ngOnInit(): void {
 
-    let url = "http://localhost:8080/workstation/list"
+    let url = "workstation/list"
     this.service.getApi(url).subscribe((res: WorkTableListRes) => {
       this.links = res.workStationList;
       let today = new Date();
@@ -216,7 +216,7 @@ export class TabsComponent {
       let day = String(today.getDate()).padStart(2, '0');
       let todayStr = year + "-" + month + "-" + day
 
-      let url = "http://localhost:8080/orders/meal/list?ordersDate=" + todayStr
+      let url = "orders/meal/list?ordersDate=" + todayStr
 
       this.service.getApi(url).subscribe((res: OrdersTodayRes) => {
         console.log(res)
@@ -258,7 +258,7 @@ export class TabsComponent {
       let day = String(today.getDate()).padStart(2, '0');
       let todayStr = year + "-" + month + "-" + day
 
-      let url = "http://localhost:8080/orders/meal/list?ordersDate=" + todayStr
+      let url = "orders/meal/list?ordersDate=" + todayStr
 
       this.service.getApi(url).subscribe((res: OrdersTodayRes) => {
         console.log(res)

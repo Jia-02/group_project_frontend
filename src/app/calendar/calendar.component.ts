@@ -63,7 +63,7 @@ export class CalendarComponent implements OnInit {
   }
 
   loadActivities(): void {
-    const apiUrl = 'http://localhost:8080/calendar/all';
+    const apiUrl = 'calendar/all';
 
     this.dataService.getApi(apiUrl).subscribe((res: any) => {
       let rawData = res.calendarList || res.activities || res;
@@ -340,7 +340,7 @@ export class CalendarComponent implements OnInit {
   }
 
   openBoardDialog(): void {
-    const apiUrl = 'http://localhost:8080/calendar/selectDate';
+    const apiUrl = 'calendar/selectDate';
 
     this.dataService.getApi(apiUrl)
       .subscribe((res: any) => {
