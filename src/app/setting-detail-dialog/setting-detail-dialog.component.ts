@@ -55,12 +55,16 @@ export class SettingDetailDialogComponent {
         this.allOptionGroups.push(...categoryGroup.optionList);
       }
     });
-
     this.data.settingDetail.forEach(category => {
       const optionMap = new Map<number, Set<string>>();
 
       category.optionList.forEach(optionGroup => {
-        optionMap.set(optionGroup.optionId, new Set<string>());
+        const selectedSet = new Set<string>();
+        if (optionGroup.maxSelect === 1 && optionGroup.optionDetail.length > 0) {
+          selectedSet.add(optionGroup.optionDetail[0].option);
+        }
+
+        optionMap.set(optionGroup.optionId, selectedSet);
       });
 
       this.currentSelections.set(category.categoryId, optionMap);
@@ -128,7 +132,6 @@ export class SettingDetailDialogComponent {
       });
     });
 
-    // 套餐選擇完整度（只檢查主餐）
     const totalCategoryGroups = this.data.settingDetail.length;
     const selectedProductCount = this.selectedMainProduct.size;
 
@@ -190,7 +193,26 @@ export class SettingDetailDialogComponent {
     return result;
   }
 
+  getSelectionSummary(): SelectionSummary[] {
+    const summary: SelectionSummary[] = [];
 
+    this.data.settingDetail.forEach(categoryGroup => {
+      // 1. 取得主產品
+      const selectedProductId = this.selectedMainProduct.get(categoryGroup.categoryId);
+      const selectedProduct = categoryGroup.detailList.find(p => p.productId === selectedProductId);
+
+      if (selectedProduct) {
+        const options: DetailOption[] = this.getOptionsByCategory(categoryGroup.categoryId);
+
+        summary.push({
+          categoryType: categoryGroup.categoryType,
+          productName: selectedProduct.productName,
+          options: options
+        });
+      }
+    });
+    return summary;
+  }
 
   addToCart(): void {
 
@@ -292,4 +314,10 @@ interface OrderDetailProduct {
 interface DetailOption {
   option: string;
   addPrice: number;
+}
+
+interface SelectionSummary {
+  categoryType: string;
+  productName: string;
+  options: DetailOption[];
 }
