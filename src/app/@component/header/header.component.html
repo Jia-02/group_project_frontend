@@ -1,38 +1,50 @@
 <div class="headerCss">
 
-  <div class="iconBox">
-    <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="home"></mat-icon>
-    <div class="titleCss" (click)="menu()">菜單</div>
+  <img src="logo1.png" alt="Logo">
+
+  <div class="iconBox" (click)="menuAdmin()" [class.active]="currentTab == 'menuAdmin'">
+    <mat-icon fontIcon="local_dining"></mat-icon>
+    <div class="titleCss">菜單管理</div>
+  </div>
+
+  <div class="iconBox" (click)="reservation()" [class.active]="currentTab == 'reserve'">
+    <mat-icon fontIcon="event"></mat-icon>
+    <div class="titleCss">訂位</div>
+  </div>
+
+  <div class="iconBox" (click)="table()" [class.active]="currentTab == 'table'">
+    <mat-icon fontIcon="dataset"></mat-icon>
+    <div class="titleCss">桌位</div>
+  </div>
+
+  <div class="iconBox" (click)="order()" [class.active]="currentTab == 'order-page'">
+    <mat-icon fontIcon="assignment"></mat-icon>
+    <div class="titleCss">訂單</div>
+  </div>
+
+  <div class="iconBox" (click)="mealStatus()" [class.active]="currentTab == 'meal/status'">
+    <mat-icon fontIcon="browse_gallery"></mat-icon>
+    <div class="titleCss">餐點狀態</div>
+  </div>
+
+  <div class="iconBox" (click)="workstation()" [class.active]="currentTab == 'workstation'">
+    <mat-icon fontIcon="work"></mat-icon>
+    <div class="titleCss">工作臺</div>
+  </div>
+
+  <div class="iconBox" (click)="calander()" [class.active]="currentTab == 'calendar'">
+    <mat-icon fontIcon="campaign"></mat-icon>
+    <div class="titleCss">行事曆</div>
   </div>
 
   <div class="iconBox">
-    <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="home"></mat-icon>
-    <div class="titleCss" (click)="menuAdmin()">菜單管理</div>
+    <mat-icon fontIcon="bar_chart"></mat-icon>
+    <div class="titleCss">銷售分析</div>
   </div>
 
   <div class="iconBox">
-    <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="home"></mat-icon>
-    <div class="titleCss" (click)="reservation()">訂位</div>
-  </div>
-
-  <div class="iconBox">
-    <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="home"></mat-icon>
-    <div class="titleCss" (click)="table()">桌位</div>
-  </div>
-
-  <div class="iconBox">
-    <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="home"></mat-icon>
-    <div class="titleCss" (click)="order()">訂單</div>
-  </div>
-
-  <div class="iconBox">
-    <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="home"></mat-icon>
-    <div class="titleCss" (click)="workStation()">工作臺</div>
-  </div>
-
-  <div class="iconBox">
-    <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="home"></mat-icon>
-    <div class="titleCss" (click)="calander()">行事曆</div>
+    <mat-icon fontIcon="logout"></mat-icon>
+    <div class="titleCss">登出</div>
   </div>
 
 </div>

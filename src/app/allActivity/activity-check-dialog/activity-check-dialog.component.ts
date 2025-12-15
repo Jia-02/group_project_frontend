@@ -3,7 +3,7 @@ import { MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle, MAT_D
 import { CommonModule, DatePipe } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { DataService } from '../@service/data.service';
+import { DataService } from '../../@service/data.service';
 
 @Component({
   selector: 'app-activity-check-dialog',

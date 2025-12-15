@@ -1,34 +1,35 @@
 /* 標題 */
 .diaTitle {
   margin: 0;
-  padding: 20px 24px;
+  padding: 10px 30px;
   font-size: 18px;
   font-weight: 600;
-  color: #013c70;
+  color: #fdfdfd;
+  background-color: #013c70;
   border-bottom: 1px solid #eee;
 }
 
 /* 內容區域 */
 .dialogContent {
-  padding: 24px !important;
+  padding: 30px !important;
   display: flex;
   flex-direction: column;
-  gap: 16px;              /* 每一排之間的距離 */
-  min-width: 500px;       /* 設定最小寬度，避免欄位擠在一起 */
+  gap: 16px;
+  min-width: 500px;
 }
 
-/* 每一排的容器 (formRow) */
+/* 每一排的容器 */
 .formRow {
   display: flex;
-  gap: 16px;              /* 左右欄位之間的距離 */
+  gap: 20px;
   width: 100%;
 }
 
-/* 單一欄位包裝 (formField) */
+/* 單一欄位包裝 */
 .formField {
-  flex: 1;                /* 關鍵：讓該排的所有欄位平均分配寬度 */
+  flex: 1;
   display: flex;
-  flex-direction: column; /* Label 在上，Input 在下 */
+  flex-direction: column;
 }
 
 /* Label 樣式 */
@@ -36,10 +37,10 @@
   font-size: 14px;
   font-weight: 600;
   color: #555;
-  margin-bottom: 6px;     /* Label 與 Input 的距離 */
+  margin-bottom: 6px;
 }
 
-/* 輸入框通用樣式 (styledInput) */
+/* 輸入框通用樣式) */
 .styledInput {
   padding: 10px 12px;
   font-size: 14px;
@@ -48,8 +49,8 @@
   outline: none;
   background-color: #fff;
   transition: all 0.2s;
-  width: 100%;            /* 填滿父容器 */
-  box-sizing: border-box; /* 確保 padding 不會撐大寬度 */
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* 輸入框 Focus */
@@ -73,28 +74,28 @@ select.styledInput:disabled {
 
 /* 針對 Textarea */
 textarea.styledInput {
-  resize: vertical;       /* 只允許垂直拉伸 */
+  resize: vertical;
   min-height: 80px;
 }
 
-/* 備註欄位可能需要強制滿版 (雖然上面 flex:1 已經處理了，但保留這個 class 以備不時之需) */
+/* 備註欄位可能需要強制滿版*/
 .fullWidth {
   width: 100%;
 }
 
 /* 按鈕區域 */
 .dialogActions {
-  padding: 16px 24px !important;
+  padding: 16px 40px !important;
   border-top: 1px solid #eee;
-  gap: 12px;
+  gap: 15px;
 }
 
 /* 通用按鈕樣式 */
 .dialogBtn {
-  padding: 10px 28px;
-  font-size: 15px;
+  padding: 10px 25px;
+  font-size: 14px;
   font-weight: 500;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
   border: none;
   transition: all 0.2s;

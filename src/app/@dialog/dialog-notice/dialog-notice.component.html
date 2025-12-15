@@ -1,20 +1,19 @@
 <div class="background">
 
-  <!-- dialog標題 -->
-  <div mat-dialog-title class="diaTitle">溫馨提醒</div>
-
-  <!-- dialog內容 -->
-  <mat-dialog-content>
-
-  <div>
-    此桌位當日已有預約，無法關閉狀態!!
+  <div mat-dialog-title class="diaTitle">
+    ＊ 溫馨提醒 ＊
   </div>
+
+  <mat-dialog-content>
+    <div>
+        <p>{{ noticeMessage }}</p>
+    </div>
   </mat-dialog-content>
 
-  <!-- dialog按鈕 -->
   <mat-dialog-actions>
     <div class="btnBox">
       <button (click)="onNoClick()" class="btn">取消</button>
+      <button (click)="onCheckClick()" class="btn">確定</button>
     </div>
   </mat-dialog-actions>
 </div>

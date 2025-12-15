@@ -12,34 +12,41 @@ import { Router } from '@angular/router';
 })
 export class HeaderComponent {
 
-  constructor(private router: Router){}
-
-  menu() {
-
-  }
+  constructor(private router: Router) { }
+  currentTab: string = ''; // 記錄目前在哪一頁
 
   menuAdmin() {
-    this.router.navigateByUrl('reserve');
-  }
-
-  reservation() {
+    this.currentTab = 'menuAdmin';
     this.router.navigateByUrl('menuAdmin');
   }
 
-  table() {
-
+  reservation() {
+    this.currentTab = 'reserve';
+    this.router.navigateByUrl('reserve');
   }
 
+  table() {
+    this.currentTab = 'table';
+    this.router.navigateByUrl('table');
+  }
 
   order() {
-
+    this.currentTab = 'order-page';
+    this.router.navigateByUrl('order-page');
   }
 
-  workStation() {
+  mealStatus() {
+    this.currentTab = 'meal/status';
+    this.router.navigateByUrl('meal/status');
+  }
 
+  workstation() {
+    this.currentTab = 'workstation';
+    this.router.navigateByUrl('workstation');
   }
 
   calander() {
-
+    this.currentTab = 'calendar';
+    this.router.navigateByUrl('calendar');
   }
 }

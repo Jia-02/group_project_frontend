@@ -1,10 +1,11 @@
 import { Component, inject } from '@angular/core';
 import { DataService } from '../../@service/data.service';
 import { HttpClientService } from '../../@service/http-client.service';
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogTitle } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogTitle, MatDialog } from '@angular/material/dialog';
 import { reservation } from '../../@interface/interface';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { DialogNoticeComponent } from '../dialog-notice/dialog-notice.component';
 
 @Component({
   selector: 'app-dialog-reserve',
@@ -27,11 +28,12 @@ export class DialogReserveComponent {
 
   readonly dialogRef = inject(MatDialogRef<DialogReserveComponent>);
   readonly data = inject<any>(MAT_DIALOG_DATA);
+  readonly dialog = inject(MatDialog);
 
   totalPeople = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
   adultList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
-  childList = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-  childSeatList = [0, 1, 2, 3];
+  childList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  childSeatList = [1, 2, 3];
   timeList = ['10:00', '12:00', '14:00', '16:00', '18:00', '20:00'];
   reservation: reservation = {
     reservationId: 0,
@@ -140,7 +142,12 @@ export class DialogReserveComponent {
     //判斷電話需7-10碼
     const phone = this.reservation.reservationPhone;
     if (phone.length < 7 || phone.length > 10) {
-      alert('電話號碼需為 7 到 10 碼');
+
+      const dialogRef = this.dialog.open(DialogNoticeComponent, {
+        width: '25%',
+        height: 'auto',
+        data: { noticeType: 'phoneLength' }
+      });
       return; // 不送出
     }
 
@@ -180,8 +187,6 @@ export class DialogReserveComponent {
       childSeat: this.reservation.childSeat,
       tableId: this.reservation.tableId
     };
-
-    console.log('準備送出的更新資料:', payload); // ★ 除錯用：檢查資料是否正確
 
     this.httpClientService.postApi('http://localhost:8080/reservation/update', payload)
       .subscribe((res: any) => {
