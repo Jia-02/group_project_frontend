@@ -40,13 +40,16 @@ export class DataService {
   // 附餐與飲料列表
   sideDishList: productList[] = [];
   drinkDishList: productList[] = [];
+  baseUrl = 'http://localhost:8080/'
 
 
   getApi(url: string): any {
+    url = this.baseUrl + url;
     return this.http.get(url);
   }
 
   postApi(url: string, postData: any): any {
+    url = this.baseUrl + url;
     return this.http.post(url, postData);
   }
 
@@ -205,9 +208,9 @@ interface Orders {
   paymentType: string;
   paid: boolean;
   ordersCode: string;
-  customerName: null;
-  customerPhone: null;
-  customerAddress: null;
+  customerName: string;
+  customerPhone: string;
+  customerAddress: string;
   tableId: string;
   orderDetailsList: OrderDetailsList[];
 }
@@ -264,6 +267,8 @@ export interface MealStatusRes {
   code: number;
   message: string;
   mealStatus: MealStatus;
+  order:Orders;
+  orderDetailsList:OrderDetailsList[];
 }
 
 export interface MealStatus {
@@ -272,4 +277,6 @@ export interface MealStatus {
   estimatedTime: number;
   finishTime: string;
   ordersId: number;
+  order:Orders;
+  orderDetailsList:OrderDetailsList[];
 }

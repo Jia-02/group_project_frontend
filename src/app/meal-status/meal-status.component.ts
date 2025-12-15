@@ -15,6 +15,7 @@ export class MealStatusComponent {
 
   count!: number;
   orders!: Order[];
+  timerId!: any;
 
   ngOnInit(): void {
     this.count = 0;
@@ -23,9 +24,7 @@ export class MealStatusComponent {
     let month = String(today.getMonth() + 1).padStart(2, '0');
     let day = String(today.getDate()).padStart(2, '0');
     let todayStr = year + "-" + month + "-" + day
-
-    let url = "http://localhost:8080/orders/meal/list?ordersDate=" + todayStr
-
+    let url = "orders/meal/list?ordersDate=" + todayStr
     this.service.getApi(url).subscribe((res: OrdersTodayRes) => {
       console.log(res)
       if (res.code == 200) {
@@ -90,8 +89,87 @@ export class MealStatusComponent {
       }
       console.log(this.orders)
     })
+    this.timerId = setInterval(() => {
+      this.count = 0;
+      let today = new Date();
+      let year = today.getFullYear();
+      let month = String(today.getMonth() + 1).padStart(2, '0');
+      let day = String(today.getDate()).padStart(2, '0');
+      let todayStr = year + "-" + month + "-" + day
+      let url = "orders/meal/list?ordersDate=" + todayStr
+      this.service.getApi(url).subscribe((res: OrdersTodayRes) => {
+        console.log(res)
+        if (res.code == 200) {
+          this.orders = [];
+          for (const order of res.orders) {
+            let status: string[] = [];
+            let workstaionId: number[] = [];
+            if (order.ordersType == "A") {
+              for (const product of order.orderDetailsList) {
+                let settingStatus: string[] = [];
+                for (const detail of product.orderDetails) {
+                  let optionId = 1;
+                  if (!workstaionId.includes(detail.workStationId)) {
+                    workstaionId.push(detail.workStationId);
+                  }
+                  if (!status.includes(detail.mealStatus)) {
+                    status.push(detail.mealStatus);
+                  }
+                  if (!settingStatus.includes(detail.mealStatus)) {
+                    settingStatus.push(detail.mealStatus);
+                  }
+                  if (detail.mealStatus == "待送餐") {
+                    this.count++;
+                  }
+                  for (const option of detail.detailList) {
+                    option.id = optionId;
+                    optionId++;
+                  }
+                }
+                product.status = settingStatus;
+              }
+            } else {
+              for (const product of order.orderDetailsList) {
+                let settingStatus: string[] = [];
+                for (const detail of product.orderDetails) {
+                  let optionId = 1;
+                  if (!workstaionId.includes(detail.workStationId)) {
+                    workstaionId.push(detail.workStationId);
+                  }
+                  if (!status.includes(detail.mealStatus)) {
+                    status.push(detail.mealStatus);
+                  }
+                  if (!settingStatus.includes(detail.mealStatus)) {
+                    settingStatus.push(detail.mealStatus);
+                  }
+                  for (const option of detail.detailList) {
+                    option.id = optionId;
+                    optionId++;
+                  }
+                }
+                product.status = settingStatus;
+              }
+              if (!status.includes("製作中") && !status.includes("已送達")) {
+                this.count++;
+              }
+            }
+            this.orders.push({
+              orderId: order.ordersId, orderCode: order.ordersCode, tableId: order.tableId,
+              price: order.totalPrice, status: status, workStationId: workstaionId, orderProductList: order.orderDetailsList, paid: order.paid
+            })
+          }
+        }
+        console.log(this.orders)
+      })
+    },1000)
 
 
+  }
+
+  ngOnDestroy() {
+    if (this.timerId) {
+      clearInterval(this.timerId);
+    }
   }
 
 
@@ -150,7 +228,7 @@ export class MealStatusComponent {
     updateOrderReq = { ordersId: id, orderDetails: productList }
     console.log(updateOrderReq)
 
-    let url = "http://localhost:8080/orders/update/ispaid"
+    let url = "orders/update/ispaid"
     this.service.postApi(url, updateOrderReq).subscribe((res: any) => {
       if (res.code == 200) {
         let today = new Date();
@@ -158,7 +236,7 @@ export class MealStatusComponent {
         let month = String(today.getMonth() + 1).padStart(2, '0');
         let day = String(today.getDate()).padStart(2, '0');
         let todayStr = year + "-" + month + "-" + day
-        url = "http://localhost:8080/orders/meal/list?ordersDate=" + todayStr
+        url = "orders/meal/list?ordersDate=" + todayStr
         this.service.getApi(url).subscribe((res: OrdersTodayRes) => {
           console.log(res)
           this.orders = [];

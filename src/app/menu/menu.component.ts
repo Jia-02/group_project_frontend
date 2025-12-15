@@ -8,6 +8,8 @@ import { SettingDetailDialogComponent } from '../setting-detail-dialog/setting-d
 import { OrderService } from '../order.service';
 import { SendOrderDialogComponent } from '../send-order-dialog/send-order-dialog.component';
 import { DataService } from '../@service/data.service';
+import { BoardDialogComponent } from '../board-dialog/board-dialog.component';
+import { Activity } from '../calendar/calendar.component';
 
 @Component({
   selector: 'app-menu',
@@ -38,6 +40,7 @@ export class MenuComponent {
   ngOnInit(): void {
     this.loadOrderDataFromService();
     this.loadInitialData();
+    this.openBoard();
   }
 
   loadOrderDataFromService(): void {
@@ -53,7 +56,7 @@ export class MenuComponent {
   }
 
   loadInitialData(): void {
-    this.dataService.getApi(`http://localhost:8080/category/list`).subscribe(
+    this.dataService.getApi(`category/list`).subscribe(
       (res: any) => {
         if (res.code === 200 && res.categoryDto) {
           this.categories = res.categoryDto.map(
@@ -75,6 +78,48 @@ export class MenuComponent {
     );
   }
 
+  openBoard() {
+    const apiUrl = 'calendar/selectDate';
+
+    this.dataService.getApi(apiUrl)
+      .subscribe((res: any) => {
+        let rawActivities: any[] = [];
+        if (Array.isArray(res)) {
+          rawActivities = res;
+        } else if (res && (res.activities || res.calendarList)) {
+          rawActivities = res.activities || res.calendarList;
+        }
+
+        if (!Array.isArray(rawActivities)) {
+          console.error('API 返回的數據結構不符合預期，無法提取活動列表。');
+          rawActivities = [];
+        }
+
+        const processedActivities: Activity[] = rawActivities.map((act: any) => {
+          return {
+            ...act,
+            calendarStartDate: new Date(act.calendarStartDate),
+            calendarEndDate: new Date(act.calendarEndDate)
+          };
+        });
+
+        const hasActivities = processedActivities.length > 0;
+
+        if (hasActivities) {
+          console.log(`活動資料載入成功: 共 ${processedActivities.length} 筆`);
+        } else {
+          console.log('API 呼叫完成，但目前沒有公告活動。');
+        }
+
+        this.dialog.open(BoardDialogComponent, {
+          data: { activities: processedActivities },
+          width: '300px',
+          height: '90vh',
+          panelClass: 'full-screen-dialog'
+        });
+      });
+  }
+
   onTabChange(event: MatTabChangeEvent): void {
     if (event.index < this.categories.length) {
       this.loadProductsForCategory(event.index);
@@ -92,11 +137,11 @@ export class MenuComponent {
       let dataKey: string;
 
       if (category.categoryType !== this.SETTING_TAB_LABEL) {
-        const productUrl = `http://localhost:8080/product/list/user?categoryId=${categoryId}`;
+        const productUrl = `product/list/user?categoryId=${categoryId}`;
         apiObservable = this.dataService.getApi(productUrl);
         dataKey = 'productList';
       } else {
-        const settingUrl = `http://localhost:8080/setting/list/user?categoryId=${categoryId}`;
+        const settingUrl = `setting/list/user?categoryId=${categoryId}`;
         apiObservable = this.dataService.getApi(settingUrl);
         dataKey = 'optionVoList';
       }
@@ -132,9 +177,9 @@ export class MenuComponent {
     let detailUrl: string;
 
     if (isSetting) {
-      detailUrl = `http://localhost:8080/setting/detail?settingId=${itemId}`;
+      detailUrl = `setting/detail?settingId=${itemId}`;
     } else {
-      detailUrl = `http://localhost:8080/product/detail?categoryId=${categoryId}&productId=${itemId}`;
+      detailUrl = `product/detail?categoryId=${categoryId}&productId=${itemId}`;
     }
 
     this.dataService.getApi(detailUrl).subscribe((res: any) => {
@@ -157,7 +202,7 @@ export class MenuComponent {
         }
 
         dialogRef.afterClosed().subscribe((result: any) => {
-          if (result && result.itemDetail) {
+          if (result && result.quantity) {
             this.addOrderDetailItemToCart(result);
           }
         });
@@ -166,20 +211,18 @@ export class MenuComponent {
   }
 
   addOrderDetailItemToCart(item: any): void {
-    const quantity = item.itemDetail.quantity;
+    const quantity = item.quantity;
 
     if (!quantity || quantity < 1) return;
 
-    for (let i = 0; i < quantity; i++) {
-      const newDetailItem = {
-        ...item,
-        orderDetailsId: this.orderService.currentOrder.orderDetailsList.length + 1 + i,
-        orderDetailsPrice: item.itemDetail.pricePerUnit,
-        settingOptions: undefined,
-      };
+    const newId = this.orderService.currentOrder.orderDetailsList.length + 1;
 
-      this.orderService.currentOrder.orderDetailsList.push(newDetailItem);
-    }
+    const newDetailItem = {
+      ...item,
+      orderDetailsId: newId,
+    };
+
+    this.orderService.currentOrder.orderDetailsList.push(newDetailItem);
 
     this.currentCart = this.orderService.currentOrder.orderDetailsList;
 

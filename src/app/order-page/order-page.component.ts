@@ -51,7 +51,7 @@ export class OrderPageComponent {
   private originalData: OrderElement[] = [];
 
   getOrderList() {
-    this.dataService.getApi('http://localhost:8080/orders/list')
+    this.dataService.getApi('orders/list')
       .subscribe((res: any) => {
         console.log(res);
 
@@ -161,7 +161,7 @@ export class OrderPageComponent {
 
   openDialog(element: OrderElement) {
     const id = element.id;
-    const apiUrl = `http://localhost:8080/orders/list/detail?ordersId=${id}`;
+    const apiUrl = `orders/list/detail?ordersId=${id}`;
 
     this.dataService.getApi(apiUrl).subscribe((fullOrderDetails: any) => {
       console.log('取得訂單詳細資料成功:', fullOrderDetails);

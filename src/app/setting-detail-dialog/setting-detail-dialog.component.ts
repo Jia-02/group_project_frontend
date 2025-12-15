@@ -1,10 +1,13 @@
-import { Component, OnInit, Inject } from '@angular/core';
-
+import { Component, OnInit, Inject, inject } from '@angular/core';
+import { FormBuilder, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatStepperModule } from '@angular/material/stepper';
 import { CommonModule } from '@angular/common';
 import { MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { MatIcon } from '@angular/material/icon';
-import { FormsModule } from '@angular/forms';
-import { DataService } from '../@service/data.service';
+import { MatButtonModule } from '@angular/material/button';
+
 
 @Component({
   selector: 'app-setting-detail-dialog',
@@ -15,6 +18,11 @@ import { DataService } from '../@service/data.service';
     CommonModule,
     MatIcon,
     FormsModule,
+    MatButtonModule,
+    MatStepperModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
   ],
   templateUrl: './setting-detail-dialog.component.html',
   styleUrl: './setting-detail-dialog.component.scss'
@@ -22,57 +30,125 @@ import { DataService } from '../@service/data.service';
 export class SettingDetailDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<SettingDetailDialogComponent>,
-    private dataService: DataService,
     @Inject(MAT_DIALOG_DATA) public data: FullSettingDetail,
   ) { }
 
   public quantity: number = 1;
   public currentPrice: number = 0;
 
-  public currentSelections: Map<number, Set<string>> = new Map();
+  public currentSelections: Map<number, Map<number, Set<string>>> = new Map();
   public selectedMainProduct: Map<number, number> = new Map();
   public selectedMainProductPrice: Map<number, number> = new Map();
   public isSelectionComplete: boolean = false;
 
-  public settingOptionList: OptionDetail[] = [];
+  public allOptionGroups: OptionDetail[] = [];
 
   ngOnInit(): void {
-    if (this.data.settingDetail && this.data.settingDetail.length > 0) {
-      this.settingOptionList = this.data.settingDetail[0].optionList || [];
-    }
+    this.data.settingDetail.forEach(categoryGroup => {
+      if (categoryGroup.detailList && categoryGroup.detailList.length > 0) {
+        const defaultProduct = categoryGroup.detailList[0];
+        this.selectedMainProduct.set(categoryGroup.categoryId, defaultProduct.productId);
+        this.selectedMainProductPrice.set(categoryGroup.categoryId, defaultProduct.productPrice);
+      }
 
-    this.settingOptionList.forEach(group => {
-      this.currentSelections.set(group.optionId, new Set<string>());
+      if (categoryGroup.optionList && categoryGroup.optionList.length > 0) {
+        this.allOptionGroups.push(...categoryGroup.optionList);
+      }
+    });
+    this.data.settingDetail.forEach(category => {
+      const optionMap = new Map<number, Set<string>>();
+
+      category.optionList.forEach(optionGroup => {
+        const selectedSet = new Set<string>();
+        if (optionGroup.maxSelect === 1 && optionGroup.optionDetail.length > 0) {
+          selectedSet.add(optionGroup.optionDetail[0].option);
+        }
+
+        optionMap.set(optionGroup.optionId, selectedSet);
+      });
+
+      this.currentSelections.set(category.categoryId, optionMap);
     });
 
+    this.calculateTotalPrice();
+  }
+
+  private _formBuilder = inject(FormBuilder);
+
+  firstFormGroup = this._formBuilder.group({
+    firstCtrl: ['', Validators.required],
+  });
+  secondFormGroup = this._formBuilder.group({
+    secondCtrl: ['', Validators.required],
+  });
+  isLinear = true;
+
+  isCategoryValid(categoryId: number): boolean {
+    return this.selectedMainProduct.has(categoryId);
+  }
+
+  isOptionGroupValid(optionGroup: OptionDetail): boolean {
+    const selectedSet = this.currentSelections.get(optionGroup.optionId);
+    return !!selectedSet && selectedSet.size > 0;
+  }
+
+  toggleOption(categoryId: number, optionId: number, option: string) {
+    const set = this.currentSelections.get(categoryId)?.get(optionId);
+    if (!set) return;
+
+    set.has(option) ? set.delete(option) : set.add(option);
+    this.calculateTotalPrice();
+  }
+
+  selectRadio(categoryId: number, optionId: number, option: string) {
+    const set = this.currentSelections.get(categoryId)?.get(optionId);
+    if (!set) return;
+
+    set.clear();
+    set.add(option);
     this.calculateTotalPrice();
   }
 
   calculateTotalPrice(): void {
     let optionsPrice = 0;
 
-    this.settingOptionList.forEach(group => {
-      const selectedOptions = this.currentSelections.get(group.optionId);
-      if (selectedOptions) {
-        group.optionDetail.forEach(item => {
-          if (selectedOptions.has(item.option)) {
+    // 逐一跑每個餐點
+    this.data.settingDetail.forEach(category => {
+
+      const optionMap = this.currentSelections.get(category.categoryId);
+      if (!optionMap) return;
+
+      // 跑該餐點底下的每個 optionGroup
+      category.optionList.forEach(optionGroup => {
+
+        const selectedSet = optionMap.get(optionGroup.optionId);
+        if (!selectedSet) return;
+
+        optionGroup.optionDetail.forEach(item => {
+          if (selectedSet.has(item.option)) {
             optionsPrice += item.addPrice;
           }
         });
-      }
+      });
     });
+
     const totalCategoryGroups = this.data.settingDetail.length;
     const selectedProductCount = this.selectedMainProduct.size;
 
-    this.isSelectionComplete = totalCategoryGroups > 0 && totalCategoryGroups === selectedProductCount;
+    this.isSelectionComplete =
+      totalCategoryGroups > 0 &&
+      totalCategoryGroups === selectedProductCount;
 
     // 套餐原價
     const basePrice = this.data.settingPrice;
+
     // 一套餐總價
     const pricePerUnit = basePrice + optionsPrice;
-    // 填入總價格
+
+    // 總價格
     this.currentPrice = pricePerUnit * this.quantity;
   }
+
 
   incrementQuantity(): void {
     this.quantity++;
@@ -87,99 +163,91 @@ export class SettingDetailDialogComponent {
   }
 
   handleMainProductChange(categoryGroup: setting, productItem: Detail): void {
-
     this.selectedMainProduct.set(categoryGroup.categoryId, productItem.productId);
-
     this.selectedMainProductPrice.set(categoryGroup.categoryId, productItem.productPrice);
-
     this.calculateTotalPrice();
   }
 
-  handleOptionRadioChange(group: OptionDetail, optionItem: Option): void {
-    const selectedOptions = this.currentSelections.get(group.optionId);
-    if (!selectedOptions) return;
+  private getOptionsByCategory(categoryId: number): DetailOption[] {
+    const result: DetailOption[] = [];
+    const optionMap = this.currentSelections.get(categoryId);
+    if (!optionMap) return result;
 
-    selectedOptions.clear();
-    selectedOptions.add(optionItem.option);
-    this.calculateTotalPrice();
+    const category = this.data.settingDetail.find(c => c.categoryId === categoryId);
+    if (!category) return result;
+
+    category.optionList.forEach(group => {
+      const selectedSet = optionMap.get(group.optionId);
+      if (!selectedSet) return;
+
+      group.optionDetail.forEach(opt => {
+        if (selectedSet.has(opt.option)) {
+          result.push({
+            option: opt.option,
+            addPrice: opt.addPrice
+          });
+        }
+      });
+    });
+
+    return result;
   }
 
-  handleOptionCheckboxChange(group: OptionDetail, optionItem: Option, isChecked: boolean): void {
-    const selectedOptions = this.currentSelections.get(group.optionId);
+  getSelectionSummary(): SelectionSummary[] {
+    const summary: SelectionSummary[] = [];
 
-    if (!selectedOptions) {
-      return;
-    }
+    this.data.settingDetail.forEach(categoryGroup => {
+      // 1. 取得主產品
+      const selectedProductId = this.selectedMainProduct.get(categoryGroup.categoryId);
+      const selectedProduct = categoryGroup.detailList.find(p => p.productId === selectedProductId);
 
-    if (isChecked) {
-      if (selectedOptions.size < group.maxSelect) {
-        selectedOptions.add(optionItem.option);
-      }
-    } else {
-      selectedOptions.delete(optionItem.option);
-    }
+      if (selectedProduct) {
+        const options: DetailOption[] = this.getOptionsByCategory(categoryGroup.categoryId);
 
-    this.calculateTotalPrice();
-  }
-
-  addToCart(): void {
-    const settingDetailList: DetailOption[] = [];
-    let settingOptionsPrice = 0;
-
-    this.settingOptionList.forEach(group => {
-      const selectedOptions = this.currentSelections.get(group.optionId);
-      if (selectedOptions) {
-        group.optionDetail.forEach(optionItem => {
-          if (selectedOptions.has(optionItem.option)) {
-            settingDetailList.push({
-              option: optionItem.option,
-              addPrice: optionItem.addPrice
-            });
-            settingOptionsPrice += optionItem.addPrice;
-          }
+        summary.push({
+          categoryType: categoryGroup.categoryType,
+          productName: selectedProduct.productName,
+          options: options
         });
       }
     });
+    return summary;
+  }
+
+  addToCart(): void {
 
     const orderDetails: OrderDetailProduct[] = [];
+    let totalOptionPrice = 0;
 
     this.data.settingDetail.forEach(categoryGroup => {
+
       const selectedProductId = this.selectedMainProduct.get(categoryGroup.categoryId);
+      if (!selectedProductId) return;
 
-      if (selectedProductId) {
-        const selectedProduct = categoryGroup.detailList.find(d => d.productId === selectedProductId);
+      const product = categoryGroup.detailList.find(p => p.productId === selectedProductId);
+      if (!product) return;
 
-        if (selectedProduct) {
-          orderDetails.push({
-            categoryId: categoryGroup.categoryId,
-            productId: selectedProduct.productId,
-            productName: selectedProduct.productName,
-            productPrice: selectedProduct.productPrice,
-            detailList: []
-          });
-        }
-      }
+      const options = this.getOptionsByCategory(categoryGroup.categoryId);
+
+      options.forEach(o => totalOptionPrice += o.addPrice);
+
+      orderDetails.push({
+        categoryId: categoryGroup.categoryId,
+        productId: product.productId,
+        productName: product.productName,
+        productPrice: product.productPrice,
+        detailList: options
+      });
     });
 
-    if (orderDetails.length > 0) {
-      orderDetails[0].detailList.push(...settingDetailList);
-    }
-
-
-    const itemPricePerUnit = this.data.settingPrice + settingOptionsPrice;
-    const orderDetailsPrice = itemPricePerUnit * this.quantity;
+    const pricePerUnit = this.data.settingPrice + totalOptionPrice;
 
     const orderDetailItem = {
-      orderDetailsPrice: orderDetailsPrice,
+      pricePerUnit: pricePerUnit,
       settingId: this.data.settingId,
-
-      orderDetails: orderDetails,
-
-      itemDetail: {
-        quantity: this.quantity,
-        pricePerUnit: itemPricePerUnit,
-        orderDetails: orderDetails
-      }
+      quantity: this.quantity,
+      orderDetailsPrice: pricePerUnit * this.quantity,
+      orderDetails
     };
 
     this.dialogRef.close(orderDetailItem);
@@ -226,9 +294,11 @@ interface Detail {
   imageUrl: string;
 }
 
-interface OrderDetailItem {
+interface CartItemPayload {
+  orderDetailsId?: number;
   orderDetailsPrice: number;
   settingId: number;
+  quantity: number;
   orderDetails: OrderDetailProduct[];
 }
 
@@ -237,10 +307,17 @@ interface OrderDetailProduct {
   productId: number;
   productName: string;
   productPrice: number;
+  mealStatus?: string;
   detailList: DetailOption[];
 }
 
 interface DetailOption {
   option: string;
   addPrice: number;
+}
+
+interface SelectionSummary {
+  categoryType: string;
+  productName: string;
+  options: DetailOption[];
 }

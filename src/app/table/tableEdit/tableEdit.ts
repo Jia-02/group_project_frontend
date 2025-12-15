@@ -29,6 +29,7 @@ export class TableEditComponent {
   tablePositionY!: number;
   lengthX!: number;
   lengthY!: number;
+  baseUrl:string = "http://localhost:4200/";
 
 
   reservation!: Reservation[];
@@ -64,7 +65,7 @@ export class TableEditComponent {
       let day = String(today.getDate()).padStart(2, '0');
       let reservation_date = `${year}-${month}-${day}`;
       this.reservation = [];
-      let url = "http://localhost:8080/reservation/date_list?reservationDate=" + reservation_date;
+      let url = "reservation/date_list?reservationDate=" + reservation_date;
       this.service.getApi(url).subscribe((res: ReservationListTodayRes) => {
         for (let i = 0; i < res.reservationAndTableByDateList.length; i++) {
           if (this.tableId == res.reservationAndTableByDateList[i].tableId) {
@@ -99,7 +100,7 @@ export class TableEditComponent {
         dialogRef.afterClosed().subscribe(res => {
           console.log(res)
           if (res) {
-            let url = "http://localhost:8080/table/del";
+            let url = "table/del";
             this.service.postApi(url, this.data.tableInfo).subscribe((res: any) => {
               console.log(res)
               if (res.code == 200) {
@@ -118,8 +119,8 @@ export class TableEditComponent {
 
         //更新桌位----
       } else {
-        let url = "http://localhost:8080/table/update";
-        let code = "http://localhost:4200/menu?tableId=" + this.tableId
+        let url = "table/update";
+        let code = this.baseUrl+"/menu?tableId=" + this.tableId
         let table: Table = {
           tableId: this.tableId, tableStatus: this.tableStatus, tableCapacity: this.tableCapacity,
           tablePositionX: this.tablePositionX, tablePositionY: this.tablePositionY,
@@ -154,8 +155,8 @@ export class TableEditComponent {
 
       //新增桌位----
     } else if (this.data.mod == "新增") {
-      let url = "http://localhost:8080/table/add";
-      let code = "http://localhost:4200/menu?tableId=" + this.tableId
+      let url = "table/add";
+      let code = this.baseUrl +"menu?tableId=" + this.tableId
       let table: Table = {
         tableId: this.tableId, tableStatus: "可預約", tableCapacity: this.tableCapacity,
         tablePositionX: this.tablePositionX, tablePositionY: this.tablePositionY,

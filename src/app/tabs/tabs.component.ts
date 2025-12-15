@@ -23,6 +23,7 @@ export class TabsComponent {
 
   links!: WorkTable[];
   orders!: Order[];
+  timerId!: any;
 
   addLink(event: MouseEvent) {
 
@@ -37,11 +38,11 @@ export class TabsComponent {
 
     dialgoRef.afterClosed().subscribe((res: any) => {
       if (res && res.name) {
-        let url = "http://localhost:8080/workstation/add?workStationName=" + res.name
+        let url = "workstation/add?workStationName=" + res.name
         let data
         this.service.postApi(url, data).subscribe((res: BasicRes) => {
           if (res.code == 200) {
-            url = "http://localhost:8080/workstation/list"
+            url = "workstation/list"
             this.service.getApi(url).subscribe((res: WorkTableListRes) => {
               this.links = res.workStationList;
             })
@@ -69,12 +70,12 @@ export class TabsComponent {
 
     dialgoRef.afterClosed().subscribe((res: any) => {
       if (res && res.flag && res.name) {
-        let url = "http://localhost:8080/workstation/update"
+        let url = "workstation/update"
         let data: WorkTable = { workStationId: id, workStationName: res.name }
         console.log(data)
         this.service.postApi(url, data).subscribe((res: BasicRes) => {
           if (res.code == 200) {
-            url = "http://localhost:8080/workstation/list"
+            url = "workstation/list"
             this.service.getApi(url).subscribe((res: WorkTableListRes) => {
               this.links = res.workStationList;
             })
@@ -103,11 +104,11 @@ export class TabsComponent {
 
     dialgoRef.afterClosed().subscribe((res: any) => {
       if (res && res.flag) {
-        let url = "http://localhost:8080/workstation/delete?workStationId=" + id
+        let url = "workstation/delete?workStationId=" + id
         let data
         this.service.postApi(url, data).subscribe((res: BasicRes) => {
           if (res.code == 200) {
-            url = "http://localhost:8080/workstation/list"
+            url = "workstation/list"
             this.service.getApi(url).subscribe((res: WorkTableListRes) => {
               this.links = res.workStationList;
             })
@@ -154,7 +155,7 @@ export class TabsComponent {
     updateOrderReq = { ordersId: id, orderDetails: productList }
     console.log(updateOrderReq)
 
-    let url = "http://localhost:8080/orders/update/ispaid"
+    let url = "orders/update/ispaid"
     this.service.postApi(url, updateOrderReq).subscribe((res: any) => {
       if (res.code == 400) {
         this.dialog.open(DialogComponent, {
@@ -168,7 +169,7 @@ export class TabsComponent {
       let month = String(today.getMonth() + 1).padStart(2, '0');
       let day = String(today.getDate()).padStart(2, '0');
       let todayStr = year + "-" + month + "-" + day
-      url = "http://localhost:8080/orders/meal/list?ordersDate=" + todayStr
+      url = "orders/meal/list?ordersDate=" + todayStr
       this.service.getApi(url).subscribe((res: OrdersTodayRes) => {
         console.log(res)
         if (res.code == 200) {
@@ -193,7 +194,7 @@ export class TabsComponent {
             }
             this.orders.push({
               orderId: order.ordersId, orderCode: order.ordersCode, tableId: order.tableId,
-              price: order.totalPrice, status: status, workStationId: workstaionId, orderProductList: order.orderDetailsList,paid:order.paid
+              price: order.totalPrice, status: status, workStationId: workstaionId, orderProductList: order.orderDetailsList, paid: order.paid
             })
           }
         }
@@ -205,7 +206,8 @@ export class TabsComponent {
   }
 
   ngOnInit(): void {
-    let url = "http://localhost:8080/workstation/list"
+
+    let url = "workstation/list"
     this.service.getApi(url).subscribe((res: WorkTableListRes) => {
       this.links = res.workStationList;
       let today = new Date();
@@ -214,7 +216,7 @@ export class TabsComponent {
       let day = String(today.getDate()).padStart(2, '0');
       let todayStr = year + "-" + month + "-" + day
 
-      let url = "http://localhost:8080/orders/meal/list?ordersDate=" + todayStr
+      let url = "orders/meal/list?ordersDate=" + todayStr
 
       this.service.getApi(url).subscribe((res: OrdersTodayRes) => {
         console.log(res)
@@ -240,7 +242,7 @@ export class TabsComponent {
             }
             this.orders.push({
               orderId: order.ordersId, orderCode: order.ordersCode, tableId: order.tableId,
-              price: order.totalPrice, status: status, workStationId: workstaionId, orderProductList: order.orderDetailsList,paid:order.paid
+              price: order.totalPrice, status: status, workStationId: workstaionId, orderProductList: order.orderDetailsList, paid: order.paid
             })
           }
         }
@@ -248,10 +250,56 @@ export class TabsComponent {
       })
     })
 
+    //每分鐘重新更新畫面資訊 搭配ngOnDestroy()
+    this.timerId = setInterval(() => {
+      let today = new Date();
+      let year = today.getFullYear();
+      let month = String(today.getMonth() + 1).padStart(2, '0');
+      let day = String(today.getDate()).padStart(2, '0');
+      let todayStr = year + "-" + month + "-" + day
+
+      let url = "orders/meal/list?ordersDate=" + todayStr
+
+      this.service.getApi(url).subscribe((res: OrdersTodayRes) => {
+        console.log(res)
+        if (res.code == 200) {
+          this.orders = [];
+          for (const order of res.orders) {
+            let status: string[] = [];
+            let workstaionId: number[] = [];
+            for (const product of order.orderDetailsList) {
+              for (const detail of product.orderDetails) {
+                let optionId = 1;
+                if (detail.mealStatus == "製作中" && !workstaionId.includes(detail.workStationId)) {
+                  workstaionId.push(detail.workStationId);
+                }
+                if (!status.includes(detail.mealStatus)) {
+                  status.push(detail.mealStatus);
+                }
+                for (const option of detail.detailList) {
+                  option.id = optionId;
+                  optionId++;
+                }
+              }
+            }
+            this.orders.push({
+              orderId: order.ordersId, orderCode: order.ordersCode, tableId: order.tableId,
+              price: order.totalPrice, status: status, workStationId: workstaionId, orderProductList: order.orderDetailsList, paid: order.paid
+            })
+          }
+        }
+        console.log(this.orders)
+      })
+    }, 1000); // 每1秒執行一次
+
 
   }
 
-
+  ngOnDestroy() {
+    if (this.timerId) {
+      clearInterval(this.timerId);
+    }
+  }
 
 
 

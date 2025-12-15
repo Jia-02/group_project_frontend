@@ -14,9 +14,9 @@
   }
   <span class="labelCss">付款方式：</span>
     <select [(ngModel)]="paymentType" class="inputCss">
-      <option value="cash">現金</option>
-      <option value="creditCard">信用卡</option>
-      <option value="ecPay">電子支付</option>
+      <option value="現金">現金</option>
+      <option value="信用卡">信用卡</option>
+      <option value="電子支付">電子支付</option>
     </select>
 
   <hr>
@@ -31,7 +31,7 @@
             [單點]
           }
         </span>
-        <span>NT$ {{ item.orderDetailsPrice }}</span>
+        <span><button (click)="reduce(item)">-</button><button (click)="add(item)">+</button>{{ item.quantity }}項 合計{{ item.orderDetailsPrice }}元</span>
       </div>
       @if (item.orderDetails && item.orderDetails.length > 0) {
         @if(item.settingId > 0) {

@@ -117,7 +117,7 @@ export class ReserveComponent {
   }
 
   loadAllEvents() {
-    this.httpClientService.getApi('http://localhost:8080/reservation/list')
+    this.httpClientService.getApi('reservation/list')
       .subscribe((res: any) => {
         if (res.code == 200 && res.reservationList) {
           this.eventDatesSet.clear(); // 清空舊資料
@@ -244,10 +244,10 @@ export class ReserveComponent {
 
     if (recordExists) {
       // 如果DB存在，用 Update
-      url = 'http://localhost:8080/table/status/update';
+      url = 'table/status/update';
     } else {
       // 如果資料庫完全沒資料
-      url = 'http://localhost:8080/table/status/add';
+      url = 'table/status/add';
     }
 
     this.httpClientService.postApi(url, payload)
@@ -280,7 +280,7 @@ export class ReserveComponent {
   loadingReservation() {
     // 顯示桌位及預約
     const dateStr = this.formatDateStr(this.selectedDay);
-    const url = `http://localhost:8080/reservation/date_list?reservationDate=${dateStr}`;
+    const url = `reservation/date_list?reservationDate=${dateStr}`;
     this.httpClientService.getApi(url)
       .subscribe((res: any) => {
         if (res.code == 200) {

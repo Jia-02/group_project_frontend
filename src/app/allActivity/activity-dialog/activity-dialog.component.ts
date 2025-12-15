@@ -76,7 +76,7 @@ export class ActivityDialogComponent {
   onPublishClick(): void {
     const body = this._mapActivityToCalendarBody(true);
 
-    this.dataService.postApi('http://localhost:8080/calendar/create', body)
+    this.dataService.postApi('calendar/create', body)
       .subscribe((res: any) => {
         console.log('活動已發布:', res);
 
@@ -99,7 +99,7 @@ export class ActivityDialogComponent {
   onSaveClick(): void {
     const body = this._mapActivityToCalendarBody(false);
 
-    this.dataService.postApi('http://localhost:8080/calendar/create', body)
+    this.dataService.postApi('calendar/create', body)
       .subscribe((res: any) => {
         console.log('活動已暫存:', res);
 
