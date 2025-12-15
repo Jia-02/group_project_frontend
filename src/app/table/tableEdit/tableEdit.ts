@@ -29,6 +29,7 @@ export class TableEditComponent {
   tablePositionY!: number;
   lengthX!: number;
   lengthY!: number;
+  baseUrl:string = "http://localhost:4200/";
 
 
   reservation!: Reservation[];
@@ -119,7 +120,7 @@ export class TableEditComponent {
         //更新桌位----
       } else {
         let url = "table/update";
-        let code = "http://localhost:4200/menu?tableId=" + this.tableId
+        let code = this.baseUrl+"/menu?tableId=" + this.tableId
         let table: Table = {
           tableId: this.tableId, tableStatus: this.tableStatus, tableCapacity: this.tableCapacity,
           tablePositionX: this.tablePositionX, tablePositionY: this.tablePositionY,
@@ -155,7 +156,7 @@ export class TableEditComponent {
       //新增桌位----
     } else if (this.data.mod == "新增") {
       let url = "table/add";
-      let code = "http://localhost:4200/menu?tableId=" + this.tableId
+      let code = this.baseUrl +"menu?tableId=" + this.tableId
       let table: Table = {
         tableId: this.tableId, tableStatus: "可預約", tableCapacity: this.tableCapacity,
         tablePositionX: this.tablePositionX, tablePositionY: this.tablePositionY,
