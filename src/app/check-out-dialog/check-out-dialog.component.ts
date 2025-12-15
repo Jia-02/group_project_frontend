@@ -58,7 +58,7 @@ export class CheckOutDialogComponent {
     console.log(updateData);
 
 
-    const apiUrl = 'http://localhost:8080/orders/update/nopaid';
+    const apiUrl = 'orders/update/nopaid';
 
     this.dataService.postApi(apiUrl, updateData)
       .subscribe((res: any) => {

@@ -112,7 +112,7 @@ export class ActivityCheckDialogComponent {
         this.dialogRef.close();
         return;
     }
-    const deleteUrlWithParam = `http://localhost:8080/calendar/del?calendarId=${id}`;
+    const deleteUrlWithParam = `calendar/del?calendarId=${id}`;
 
     this.dataService.postApi(deleteUrlWithParam, null)
       .subscribe((res: any) => {

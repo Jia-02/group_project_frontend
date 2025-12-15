@@ -100,7 +100,7 @@ export class MenuAdminComponent {
 
   // 抓取菜單分類
   loadCategories(): void {
-    this.httpClientService.getApi('http://localhost:8080/category/list')
+    this.httpClientService.getApi('category/list')
       .subscribe((res: any) => {
         if (res.code == 200) {
           this.allCategoryDto = res.categoryDto; // 更新分類列表
@@ -119,7 +119,7 @@ export class MenuAdminComponent {
   // 新增分類
   addCategory() {
     if (this.isEditMode) {
-      this.httpClientService.postApi('http://localhost:8080/category/update', this.categoryDto)
+      this.httpClientService.postApi('category/update', this.categoryDto)
         .subscribe((res: any) => {
           if (res.code == 200) {
             this.loadCategories(); // 重新整理列表
@@ -129,7 +129,7 @@ export class MenuAdminComponent {
           }
         });
     } else {
-      this.httpClientService.postApi('http://localhost:8080/category/add', this.categoryDto)
+      this.httpClientService.postApi('category/add', this.categoryDto)
         .subscribe((res: any) => {
           if (res.code == 200) {
             this.dataService.allCategoryDto.push(res); // 或直接 loadCategories
@@ -158,7 +158,7 @@ export class MenuAdminComponent {
       categoryId: targetCategory.categoryId
     };
 
-    this.httpClientService.postApi('http://localhost:8080/category/del', payload)
+    this.httpClientService.postApi('category/del', payload)
       .subscribe((res: any) => {
         if (res.code == 200) {
           this.loadCategories();
@@ -177,7 +177,7 @@ export class MenuAdminComponent {
 
   // 抓取餐點列表
   loadProducts(categoryId: number) {
-    const apiUrl = `http://localhost:8080/product/list?categoryId=${categoryId}`;
+    const apiUrl = `product/list?categoryId=${categoryId}`;
     this.httpClientService.getApi(apiUrl)
       .subscribe((res: any) => {
         // 成功收到api
@@ -211,7 +211,7 @@ export class MenuAdminComponent {
   // 是否上架餐點
   launchProduct(product: productList) {
     product.categoryId = this.currentCategoryId;
-    this.httpClientService.postApi('http://localhost:8080/product/update', product).subscribe();
+    this.httpClientService.postApi('product/update', product).subscribe();
   }
 
   // 更新餐點
@@ -255,7 +255,7 @@ export class MenuAdminComponent {
 
   // 套餐列表
   loadSets(categoryId: number) {
-    const apiUrl = `http://localhost:8080/setting/list?categoryId=${categoryId}`;
+    const apiUrl = `setting/list?categoryId=${categoryId}`;
     this.httpClientService.getApi(apiUrl)
       .subscribe((res: any) => {
         if (res.code == 200) {
@@ -286,7 +286,7 @@ export class MenuAdminComponent {
     const findDrink = () => {
       // 如果有飲料id
       if (drinkCategoryId > 0) {
-        this.httpClientService.getApi(`http://localhost:8080/product/list?categoryId=${drinkCategoryId}`)
+        this.httpClientService.getApi(`product/list?categoryId=${drinkCategoryId}`)
           .subscribe((res: any) => {
             if (res.code == 200) {
               for (const p of res.productList) {
@@ -307,7 +307,7 @@ export class MenuAdminComponent {
     // 抓附餐 > 成功後去抓飲料
     // 如果有附餐
     if (sideCategoryId > 0) {
-      this.httpClientService.getApi(`http://localhost:8080/product/list?categoryId=${sideCategoryId}`)
+      this.httpClientService.getApi(`product/list?categoryId=${sideCategoryId}`)
         .subscribe((res: any) => {
           if (res.code == 200) {
             for (const p of res.productList) {
@@ -413,7 +413,7 @@ export class MenuAdminComponent {
       settingDetail: cleanDetail
     };
 
-    this.httpClientService.postApi('http://localhost:8080/setting/update', payload)
+    this.httpClientService.postApi('setting/update', payload)
       .subscribe((res: any) => {
         if (res.code == 200) {
           this.loadSets(this.currentCategoryId);
@@ -442,7 +442,7 @@ export class MenuAdminComponent {
 
   // 客製化列表
   customizedList(categoryId: number) {
-    const apiUrl = `http://localhost:8080/option/list?categoryId=${categoryId}`;
+    const apiUrl = `option/list?categoryId=${categoryId}`;
     this.httpClientService.getApi(apiUrl)
       .subscribe((res: any) => {
         if (res.code == 200) {
@@ -542,7 +542,7 @@ export class MenuAdminComponent {
     const drinkOptions: any[] = []; // 飲料選項
 
     for (const categoryId of categoryIds) {
-      this.httpClientService.getApi(`http://localhost:8080/option/list?categoryId=${categoryId}`)
+      this.httpClientService.getApi(`option/list?categoryId=${categoryId}`)
         .subscribe((res: any) => {
           if (res.code == 200) {
             if (categoryId == sideCatId) {
