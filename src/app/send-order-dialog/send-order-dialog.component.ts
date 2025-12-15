@@ -174,6 +174,7 @@ export class SendOrderDialogComponent {
       .subscribe((res: any) => {
         console.log('下單成功', res);
         const orderId = res.ordersId
+        console.log(res.ordersId);
         this.dialogRef.close(finalPayload);
         this.goToPage(orderId);
       }
@@ -181,7 +182,7 @@ export class SendOrderDialogComponent {
   }
 
   goToPage(orderId: number) {
-    this.router.navigateByUrl(`/meal/status/user${orderId}`);
+    this.router.navigateByUrl(`/meal/status/user?orderId=${orderId}`);
   }
 }
 
