@@ -88,7 +88,7 @@ export class ActivityCheckDialogComponent {
       calendarStatus: status
     };
 
-    this.dataService.postApi('http://localhost:8080/calendar/update', updatedActivityData)
+    this.dataService.postApi('calendar/update', updatedActivityData)
       .subscribe((res: any) => {
         console.log(res);
         this.dialogRef.close({ action: status ? 'publish' : 'saveDraft', data: updatedActivityData, photoFile: this.newPhotoFile });
