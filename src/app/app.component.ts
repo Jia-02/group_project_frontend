@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
     RouterOutlet,
     HeaderComponent,
     CommonModule
-],
+  ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
@@ -17,13 +17,16 @@ export class AppComponent {
   title = 'GroupProject';
 
   showHeader = true;
-  constructor(private router:Router){
+  constructor(private router: Router) {
     router.events.forEach((event) => {
       if (event instanceof NavigationStart) {
-        if (event['url'] == '/meal/status/user') {
+        if (event['url'].match('meal/status/user') ||
+          event['url'].match('inner-start-page') ||
+          event['url'] == '/non-inner-start-page' ||
+          event['url'] == '/customer-information' ||
+          event['url'] == '/menu') {
           this.showHeader = false;
         } else {
-          // console.log("NU")
           this.showHeader = true;
         }
       }

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { DataService, MealStatus, MealStatusRes, Order } from '../@service/data.service';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 
 @Component({
@@ -12,25 +12,60 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class MealStatusUserComponent {
 
-  constructor(private service: DataService, private activatedRoute: ActivatedRoute) { }
+  constructor(private service: DataService, private activatedRoute: ActivatedRoute, private router: Router) { }
   orderId!: any;
   mealStatus!: MealStatus;
+  timerId!: any;
 
   ngOnInit(): void {
     console.log(this.activatedRoute.snapshot.queryParamMap.get('orderId'))
     this.orderId = this.activatedRoute.snapshot.queryParamMap.get('orderId')
+
     if (this.orderId) {
       let url = "http://localhost:8080/meal/status?orderId=" + this.orderId;
       this.service.getApi(url).subscribe((res: MealStatusRes) => {
-        this.mealStatus = res.mealStatus;
+        this.mealStatus = {
+          mealStatusId: res.mealStatus.mealStatusId
+          , mealStatus: res.mealStatus.mealStatus, estimatedTime: res.mealStatus.estimatedTime,
+          finishTime: res.mealStatus.finishTime, ordersId: res.mealStatus.ordersId,
+          order: res.order, orderDetailsList: res.orderDetailsList
+        }
+        console.log(this.mealStatus)
       })
+    }
+
+    if (this.orderId) {
+      this.timerId = setInterval(() => {
+        this.orderId = this.activatedRoute.snapshot.queryParamMap.get('orderId')
+        let url = "http://localhost:8080/meal/status?orderId=" + this.orderId;
+        this.service.getApi(url).subscribe((res: MealStatusRes) => {
+          this.mealStatus = {
+            mealStatusId: res.mealStatus.mealStatusId
+            , mealStatus: res.mealStatus.mealStatus, estimatedTime: res.mealStatus.estimatedTime,
+            finishTime: res.mealStatus.finishTime, ordersId: res.mealStatus.ordersId,
+            order: res.order, orderDetailsList: res.orderDetailsList
+          }
+          console.log(this.mealStatus)
+        })
+      }, 1000); // 每1秒執行一次
+    }
+  }
+
+  ngOnDestroy() {
+    if (this.timerId) {
+      clearInterval(this.timerId);
     }
   }
 
   search() {
     let url = "http://localhost:8080/meal/status?orderId=" + this.orderId;
     this.service.getApi(url).subscribe((res: MealStatusRes) => {
-      this.mealStatus = res.mealStatus;
+      if (res.code == 200) {
+        url = '/meal/status/user?orderId=' + this.orderId;
+        this.router.navigateByUrl(url).then(() => {
+          window.location.reload();
+        });
+      }
     })
   }
 
