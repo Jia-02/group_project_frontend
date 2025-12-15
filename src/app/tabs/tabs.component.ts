@@ -74,7 +74,7 @@ export class TabsComponent {
         console.log(data)
         this.service.postApi(url, data).subscribe((res: BasicRes) => {
           if (res.code == 200) {
-            url = "http://localhost:8080/workstation/list"
+            url = "https://declivitous-mariyah-chartographically.ngrok-free.dev/workstation/list"
             this.service.getApi(url).subscribe((res: WorkTableListRes) => {
               this.links = res.workStationList;
             })
@@ -205,7 +205,7 @@ export class TabsComponent {
   }
 
   ngOnInit(): void {
-    let url = "http://localhost:8080/workstation/list"
+    let url = "https://declivitous-mariyah-chartographically.ngrok-free.dev/workstation/list"
     this.service.getApi(url).subscribe((res: WorkTableListRes) => {
       this.links = res.workStationList;
       let today = new Date();

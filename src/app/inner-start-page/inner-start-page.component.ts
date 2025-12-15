@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { OrderService } from '../order.service';
 
 @Component({
@@ -8,15 +8,26 @@ import { OrderService } from '../order.service';
   templateUrl: './inner-start-page.component.html',
   styleUrl: './inner-start-page.component.scss'
 })
+
 export class InnerStartPageComponent {
+
   tableId!: string;
 
   constructor(
     private router: Router,
-    private orderService: OrderService
-  ) {}
+    private orderService: OrderService,
+    private route: ActivatedRoute
+  ) { }
 
-  startDineInOrder(){
+
+  ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      this.tableId = params['tableId'];
+      console.log(this.tableId);
+    });
+  }
+
+  startDineInOrder() {
     this.orderService.currentOrder.ordersType = 'A';
     this.orderService.currentOrder.tableId = this.tableId;
 
