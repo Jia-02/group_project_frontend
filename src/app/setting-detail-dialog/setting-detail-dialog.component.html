@@ -23,7 +23,7 @@
               <input type="radio" [name]="'mainProduct_' + categoryGroup.categoryId"
                      [checked]="selectedMainProduct.get(categoryGroup.categoryId) === productGroup.productId"
                      (change)="handleMainProductChange(categoryGroup, productGroup)">
-              {{ productGroup.productName }} (單點價格: {{ productGroup.productPrice }})
+              {{ productGroup.productName }} (單點價格: {{ productGroup.productPrice }})<br>
               過敏原:
               @if(productGroup.productNote.length > 0){
                 {{ productGroup.productNote }}
@@ -70,11 +70,6 @@
 
     <mat-step label="數量與結帳">
       <ng-template matStepLabel>確認數量與結帳</ng-template>
-
-      <h3>確認數量</h3>
-      <div class="stepper-actions">
-        <button mat-button matStepperPrevious>上一步</button>
-        </div>
     </mat-step>
 
   </mat-stepper>
