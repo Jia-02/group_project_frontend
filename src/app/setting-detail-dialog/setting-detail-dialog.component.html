@@ -96,13 +96,13 @@
 
   </mat-stepper>
 
-  <mat-dialog-actions>
+  <mat-dialog-actions class="quantity-actions">
     <button (click)="decrementQuantity()"><mat-icon>remove</mat-icon></button>
     <input type="number" [(ngModel)]="quantity" min="1" class="numberCss">
     <button (click)="incrementQuantity()"><mat-icon>add</mat-icon></button>
   </mat-dialog-actions>
 
-  <mat-dialog-actions>
+  <mat-dialog-actions class="cart-actions">
     <h3>總價格: NT$ {{ currentPrice }}</h3>
     <button [disabled]="!quantity || quantity <= 0 || !isSelectionComplete" (click)="addToCart()" class="buttonCss">
       加入購物車
