@@ -96,7 +96,7 @@ export class CheckOutDialogComponent {
     this.data.paid = true;
     this.saveChanges();
     console.log('訂單付款狀態已更新為：已付 (true)', this.data.paid);
-    this.dialogRef.close();
+    this.dialogRef.close(true);
   }
 
   toggleEditMode() {
