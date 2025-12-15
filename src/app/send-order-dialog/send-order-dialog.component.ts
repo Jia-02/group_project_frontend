@@ -170,10 +170,11 @@ export class SendOrderDialogComponent {
 
     console.log('準備送出的資料 (已修正價格和結構轉換):', finalPayload);
 
-    this.dataService.postApi('http://localhost:8080/orders/add', finalPayload)
+    this.dataService.postApi('orders/add', finalPayload)
       .subscribe((res: any) => {
         console.log('下單成功', res);
         const orderId = res.ordersId
+        console.log(res.ordersId);
         this.dialogRef.close(finalPayload);
         this.goToPage(orderId);
       }
@@ -181,7 +182,7 @@ export class SendOrderDialogComponent {
   }
 
   goToPage(orderId: number) {
-    this.router.navigateByUrl(`/meal/status/user${orderId}`);
+    this.router.navigateByUrl(`/meal/status/user?orderId=${orderId}`);
   }
 }
 

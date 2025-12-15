@@ -28,7 +28,7 @@
     margin-bottom: 10px;
   }
 
-  mat-dialog-content > span {
+  mat-dialog-content>span {
     font-weight: bold;
     font-size: 1.2em;
     display: block;
@@ -99,31 +99,33 @@
 }
 
 @media screen and (max-width: 768px) {
-  .mat-mdc-dialog-actions {
+  .quantity-actions {
     padding: 10px 20px;
     margin: 0;
-    position: fixed;
-    left: 0;
-    right: 0;
-    z-index: 1000;
-    background-color: white;
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
     display: flex;
     align-items: center;
-  }
-
-  .mat-mdc-dialog-actions:nth-last-of-type(2) {
-    bottom: 65px;
     justify-content: center;
     gap: 15px;
+    margin-top: 20px;
   }
 
-  .mat-mdc-dialog-actions:last-of-type {
-    bottom: 0;
+  .cart-actions {
+    padding: 10px 20px;
+    margin: 0;
+    display: flex;
+    align-items: center;
     justify-content: space-between;
+    border-top: 1px solid #eee;
+    margin-bottom: 20px;
   }
 
-  .mat-mdc-dialog-actions h3 {
+  mat-dialog-content {
+    padding: 0 20px 20px 20px !important;
+    overflow-y: auto;
+    flex-grow: 1;
+  }
+
+  .cart-actions h3 {
     font-size: 1.3em;
     color: green;
     margin: 0;
@@ -146,7 +148,7 @@
     border-radius: 4px;
   }
 
-  .mat-mdc-dialog-actions button:not(.buttonCss) {
+  .quantity-actions button {
     width: 35px;
     height: 35px;
     min-width: 35px;
