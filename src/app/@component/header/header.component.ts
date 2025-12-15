@@ -40,6 +40,6 @@ export class HeaderComponent {
   }
 
   calander() {
-
+    this.router.navigateByUrl('calendar');
   }
 }

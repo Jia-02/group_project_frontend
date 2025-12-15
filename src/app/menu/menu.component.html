@@ -3,7 +3,7 @@
 } @else {
   <h2>{{ displayOrderType }}</h2>
 }
-<div>
+<div class="content-container">
   @if (!isLoadingCategories) {
   <mat-tab-group (selectedTabChange)="onTabChange($event)">
     @for (category of categories; track category.categoryId) {

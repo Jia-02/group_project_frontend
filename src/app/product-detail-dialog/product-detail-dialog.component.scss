@@ -1,9 +1,38 @@
-.buttonCss{
-  width: 400px;
-  height: 50px;
-}
+@media screen and (max-width: 768px) {
+  .mat-mdc-dialog-container .mat-mdc-dialog-surface {
+    width: 95vw !important;
+    max-height: 95vh;
+    max-width: none !important;
+  }
 
-.numberCss{
-  width: 265px;
-  height: 30px;
+  .mat-mdc-dialog-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    margin: 0;
+  }
+
+  mat-dialog-content {
+    padding: 0 20px 100px 20px !important;
+    overflow-y: auto;
+  }
+
+  mat-dialog-content img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 10px;
+  }
+
+  mat-dialog-content span,
+  mat-dialog-content p {
+    font-size: 1.1em;
+    line-height: 1.5;
+  }
+
+  mat-dialog-content h3 {
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
 }
