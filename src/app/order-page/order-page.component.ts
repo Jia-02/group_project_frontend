@@ -245,6 +245,7 @@ export interface OrderProduct {
   productName: string;
   productPrice: number;
   mealStatus: string;
+  categoryId: number;
   detailList: DetailOption[];
 }
 
@@ -271,55 +272,3 @@ export interface FullOrderData {
   order_detailsList: OrderDetailsGroup[];
 }
 
-export const FULL_ORDER_DETAIL_MOCK: FullOrderData = {
-  ordersId: 1001,
-  ordersCode: 'A1001',
-  ordersType: '內用',
-  ordersDate: '2025-12-08',
-  ordersTime: '10:30',
-  totalPrice: 480,
-  paymentType: '電子支付',
-  paid: false,
-  tableId: 'T05',
-  customerName: '王小明',
-  customerPhone: '0912345678',
-  customerAddress: null,
-
-  order_detailsList: [
-    {
-      orderDetailsId: 1,
-      orderDetailsPrice: 180,
-      settingId: 1,
-      orderDetails: [
-        {
-          workstationId: 1,
-          productId: 101,
-          productName: '經典拿鐵',
-          productPrice: 150,
-          mealStatus: '已完成',
-          detailList: [
-            { option: '加一份濃縮', addPrice: 30 },
-          ],
-        },
-      ],
-    },
-    {
-      orderDetailsId: 2,
-      orderDetailsPrice: 300,
-      settingId: 1,
-      orderDetails: [
-        {
-          workstationId: 2,
-          productId: 201,
-          productName: '豪華總匯三明治',
-          productPrice: 250,
-          mealStatus: '製作中',
-          detailList: [
-            { option: '醬料多一點', addPrice: 0 },
-            { option: '加起司片', addPrice: 50 },
-          ],
-        },
-      ],
-    },
-  ],
-};
