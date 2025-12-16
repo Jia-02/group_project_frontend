@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
 import { HttpClientService } from '../../@service/http-client.service';
 import { categoryDto, productList } from '../../@interface/interface';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-dialog-set',
@@ -13,7 +14,8 @@ import { categoryDto, productList } from '../../@interface/interface';
     MatDialogContent,
     MatDialogTitle,
     FormsModule,
-    CommonModule
+    CommonModule,
+    MatIconModule
   ],
   templateUrl: './dialog-set.component.html',
   styleUrl: './dialog-set.component.scss'
@@ -82,6 +84,8 @@ export class DialogSetComponent {
     if (this.data.isEditMode && this.data.targetSet) {
       this.isEditMode = true;
       this.optionVo = JSON.parse(JSON.stringify(this.data.targetSet)); // 深拷貝資料
+      console.log(this.optionVo);
+
       this.optionVo.categoryId = this.data.currentCategoryId;
       this.existingDetails();
     }
@@ -137,7 +141,7 @@ export class DialogSetComponent {
 
       // 找主餐分類名稱
       let mainCatName = '';
-      for(const cat of this.categoryList) {
+      for (const cat of this.categoryList) {
         if (cat.categoryId == this.selections.mainCatId) {
           mainCatName = cat.categoryType;
           break;
@@ -213,7 +217,6 @@ export class DialogSetComponent {
         if (res.settingId) {
           this.optionVo.settingId = res.settingId;
         }
-        alert('儲存成功');
         this.dialogRef.close(this.optionVo);
       }
     };
@@ -284,6 +287,7 @@ export class DialogSetComponent {
 
     for (const cat of this.categoryList) {
       const typeName = cat.categoryType.trim();
+      console.log(typeName);
 
       if (typeName == '炸物') {
         realSideCatId = cat.categoryId;
@@ -302,16 +306,29 @@ export class DialogSetComponent {
         continue;
       }
 
+
+      let currentTypeName = ''; // 用來存查到的分類名稱
+      for (const cat of this.categoryList) {
+        // 使用 == (雙等號) 讓 "5" (字串) 可以等於 5 (數字)
+        if (cat.categoryId == cId) {
+          currentTypeName = cat.categoryType.trim(); // 找到後去除空白
+          break; // 找到了就跳出迴圈，不用再找了
+        }
+      }
+
       // 檢查是否為附餐
       if (cId == realSideCatId) {
         const firstItem = group.detailList[0];
         this.selections.sideId = firstItem.productId;
+        console.log(this.selections.sideId);
+        continue;
       }
 
       // 檢查是否為飲料
       if (cId == realDrinkCatId) {
         const firstItem = group.detailList[0];
         this.selections.drinkId = firstItem.productId;
+        continue;
       }
 
       // 剩下的就是主餐

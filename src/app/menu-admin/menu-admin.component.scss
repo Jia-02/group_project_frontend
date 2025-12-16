@@ -12,7 +12,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: 16px;
 }
 
 .labelText {
@@ -39,7 +39,8 @@
 
 /* 調整 Icon 本身的大小以配合迷你按鈕 */
 .mini-btn mat-icon {
-  font-size: 18px !important; /* Icon 縮小 */
+  font-size: 18px !important;
+  /* Icon 縮小 */
   width: 18px !important;
   height: 18px !important;
 }
@@ -55,24 +56,72 @@
   background: #fff;
   border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 3px 8px rgba(0,0,0,.15);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, .15);
   display: flex;
   flex-direction: column;
 }
 
 .card img {
   height: 170px;
-  object-fit: cover;  // 保持原始比例的情況下，填滿整個容器
+  object-fit: cover; // 保持原始比例的情況下，填滿整個容器
 }
 
 .cardBody {
-  padding: 20px;
+  padding: 18px 20px 8px 20px;
   flex: 1;
 }
 
 .cardTitle {
   font-weight: 600;
   margin-bottom: 6px;
+}
+
+/* 卡片整體變灰底 */
+.card.is-inactive {
+  background-color: #f2f2f2;
+  border: 1px solid #e0e0e0;
+}
+
+/* 圖片變灰階且半透明 */
+.card.is-inactive img {
+  filter: grayscale(20%); // 轉灰階
+  opacity: 0.3; // 透明度
+}
+
+/* 文字顏色變淡 (除了 Footer 操作區) */
+.card.is-inactive .cardBody {
+  opacity: 0.4;
+}
+
+.card.is-inactive .price {
+  color: #999; // 價格原本是橘色，未上架時改為灰色
+}
+
+/* 在圖片上顯示「未上架」標籤 */
+.card.is-inactive {
+  position: relative;
+}
+
+.card.is-inactive::after {
+  content: "未上架";
+  position: absolute;
+  top: 20%;
+  right: 35%;
+  background-color: rgba(0, 0, 0, 0.6);
+  /* 半透明黑底 */
+  color: #fff;
+  font-size: 14px;
+  padding: 8px 15px;
+  border-radius: 8px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* 確保 Footer (開關按鈕) 保持清晰 */
+.card.is-inactive .cardFooter {
+  background-color: #fff;
+  opacity: 1;
+  border-top: 1px solid #ddd;
 }
 
 .note {
@@ -88,10 +137,11 @@
 
 
 .cardFooter {
-  padding: 10px 20px;
+  padding: 10px 8px 6px 8px;
   display: flex;
   justify-content: space-between;
   border-top: 1px solid #eee;
+  font-size: 14px;
 }
 
 
@@ -102,6 +152,8 @@
   align-items: center;
   justify-content: center;
   font-size: 16px;
+  width: 210px;
+  height: auto;
   cursor: pointer;
 }
 
@@ -109,39 +161,115 @@
   background: #f0f6ff;
 }
 
-/* 客製化 Sidebar */
+/* --- 套餐內容詳情樣式 --- */
+
+.packageDetail {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed #eee;
+  /* 上方加一條虛線，與價格/備註區隔 */
+}
+
+.detailRow {
+  display: flex;
+  flex-wrap: wrap;
+  /* 內容太多時自動換行 */
+  align-items: center;
+  gap: 6px;
+  /* 標籤之間的間距 */
+  margin-bottom: 5px;
+}
+
+/* 通用標籤樣式 */
+.tag {
+  font-size: 12px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  line-height: 1.2;
+}
+
+/* 分類標籤：灰底、深色字 */
+.tag.category {
+  background-color: #e0e0e0;
+  color: #333;
+  font-weight: 600;
+}
+
+/* 產品標籤：白底、灰框 */
+.tag.product {
+  background-color: #fff;
+  color: #666;
+}
+
+
 .customizeSidebar {
   width: 300px;
   background: #fff;
   border-radius: 10px;
-  padding: 35px;
-  box-shadow: 0 2px 6px rgba(0,0,0,.12);
+  padding: 25px 45px 35px 45px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .12);
   display: flex;
   flex-direction: column;
 }
 
-/* sidebar-title -> sidebarTitle */
+
 .sidebarTitle {
   font-weight: bold;
   text-align: center;
   border-bottom: 1px solid #eee;
-  padding-bottom: 8px;
+  padding-bottom: 15px;
 }
 
-/* customize-group -> customizeGroup */
+
 .customizeGroup {
   margin-top: 16px;
-  margin-bottom: 20px;
+  margin-bottom: 5px;
 }
 
-/* customize-header -> customizeHeader */
+
 .customizeHeader {
   display: flex;
   justify-content: space-between;
   font-weight: 500;
 }
 
-/* customize-item -> customizeItem */
+/* --- Icon 按鈕容器 --- */
+/* 選取 customizeHeader 裡面的那個 div (包著兩個 icon 的那個) */
+.customizeHeader>div {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  /* Icon 之間的距離 */
+}
+
+/* --- Icon 通用基礎樣式 --- */
+.customizeHeader mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  color: #bbb;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+/* --- 編輯按鈕 (Edit) 特效 --- */
+/* 假設編輯是第一個 Icon */
+.customizeHeader mat-icon:first-of-type:hover {
+  color: #013c70;
+  background-color: #eef4fc;
+  transform: scale(1.1);
+}
+
+/* --- 刪除按鈕 (Delete) 特效 --- */
+/* 假設刪除是最後一個 Icon */
+.customizeHeader mat-icon:last-of-type:hover {
+  color: #d32f2f;
+  background-color: #ffebee;
+  transform: scale(1.1);
+}
+
 .customizeItem {
   display: flex;
   align-items: center;
@@ -183,7 +311,7 @@
   padding: 32px;
   background: #fff;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 
   display: flex;
   flex-direction: column;
@@ -222,7 +350,8 @@
 /* 輸入框 Focus 狀態 (點擊時變色) */
 .addCategoryForm input:focus,
 .addCategoryForm select:focus {
-  border-color: #013c70;      /* 變成主色 */
+  border-color: #013c70;
+  /* 變成主色 */
   background-color: #fff;
 }
 

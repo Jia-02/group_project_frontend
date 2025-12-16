@@ -2,6 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { FullOrderData } from '../order-page/order-page.component';
 import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-order-dialog',
@@ -10,6 +11,7 @@ import { CommonModule } from '@angular/common';
     MatDialogContent,
     MatDialogActions,
     CommonModule,
+    MatIconModule,
   ],
   templateUrl: './order-dialog.component.html',
   styleUrl: './order-dialog.component.scss'

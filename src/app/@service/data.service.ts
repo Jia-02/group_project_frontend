@@ -56,8 +56,6 @@ export class DataService {
 
   // 桌位列表
   tableIdList: any[] = [];
-
-
 }
 
 

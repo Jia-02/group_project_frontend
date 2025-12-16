@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
 import { MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 
 @Component({
@@ -14,6 +15,7 @@ import { MatInputModule } from '@angular/material/input';
     MatDialogActions,
     ReactiveFormsModule,
     MatDialogTitle,
+    MatIconModule
   ],
   templateUrl: './activity-create-dialog.component.html',
   styleUrl: './activity-create-dialog.component.scss'

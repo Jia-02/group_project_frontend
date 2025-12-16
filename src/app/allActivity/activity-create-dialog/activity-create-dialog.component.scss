@@ -1,3 +1,4 @@
+/* --- Header --- */
 .diaTitle {
   margin: 0;
   padding: 10px 30px;
@@ -8,7 +9,7 @@
   border-bottom: 1px solid #eee;
 }
 
-/* 內容區域排版 */
+/* --- Content --- */
 .dialogContent {
   padding: 25px !important;
   display: flex;
@@ -17,45 +18,32 @@
   min-width: 500px;
 }
 
-/* 標籤樣式 */
+/* 標籤文字 */
 .dialogContent label {
   font-size: 14px;
   font-weight: 600;
   color: #555;
+  margin-bottom: 4px; /* 微調：讓標籤跟輸入框近一點 */
 }
 
-/* 每一排的容器 */
+/* --- Form Layout --- */
 .formRow {
   display: flex;
   gap: 15px;
   width: 100%;
 }
 
-/* 單一欄位包裝 */
 .formField {
   flex: 1;
   display: flex;
   flex-direction: column;
 }
 
-/* Label 樣式 */
 .formField label {
-  font-size: 14px;
-  font-weight: 600;
-  color: #555;
   margin-bottom: 6px;
 }
 
-/* 純文字顯示區域 (分類名稱) */
-.staticText {
-  padding: 8px 12px;
-  background-color: #f5f5f5;
-  border-radius: 8px;
-  color: #333;
-  font-weight: 500;
-}
-
-/* 輸入框與文字區域 styledInput */
+/* --- Inputs --- */
 .styledInput {
   padding: 10px 12px;
   font-size: 14px;
@@ -68,50 +56,28 @@
   box-sizing: border-box;
 }
 
-/* 輸入框 Focus 效果 */
 .styledInput:focus {
   border-color: #013c70;
   background-color: #fdfdfd;
 }
 
-/* 針對 textarea 特別調整 */
 textarea.styledInput {
   resize: vertical;
-  min-height: 50px;
+  min-height: 80px; /* 稍微加高一點 */
 }
 
-/* 檔案選取狀態 */
-.fileStatus {
-  display: flex;
-  align-items: center;
-  gap: 3px;
-  font-size: 13px;
-  color: #2e7d32;
-  background: #e8f5e9;
-  padding: 8px;
-  border-radius: 4px;
-}
-
-.fileStatus mat-icon {
-  font-size: 18px;
-  width: 18px;
-  height: 15px;
-}
-
-/* 檔案上傳區塊 */
+/* --- File Upload --- */
 .fileInputWrapper {
   width: 100%;
-
 }
 
-/* 自訂上傳按鈕 (Label) */
 .uploadBtn {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 5px;
+  gap: 8px;
   width: 100%;
-  padding: 10px;
+  padding: 12px; /* 增加一點點擊範圍 */
   background-color: #f8f9fa;
   border: 2px dashed #ccc;
   border-radius: 8px;
@@ -121,12 +87,10 @@ textarea.styledInput {
   box-sizing: border-box;
 }
 
-/* Icon 大小微調 */
 .uploadBtn mat-icon {
   color: #888;
 }
 
-/* 滑鼠移上去的效果 */
 .uploadBtn:hover {
   background-color: #eef4fc;
   border-color: #013c70;
@@ -137,20 +101,39 @@ textarea.styledInput {
   color: #013c70;
 }
 
-/* 按下去的效果 */
 .uploadBtn:active {
   background-color: #dde9f7;
   transform: scale(0.99);
 }
 
-/* 按鈕區域 */
+/* --- Image Preview (新增樣式) --- */
+.imagePreviewBox {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  background: #f5f5f5;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #eee;
+}
+
+.imagePreviewBox img {
+  max-width: 100%;
+  max-height: 200px;
+  object-fit: contain;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* --- Actions --- */
 .dialogActions {
   padding: 16px 40px !important;
   border-top: 1px solid #eee;
   gap: 15px;
+  display: flex;
+  justify-content: flex-end; /* 靠右對齊 */
 }
 
-/* 通用按鈕樣式 */
 .dialogBtn {
   padding: 10px 25px;
   font-size: 14px;
@@ -161,7 +144,6 @@ textarea.styledInput {
   transition: all 0.2s;
 }
 
-/* 取消按鈕 */
 .cancelBtn {
   background-color: #fff;
   border: 1px solid #ddd;
@@ -173,7 +155,6 @@ textarea.styledInput {
   color: #333;
 }
 
-/* 確定按鈕 */
 .confirmBtn {
   background-color: #013c70;
   color: #fff;

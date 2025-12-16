@@ -3,35 +3,36 @@
   <div class="content">
 
     <mat-tab-group class="categoryTabs" [(selectedIndex)]="selectedTabIndex" (selectedTabChange)="onTabChange($event)">
-
       @for (category of allCategoryDto; track $index) {
       <mat-tab>
-
+        <!-- tab區域 -->
         <ng-template mat-tab-label>
           <div class="tabLabel">
             <span class="labelText">{{ category.categoryType }}</span>
 
             <div class="actionIcons">
-
+              <!-- 移除 -->
               <button mat-icon-button color="warn" class="mini-btn"
-                (click)="delCategory(category); $event.stopPropagation()">
+                (click)="delCategory(category)">
                 <mat-icon>remove</mat-icon>
               </button>
 
-              <button mat-icon-button class="mini-btn" (click)="updateCategory(category); $event.stopPropagation()">
+              <!-- 編輯 -->
+              <button mat-icon-button class="mini-btn" (click)="updateCategory(category)">
                 <mat-icon>edit</mat-icon>
               </button>
-
             </div>
+
           </div>
         </ng-template>
 
 
+        <!-- 套餐分類 -->
         @if (category.categoryType == '套餐') {
         <div class="cardGrid">
 
           @for (pkg of setList; track $index) {
-          <div class="card packageCard" (click)="onSetSelected(pkg)">
+          <div class="card packageCard" (click)="onSetSelected(pkg)" [class.is-inactive]="!pkg.settingActive">
 
             <img [src]="pkg.settingImg || 'assets/default-package.jpg'">
 
@@ -79,19 +80,19 @@
           </div>
           }
 
+          <!-- 新增套餐 -->
           <div class="card addCard" (click)="addSets()">
             <mat-icon>add_circle</mat-icon>
             <span>新增套餐</span>
->>>>>>> reserve
           </div>
         </div>
         }
 
         @else {
         <div class="cardGrid">
-
+          <!-- 其他分類 -->
           @for (product of productList; track $index) {
-          <div class="card">
+          <div class="card" [class.is-inactive]="!product.productActive">
 
             <img [src]="product.imageUrl">
 
@@ -101,6 +102,7 @@
               <div class="price">${{ product.productPrice }}</div>
             </div>
 
+            <!-- 餐點編輯區塊 -->
             <div class="cardFooter">
               <mat-slide-toggle [(ngModel)]="product.productActive" (change)="launchProduct(product)">
                 是否上架
@@ -123,6 +125,7 @@
           </div>
           }
 
+          <!-- 新增餐點 -->
           <div class="card addCard" (click)="addProduct()">
             <mat-icon>add_circle</mat-icon>
             <span>新增餐點</span>
@@ -135,6 +138,7 @@
       }
 
       <mat-tab>
+        <!-- 新增分類tab -->
         <ng-template mat-tab-label>
           <mat-icon>add_circle</mat-icon>
         </ng-template>
@@ -159,6 +163,8 @@
     </mat-tab-group>
   </div>
 
+
+  <!-- 客製化區域 -->
   @if (currentCategoryId > 0) {
   <aside class="customizeSidebar">
 

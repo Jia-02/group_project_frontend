@@ -1,0 +1,46 @@
+<h2 mat-dialog-title class="diaTitle">新增活動</h2>
+
+<mat-dialog-content class="dialogContent">
+
+  <div class="formField">
+    <label>活動標題</label>
+    <input type="text" class="styledInput" [(ngModel)]="data.calendarTitle" placeholder="請輸入活動標題">
+  </div>
+
+  <div class="formRow">
+    <div class="formField">
+      <label>開始時間</label>
+      <input type="date" class="styledInput" [(ngModel)]="data.calendarStartDate" [min]="todayDateString">
+    </div>
+
+    <div class="formField">
+      <label>結束時間</label>
+      <input type="date" class="styledInput" [(ngModel)]="data.calendarEndDate" [min]="data.calendarStartDate">
+    </div>
+  </div>
+
+  <label>活動內容</label>
+  <textarea class="styledInput" rows="3" [(ngModel)]="data.calendarDescription" placeholder="請輸入活動詳細內容"></textarea>
+
+  <label>活動圖片</label>
+  <div class="fileInputWrapper">
+    <input type="file" id="eventFile" (change)="onFileSelected($event)" accept="image/*" hidden>
+
+    <label for="eventFile" class="uploadBtn">
+      <mat-icon>upload</mat-icon>
+      <span>{{ selectedPhotoFile?.name || '點擊選擇圖片' }}</span>
+    </label>
+  </div>
+
+  @if (photoUrl) {
+  <div class="imagePreviewBox">
+    <img [src]="photoUrl" alt="活動圖片預覽">
+  </div>
+  }
+
+</mat-dialog-content>
+
+<mat-dialog-actions class="dialogActions">
+  <button (click)="closeDialog()" class="dialogBtn cancelBtn">取消</button>
+  <button (click)="submit()" class="dialogBtn confirmBtn">下一步</button>
+</mat-dialog-actions>

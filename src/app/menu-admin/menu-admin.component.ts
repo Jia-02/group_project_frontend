@@ -14,6 +14,7 @@ import { DialogMenuComponent } from '../@dialog/dialog-menu/dialog-menu.componen
 import { DialogDeleteComponent } from '../@dialog/dialog-delete/dialog-delete.component';
 import { DialogCustomizedComponent } from '../@dialog/dialog-customized/dialog-customized.component';
 import { DialogSetComponent } from '../@dialog/dialog-set/dialog-set.component';
+import { DialogNoticeComponent } from '../@dialog/dialog-notice/dialog-notice.component';
 
 @Component({
   selector: 'app-menu-admin',
@@ -167,6 +168,12 @@ export class MenuAdminComponent {
           if (this.currentCategoryId == targetCategory.categoryId) {
             this.currentCategoryId = 0; // 重置邏輯
           }
+        } else {
+          this.dialog.open(DialogNoticeComponent, {
+            width: '25%',
+            height: 'auto',
+            data: { noticeType: 'delCategory' }
+          })
         }
       });
   }
@@ -195,6 +202,8 @@ export class MenuAdminComponent {
   // 新增餐點
   addProduct() {
     const dialogRef = this.dialog.open(DialogMenuComponent, {
+      width: '85%',
+      height: 'auto',
       data: {
         categoryId: this.currentCategory.categoryId,
         categoryType: this.currentCategory.categoryType,
@@ -216,8 +225,9 @@ export class MenuAdminComponent {
 
   // 更新餐點
   updateProduct(product: productList) {
-
     const dialogRef = this.dialog.open(DialogMenuComponent, {
+      width: '85%',
+      height: 'auto',
       data: {
         categoryId: this.currentCategoryId,
         categoryType: this.currentCategory.categoryType,
@@ -277,9 +287,10 @@ export class MenuAdminComponent {
     let drinkCategoryId = 0;
 
     // 找出附餐和飲料的 Category ID
-    for (let catgoryData of this.dataService.allCategoryDto) {
-      if (catgoryData.categoryType == '炸物') sideCategoryId = catgoryData.categoryId;
-      if (catgoryData.categoryType == '飲料') drinkCategoryId = catgoryData.categoryId;
+    for (let catgoryData of this.allCategoryDto) {
+      const typeName = catgoryData.categoryType.trim();
+      if (typeName == '炸物') sideCategoryId = catgoryData.categoryId;
+      if (typeName == '飲料') drinkCategoryId = catgoryData.categoryId;
     }
 
     // 抓飲料
@@ -315,8 +326,8 @@ export class MenuAdminComponent {
               if (p.productActive == true) {
                 this.dataService.sideDishList.push(p);
               }
-              this.sideDishList = [...this.dataService.sideDishList];
             }
+            this.sideDishList = [...this.dataService.sideDishList];
           }
           findDrink(); // 接著抓飲料
         });
@@ -329,6 +340,8 @@ export class MenuAdminComponent {
   addSets() {
     this.prepareSetData(() => {
       const dialogRef = this.dialog.open(DialogSetComponent, {
+        width: '85%',
+        height: 'auto',
         data: {
           allCategories: this.allCategoryDto,
           sideDishList: this.sideDishList,
@@ -348,9 +361,13 @@ export class MenuAdminComponent {
 
   // 編輯套餐
   updateSet(pkg: any) {
+    console.log(pkg);
+
     // 附餐與飲料的選項清單
     this.prepareSetData(() => {
       const dialogRef = this.dialog.open(DialogSetComponent, {
+        width: '85%',
+        height: 'auto',
         data: {
           allCategories: this.allCategoryDto,
           sideDishList: this.sideDishList,
@@ -455,6 +472,8 @@ export class MenuAdminComponent {
   // 新增客製化
   addCustomized() {
     const dialogRef = this.dialog.open(DialogCustomizedComponent, {
+      width: '85%',
+      height: 'auto',
       data: {
         categoryId: this.currentCategoryId, // 傳入當前的分類 ID
         existingOptions: this.dataService.optionList // 目前的選項列表

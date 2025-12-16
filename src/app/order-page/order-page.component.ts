@@ -11,6 +11,7 @@ import { CheckOutDialogComponent } from '../check-out-dialog/check-out-dialog.co
 
 import { A11yModule } from "@angular/cdk/a11y";
 import { DataService } from '../@service/data.service';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-order-page',
@@ -21,7 +22,8 @@ import { DataService } from '../@service/data.service';
     MatFormFieldModule,
     MatSelectModule,
     MatInputModule,
-    A11yModule
+    A11yModule,
+    MatIconModule,
   ],
   templateUrl: './order-page.component.html',
   styleUrl: './order-page.component.scss'
@@ -193,14 +195,14 @@ export class OrderPageComponent {
 
       if (isPaid) {
         dialogRef = this.dialog.open(OrderDialogComponent, {
-          width: '500px',
-          height: '900px',
+          width: '80%',
+          height: 'auto',
           data: dataToSendToDialog,
         });
       } else {
         dialogRef = this.dialog.open(CheckOutDialogComponent, {
-          width: '500px',
-          height: '900px',
+          width: '80%',
+          height: 'auto',
           data: dataToSendToDialog,
         });
       }

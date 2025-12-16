@@ -1,0 +1,54 @@
+<h2 mat-dialog-title class="diaTitle">
+  活動預覽
+  <span class="headerSubtitle">{{ activityData.calendarTitle }}</span>
+</h2>
+
+<mat-dialog-content class="dialogContent">
+
+  <div class="leftColumn">
+
+    <div class="infoGroup">
+      <label>活動時間</label>
+      <div class="infoValue dateRange">
+        {{ activityData.calendarStartDate | date:'yyyy/MM/dd' }}
+        <mat-icon class="arrowIcon">arrow_right_alt</mat-icon>
+        {{ activityData.calendarEndDate | date:'yyyy/MM/dd' }}
+      </div>
+    </div>
+
+    <div class="infoGroup">
+      <label>活動內容</label>
+      <div class="infoValue description">
+        {{ activityData.calendarDescription || '無詳細內容' }}
+      </div>
+    </div>
+
+  </div>
+
+  <div class="verticalDivider"></div>
+
+  <div class="rightColumn">
+    <label class="sectionLabel">活動圖片預覽</label>
+
+    @if (activityData.calendarPhoto) {
+      <div class="imageContainer">
+        <img [src]="activityData.calendarPhoto" alt="活動圖片">
+      </div>
+    } @else {
+      <div class="noImagePlaceholder">
+        <mat-icon>image_not_supported</mat-icon>
+        <span>未上傳活動圖片</span>
+      </div>
+    }
+  </div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions class="dialogActions">
+  <button (click)="onCancelClick()" class="dialogBtn cancelBtn">取消</button>
+
+  <div class="actionGroup">
+    <button (click)="onSaveClick()" class="dialogBtn secondaryBtn">暫存</button>
+    <button (click)="onPublishClick()" class="dialogBtn confirmBtn">發布</button>
+  </div>
+</mat-dialog-actions>

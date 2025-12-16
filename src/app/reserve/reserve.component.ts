@@ -1,13 +1,13 @@
 import { DataService } from './../@service/data.service';
 import { HttpClientService } from './../@service/http-client.service';
-import { calendarDay, reservation, reservationAndTableByDateList, scheduleItem, timeLabel } from './../@interface/interface';
+import { calendarDay, reservationAndTableByDateList, scheduleItem, timeLabel } from './../@interface/interface';
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogReserveComponent } from '../@dialog/dialog-reserve/dialog-reserve.component';
-import { DialogTableCloseComponent } from '../@dialog/dialog-table-close/dialog-table-close.component';
 import { DialogDeleteComponent } from '../@dialog/dialog-delete/dialog-delete.component';
+import { DialogNoticeComponent } from '../@dialog/dialog-notice/dialog-notice.component';
 
 @Component({
   selector: 'app-reserve',
@@ -151,8 +151,8 @@ export class ReserveComponent {
 
     const dialogRef = this.dialog.open(DialogReserveComponent, {
       data: dialogData,
-      height: '490px',
-      maxWidth: '900px',
+      width: '80%',
+      height: 'auto',
     });
 
     // 監聽關閉，若更新成功刷新畫面
@@ -211,21 +211,26 @@ export class ReserveComponent {
   }
 
   // 桌位開關
-  tableAvailabe(tableData: reservationAndTableByDateList) {
+  tableAvailabe(tableData: reservationAndTableByDateList, event?: Event) {
 
     // 檢查如果有預約，則不可關閉
     if (tableData.reservations && tableData.reservations.length > 0) {
-      const dialogRef = this.dialog.open(DialogTableCloseComponent);
+      const dialogRef = this.dialog.open(DialogNoticeComponent, {
+        width: '25%',
+        height: 'auto',
+        data: { noticeType: 'tableClose' }
+      });
 
-      // 強制重新載入一次資料，把被使用者點擊變動的 checkbox 狀態復原
-      this.loadingReservation();
+      if (event) {
+        const checkbox = event.target as HTMLInputElement;
+        checkbox.checked = !checkbox.checked; // 恢復原本狀態
+      }
       return;
     }
-
-    const isCurrentlyOpen = tableData.tableDailyStatus == true;  // 判斷目前的狀態
+    const isCurrentlyOpen = tableData.tableDailyStatus !== false;  // 判斷目前的狀態
 
     // 判斷是否有此筆資料存在
-    const recordExists = tableData.tableDailyStatus !== null && tableData.tableDailyStatus !== undefined;
+    const recordExists = tableData.tableDailyStatus == false;
 
     // 準備傳給後端的資料
     const payload = {
@@ -293,6 +298,7 @@ export class ReserveComponent {
                 const items: scheduleItem = {
                   ...reservationData,
                   tableId: tableData.tableId,
+                  reservationDate: dateStr,
                   useTime: defaultDuration,
                   endTime: this.calculateEndTime(reservationData.reservationTime, defaultDuration)
                 }
@@ -398,5 +404,26 @@ export class ReserveComponent {
 
     // 如果 現在時間 > 檢查時間，代表已過期
     return now.getTime() > checkDate.getTime();
+  }
+
+  // 取得滑鼠移入時要顯示的文字
+  getSlotText(tableDailyStatus: boolean | null, time: string): string {
+    // 1. 桌位已關閉 (明確為 false)
+    if (tableDailyStatus == false) {
+      return '桌位已關閉';
+    }
+
+    // 2. 過去時間
+    if (this.isPastTime(time)) {
+      return '此時段已過期';
+    }
+
+    // 3. 不在允許的預約時間清單內
+    if (!this.isAllowedTime(time)) {
+      return '不可預約';
+    }
+
+    // 4. 以上都通過
+    return '可預約';
   }
 }

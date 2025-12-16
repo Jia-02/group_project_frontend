@@ -83,6 +83,11 @@ export class DialogCustomizedComponent {
     });
   }
 
+  // 刪除選項
+  removeOption(index: number) {
+    this.customizedData.optionDetail.splice(index, 1);
+  }
+
   // 取消
   onNoClick() {
     this.dialogRef.close();

@@ -1,47 +1,59 @@
-<h2 mat-dialog-title class="dialogTitle">客製化餐點編輯</h2>
+<h2 mat-dialog-title class="dialogTitle">
+  {{ isEditMode ? '編輯客製化選項' : '新增客製化選項' }}
+</h2>
 
 <mat-dialog-content class="dialogContent">
 
-  <label>客製化主題</label>
-  <input type="text" class="styledInput" placeholder="例：甜度、加料" [(ngModel)]="customizedData.optionName">
+  <div class="formField">
+    <label>客製化主題</label>
+    <input type="text" class="styledInput" placeholder="例：甜度、加料" [(ngModel)]="customizedData.optionName">
+  </div>
 
   <div class="selectionGroup">
     <label>選擇類型</label>
     <div class="toggleButtons">
-      <button class="typeBtn" [class.active]="currentType === 'S'" (click)="chooseBtn('S')">單選</button>
-      <button class="typeBtn" [class.active]="currentType === 'M'" (click)="chooseBtn('M')">複選</button>
+      <button class="typeBtn" [class.active]="currentType === 'S'" (click)="chooseBtn('S')">
+        <mat-icon>radio_button_checked</mat-icon> 單選
+      </button>
+      <button class="typeBtn" [class.active]="currentType === 'M'" (click)="chooseBtn('M')">
+        <mat-icon>check_box</mat-icon> 複選
+      </button>
     </div>
   </div>
 
   <div class="divider"></div>
 
-  <label class="sectionLabel">選項列表：</label>
+  <label class="sectionLabel">選項列表</label>
 
   <div class="optionsContainer">
     @for (opt of customizedData.optionDetail; track $index; let i = $index) {
-    <div class="optionRow">
+      <div class="optionRow">
 
-      <div class="iconPlaceholder">
-        @if (currentType == 'S') {
-        <mat-icon>radio_button_unchecked</mat-icon>
-        } @else {
-        <mat-icon>check_box_outline_blank</mat-icon>
-        }
+        <div class="iconPlaceholder">
+          @if (currentType == 'S') {
+            <mat-icon>radio_button_unchecked</mat-icon>
+          } @else {
+            <mat-icon>check_box_outline_blank</mat-icon>
+          }
+        </div>
+
+        <input type="text" class="styledInput nameInput" placeholder="選項名稱 (例: 半糖)" [(ngModel)]="opt.option">
+
+        <div class="priceGroup">
+          <label>+$</label>
+          <input type="number" class="styledInput priceInput" min="0" placeholder="0" [(ngModel)]="opt.addPrice">
+        </div>
+
+        <button class="iconBtn deleteBtn" (click)="removeOption(i)" tabindex="-1">
+          <mat-icon>delete_outline</mat-icon>
+        </button>
+
       </div>
-
-      <input type="text" class="styledInput nameInput" placeholder="選項名稱" [(ngModel)]="opt.option">
-
-      <div class="priceGroup">
-        <label>+$</label>
-        <input type="number" class="styledInput priceInput" placeholder="0" [(ngModel)]="opt.addPrice">
-      </div>
-
-    </div>
     }
   </div>
 
   <div class="addBtnArea" (click)="addOption()">
-    <mat-icon>add_circle</mat-icon>
+    <mat-icon>add_circle_outline</mat-icon>
     <span>新增選項</span>
   </div>
 
