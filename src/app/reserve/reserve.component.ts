@@ -298,6 +298,7 @@ export class ReserveComponent {
                 const items: scheduleItem = {
                   ...reservationData,
                   tableId: tableData.tableId,
+                  reservationDate: dateStr,
                   useTime: defaultDuration,
                   endTime: this.calculateEndTime(reservationData.reservationTime, defaultDuration)
                 }

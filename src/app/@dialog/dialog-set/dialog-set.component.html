@@ -1,8 +1,8 @@
 <h2 mat-dialog-title class="dialogTitle">
   @if (isEditMode) {
-    編輯套餐
+  編輯套餐
   } @else {
-    新增套餐
+  新增套餐
   }
 </h2>
 
@@ -21,37 +21,39 @@
 
   <label>套餐圖片</label>
   <div class="fileInputWrapper">
-    <input type="file" (change)="onFileSelected($event)">
+    <input type="file" id="setFileInput" (change)="onFileSelected($event)" accept="image/*" hidden>
+    <label for="setFileInput" class="uploadBtn">
+      <mat-icon>upload</mat-icon>
+      <span>點擊選擇圖片</span>
+    </label>
   </div>
 
   <label>選擇主餐分類</label>
   <select class="styledInput" [(ngModel)]="selections.mainCatId" (change)="onMainCategoryChange()">
     <option [value]="0">請選擇分類</option>
     @for (cat of categoryList; track cat.categoryId) {
-      @if (cat.categoryType !== '炸物' && cat.categoryType !== '飲料' && cat.categoryType !== '套餐') {
-        <option [value]="cat.categoryId">{{ cat.categoryType }}</option>
-      }
+    @if (cat.categoryType !== '炸物' && cat.categoryType !== '飲料' && cat.categoryType !== '套餐') {
+    <option [value]="cat.categoryId">{{ cat.categoryType }}</option>
+    }
     }
   </select>
 
   @if (mainDishList.length > 0) {
-    <label>勾選可提供的主餐選項 (可複選)</label>
-    <div class="scrollableList styledInput">
-      @for (p of mainDishList; track p.productId) {
-        <div class="checkboxItem">
-          <input type="checkbox"
-                 [id]="'product-' + p.productId"
-                 [checked]="isMainSelected(p.productId)"
-                 (change)="toggleMainSelection(p.productId, $event)">
-          <label [for]="'product-' + p.productId">
-            <span class="itemName">{{ p.productName }}</span>
-            <span class="itemPrice">${{ p.productPrice }}</span>
-          </label>
-        </div>
-      }
+  <label>勾選可提供的主餐選項 (可複選)</label>
+  <div class="scrollableList styledInput">
+    @for (p of mainDishList; track p.productId) {
+    <div class="checkboxItem">
+      <input type="checkbox" [id]="'product-' + p.productId" [checked]="isMainSelected(p.productId)"
+        (change)="toggleMainSelection(p.productId, $event)">
+      <label [for]="'product-' + p.productId">
+        <span class="itemName">{{ p.productName }}</span>
+        <span class="itemPrice">${{ p.productPrice }}</span>
+      </label>
     </div>
+    }
+  </div>
   } @else if (selections.mainCatId > 0) {
-    <div class="emptyState">此分類目前無上架商品</div>
+  <div class="emptyState">此分類目前無上架商品</div>
   }
 
   <div class="formRow">
@@ -60,7 +62,7 @@
       <select class="styledInput" [(ngModel)]="selections.sideId">
         <option [value]="0">無</option>
         @for (p of sideDishList; track p.productId) {
-          <option [value]="p.productId">{{ p.productName }} (+{{ p.productPrice }})</option>
+        <option [value]="p.productId">{{ p.productName }} (+{{ p.productPrice }})</option>
         }
       </select>
     </div>
@@ -70,19 +72,12 @@
       <select class="styledInput" [(ngModel)]="selections.drinkId">
         <option [value]="0">無</option>
         @for (p of drinkDishList; track p.productId) {
-          <option [value]="p.productId">{{ p.productName }} (+{{ p.productPrice }})</option>
+        <option [value]="p.productId">{{ p.productName }} (+{{ p.productPrice }})</option>
         }
       </select>
     </div>
   </div>
 
-  <div class="switchWrapper">
-    <label class="switch">
-      <input type="checkbox" [(ngModel)]="optionVo.settingActive">
-      <span class="slider round"></span>
-    </label>
-    <span class="switchLabel">上架狀態</span>
-  </div>
 
 </mat-dialog-content>
 
