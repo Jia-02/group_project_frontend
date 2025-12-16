@@ -1,24 +1,45 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTabChangeEvent, MatTabsModule } from '@angular/material/tabs';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Observable } from 'rxjs';
 
-import { Observable, of } from 'rxjs';
 import { ProductDetailDialogComponent } from '../product-detail-dialog/product-detail-dialog.component';
 import { SettingDetailDialogComponent } from '../setting-detail-dialog/setting-detail-dialog.component';
 import { OrderService } from '../order.service';
-import { SendOrderDialogComponent } from '../send-order-dialog/send-order-dialog.component';
 import { DataService } from '../@service/data.service';
-import { ActivatedRoute, Router } from '@angular/router';
+
+interface Product {
+  productId: number;
+  productName: string;
+  productPrice: number;
+  imageUrl?: string;
+}
+
+interface Category {
+  categoryId: number;
+  categoryType: string;
+  workstationId: number;
+  products?: (Product | { productId: number, productName: string, productPrice: number })[];
+  isLoadingProducts?: boolean;
+}
+
+const ORDER_TYPE_MAP: { [key: string]: string } = {
+  'A': '內用',
+  'T': '外帶',
+  'D': '外送',
+};
 
 @Component({
   selector: 'app-menu-c',
+  standalone: true, // 假設為獨立元件
   imports: [
-    MatTabsModule
+    MatTabsModule,
   ],
   templateUrl: './menu-c.component.html',
   styleUrl: './menu-c.component.scss'
 })
-export class MenuCComponent {
+export class MenuCComponent implements OnInit {
   private existingOrderId: string | number | null = null;
 
   ordersType: string = '';
@@ -57,8 +78,13 @@ export class MenuCComponent {
     const map = new Map();
 
     apiList.forEach(item => {
+      if (!item.orderDetails || item.orderDetails.length === 0) return;
+
       const mainProduct = item.orderDetails[0];
-      const optionKey = JSON.stringify(mainProduct.detailList.sort((a: any, b: any) => a.option.localeCompare(b.option)));
+
+      const detailList = mainProduct.detailList || [];
+      const optionKey = JSON.stringify(detailList.sort((a: any, b: any) => a.option.localeCompare(b.option)));
+
       const key = `${mainProduct.productId}-${item.orderDetailsPrice}-${optionKey}`;
 
       if (map.has(key)) {
@@ -80,29 +106,31 @@ export class MenuCComponent {
     const apiUrl = `orders/list/detail?ordersId=${orderId}`;
 
     this.dataService.getApi(apiUrl).subscribe((res: any) => {
-      if (res.code === 200) {
-        const groupedDetails = this.groupOrderDetails(res.orderDetailsList);
+      if (res.code === 200 && res.ordersId) {
+        const groupedDetails = this.groupOrderDetails(res.orderDetailsList || []);
 
         this.orderService.currentOrder = {
           ordersId: res.ordersId,
           ordersType: res.ordersType,
           tableId: res.tableId || '',
-          customerName: res.customerName || '',
-          customerPhone: res.customerPhone || '',
-          customerAddress: res.customerAddress || '',
-          ordersDate: res.ordersDate,
-          ordersTime: res.ordersTime,
-          paymentType:res.paymentType,
+          customerName: res.customerName || null,
+          customerPhone: res.customerPhone || null,
+          customerAddress: res.customerAddress || null,
+          ordersDate: res.ordersDate, // 確保從 API 獲取
+          ordersTime: res.ordersTime, // 確保從 API 獲取
+          ordersCode: res.ordersCode, // 確保從 API 獲取
+          paymentType: res.paymentType,
           paid: res.paid,
-          orderDetailsList: groupedDetails,
+          orderDetailsList: groupedDetails, // 這裡是分組後的列表
         };
-        console.log(`已成功載入訂單 ID: ${orderId} 進行修改`);
+        console.log(`✅ 已成功載入訂單 ID: ${orderId} 進行修改`);
         this.loadOrderDataFromService();
       } else {
-        console.error('載入現有訂單詳細資料失敗:', res);
+        console.error('❌ 載入現有訂單詳細資料失敗:', res);
         this.loadOrderDataFromService();
       }
-    });
+    }
+    );
   }
 
   loadOrderDataFromService(): void {
@@ -177,15 +205,12 @@ export class MenuCComponent {
               productPrice: item.settingPrice
             }));
           }
-          console.log(res);
-
         } else {
           console.warn(`載入分類 ${category.categoryType} 失敗:`, res.message);
           category.products = [];
         }
         category.isLoadingProducts = false;
-      }
-      );
+      });
     }
   }
 
@@ -202,71 +227,60 @@ export class MenuCComponent {
       detailUrl = `product/detail?categoryId=${categoryId}&productId=${itemId}`;
     }
 
-    this.dataService.getApi(detailUrl).subscribe((res: any) => {
-      if (res.code == 200) {
-        console.log('獲取詳情成功:', res);
-        let dialogRef;
+    this.dataService.getApi(detailUrl).subscribe({
+      next: (res: any) => {
+        if (res.code == 200) {
+          console.log('獲取詳情成功:', res);
+          let dialogRef;
 
-        if (isSetting) {
-          dialogRef = this.dialog.open(SettingDetailDialogComponent, {
-            width: '400px',
-            height: '900px',
-            data: res
-          });
-        } else {
-          dialogRef = this.dialog.open(ProductDetailDialogComponent, {
-            width: '400px',
-            height: '900px',
-            data: res
+          if (isSetting) {
+            dialogRef = this.dialog.open(SettingDetailDialogComponent, {
+              width: '400px',
+              height: '900px',
+              data: res
+            });
+          } else {
+            dialogRef = this.dialog.open(ProductDetailDialogComponent, {
+              width: '400px',
+              height: '900px',
+              data: res
+            });
+          }
+
+          dialogRef.afterClosed().subscribe((result: any) => {
+            if (result && result.quantity && result.quantity > 0) {
+
+              let productName: string;
+
+              if (isSetting) {
+                productName = res.settingDetail?.settingName || '未知套餐';
+              } else {
+                productName = res.productDetail?.productName || '未知產品';
+              }
+
+              const itemWithProductName = {
+                ...result,
+                productName: productName,
+                orderDetailsId: Date.now() + Math.random(),
+              };
+
+              this.addOrderDetailItemToCart(itemWithProductName);
+            }
           });
         }
-
-        dialogRef.afterClosed().subscribe((result: any) => {
-          if (result && result.quantity) {
-
-            let productName: string;
-
-            if (isSetting) {
-              productName = res.settingDetail?.settingName || '未知套餐';
-            } else {
-              productName = res.productDetail?.productName || '未知產品';
-            }
-
-            const itemWithProductName = {
-              ...result,
-              productName: productName
-            };
-
-            this.addOrderDetailItemToCart(itemWithProductName);
-          }
-        });
       }
     });
   }
 
   addOrderDetailItemToCart(item: any): void {
-    const quantity = item.quantity;
-
-    if (!quantity || quantity < 1) return;
-
-    const newId = this.orderService.currentOrder.orderDetailsList.length + 1;
-
-    const newDetailItem = {
-      ...item,
-      orderDetailsId: newId,
-    };
-
-    this.orderService.currentOrder.orderDetailsList.push(newDetailItem);
-
-    this.currentCart = this.orderService.currentOrder.orderDetailsList;
+    this.orderService.currentOrder.orderDetailsList.push(item);
+    this.currentCart = [...this.orderService.currentOrder.orderDetailsList];
 
     console.log('已加入購物車。當前總項數:', this.currentCart.length);
   }
 
   deleteCartItem(itemToDelete: any): void {
-    const index = this.currentCart.findIndex(item =>
-      item === itemToDelete
-    );
+    const index = this.currentCart.findIndex(item => item.orderDetailsId === itemToDelete.orderDetailsId);
 
     if (index > -1) {
       this.orderService.currentOrder.orderDetailsList.splice(index, 1);
@@ -281,7 +295,7 @@ export class MenuCComponent {
     return this.currentCart.reduce((total, item) => {
       const pricePerUnit = item.orderDetailsPrice || 0;
       const quantity = item.quantity || 0;
-      return total + (pricePerUnit * quantity); // 修正：單價 * 數量
+      return total + (pricePerUnit * quantity);
     }, 0);
   }
 
@@ -294,23 +308,30 @@ export class MenuCComponent {
     const originalOrder = this.orderService.currentOrder;
 
     let finalOrderDetailsList: any[] = [];
+    let tempIdCounter = 1;
 
     originalOrder.orderDetailsList.forEach(cartItem => {
-      const { quantity, productName, ...apiItem } = cartItem;
+      const { quantity, productName, orderDetailsId: cartItemId, ...apiItem } = cartItem;
+
+      const updatedOrderDetails = apiItem.orderDetails.map((detail: any) => ({
+        ...detail,
+        mealStatus: "製作中"
+      }));
 
       const cleanedApiItem = {
-        orderDetailsId: apiItem.orderDetailsId, // ID 由前端賦予，後端可能需要重新編號
         orderDetailsPrice: apiItem.orderDetailsPrice,
-        settingId: apiItem.settingId,
-        orderDetails: apiItem.orderDetails
+        settingId: apiItem.settingId || 0,
+        orderDetails: updatedOrderDetails
       };
 
       for (let i = 0; i < (quantity || 1); i++) {
-        finalOrderDetailsList.push(cleanedApiItem);
+        finalOrderDetailsList.push({
+          ...cleanedApiItem,
+          orderDetailsId: tempIdCounter++
+        });
       }
     });
 
-    const now = new Date();
     const finalPayload = {
       ...originalOrder,
       ordersId: this.existingOrderId || originalOrder.ordersId,
@@ -319,44 +340,23 @@ export class MenuCComponent {
       totalPrice: this.getTotalPrice(),
       paid: originalOrder.paid || false,
       paymentType: originalOrder.paymentType || '現金',
-      orderDetailsList: finalOrderDetailsList // 結構 2
+      orderDetailsList: finalOrderDetailsList
     };
 
-    console.log('Final Payload (API 提交結構):', finalPayload);
+    console.log('Final Payload (API 提交結構):', finalPayload); //
 
     const apiUrl = 'orders/update/nopaid';
 
     this.dataService.postApi(apiUrl, finalPayload)
-    .subscribe((res: any) => {
+      .subscribe((res: any) => {
         if (res.code === 200) {
           alert('訂單更新成功！');
-          this.router.navigate(['/order-page'], { queryParams: { reopenOrderId: this.existingOrderId } });
+          this.router.navigate(['/order-page'], { queryParams: { reopenOrderId: this.existingOrderId || res.ordersId } });
         } else {
           alert(`訂單更新失敗: ${res.message || '未知錯誤'}`);
           console.error('訂單更新 API 錯誤:', res);
         }
       }
-    );
+      );
   }
 }
-
-interface Product {
-  productId: number;
-  productName: string;
-  productPrice: number;
-  imageUrl: string;
-}
-
-interface Category {
-  categoryId: number;
-  categoryType: string;
-  workstationId: number;
-  products?: (Product | { productId: number, productName: string, productPrice: number })[];
-  isLoadingProducts?: boolean;
-}
-
-const ORDER_TYPE_MAP: { [key: string]: string } = {
-  'A': '內用',
-  'T': '外帶',
-  'D': '外送',
-};

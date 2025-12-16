@@ -12,6 +12,7 @@ export class OrderService {
     customerName: '',
     customerPhone: '',
     customerAddress: '',
+    ordersCode: '',
     ordersDate: '',
     ordersTime: '',
     paymentType: '',
@@ -31,6 +32,7 @@ export class OrderService {
       customerName: '',
       customerPhone: '',
       customerAddress: '',
+      ordersCode: '',
       ordersDate: '',
       ordersTime: '',
       paymentType: '',
@@ -55,6 +57,7 @@ interface Order {
     customerName:  string;
     customerPhone:  string;
     customerAddress:  string;
+    ordersCode: string;
     ordersDate: string,
     ordersTime: string;
     paymentType: string;
