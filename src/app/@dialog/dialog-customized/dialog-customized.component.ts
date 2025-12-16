@@ -106,7 +106,7 @@ export class DialogCustomizedComponent {
   // 新增
   createCheck() {
     this.countNextGlobalOptionId();
-    this.httpClientService.postApi('http://localhost:8080/option/add', this.customizedData)
+    this.httpClientService.postApi('option/add', this.customizedData)
       .subscribe((res: any) => {
         if (res.code == 200) {
           this.dialogRef.close(true);
@@ -116,7 +116,7 @@ export class DialogCustomizedComponent {
 
   // 更新
   updateCheck() {
-    this.httpClientService.postApi('http://localhost:8080/option/update', this.customizedData)
+    this.httpClientService.postApi('option/update', this.customizedData)
       .subscribe((res: any) => {
         if (res.code == 200) {
           this.dialogRef.close(true);
@@ -141,7 +141,7 @@ export class DialogCustomizedComponent {
 
     // 針對每一個分類發送 API
     for (const cat of categories) {
-      this.httpClientService.getApi(`http://localhost:8080/option/list?categoryId=${cat.categoryId}`)
+      this.httpClientService.getApi(`option/list?categoryId=${cat.categoryId}`)
         .subscribe((res: any) => {
 
           if (res.code == 200 && res.optionVoList) {

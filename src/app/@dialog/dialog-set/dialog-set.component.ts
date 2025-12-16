@@ -220,10 +220,10 @@ export class DialogSetComponent {
 
     // 送出
     if (this.isEditMode) {
-      this.httpClientService.postApi('http://localhost:8080/setting/update', this.optionVo)
+      this.httpClientService.postApi('setting/update', this.optionVo)
         .subscribe(handleSuccess);
     } else {
-      this.httpClientService.postApi('http://localhost:8080/setting/add', this.optionVo)
+      this.httpClientService.postApi('setting/add', this.optionVo)
         .subscribe(handleSuccess);
     }
   }
@@ -234,7 +234,7 @@ export class DialogSetComponent {
     this.selections.mainIds = [];
 
     if (this.selections.mainCatId > 0) {
-      this.httpClientService.getApi(`http://localhost:8080/product/list?categoryId=${this.selections.mainCatId}`)
+      this.httpClientService.getApi(`product/list?categoryId=${this.selections.mainCatId}`)
         .subscribe((res: any) => {
           if (res.code == 200) {
             for (const p of res.productList) {
@@ -334,7 +334,7 @@ export class DialogSetComponent {
 
   // 編輯模式 > 讀取主餐 > 抓產品分類
   loadMainDishForEdit(categoryId: number) {
-    this.httpClientService.getApi(`http://localhost:8080/product/list?categoryId=${categoryId}`)
+    this.httpClientService.getApi(`product/list?categoryId=${categoryId}`)
       .subscribe((res: any) => {
         if (res.code == 200) {
           this.mainDishList = []; // 清空目前的主餐列表

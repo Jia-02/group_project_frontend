@@ -36,7 +36,7 @@ export class DialogDeleteComponent {
         reservationPhone: this.data.reservationPhone
       };
 
-      this.httpClientService.postApi('http://localhost:8080/reservation/delete', payload)
+      this.httpClientService.postApi('reservation/delete', payload)
         .subscribe((res: any) => {
           if (res.code == 200) {
             console.log('預約刪除成功', res);
@@ -53,7 +53,7 @@ export class DialogDeleteComponent {
         productId: this.data.productId
       };
 
-      this.httpClientService.postApi('http://localhost:8080/product/del', payload)
+      this.httpClientService.postApi('product/del', payload)
         .subscribe((res: any) => {
           if (res.code == 200) {
             console.log('餐點刪除成功', res);
@@ -73,7 +73,7 @@ export class DialogDeleteComponent {
         optionId: this.data.optionId
       };
 
-      this.httpClientService.postApi('http://localhost:8080/option/del', payload)
+      this.httpClientService.postApi('option/del', payload)
         .subscribe((res: any) => {
           if (res.code == 200) {
             console.log('餐點刪除成功', res);
@@ -91,7 +91,7 @@ export class DialogDeleteComponent {
         settingId: this.data.settingId
       };
 
-      this.httpClientService.postApi('http://localhost:8080/setting/del', payload)
+      this.httpClientService.postApi('setting/del', payload)
         .subscribe((res: any) => {
           if (res.code == 200) {
             console.log('餐點刪除成功', res);
