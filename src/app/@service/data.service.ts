@@ -208,9 +208,9 @@ interface Orders {
   paymentType: string;
   paid: boolean;
   ordersCode: string;
-  customerName: null;
-  customerPhone: null;
-  customerAddress: null;
+  customerName: string;
+  customerPhone: string;
+  customerAddress: string;
   tableId: string;
   orderDetailsList: OrderDetailsList[];
 }
@@ -267,6 +267,8 @@ export interface MealStatusRes {
   code: number;
   message: string;
   mealStatus: MealStatus;
+  order:Orders;
+  orderDetailsList:OrderDetailsList[];
 }
 
 export interface MealStatus {
@@ -275,4 +277,6 @@ export interface MealStatus {
   estimatedTime: number;
   finishTime: string;
   ordersId: number;
+  order:Orders;
+  orderDetailsList:OrderDetailsList[];
 }
