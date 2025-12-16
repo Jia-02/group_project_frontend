@@ -106,7 +106,7 @@ export class DialogMenuComponent {
   addProduct() {
     this.countNextProductId();
 
-    this.httpClientService.postApi('http://localhost:8080/product/add', this.productList)
+    this.httpClientService.postApi('product/add', this.productList)
       .subscribe((res: any) => {
         if (res.code == 200) {
           this.dialogRef.close(true);
@@ -116,7 +116,7 @@ export class DialogMenuComponent {
 
   // 更新商品
   updateProduct() {
-    this.httpClientService.postApi('http://localhost:8080/product/update', this.productList)
+    this.httpClientService.postApi('product/update', this.productList)
       .subscribe((res: any) => {
         if (res.code == 200) {
           this.dialogRef.close(true);
@@ -140,7 +140,7 @@ countNextProductId() {
     const totalCount = categories.length;
 
     for (const cat of categories) {
-      this.httpClientService.getApi(`http://localhost:8080/product/list?categoryId=${cat.categoryId}`)
+      this.httpClientService.getApi(`product/list?categoryId=${cat.categoryId}`)
         .subscribe((res: any) => {
           if (res.code == 200 && res.productList) {
             for (const p of res.productList) {

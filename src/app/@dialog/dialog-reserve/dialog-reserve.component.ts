@@ -58,7 +58,7 @@ export class DialogReserveComponent {
 
   ngOnInit(): void {
     // 桌號api
-    this.httpClientService.getApi('http://localhost:8080/table/list')
+    this.httpClientService.getApi('table/list')
       .subscribe((res: any) => {
         if (res.code == 200) {
           const availableTables = [];
@@ -151,7 +151,7 @@ export class DialogReserveComponent {
       return; // 不送出
     }
 
-    this.httpClientService.postApi('http://localhost:8080/reservation/create', this.reservation)
+    this.httpClientService.postApi('reservation/create', this.reservation)
       .subscribe((res: any) => {
         if (res.code == 200) {
           this.dataService.reservation = res;
@@ -188,7 +188,7 @@ export class DialogReserveComponent {
       tableId: this.reservation.tableId
     };
 
-    this.httpClientService.postApi('http://localhost:8080/reservation/update', payload)
+    this.httpClientService.postApi('reservation/update', payload)
       .subscribe((res: any) => {
         console.log('後端回傳結果:', res);
         if (res.code == 200) {
