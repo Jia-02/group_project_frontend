@@ -1,6 +1,6 @@
 <div class="background">
 
-  <h2 mat-dialog-title class="diaTitle">新增訂位</h2>
+  <h2 mat-dialog-title class="diaTitle">▎新增訂位</h2>
 
   <mat-dialog-content class="dialogContent">
 
@@ -80,7 +80,7 @@
       <div class="formField">
         <label>兒童座椅</label>
         <select class="styledInput" [(ngModel)]="reservation.childSeat" [disabled]="reservation.reservationChildCount === 0">
-          <option [ngValue]="0">無需</option>
+          <option [ngValue]="0">0</option>
           @for (data of childSeatList; track data) {
           <option [value]="data">{{ data }} 張</option>
           }
