@@ -11,6 +11,7 @@ import { CheckOutDialogComponent } from '../check-out-dialog/check-out-dialog.co
 
 import { A11yModule } from "@angular/cdk/a11y";
 import { DataService } from '../@service/data.service';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-order-page',
@@ -21,7 +22,8 @@ import { DataService } from '../@service/data.service';
     MatFormFieldModule,
     MatSelectModule,
     MatInputModule,
-    A11yModule
+    A11yModule,
+    MatIconModule,
   ],
   templateUrl: './order-page.component.html',
   styleUrl: './order-page.component.scss'
@@ -193,14 +195,14 @@ export class OrderPageComponent {
 
       if (isPaid) {
         dialogRef = this.dialog.open(OrderDialogComponent, {
-          width: '500px',
-          height: '900px',
+          width: '80%',
+          height: 'auto',
           data: dataToSendToDialog,
         });
       } else {
         dialogRef = this.dialog.open(CheckOutDialogComponent, {
-          width: '500px',
-          height: '900px',
+          width: '80%',
+          height: 'auto',
           data: dataToSendToDialog,
         });
       }
@@ -245,6 +247,7 @@ export interface OrderProduct {
   productName: string;
   productPrice: number;
   mealStatus: string;
+  categoryId: number;
   detailList: DetailOption[];
 }
 
@@ -271,55 +274,3 @@ export interface FullOrderData {
   order_detailsList: OrderDetailsGroup[];
 }
 
-export const FULL_ORDER_DETAIL_MOCK: FullOrderData = {
-  ordersId: 1001,
-  ordersCode: 'A1001',
-  ordersType: '內用',
-  ordersDate: '2025-12-08',
-  ordersTime: '10:30',
-  totalPrice: 480,
-  paymentType: '電子支付',
-  paid: false,
-  tableId: 'T05',
-  customerName: '王小明',
-  customerPhone: '0912345678',
-  customerAddress: null,
-
-  order_detailsList: [
-    {
-      orderDetailsId: 1,
-      orderDetailsPrice: 180,
-      settingId: 1,
-      orderDetails: [
-        {
-          workstationId: 1,
-          productId: 101,
-          productName: '經典拿鐵',
-          productPrice: 150,
-          mealStatus: '已完成',
-          detailList: [
-            { option: '加一份濃縮', addPrice: 30 },
-          ],
-        },
-      ],
-    },
-    {
-      orderDetailsId: 2,
-      orderDetailsPrice: 300,
-      settingId: 1,
-      orderDetails: [
-        {
-          workstationId: 2,
-          productId: 201,
-          productName: '豪華總匯三明治',
-          productPrice: 250,
-          mealStatus: '製作中',
-          detailList: [
-            { option: '醬料多一點', addPrice: 0 },
-            { option: '加起司片', addPrice: 50 },
-          ],
-        },
-      ],
-    },
-  ],
-};

@@ -27,7 +27,9 @@ export class DialogNoticeComponent {
     } else if (this.data.noticeType == 'tableClose') {
       this.noticeMessage = '此桌位當日已有預約，無法關閉桌位';
     } else if (this.data.noticeType == 'delCategory') {
-      this.noticeMessage = '該分類下存在商品，不可刪除分類'
+      this.noticeMessage = '該分類下存在商品，不可刪除分類';
+    } else if (this.data.noticeType == 'addMenu') {
+      this.noticeMessage = '必填欄位(名稱、價格、描述、圖片)不可為空';
     }
 
   }

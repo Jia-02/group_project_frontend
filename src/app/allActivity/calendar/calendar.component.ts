@@ -208,8 +208,8 @@ export class CalendarComponent implements OnInit {
 
   openDialog(): void {
     const dialogRef = this.dialog.open(ActivityCreateDialogComponent, {
-      width: '500px',
-      height: '500px'
+      width: '80%',
+      height: 'auto'
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -218,8 +218,8 @@ export class CalendarComponent implements OnInit {
       const { formData } = result;
 
       const checkRef = this.dialog.open(ActivityDialogComponent, {
-        width: '600px',
-        height: '600px',
+        width: '80%',
+        height: 'auto',
         data: formData
       });
 
@@ -277,8 +277,8 @@ export class CalendarComponent implements OnInit {
 
   private ActivityReadDialog(activity: Activity) {
     const dialogRef = this.dialog.open(ActivityReadDialogComponent, {
-      width: '600px',
-      maxHeight: '600px',
+      width: '80%',
+      height: 'auto',
       data: activity,
     });
 
@@ -289,8 +289,8 @@ export class CalendarComponent implements OnInit {
 
   private ActivityCheckDialog(activity: Activity) {
     const dialogRef = this.dialog.open(ActivityCheckDialogComponent, {
-      width: '600px',
-      maxHeight: '600px',
+      width: '80%',
+      height: 'auto',
       data: { ...activity },
     });
 
@@ -374,9 +374,8 @@ export class CalendarComponent implements OnInit {
 
         this.dialog.open(BoardDialogComponent, {
           data: { activities: processedActivities },
-          width: '90vw',
-          maxWidth: '400px',
-          height: '90vh',
+          width: '80%',
+          height: 'auto',
           panelClass: 'full-screen-dialog'
         });
       });

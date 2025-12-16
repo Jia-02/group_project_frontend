@@ -1,42 +1,201 @@
-.boxCss {
-  background-color: rgba(164, 235, 240, 0.8);
-  padding: 20px;
-  border-radius: 15px;
+/* 外框容器：置中並限制最大寬度 */
+.page-container {
+  padding: 30px;
+  max-width: 1400px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 25px;
+}
+
+/* 搜尋篩選區塊 */
+.boxCss {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05); /* 柔和陰影 */
+  border-top: 5px solid #013c70; /* 頂部品牌色條 */
+  overflow: hidden;
+  padding: 30px 40px 30px 40px;
+}
+
+.boxHeader {
+  display: flex;
   align-items: center;
-  width: 80%;
-  height: 5%;
-  margin-left: 8%;
-  margin-bottom: 3%;
-  margin-top: 3%;
+  gap: 8px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #013c70;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+}
+
+.boxHeader mat-icon {
+  color: #fe6d13;
 }
 
 .selectBox {
   display: flex;
-  gap: 15px;
-  align-items: center;
-  padding: 10px;
-  height: 10%;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: flex-end;
+}
+
+/* 每個篩選項目 */
+.filter-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .labelCss {
-  font-weight: bold;
-  white-space: nowrap;
-  margin-right: 5px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #666;
+  margin-left: 2px;
 }
 
+/* 輸入框美化 */
 .inputCss {
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  padding: 10px 14px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: #fcfcfc;
+  min-width: 160px;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.3s ease;
 }
 
-.tableCss{
-  width: 83%;
-  height: 50%;
-  display: flex;
-  flex-direction: column;
-  margin-left: 8%;
+.inputCss:focus {
+  border-color: #013c70;
+  background-color: #fff;
+  box-shadow: 0 0 0 3px rgba(1, 60, 112, 0.1);
 }
+
+/* 按鈕群組 (推到最右邊) */
+.action-group {
+  margin-left: auto;
+  display: flex;
+  gap: 12px;
+}
+
+/* 通用按鈕樣式 */
+.buttonCss {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.buttonCss mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+/* 搜尋按鈕 */
+.searchBtn {
+  background-color: #013c70;
+  color: white;
+  box-shadow: 0 4px 6px rgba(1, 60, 112, 0.2);
+}
+
+.searchBtn:hover {
+  background-color: #fe6d13;
+  transform: translateY(-1px);
+}
+
+/* 重置按鈕 */
+.resetBtn {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  color: #555;
+}
+
+.resetBtn:hover {
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+
+/* 表格區塊美化 */
+.tableCss {
+  border-radius: 12px;
+  overflow: hidden; /* 確保圓角不被表格切掉 */
+  background: #fff;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+}
+
+table {
+  width: 100%;
+}
+
+/* 斑馬紋 (單數行變色) */
+tr:nth-child(odd) {
+  background-color: #fff;
+}
+
+
+tr.mat-row:hover {
+  background-color: #eef4fc;
+}
+
+/* 編號欄位 (加粗) */
+.code-cell {
+  font-family: monospace;
+  font-weight: 600;
+  color: #555;
+}
+
+/* --- 狀態膠囊 (Badges) --- */
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-block;
+  min-width: 50px;
+  text-align: center;
+}
+
+/* 已付 (綠色) */
+.status-badge.paid {
+  background-color: #F8F9FA;
+  color:  #9ca3af;
+  border: 1px solid  #9ca3af;
+}
+
+/* 未付 */
+.status-badge.unpaid {
+  background-color: #F8F9FA;
+  color: #fe6d13;
+  border: 1px solid #fe6d13;
+}
+
+/* --- 操作按鈕 (Ghost Button) --- */
+.action-btn {
+  background: transparent;
+  border: 1px solid #013c70;
+  color: #013c70;
+  padding: 6px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.action-btn:hover {
+  background: #013c70;
+  color: #fff;
+  box-shadow: 0 2px 4px rgba(1, 60, 112, 0.2);
+}
+
+

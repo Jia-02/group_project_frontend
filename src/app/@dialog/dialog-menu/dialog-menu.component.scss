@@ -1,19 +1,20 @@
-.dialogTitle {
+.diaTitle {
   margin: 0;
-  padding: 14px 24px;
+  padding: 10px 30px;
   font-size: 18px;
   font-weight: 600;
-  color: #013c70;
+  color: #fdfdfd;
+  background-color: #013c70;
   border-bottom: 1px solid #eee;
 }
 
 /* 內容區域排版 */
 .dialogContent {
+  padding: 25px !important;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding: 28px !important;
-  min-width: 400px;
+  gap: 16px;
+  min-width: 500px;
 }
 
 /* 標籤樣式 */
@@ -21,26 +22,28 @@
   font-size: 14px;
   font-weight: 600;
   color: #555;
-  margin-top: 4px;
 }
 
-/* 新增：橫向排版容器 */
+/* 每一排的容器 */
 .formRow {
   display: flex;
-  gap: 45px;
+  gap: 15px;
   width: 100%;
 }
 
-/* 新增：單一欄位容器 */
+/* 單一欄位包裝 */
 .formField {
   flex: 1;
   display: flex;
   flex-direction: column;
 }
 
-/* 為了讓對齊更整齊，微調 formField 裡面的 label 間距 */
+/* Label 樣式 */
 .formField label {
-  margin-top: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 6px;
 }
 
 /* 純文字顯示區域 (分類名稱) */
@@ -81,40 +84,84 @@ textarea.styledInput {
 .fileStatus {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 3px;
   font-size: 13px;
   color: #2e7d32;
   background: #e8f5e9;
   padding: 8px;
   border-radius: 4px;
-  margin-top: 4px;
 }
 
 .fileStatus mat-icon {
   font-size: 18px;
   width: 18px;
-  height: 18px;
+  height: 15px;
+}
+
+/* 檔案上傳區塊 */
+.fileInputWrapper {
+  width: 100%;
+
+}
+
+/* 自訂上傳按鈕 (Label) */
+.uploadBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  width: 100%;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+/* Icon 大小微調 */
+.uploadBtn mat-icon {
+  color: #888;
+}
+
+/* 滑鼠移上去的效果 */
+.uploadBtn:hover {
+  background-color: #eef4fc;
+  border-color: #013c70;
+  color: #013c70;
+}
+
+.uploadBtn:hover mat-icon {
+  color: #013c70;
+}
+
+/* 按下去的效果 */
+.uploadBtn:active {
+  background-color: #dde9f7;
+  transform: scale(0.99);
 }
 
 /* 按鈕區域 */
 .dialogActions {
-  padding: 16px 24px !important;
+  padding: 16px 40px !important;
   border-top: 1px solid #eee;
-  gap: 12px;
+  gap: 15px;
 }
 
-/* 按鈕通用樣式 dialogBtn */
+/* 通用按鈕樣式 */
 .dialogBtn {
-  padding: 10px 24px;
-  font-size: 15px;
+  padding: 10px 25px;
+  font-size: 14px;
   font-weight: 500;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
   border: none;
   transition: all 0.2s;
 }
 
-/* 取消按鈕 cancelBtn */
+/* 取消按鈕 */
 .cancelBtn {
   background-color: #fff;
   border: 1px solid #ddd;
@@ -126,7 +173,7 @@ textarea.styledInput {
   color: #333;
 }
 
-/* 確定按鈕 confirmBtn */
+/* 確定按鈕 */
 .confirmBtn {
   background-color: #013c70;
   color: #fff;
@@ -134,5 +181,5 @@ textarea.styledInput {
 
 .confirmBtn:hover {
   background-color: #fe6d13;
-  box-shadow: 0 2px 4px rgba(1, 60, 112, 0.2);
+  box-shadow: 0 2px 4px rgba(1, 60, 112, 0.25);
 }
