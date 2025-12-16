@@ -6,7 +6,7 @@ import { MatTabChangeEvent, MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatSlideToggleChange, MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
@@ -15,6 +15,7 @@ import { DialogDeleteComponent } from '../@dialog/dialog-delete/dialog-delete.co
 import { DialogCustomizedComponent } from '../@dialog/dialog-customized/dialog-customized.component';
 import { DialogSetComponent } from '../@dialog/dialog-set/dialog-set.component';
 import { DialogNoticeComponent } from '../@dialog/dialog-notice/dialog-notice.component';
+import { LoadingServiceService } from '../@service/loading-service.service';
 
 @Component({
   selector: 'app-menu-admin',
@@ -35,7 +36,8 @@ export class MenuAdminComponent {
 
   constructor(
     private httpClientService: HttpClientService,
-    private dataService: DataService
+    private dataService: DataService,
+    private loadingServiceService: LoadingServiceService
   ) { }
 
   readonly dialog = inject(MatDialog);
@@ -50,6 +52,7 @@ export class MenuAdminComponent {
   sideDishList: any[] = [];   // 用於儲存附餐列表
   drinkDishList: any[] = [];  // 用於儲存飲料列表
   currentCategory!: categoryDto;
+  workstationList: any[] = [];
 
   // 新增單個分類
   categoryDto: categoryDto = {
@@ -59,8 +62,10 @@ export class MenuAdminComponent {
   };
 
 
+
   ngOnInit(): void {
     this.loadCategories();
+    this.loadWorkstations();
 
   }
 
@@ -116,7 +121,6 @@ export class MenuAdminComponent {
   }
 
   // 抓取餐點列表
-
   // 新增分類
   addCategory() {
     if (this.isEditMode) {
@@ -152,6 +156,16 @@ export class MenuAdminComponent {
     this.selectedTabIndex = this.allCategoryDto.length;
   }
 
+  // 抓工作臺列表
+  loadWorkstations() {
+    this.httpClientService.getApi('workstation/list').subscribe((res: any) => {
+      if (res.code == 200) {
+        console.log(res);
+
+        this.workstationList = res.workStationList;
+      }
+    })
+  }
 
   // 刪除分類
   delCategory(targetCategory: categoryDto) {
@@ -187,6 +201,7 @@ export class MenuAdminComponent {
     const apiUrl = `product/list?categoryId=${categoryId}`;
     this.httpClientService.getApi(apiUrl)
       .subscribe((res: any) => {
+
         // 成功收到api
         if (res.code == 200) {
           // 如果api的分類 = tab的分頁
@@ -195,6 +210,7 @@ export class MenuAdminComponent {
             this.dataService.productList = this.productList;
           }
         }
+        this.loadingServiceService.hide();
       });
   }
 
@@ -218,9 +234,28 @@ export class MenuAdminComponent {
   }
 
   // 是否上架餐點
-  launchProduct(product: productList) {
-    product.categoryId = this.currentCategoryId;
-    this.httpClientService.postApi('product/update', product).subscribe();
+  launchProduct(event: MatSlideToggleChange, product: productList) {
+    const newStatus = event.checked;
+    // product.productActive = newStatus;
+    // product.categoryId = this.currentCategoryId;
+
+    const payload = {
+      ...product,
+      productActive: newStatus,
+      categoryId: this.currentCategoryId
+    };
+    console.log('2. 準備送出 API:', payload);
+    this.httpClientService.postApi('product/update', payload)
+      .subscribe((res: any) => {
+        if (res.code == 200) {
+          console.log(res);
+          product.productActive = newStatus;
+        } else if(res.message == "套餐開放使用中。") {
+          this.dialog.open(DialogNoticeComponent, {
+            data: { noticeType: 'setHasMeal'}
+          });
+        }
+      });
   }
 
   // 更新餐點

@@ -2,13 +2,16 @@ import { Component } from '@angular/core';
 import { NavigationStart, Router, RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './@component/header/header.component';
 import { CommonModule } from '@angular/common';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { LoadingServiceService } from './@service/loading-service.service';
 
 @Component({
   selector: 'app-root',
   imports: [
     RouterOutlet,
     HeaderComponent,
-    CommonModule
+    CommonModule,
+    MatProgressSpinnerModule
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
@@ -17,7 +20,8 @@ export class AppComponent {
   title = 'GroupProject';
 
   showHeader = true;
-  constructor(private router: Router) {
+  constructor(private router: Router,
+    private loadingServiceService: LoadingServiceService) {
     router.events.forEach((event) => {
       if (event instanceof NavigationStart) {
         if (event['url'].match('meal/status/user') ||
@@ -33,6 +37,14 @@ export class AppComponent {
     });
   }
 
+  loading$!: boolean;
+  ngOnInit(): void {
+    this.loadingServiceService.loading$.subscribe((res) => {
+      console.log(res);
+
+      this.loading$ = res;
+    });
+  }
 
 
 }

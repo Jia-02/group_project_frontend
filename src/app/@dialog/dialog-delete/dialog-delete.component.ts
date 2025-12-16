@@ -1,8 +1,10 @@
 import { reservation } from './../../@interface/interface';
 import { HttpClientService } from './../../@service/http-client.service';
 import { Component, inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
 import { scheduleItem } from '../../@interface/interface';
+import { Dialog } from '@angular/cdk/dialog';
+import { DialogNoticeComponent } from '../dialog-notice/dialog-notice.component';
 
 @Component({
   selector: 'app-dialog-delete',
@@ -22,6 +24,7 @@ export class DialogDeleteComponent {
 
   readonly dialogRef = inject(MatDialogRef<DialogDeleteComponent>);
   readonly data = inject(MAT_DIALOG_DATA);
+  readonly dialog = inject(MatDialog);
 
   onNoClick() {
     this.dialogRef.close();
@@ -58,9 +61,11 @@ export class DialogDeleteComponent {
           if (res.code == 200) {
             console.log('餐點刪除成功', res);
             this.dialogRef.close(true);
-          } else {
+          } else if (res.message = '商品上架中。') {
             console.log('刪除失敗', res);
-            alert('商品販售中，不可以刪除!!!');
+            this.dialog.open(DialogNoticeComponent, {
+              data: { noticeType: 'selling' }
+            })
           }
         });
     }
@@ -78,7 +83,7 @@ export class DialogDeleteComponent {
           if (res.code == 200) {
             console.log('餐點刪除成功', res);
             this.dialogRef.close(true);
-          } else {
+          } else if (res.message = '商品上架中。') {
             console.log('刪除失敗', res);
           }
         });
@@ -96,9 +101,10 @@ export class DialogDeleteComponent {
           if (res.code == 200) {
             console.log('餐點刪除成功', res);
             this.dialogRef.close(true);
-          } else {
-            console.log('刪除失敗', res);
-            alert('商品販售中，不可以刪除!!!');
+          } else if (res.message = '商品上架中。') {
+            this.dialog.open(DialogNoticeComponent, {
+              data: { noticeType: 'selling' }
+            })
           }
         });
     }

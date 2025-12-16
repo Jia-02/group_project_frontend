@@ -12,8 +12,7 @@
 
             <div class="actionIcons">
               <!-- 移除 -->
-              <button mat-icon-button color="warn" class="mini-btn"
-                (click)="delCategory(category)">
+              <button mat-icon-button color="warn" class="mini-btn" (click)="delCategory(category)">
                 <mat-icon>remove</mat-icon>
               </button>
 
@@ -104,7 +103,7 @@
 
             <!-- 餐點編輯區塊 -->
             <div class="cardFooter">
-              <mat-slide-toggle [(ngModel)]="product.productActive" (change)="launchProduct(product)">
+              <mat-slide-toggle [(ngModel)]="product.productActive" (change)="launchProduct($event, product)">
                 是否上架
               </mat-slide-toggle>
 
@@ -152,8 +151,11 @@
           <label>工作檯</label>
           <select [(ngModel)]="categoryDto.workstationId">
             <option value="">請選擇</option>
-            <option [ngValue]="1">飲品區</option>
-            <option [ngValue]="2">熱食區</option>
+            @for (ws of workstationList; track ws.workStationId) {
+            <option [ngValue]="ws.workStationId">
+              {{ ws.workStationName }}
+            </option>
+            }
           </select>
 
           <button (click)="addCategory()">建立分類</button>
