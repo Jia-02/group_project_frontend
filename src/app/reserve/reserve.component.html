@@ -128,10 +128,8 @@
           <!-- 桌位開關按鈕 -->
           <label class="toggleSwitch" [title]="(table.reservations && table.reservations.length > 0) ? '已有預約不可關閉' : '切換開放狀態'">
             <input type="checkbox"
-            [checked]="table.tableDailyStatus == true"
-            [disabled]="table.reservations && table.reservations.length > 0"
-            (change)="tableAvailabe(table)">
-
+            [checked]="table.tableDailyStatus !== false"
+            (change)="tableAvailabe(table, $event)">
             <span class="slider round"></span>
           </label>
         </div>
@@ -153,6 +151,7 @@
           [class.isUnavailable]="table.tableDailyStatus == false"
           [class.allowedSlot]="isAllowedTime(label.display)"
           [class.isPast]="isPastTime(label.display)"
+          [attr.data-label]="getSlotText(table.tableDailyStatus, label.display)"
           (click)="isAllowedTime(label.display) ? addReservation(table.tableId, label.display) : null">
 
         </div>

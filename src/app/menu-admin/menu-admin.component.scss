@@ -75,6 +75,53 @@
   margin-bottom: 6px;
 }
 
+/* 卡片整體變灰底 */
+.card.is-inactive {
+  background-color: #f2f2f2;
+  border: 1px solid #e0e0e0;
+}
+
+/* 圖片變灰階且半透明 */
+.card.is-inactive img {
+  filter: grayscale(20%); // 轉灰階
+  opacity: 0.3;            // 透明度
+}
+
+/* 文字顏色變淡 (除了 Footer 操作區) */
+.card.is-inactive .cardBody {
+  opacity: 0.4;
+}
+
+.card.is-inactive .price {
+  color: #999; // 價格原本是橘色，未上架時改為灰色
+}
+
+/* 在圖片上顯示「未上架」標籤 */
+.card.is-inactive {
+  position: relative;
+}
+
+.card.is-inactive::after {
+  content: "未上架";
+  position: absolute;
+  top: 20%;
+  right: 35%;
+  background-color: rgba(0, 0, 0, 0.6); /* 半透明黑底 */
+  color: #fff;
+  font-size: 14px;
+  padding: 8px 15px;
+  border-radius: 8px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* 確保 Footer (開關按鈕) 保持清晰 */
+.card.is-inactive .cardFooter {
+  background-color: #fff;
+  opacity: 1;
+  border-top: 1px solid #ddd;
+}
+
 .note {
   font-size: 13px;
   color: #666;
@@ -88,10 +135,11 @@
 
 
 .cardFooter {
-  padding: 10px 20px;
+  padding: 10px 8px 6px 8px;
   display: flex;
   justify-content: space-between;
   border-top: 1px solid #eee;
+  font-size: 14px;
 }
 
 
@@ -109,7 +157,7 @@
   background: #f0f6ff;
 }
 
-/* 客製化 Sidebar */
+
 .customizeSidebar {
   width: 300px;
   background: #fff;
@@ -120,7 +168,7 @@
   flex-direction: column;
 }
 
-/* sidebar-title -> sidebarTitle */
+
 .sidebarTitle {
   font-weight: bold;
   text-align: center;
@@ -128,20 +176,20 @@
   padding-bottom: 8px;
 }
 
-/* customize-group -> customizeGroup */
+
 .customizeGroup {
   margin-top: 16px;
   margin-bottom: 20px;
 }
 
-/* customize-header -> customizeHeader */
+
 .customizeHeader {
   display: flex;
   justify-content: space-between;
   font-weight: 500;
 }
 
-/* customize-item -> customizeItem */
+
 .customizeItem {
   display: flex;
   align-items: center;

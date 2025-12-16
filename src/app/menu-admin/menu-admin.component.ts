@@ -14,6 +14,7 @@ import { DialogMenuComponent } from '../@dialog/dialog-menu/dialog-menu.componen
 import { DialogDeleteComponent } from '../@dialog/dialog-delete/dialog-delete.component';
 import { DialogCustomizedComponent } from '../@dialog/dialog-customized/dialog-customized.component';
 import { DialogSetComponent } from '../@dialog/dialog-set/dialog-set.component';
+import { DialogNoticeComponent } from '../@dialog/dialog-notice/dialog-notice.component';
 
 @Component({
   selector: 'app-menu-admin',
@@ -167,6 +168,12 @@ export class MenuAdminComponent {
           if (this.currentCategoryId == targetCategory.categoryId) {
             this.currentCategoryId = 0; // 重置邏輯
           }
+        } else {
+          this.dialog.open(DialogNoticeComponent, {
+            width: '25%',
+            height: 'auto',
+            data:{ noticeType: 'delCategory'}
+          })
         }
       });
   }

@@ -25,7 +25,6 @@ $hour-height: 45px; // 每小時的高度
   height: 100vh;
   width: 100%;
   display: flex;
-  font-family: 'Inter', sans-serif;
   color: $color-text;
 }
 
@@ -35,7 +34,7 @@ $hour-height: 45px; // 每小時的高度
   display: flex;
   flex-direction: column;
   width: 250px;
-  margin: 45px 20px 0 10px;
+  margin: 40px 20px 0 10px;
 }
 
 // ==================== 日曆面板 ====================
@@ -44,7 +43,7 @@ $hour-height: 45px; // 每小時的高度
 .calendarPanel {
   flex-shrink: 0;
   height: 260px;
-  padding: 20px;
+  padding: 15px;
   background-color: $color-card-bg;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
   border-radius: 8px;
@@ -214,7 +213,7 @@ $hour-height: 45px; // 每小時的高度
   flex-direction: column;
   overflow-y: auto;
   margin-top: 20px;
-  margin-right: 40px;
+  margin-right: 20px;
 }
 
 .scheduleTitle {
@@ -310,13 +309,13 @@ input:checked+.slider:before {
   transform: translateX(14px);
 }
 
-input:disabled + .slider {
+input:disabled+.slider {
   background-color: #e0e0e0;
   cursor: not-allowed;
   opacity: 0.6;
 }
 
-input:checked:disabled + .slider {
+input:checked:disabled+.slider {
   background-color: $color-primary;
 }
 
@@ -358,11 +357,12 @@ input:checked:disabled + .slider {
   position: relative;
   box-sizing: border-box;
 
-  &:hover {
-    background-color: rgba($color-primary, 0.05);
+  // 只要「不是」允許的時段，滑鼠一律顯示禁止符號
+  &:not(.allowedSlot) {
+    cursor: not-allowed;
   }
 
- // 允許點擊的時段 (白色底)
+  // 允許點擊的時段 (白色底)
   &.allowedSlot {
     cursor: pointer;
     background-color: #fff;
@@ -387,15 +387,29 @@ input:checked:disabled + .slider {
   &.isUnavailable {
     background-color: #f1f1f1;
     // 條紋樣式
-    background-image: repeating-linear-gradient(
-        45deg,
+    background-image: repeating-linear-gradient(45deg,
         transparent,
         transparent 5px,
         #dcdcdc 5px,
-        #dcdcdc 6px
-      );
+        #dcdcdc 6px);
 
     cursor: not-allowed;
+  }
+
+  // 滑鼠懸停顯示文字
+  &:hover::after {
+    content: attr(data-label); // 讀取 HTML 上的 data-label 文字
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(249, 249, 249, 1);
+    color: $color-muted;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap; // 不換行
+    z-index: 100; // 確保浮在最上層
     pointer-events: none;
   }
 }

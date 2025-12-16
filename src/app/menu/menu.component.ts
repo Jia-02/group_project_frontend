@@ -9,7 +9,7 @@ import { OrderService } from '../order.service';
 import { SendOrderDialogComponent } from '../send-order-dialog/send-order-dialog.component';
 import { DataService } from '../@service/data.service';
 import { BoardDialogComponent } from '../board-dialog/board-dialog.component';
-import { Activity } from '../calendar/calendar.component';
+import { Activity } from '../allActivity/calendar/calendar.component';
 
 @Component({
   selector: 'app-menu',

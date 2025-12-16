@@ -3,32 +3,6 @@
 @use '@angular/material' as mat;
 
 html {
-  @include mat.theme((
-    color: (
-      theme-type: light,
-      primary: mat.$azure-palette,
-      tertiary: mat.$blue-palette,
-    ),
-    typography: Roboto,
-    density: 0,
-  ));
-}
-
-
-.mat-mdc-tab.mdc-tab{
-  padding: 0;
-}
-
-.mat-mdc-tab-labels {
-    display: flex;
-    border-radius: 10px;
-    background-color: white;
-    overflow: hidden;
-    border: 1px solid black;
-    margin-bottom: 5%;
-    flex: 1 0 auto;
-
-
   @include mat.theme((color: (theme-type: light,
         primary: mat.$azure-palette,
         tertiary: mat.$blue-palette,
@@ -36,8 +10,13 @@ html {
       typography: Roboto,
       density: 0,
     ));
-
 }
+
+
+.mat-mdc-tab.mdc-tab {
+  padding: 0;
+}
+
 
 /* You can add global styles to this file, and also import other style files */
 // 原有的設定
@@ -51,7 +30,7 @@ body {
 
 
 // Tab 內容區域
-.mat-mdc-tab-body-active > .mat-mdc-tab-body-content {
+.mat-mdc-tab-body-active>.mat-mdc-tab-body-content {
   visibility: visible;
   display: flex;
   flex-wrap: wrap;
@@ -69,4 +48,30 @@ mat-tab-group {
 }
 
 
+mat-slide-toggle {
 
+  /* 大小設定 */
+  transform: scale(0.9); // 整體縮放為 0.8 倍
+
+  /* 開啟狀態 (Selected)*/
+  /* 靜止時 */
+  --mdc-switch-selected-track-color: #013c70 !important;
+  --mdc-switch-selected-handle-color: #fff !important;
+
+  /* 滑鼠懸停 (Hover) */
+  --mdc-switch-selected-hover-track-color: #013c70 !important;
+  --mdc-switch-selected-hover-handle-color: #e0e0e0 !important;
+
+  /* 點擊聚焦 (Focus) */
+  --mdc-switch-selected-focus-track-color: #013c70 !important;
+  --mdc-switch-selected-focus-handle-color: #e0e0e0 !important;
+
+  /* 按下瞬間 (Pressed) */
+  --mdc-switch-selected-pressed-track-color: #013c70 !important;
+  --mdc-switch-selected-pressed-handle-color: #e0e0e0 !important;
+
+  /* 關閉狀態 (Unselected)*/
+  --mdc-switch-unselected-track-color: #e0e0e0 !important;
+  --mdc-switch-unselected-handle-color: #fff !important;
+
+}

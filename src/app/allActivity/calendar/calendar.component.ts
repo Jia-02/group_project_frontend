@@ -1,4 +1,4 @@
-import { DataService } from './../@service/data.service';
+import { DataService } from '../../@service/data.service';
 import { ActivityCheckDialogComponent } from '../activity-check-dialog/activity-check-dialog.component';
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
@@ -8,7 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivityReadDialogComponent } from '../activity-read-dialog/activity-read-dialog.component';
 import { ActivityDialogComponent, DialogResult } from '../activity-dialog/activity-dialog.component';
 import { ActivityCreateDialogComponent } from '../activity-create-dialog/activity-create-dialog.component';
-import { BoardDialogComponent } from '../board-dialog/board-dialog.component';
+import { BoardDialogComponent } from '../../board-dialog/board-dialog.component';
 
 @Component({
   selector: 'app-calendar',
