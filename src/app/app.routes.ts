@@ -11,6 +11,7 @@ import { InnerStartPageComponent } from './inner-start-page/inner-start-page.com
 import { NonInnerStartPageComponent } from './non-inner-start-page/non-inner-start-page.component';
 import { CustomerInformationComponent } from './customer-information/customer-information.component';
 import { MenuComponent } from './menu/menu.component';
+import { MenuCComponent } from './menu-c/menu-c.component';
 
 
 export const routes: Routes = [
@@ -26,6 +27,7 @@ export const routes: Routes = [
   { path: 'non-inner-start-page', component: NonInnerStartPageComponent },
   { path: 'customer-information', component: CustomerInformationComponent },
   { path: 'menu', component: MenuComponent },
+  { path: 'menuC', component: MenuCComponent },
   { path: '**', component: ReserveComponent}
 ]
 

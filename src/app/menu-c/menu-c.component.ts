@@ -8,18 +8,19 @@ import { SettingDetailDialogComponent } from '../setting-detail-dialog/setting-d
 import { OrderService } from '../order.service';
 import { SendOrderDialogComponent } from '../send-order-dialog/send-order-dialog.component';
 import { DataService } from '../@service/data.service';
-import { BoardDialogComponent } from '../board-dialog/board-dialog.component';
-import { Activity } from '../allActivity/calendar/calendar.component';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
-  selector: 'app-menu',
+  selector: 'app-menu-c',
   imports: [
     MatTabsModule
   ],
-  templateUrl: './menu.component.html',
-  styleUrl: './menu.component.scss'
+  templateUrl: './menu-c.component.html',
+  styleUrl: './menu-c.component.scss'
 })
-export class MenuComponent {
+export class MenuCComponent {
+  private existingOrderId: string | number | null = null;
+
   ordersType: string = '';
   tableId: string = '';
   currentCart: any[] = [];
@@ -35,12 +36,73 @@ export class MenuComponent {
     private dataService: DataService,
     private dialog: MatDialog,
     private orderService: OrderService,
+    private route: ActivatedRoute,
+    private router: Router,
   ) { }
 
   ngOnInit(): void {
-    this.loadOrderDataFromService();
-    this.loadInitialData();
-    this.openBoard();
+    this.route.queryParams.subscribe(params => {
+      const orderId = params['orderId'];
+      if (orderId) {
+        this.existingOrderId = orderId;
+        this.loadExistingOrderToService(orderId);
+      } else {
+        this.loadOrderDataFromService();
+      }
+      this.loadInitialData();
+    });
+  }
+
+  groupOrderDetails(apiList: any[]): any[] {
+    const map = new Map();
+
+    apiList.forEach(item => {
+      const mainProduct = item.orderDetails[0];
+      const optionKey = JSON.stringify(mainProduct.detailList.sort((a: any, b: any) => a.option.localeCompare(b.option)));
+      const key = `${mainProduct.productId}-${item.orderDetailsPrice}-${optionKey}`;
+
+      if (map.has(key)) {
+        const existing = map.get(key);
+        existing.quantity += 1;
+      } else {
+        map.set(key, {
+          ...item,
+          quantity: 1,
+          productName: mainProduct.productName,
+        });
+      }
+    });
+
+    return Array.from(map.values());
+  }
+
+  loadExistingOrderToService(orderId: string | number): void {
+    const apiUrl = `orders/list/detail?ordersId=${orderId}`;
+
+    this.dataService.getApi(apiUrl).subscribe((res: any) => {
+      if (res.code === 200) {
+        const groupedDetails = this.groupOrderDetails(res.orderDetailsList);
+
+        this.orderService.currentOrder = {
+          ordersId: res.ordersId,
+          ordersType: res.ordersType,
+          tableId: res.tableId || '',
+          customerName: res.customerName || '',
+          customerPhone: res.customerPhone || '',
+          customerAddress: res.customerAddress || '',
+          ordersDate: res.ordersDate,
+          ordersTime: res.ordersTime,
+          paymentType:res.paymentType,
+          paid: res.paid,
+          orderDetailsList: groupedDetails,
+        };
+        console.log(`已成功載入訂單 ID: ${orderId} 進行修改`);
+        this.loadOrderDataFromService();
+      } else {
+        console.error('載入現有訂單詳細資料失敗:', res);
+        this.loadOrderDataFromService();
+      }
+    });
   }
 
   loadOrderDataFromService(): void {
@@ -76,48 +138,6 @@ export class MenuComponent {
         }
       }
     );
-  }
-
-  openBoard() {
-    const apiUrl = 'calendar/selectDate';
-
-    this.dataService.getApi(apiUrl)
-      .subscribe((res: any) => {
-        let rawActivities: any[] = [];
-        if (Array.isArray(res)) {
-          rawActivities = res;
-        } else if (res && (res.activities || res.calendarList)) {
-          rawActivities = res.activities || res.calendarList;
-        }
-
-        if (!Array.isArray(rawActivities)) {
-          console.error('API 返回的數據結構不符合預期，無法提取活動列表。');
-          rawActivities = [];
-        }
-
-        const processedActivities: Activity[] = rawActivities.map((act: any) => {
-          return {
-            ...act,
-            calendarStartDate: new Date(act.calendarStartDate),
-            calendarEndDate: new Date(act.calendarEndDate)
-          };
-        });
-
-        const hasActivities = processedActivities.length > 0;
-
-        if (hasActivities) {
-          console.log(`活動資料載入成功: 共 ${processedActivities.length} 筆`);
-        } else {
-          console.log('API 呼叫完成，但目前沒有公告活動。');
-        }
-
-        this.dialog.open(BoardDialogComponent, {
-          data: { activities: processedActivities },
-          width: '300px',
-          height: '90vh',
-          panelClass: 'full-screen-dialog'
-        });
-      });
   }
 
   onTabChange(event: MatTabChangeEvent): void {
@@ -203,7 +223,21 @@ export class MenuComponent {
 
         dialogRef.afterClosed().subscribe((result: any) => {
           if (result && result.quantity) {
-            this.addOrderDetailItemToCart(result);
+
+            let productName: string;
+
+            if (isSetting) {
+              productName = res.settingDetail?.settingName || '未知套餐';
+            } else {
+              productName = res.productDetail?.productName || '未知產品';
+            }
+
+            const itemWithProductName = {
+              ...result,
+              productName: productName
+            };
+
+            this.addOrderDetailItemToCart(itemWithProductName);
           }
         });
       }
@@ -229,6 +263,28 @@ export class MenuComponent {
     console.log('已加入購物車。當前總項數:', this.currentCart.length);
   }
 
+  deleteCartItem(itemToDelete: any): void {
+    const index = this.currentCart.findIndex(item =>
+      item === itemToDelete
+    );
+
+    if (index > -1) {
+      this.orderService.currentOrder.orderDetailsList.splice(index, 1);
+      this.currentCart = [...this.orderService.currentOrder.orderDetailsList];
+      console.log('已從購物車中刪除項目。');
+    } else {
+      console.warn('嘗試刪除不存在的項目。');
+    }
+  }
+
+  getTotalPrice(): number {
+    return this.currentCart.reduce((total, item) => {
+      const pricePerUnit = item.orderDetailsPrice || 0;
+      const quantity = item.quantity || 0;
+      return total + (pricePerUnit * quantity); // 修正：單價 * 數量
+    }, 0);
+  }
+
   submitCart() {
     if (this.currentCart.length === 0) {
       alert('請至少選擇一個商品！');
@@ -237,23 +293,50 @@ export class MenuComponent {
 
     const originalOrder = this.orderService.currentOrder;
 
-    const cleanedOrderDetailsList = originalOrder.orderDetailsList.map(item => {
-      const { itemDetail, ...rest } = item;
-      return rest;
+    let finalOrderDetailsList: any[] = [];
+
+    originalOrder.orderDetailsList.forEach(cartItem => {
+      const { quantity, productName, ...apiItem } = cartItem;
+
+      const cleanedApiItem = {
+        orderDetailsId: apiItem.orderDetailsId, // ID 由前端賦予，後端可能需要重新編號
+        orderDetailsPrice: apiItem.orderDetailsPrice,
+        settingId: apiItem.settingId,
+        orderDetails: apiItem.orderDetails
+      };
+
+      for (let i = 0; i < (quantity || 1); i++) {
+        finalOrderDetailsList.push(cleanedApiItem);
+      }
     });
 
+    const now = new Date();
     const finalPayload = {
       ...originalOrder,
-      orderDetailsList: cleanedOrderDetailsList
+      ordersId: this.existingOrderId || originalOrder.ordersId,
+      ordersType: originalOrder.ordersType || 'A',
+      tableId: originalOrder.tableId || null,
+      totalPrice: this.getTotalPrice(),
+      paid: originalOrder.paid || false,
+      paymentType: originalOrder.paymentType || '現金',
+      orderDetailsList: finalOrderDetailsList // 結構 2
     };
 
-    console.log(finalPayload);
+    console.log('Final Payload (API 提交結構):', finalPayload);
 
-    this.dialog.open(SendOrderDialogComponent, {
-      width: '500px',
-      height: '900px',
-      data: finalPayload,
-    })
+    const apiUrl = 'orders/update/nopaid';
+
+    this.dataService.postApi(apiUrl, finalPayload)
+    .subscribe((res: any) => {
+        if (res.code === 200) {
+          alert('訂單更新成功！');
+          this.router.navigate(['/order-page'], { queryParams: { reopenOrderId: this.existingOrderId } });
+        } else {
+          alert(`訂單更新失敗: ${res.message || '未知錯誤'}`);
+          console.error('訂單更新 API 錯誤:', res);
+        }
+      }
+    );
   }
 }
 

@@ -12,6 +12,7 @@ import { CheckOutDialogComponent } from '../check-out-dialog/check-out-dialog.co
 import { A11yModule } from "@angular/cdk/a11y";
 import { DataService } from '../@service/data.service';
 import { MatIconModule } from '@angular/material/icon';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-order-page',
@@ -36,6 +37,7 @@ export class OrderPageComponent {
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
+    this.checkAndReopenDialog();
   }
   ngOnInit(): void {
     this.getOrderList();
@@ -44,6 +46,8 @@ export class OrderPageComponent {
   constructor(
     public dialog: MatDialog,
     public dataService: DataService,
+    public router: Router,
+    public route: ActivatedRoute,
   ) { }
 
   date!: string;
@@ -104,7 +108,36 @@ export class OrderPageComponent {
         if (this.paginator) {
           this.dataSource.paginator = this.paginator;
         }
+
+        this.checkAndReopenDialog();
       });
+  }
+
+  checkAndReopenDialog(): void {
+    this.route.queryParams.subscribe(params => {
+      const reopenOrderId = params['reopenOrderId'];
+
+      if (reopenOrderId) {
+        // 1. 移除 URL 參數，避免下次進入時再次彈出
+        this.router.navigate([], {
+          queryParams: { reopenOrderId: null },
+          queryParamsHandling: 'merge'
+        }).then(() => {
+           // 2. 找到對應的訂單資料
+            const targetOrder = this.dataSource.data.find(order =>
+                order.id.toString() === reopenOrderId.toString()
+            );
+
+            if (targetOrder) {
+                console.log(`偵測到訂單 ${reopenOrderId} 已更新，重新打開對話框...`);
+                // 3. 重新打開對話框
+                this.openDialog(targetOrder);
+            } else {
+                console.warn(`未找到 ID 為 ${reopenOrderId} 的訂單，無法重開。`);
+            }
+        });
+      }
+    });
   }
 
   searchOrders() {
@@ -161,6 +194,9 @@ export class OrderPageComponent {
     }
   }
 
+  editOrder(): void {
+  }
+
   openDialog(element: OrderElement) {
     const id = element.id;
     const apiUrl = `orders/list/detail?ordersId=${id}`;
@@ -208,13 +244,29 @@ export class OrderPageComponent {
       }
 
       dialogRef.afterClosed().subscribe(result => {
-        if (result === true) {
-          console.log('對話框回傳成功狀態，正在刷新訂單列表...');
+        if (result === 'edit') {
+          console.log('收到編輯訂單請求，準備導航到菜單頁面...');
+
+          this.router.navigate(['/menuC'], { queryParams: { orderId: mappedDetail.ordersId } });
+
+        } else if (result === true) {
+          console.log('訂單已結帳');
           this.getOrderList();
+        } else if (result === 'reopen') {
+          console.log('訂單已更新，重新打開 CheckOut Dialog');
+          this.getOrderList();
+        } else {
+          console.log('對話框關閉');
         }
-      });
-    }
-    );
+
+        if (result === 'reopen') {
+          setTimeout(() => {
+            this.openDialog(element);
+          }, 100);
+        }
+      }
+      );
+    });
   }
 }
 
@@ -229,12 +281,7 @@ export interface OrderElement {
   details: string;
 }
 
-const ELEMENT_DATA: OrderElement[] = [
-  { id: 1, code: '2512081000D01', type: '外送', date: '2025-12-08', time: '10:00:00', paymentType: '電子支付', paid: '已付', details: '' },
-  { id: 2, code: '2512061000T01', type: '外帶', date: '2025-12-06', time: '10:00:00', paymentType: '信用卡', paid: '已付', details: '' },
-  { id: 3, code: '2512071000A01', type: '內用', date: '2025-12-07', time: '10:00:00', paymentType: '現金', paid: '未付', details: '' },
-  { id: 4, code: '2512091000A03', type: '內用', date: '2025-12-09', time: '10:00:00', paymentType: '取消', paid: '未付', details: '' },
-];
+const ELEMENT_DATA: OrderElement[] = [];
 
 export interface DetailOption {
   option: string;
