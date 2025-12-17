@@ -13,9 +13,7 @@
     }
   </div>
   <input type="file" (change)="onFileSelected($event)" accept="image/*"><br>
-  <small>
-    原本時間:{{ data.calendarStartDate | date:'yyyy/MM/dd ' }}~{{ data.calendarEndDate | date:'yyyy/MM/dd ' }}
-  </small><br>
+
   <input type="date" [(ngModel)]="data.calendarStartDate">~<input type="date" [(ngModel)]="data.calendarEndDate">
 </mat-dialog-content>
 

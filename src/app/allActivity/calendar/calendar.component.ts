@@ -291,7 +291,7 @@ export class CalendarComponent implements OnInit {
     const dialogRef = this.dialog.open(ActivityCheckDialogComponent, {
       width: '80%',
       height: 'auto',
-      data: { ...activity },
+      data: activity,
     });
 
     dialogRef.afterClosed().subscribe(result => {
