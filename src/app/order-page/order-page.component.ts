@@ -221,6 +221,7 @@ export class OrderPageComponent {
       };
 
       const isPaid = element.paid === '已付';
+      const isCancel = element.paymentType === '取消';
 
       const dataToSendToDialog = {
         ...mappedDetail,
@@ -229,22 +230,14 @@ export class OrderPageComponent {
 
       let dialogRef;
 
-      if (isPaid) {
+      if (isPaid || isCancel) {
         dialogRef = this.dialog.open(OrderDialogComponent, {
           width: '80%',
-          height: 'auto',
-          data: dataToSendToDialog,
-        });
-      } else if (this.paymentType == '取消') {
-        dialogRef = this.dialog.open(OrderDialogComponent, {
-          width: '80%',
-          height: 'auto',
           data: dataToSendToDialog,
         });
       } else {
         dialogRef = this.dialog.open(CheckOutDialogComponent, {
           width: '80%',
-          height: 'auto',
           data: dataToSendToDialog,
         });
       }
