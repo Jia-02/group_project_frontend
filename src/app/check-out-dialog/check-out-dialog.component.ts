@@ -69,6 +69,13 @@ export class CheckOutDialogComponent {
       );
   }
 
+  cancel(){
+    this.data.paymentType = '取消';
+    this.saveChanges();
+    console.log('訂單已被取消', this.data.paymentType);
+    this.dialogRef.close('取消');
+  }
+
   close(): void {
     this.dialogRef.close();
   }
