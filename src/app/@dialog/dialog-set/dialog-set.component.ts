@@ -245,8 +245,11 @@ export class DialogSetComponent {
                 this.mainDishList.push(p);
               }
             }
-          }
-        });
+          }else{
+            alert('無法取得主餐列表，請稍後再試');
+        }
+        }
+      );
     }
   }
 

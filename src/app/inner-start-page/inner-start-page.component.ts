@@ -8,7 +8,9 @@ import { OrderService } from '../order.service';
   templateUrl: './inner-start-page.component.html',
   styleUrl: './inner-start-page.component.scss'
 })
+
 export class InnerStartPageComponent {
+
   tableId!: string;
 
   constructor(
