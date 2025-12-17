@@ -26,14 +26,10 @@
               class="nativeRadio"
               [checked]="selectedMainProduct.get(categoryGroup.categoryId) === productGroup.productId"
               (change)="handleMainProductChange(categoryGroup, productGroup)">
-
             <div class="productInfo">
               <span class="productName">
                 {{ productGroup.productName }}
                 <span class="productPriceTag">(單點: {{ productGroup.productPrice }})</span>
-              </span>
-              <span class="allergenInfo">
-                過敏原: {{ productGroup.productNote.length > 0 ? productGroup.productNote : '無' }}
               </span>
             </div>
         </label>

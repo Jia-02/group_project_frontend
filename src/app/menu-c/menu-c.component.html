@@ -44,14 +44,30 @@
                 <span class="item-quantity"> x {{ item.quantity }}</span>
                 <span class="item-price">$NT{{ item.orderDetailsPrice }}</span>
                 <br>
-                @if (item.orderDetails && item.orderDetails[0] && item.orderDetails[0].detailList?.length) {
-                  <small style="color: #888;">
+                @if(item.settingId > 0){
+                  @for(subItem of item.orderDetails; track subItem.productId){
+                    <small>{{ subItem.productName }}
+                      @if (item.orderDetails && item.orderDetails[0] && item.orderDetails[0].detailList?.length) {
+                        <small style="color: #888;">
+                        客製化:
+                        @for (detail of item.orderDetails[0].detailList; track detail.option) {
+                          {{ detail.option }} (+{{ detail.addPrice }})
+                        }<br>
+                    </small>
+                  }
+                    </small>
+                  }
+                } @else {
+                  @if (item.orderDetails && item.orderDetails[0] && item.orderDetails[0].detailList?.length) {
+                    <small style="color: #888;">
                     客製化:
                     @for (detail of item.orderDetails[0].detailList; track detail.option) {
                       {{ detail.option }} (+{{ detail.addPrice }})
                     }
-                  </small>
+                    </small>
+                  }
                 }
+
               </div>
             }
             <div style="margin-top: 15px; padding-top: 10px; border-top: 2px solid #ddd;">

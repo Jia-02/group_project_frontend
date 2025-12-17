@@ -7,21 +7,12 @@
 
 <mat-dialog-content class="dialogContent">
   <img [src]="data.imageUrl" alt="{{ data.productName }}" class="heroImage">
-
   <div class="productInfoSection">
     <div class="productHeader">
       <h3 class="productTitle">{{ data.productName }}</h3>
       <span class="basePrice">NT$ {{ data.productPrice }}</span>
     </div>
-
     <p class="productDesc">{{ data.productDescription }}</p>
-
-    <div class="allergenBox">
-      <span class="allergenLabel">可能過敏原:</span>
-      <span class="allergenText">
-        @if(data.productNote.length > 0){ {{ data.productNote }} } @else { 無 }
-      </span>
-    </div>
   </div>
 
   <div class="customizationSection">

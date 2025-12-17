@@ -86,7 +86,10 @@ export class SendOrderDialogComponent {
 
   addOrder(): void {
     console.log('執行加點操作...');
-    this.dialogRef.close('add');
+    this.dialogRef.close({
+      action: 'add',
+      updatedData: this.data
+    });
   }
 
   sendOut(): void {

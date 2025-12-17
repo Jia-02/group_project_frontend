@@ -123,18 +123,18 @@ export class OrderPageComponent {
           queryParams: { reopenOrderId: null },
           queryParamsHandling: 'merge'
         }).then(() => {
-           // 2. 找到對應的訂單資料
-            const targetOrder = this.dataSource.data.find(order =>
-                order.id.toString() === reopenOrderId.toString()
-            );
+          // 2. 找到對應的訂單資料
+          const targetOrder = this.dataSource.data.find(order =>
+            order.id.toString() === reopenOrderId.toString()
+          );
 
-            if (targetOrder) {
-                console.log(`偵測到訂單 ${reopenOrderId} 已更新，重新打開對話框...`);
-                // 3. 重新打開對話框
-                this.openDialog(targetOrder);
-            } else {
-                console.warn(`未找到 ID 為 ${reopenOrderId} 的訂單，無法重開。`);
-            }
+          if (targetOrder) {
+            console.log(`偵測到訂單 ${reopenOrderId} 已更新，重新打開對話框...`);
+            // 3. 重新打開對話框
+            this.openDialog(targetOrder);
+          } else {
+            console.warn(`未找到 ID 為 ${reopenOrderId} 的訂單，無法重開。`);
+          }
         });
       }
     });
@@ -221,6 +221,7 @@ export class OrderPageComponent {
       };
 
       const isPaid = element.paid === '已付';
+      const isCancel = element.paymentType === '取消';
 
       const dataToSendToDialog = {
         ...mappedDetail,
@@ -229,16 +230,14 @@ export class OrderPageComponent {
 
       let dialogRef;
 
-      if (isPaid) {
+      if (isPaid || isCancel) {
         dialogRef = this.dialog.open(OrderDialogComponent, {
           width: '80%',
-          height: 'auto',
           data: dataToSendToDialog,
         });
       } else {
         dialogRef = this.dialog.open(CheckOutDialogComponent, {
           width: '80%',
-          height: 'auto',
           data: dataToSendToDialog,
         });
       }
@@ -254,6 +253,8 @@ export class OrderPageComponent {
           this.getOrderList();
         } else if (result === 'reopen') {
           console.log('訂單已更新，重新打開 CheckOut Dialog');
+          this.getOrderList();
+        } else if (result == '取消') {
           this.getOrderList();
         } else {
           console.log('對話框關閉');
