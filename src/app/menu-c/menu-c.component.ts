@@ -119,9 +119,9 @@ export class MenuCComponent implements OnInit {
           customerName: res.customerName || null,
           customerPhone: res.customerPhone || null,
           customerAddress: res.customerAddress || null,
-          ordersDate: res.ordersDate, // 確保從 API 獲取
-          ordersTime: res.ordersTime, // 確保從 API 獲取
-          ordersCode: res.ordersCode, // 確保從 API 獲取
+          ordersDate: res.ordersDate,
+          ordersTime: res.ordersTime,
+          ordersCode: res.ordersCode,
           paymentType: res.paymentType,
           paid: res.paid,
           orderDetailsList: groupedDetails, // 這裡是分組後的列表
