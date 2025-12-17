@@ -1,67 +1,89 @@
-<h2 mat-dialog-title>
-  {{ data.settingName }}
-  <button (click)="dialogRef.close()">
+<h2 mat-dialog-title class="dialogHeader">
+  <span class="headerTitle">{{ data.settingName }}</span>
+  <button class="closeBtn" (click)="dialogRef.close()">
     <mat-icon>close</mat-icon>
   </button>
 </h2>
 
-<mat-dialog-content>
-  <img [src]="data.settingImg" alt="{{ data.settingName }}">
-  <span>NT$ {{ data.settingPrice }}</span>
+<mat-dialog-content class="dialogContent">
+  <img [src]="data.settingImg" alt="{{ data.settingName }}" class="heroImage">
+  <div class="basePriceTag">NT$ {{ data.settingPrice }}</div>
 
-  <mat-stepper orientation="vertical" [linear]="isLinear" #stepper>
+  <mat-stepper orientation="vertical" [linear]="isLinear" #stepper class="customStepper">
 
     @if (data.settingDetail.length) {
     @for (categoryGroup of data.settingDetail; track categoryGroup.categoryId) {
 
     <mat-step [label]="categoryGroup.categoryType" [completed]="isCategoryValid(categoryGroup.categoryId)">
 
-      <h3>選擇 {{ categoryGroup.categoryType }}</h3>
+      <div class="stepSectionTitle">選擇 {{ categoryGroup.categoryType }}</div>
 
       @for (productGroup of categoryGroup.detailList; track productGroup.productId) {
-      <h4>
-        <input type="radio" [name]="'mainProduct_' + categoryGroup.categoryId"
-          [checked]="selectedMainProduct.get(categoryGroup.categoryId) === productGroup.productId"
-          (change)="handleMainProductChange(categoryGroup, productGroup)">
-        {{ productGroup.productName }} (單點價格: {{ productGroup.productPrice }})<br>
-        過敏原:
-        @if(productGroup.productNote.length > 0){
-        {{ productGroup.productNote }}
-        } @else {
-        無
-        }
-      </h4>
+      <div class="productCard"
+           [class.selected]="selectedMainProduct.get(categoryGroup.categoryId) === productGroup.productId">
+        <label class="productLabel">
+            <input type="radio" [name]="'mainProduct_' + categoryGroup.categoryId"
+              class="nativeRadio"
+              [checked]="selectedMainProduct.get(categoryGroup.categoryId) === productGroup.productId"
+              (change)="handleMainProductChange(categoryGroup, productGroup)">
+
+            <div class="productInfo">
+              <span class="productName">
+                {{ productGroup.productName }}
+                <span class="productPriceTag">(單點: {{ productGroup.productPrice }})</span>
+              </span>
+              <span class="allergenInfo">
+                過敏原: {{ productGroup.productNote.length > 0 ? productGroup.productNote : '無' }}
+              </span>
+            </div>
+        </label>
+      </div>
       }
 
       @for (optionGroup of categoryGroup.optionList; track optionGroup.optionId) {
       @if (isCategoryValid(categoryGroup.categoryId)) {
-      <div class="option-group">
-        <p>{{ optionGroup.optionName }} 最多選擇 {{ optionGroup.maxSelect }} 項</p>
-        @for (optionItem of optionGroup.optionDetail; track optionItem.option) {
-        @if (currentSelections.get(categoryGroup.categoryId)?.get(optionGroup.optionId); as selectedSet) {
-        <label>
-          @if (optionGroup.maxSelect > 1) {
-          <input type="checkbox" [checked]="selectedSet.has(optionItem.option)"
-            [disabled]="!selectedSet.has(optionItem.option) && selectedSet.size >= optionGroup.maxSelect"
-            (change)="toggleOption(categoryGroup.categoryId, optionGroup.optionId, optionItem.option)">
+      <div class="modifierGroup">
+        <div class="modifierHeader">
+          {{ optionGroup.optionName }}
+          <span class="limitText">(最多選 {{ optionGroup.maxSelect }} 項)</span>
+        </div>
 
-          } @else {
-          <input type="radio" [name]="'opt_' + categoryGroup.categoryId + '_' + optionGroup.optionId"
-            [checked]="selectedSet.has(optionItem.option)"
-            (change)="selectRadio(categoryGroup.categoryId, optionGroup.optionId, optionItem.option)">
+        <div class="modifierList">
+          @for (optionItem of optionGroup.optionDetail; track optionItem.option) {
+          @if (currentSelections.get(categoryGroup.categoryId)?.get(optionGroup.optionId); as selectedSet) {
+
+          <label class="modifierItem"
+                 [class.active]="selectedSet.has(optionItem.option)"
+                 [class.disabled]="!selectedSet.has(optionItem.option) && selectedSet.size >= optionGroup.maxSelect">
+
+            @if (optionGroup.maxSelect > 1) {
+            <input type="checkbox"
+              class="nativeInput"
+              [checked]="selectedSet.has(optionItem.option)"
+              [disabled]="!selectedSet.has(optionItem.option) && selectedSet.size >= optionGroup.maxSelect"
+              (change)="toggleOption(categoryGroup.categoryId, optionGroup.optionId, optionItem.option)">
+            } @else {
+            <input type="radio" [name]="'opt_' + categoryGroup.categoryId + '_' + optionGroup.optionId"
+              class="nativeInput"
+              [checked]="selectedSet.has(optionItem.option)"
+              (change)="selectRadio(categoryGroup.categoryId, optionGroup.optionId, optionItem.option)">
+            }
+
+            <span class="modifierName">{{ optionItem.option }}</span>
+            <span class="modifierPrice">+NT$ {{ optionItem.addPrice }}</span>
+          </label>
           }
-          {{ optionItem.option }} (+NT$ {{ optionItem.addPrice }})
-        </label>
-        <br>
-        }
-        }
+          }
+        </div>
       </div>
       }
       }
 
-      <div class="stepper-actions">
-        <button mat-button matStepperPrevious>上一步</button>
-        <button mat-button matStepperNext [disabled]="!isCategoryValid(categoryGroup.categoryId)">下一步</button>
+      <div class="stepActionBtns">
+        <button mat-button matStepperPrevious class="prevBtn">上一步</button>
+        <button mat-flat-button matStepperNext
+                class="nextBtn"
+                [disabled]="!isCategoryValid(categoryGroup.categoryId)">下一步</button>
       </div>
 
     </mat-step>
@@ -70,41 +92,58 @@
 
     <mat-step label="數量與結帳">
       <ng-template matStepLabel>確認數量與結帳</ng-template>
-      @for (selection of getSelectionSummary(); track $index) {
-        <div class="selection-summary-item">
-          <h4>{{ selection.categoryType }}: **{{ selection.productName }}**</h4>
+
+      <div class="summaryContainer">
+        @for (selection of getSelectionSummary(); track $index) {
+        <div class="summaryCard">
+          <div class="summaryHeader">
+            <span class="summaryCategory">{{ selection.categoryType }}</span>
+            <span class="summaryProduct">{{ selection.productName }}</span>
+          </div>
+
           @if (selection.options.length > 0) {
-            <ul>
+            <ul class="summaryOptionList">
               @for (option of selection.options; track $index) {
                 <li>
-                  {{ option.option }}
-                  @if (option.addPrice > 0) {
-                    (+NT$ {{ option.addPrice }})
-                  }
+                  <span>{{ option.option }}</span>
+                  @if (option.addPrice > 0) { <span class="summaryAddPrice">(+{{ option.addPrice }})</span> }
                 </li>
               }
             </ul>
-            } @else {
-              <p style="margin-left: 20px;">無額外加購選項。</p>
-            }
-          </div>
+          } @else {
+            <div class="noOptionText">無額外加購選項</div>
+          }
+        </div>
         }
-      <div class="stepper-actions">
-        <button mat-button matStepperPrevious>上一步</button>
+      </div>
+
+      <div class="stepActionBtns">
+        <button mat-button matStepperPrevious class="prevBtn">上一步</button>
       </div>
     </mat-step>
 
   </mat-stepper>
+</mat-dialog-content>
 
-  <mat-dialog-actions class="quantity-actions">
-    <button (click)="decrementQuantity()"><mat-icon>remove</mat-icon></button>
-    <input type="number" [(ngModel)]="quantity" min="1" class="numberCss">
-    <button (click)="incrementQuantity()"><mat-icon>add</mat-icon></button>
-  </mat-dialog-actions>
 
-  <mat-dialog-actions class="cart-actions">
-    <h3>總價格: NT$ {{ currentPrice }}</h3>
-    <button [disabled]="!quantity || quantity <= 0 || !isSelectionComplete" (click)="addToCart()" class="buttonCss">
-      加入購物車
-    </button>
-  </mat-dialog-actions>
+<mat-dialog-actions class="quantityControlPanel">
+  <button class="qtyBtn" (click)="decrementQuantity()">
+    <mat-icon>remove</mat-icon>
+  </button>
+  <input type="number" [(ngModel)]="quantity" min="1" class="qtyInput" readonly>
+  <button class="qtyBtn" (click)="incrementQuantity()">
+    <mat-icon>add</mat-icon>
+  </button>
+</mat-dialog-actions>
+
+<mat-dialog-actions class="footerCartPanel">
+  <div class="totalPriceDisplay">
+    <small>總金額</small>
+    <span>NT$ {{ currentPrice }}</span>
+  </div>
+  <button class="submitCartBtn"
+          [disabled]="!quantity || quantity <= 0 || !isSelectionComplete"
+          (click)="addToCart()">
+    加入購物車
+  </button>
+</mat-dialog-actions>

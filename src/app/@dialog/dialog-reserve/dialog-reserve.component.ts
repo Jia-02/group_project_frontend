@@ -151,13 +151,19 @@ export class DialogReserveComponent {
       return; // 不送出
     }
 
+
+
     this.httpClientService.postApi('reservation/create', this.reservation)
       .subscribe((res: any) => {
         if (res.code == 200) {
           this.dataService.reservation = res;
           this.dialogRef.close(true);
-        } else {
-          console.log(res);
+        } else if (res.message == "桌位容納不下這個人數") {
+          this.dialog.open(DialogNoticeComponent, {
+            width: '25%',
+            height: 'auto',
+            data: { noticeType: 'peopleCount' }
+          })
         }
       });
   }

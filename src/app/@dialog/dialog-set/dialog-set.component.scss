@@ -64,7 +64,7 @@
   width: 100%;
 }
 
-.uploadBtn {
+.dialogContent label.uploadBtn {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -78,6 +78,7 @@
   cursor: pointer;
   transition: all 0.3s ease;
   box-sizing: border-box;
+  margin-bottom: 0;
 }
 
 .uploadBtn mat-icon {
@@ -103,7 +104,7 @@
 .fileStatus {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 3px;
   font-size: 13px;
   color: #2e7d32;
   background: #e8f5e9;

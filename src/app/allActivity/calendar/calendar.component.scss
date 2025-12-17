@@ -1,5 +1,5 @@
 /* --- 全局容器設定 --- */
-.calendar-container {
+.calendarContainer {
   padding: 20px 20px 10px 20px;
   margin: 0 auto;
 }
@@ -7,28 +7,31 @@
 .display {
   display: flex;
   gap: 25px;
-  align-items: flex-start; /* 讓左右兩邊頂部對齊 */
+  align-items: flex-start;
+  /* 讓左右兩邊頂部對齊 */
 }
 
 /* =========================================
    左側：月曆主體
    ========================================= */
-.calendar-left-content {
-  flex: 1; /* 佔據剩餘空間 (約 70%) */
+.calendarLeftContent {
+  flex: 1;
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-  padding: 20px;
+  padding: 35px;
   position: relative;
 }
 
 /* --- 月份切換控制列 --- */
-.month-header-control {
+.monthHeaderControl {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 15px;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   padding: 0 10px;
+  position: relative;
 
   h3 {
     margin: 0;
@@ -36,14 +39,16 @@
     color: #013c70;
     font-weight: 700;
     letter-spacing: 1px;
+    min-width: 120px;
+    text-align: center;
   }
 
   button {
     background: transparent;
     border: 1px solid #ddd;
     border-radius: 50%;
-    width: 25px;
-    height: 25px;
+    width: 30px;
+    height: 30px;
     font-size: 14px;
     color: #555;
     cursor: pointer;
@@ -61,18 +66,19 @@
 }
 
 /* --- 月曆表格 --- */
-.calendar-wrapper {
+.calendarWrapper {
   width: 100%;
 }
 
-.calendar-table {
+.calendarTable {
   width: 100%;
   border-collapse: collapse;
-  table-layout: fixed; /* 固定列寬，確保每格一樣大 */
+  table-layout: fixed;
+  /* 固定列寬，確保每格一樣大 */
 }
 
 /* 星期標頭 */
-.calendar-table th {
+.calendarTable th {
   padding: 5px;
   text-align: center;
   font-weight: 600;
@@ -82,9 +88,9 @@
 }
 
 /* 日期格子 */
-.calendar-day {
-  height: 80px; /* 設定固定高度，讓活動條有空間 */
-  vertical-align: top; /* 內容靠上對齊 */
+.calendarDay {
+  height: 80px;
+  vertical-align: top;
   border: 1px solid #f0f0f0;
   padding: 6px;
   cursor: pointer;
@@ -92,26 +98,28 @@
   position: relative;
 
   &:hover {
-    background-color: #f8fbff; /* 滑鼠經過變淡藍色 */
+    background-color: #f8fbff;
   }
 
   /* 非本月日期 (變灰) */
-  &:not(.is-current-month) {
+  &:not(.isCurrentMonth) {
     background-color: #f9f9f9;
     color: #ccc;
-    pointer-events: none; /* 禁止點擊非本月 */
+    pointer-events: none;
 
-    .day-number { color: #ccc !important; }
+    .dayNumber {
+      color: #ccc !important;
+    }
   }
 }
 
 /* 選中日期的樣式 */
-.calendar-day.selected-day {
-  border: 2px solid #fe6d13; /* 橘色邊框 */
+.calendarDay.selectedDay {
+  background-color: #EBF4FF;
 }
 
 /* "今天" 的樣式 */
-.calendar-day.is-today .day-number {
+.calendarDay.isToday .dayNumber {
   background-color: #013c70;
   color: #fff;
   width: 24px;
@@ -123,7 +131,7 @@
   box-shadow: 0 2px 4px rgba(1, 60, 112, 0.3);
 }
 
-.day-number {
+.dayNumber {
   font-size: 14px;
   font-weight: 600;
   color: #333;
@@ -133,77 +141,92 @@
 }
 
 /* --- 活動條 (Activity Bar) --- */
-.activity-bar-container {
+.activityBarContainer {
   display: flex;
   flex-direction: column;
   gap: 3px;
-  overflow: hidden; /* 超出隱藏 */
-  max-height: 85px; /* 限制最大高度以免撐破格子 */
+  overflow: hidden;
+  max-height: 85px;
 }
 
-.activity-bar {
+.activityBar {
   font-size: 12px;
   padding: 2px 6px;
   border-radius: 4px;
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis; /* 文字過長顯示 ... */
+  text-overflow: ellipsis;
   color: #fff;
   font-weight: 500;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 
   /* 狀態顏色：已發布 */
-  &.activity-published {
-    background-color: #fe6d13; /* 綠色代表已發布 */
-    border-left: 3px solid #fe6d13;
+  &.activityPublished {
+    background-color: #fe6d13;
+    border-left: 3px solid #AF4301;
+    opacity: 0.9;
   }
 
   /* 狀態顏色：草稿 */
-  &.activity-draft {
-    background-color: #9e9e9e; /* 灰色代表草稿 */
+  &.activityDraft {
+    background-color: #9e9e9e;
     border-left: 3px solid #616161;
     opacity: 0.9;
   }
 }
 
-/* 新增活動按鈕 (懸浮或置底) */
-.add-btn {
-  margin-top: 20px;
-  padding: 10px 24px;
+/* --- 新增活動按鈕 --- */
+.addBtn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  margin: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  padding: 0;
   background-color: #013c70;
-  color: #fff;
   border: none;
-  border-radius: 8px;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
   box-shadow: 0 4px 6px rgba(1, 60, 112, 0.2);
+  cursor: pointer;
   transition: all 0.2s;
-  display: block;
-  margin-left: auto; /* 靠右對齊 */
+  font-size: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
+  /* 使用偽元素製作 Icon */
+  &::after {
+    content: '+';
+    font-size: 24px;
+    color: #fff;
+    font-weight: 300;
+    display: block;
+    line-height: 1;
+    margin-top: -2px;
+  }
+
+  /* Hover 效果 */
   &:hover {
     background-color: #fe6d13;
-    transform: translateY(-2px);
+    transform: rotate(90deg);
   }
 }
 
-/* =========================================
-   右側：側邊欄 (Sidebar)
-   ========================================= */
-.sidebar-card {
-  width: 400px; /* 固定寬度 */
+/* 右側：側邊欄 (Sidebar) */
+.sidebarCard {
+  width: 500px;
   background: #fff;
-  border-radius: 12px;
+  border-radius: 8px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-  border-top: 5px solid #fe6d13; /* 頂部橘色裝飾條 */
+  border-top: 5px solid #fe6d13;
   padding: 25px;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
 }
 
-.sidebar-card h3 {
+.sidebarCard h3 {
   margin: 0 0 10px 0;
   font-size: 18px;
   color: #333;
@@ -212,93 +235,148 @@
   gap: 8px;
 }
 
-.sidebar-line {
+.sidebarLine {
   height: 1px;
   background-color: #eee;
-  margin-bottom: 15px;
+  margin-bottom: 18px;
 }
 
 /* 活動列表容器 */
-.activities-content {
+.activitiesContent {
   flex: 1;
-  overflow-y: auto; /* 內容多時滾動 */
-
-  /* 捲軸美化 */
-  &::-webkit-scrollbar { width: 6px; }
-  &::-webkit-scrollbar-track { background: transparent; }
-  &::-webkit-scrollbar-thumb { background: #ddd; border-radius: 10px; }
 }
 
-.activities-content ul {
+.activitiesContent ul {
   list-style: none;
   padding: 0;
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 20px;
 }
 
 /* 單個活動卡片 */
-.activity-item {
-  display: flex;
-  gap: 12px;
+.activityItem {
+  display: grid;
+  grid-template-columns: 35% 1fr;
+  grid-template-rows: min-content 1fr min-content;
+  grid-template-areas:
+    "img title"
+    "img desc"
+    "img date";
+  gap: 8px 15px;
   padding: 12px;
   background: #fff;
   border: 1px solid #eee;
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s;
+  min-height: 110px;
+  position: relative;
+  /* 為了讓編輯 Icon 絕對定位 */
+  overflow: hidden;
+  /* 確保圓角內背景色正常 */
+}
 
-  &:hover {
-    border-color: #013c70;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    transform: translateX(3px); /* 輕微右移互動 */
-  }
+/* Hover 效果保持不變 */
+.activityItem:hover {
+  border-color: #013c70;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transform: translateX(3px);
+}
 
-  /* 左側狀態線 */
-  &.detail-published { border-left: 4px solid #4caf50; }
-  &.detail-draft { border-left: 4px solid #9e9e9e; }
+/* 左側狀態線 - 已發布 */
+.activityItem.detailPublished {
+  border-left: 4px solid #AF4301;
+}
+
+/* 左側狀態線 - 草稿 (修改背景色) */
+.activityItem.detailDraft {
+  border-left: 4px solid #9e9e9e;
+  background-color: #f2f2f2; /* 淺灰色背景 */
+}
+
+/* 針對草稿狀態的 hover 微調，讓它變稍微亮一點 */
+.activityItem.detailDraft:hover {
+  background-color: #e6e6e6;
+}
+
+/* 修改這段 */
+.editBadge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 24px;
+  height: 24px;
+  background-color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  color: #666;
+  z-index: 2;
+}
+
+.editBadge mat-icon {
+  font-size: 14px; /* 縮小圖示，讓它在圓圈中有留白 */
+  width: 14px;     /* 配合 font-size */
+  height: 14px;    /* 配合 font-size */
+
+  /* 確保 mat-icon 垂直水平置中 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* 活動圖片 */
-.activity-image {
-  width: 60px;
-  height: 60px;
-  border-radius: 6px;
+.activityImage {
+  grid-area: img;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
+  border-radius: 6px;
   background-color: #f0f0f0;
 }
 
-/* 文字排版 */
-.activity-item strong {
+/* --- 標題 (右半邊：上) --- */
+.activityItem strong {
+  grid-area: title;
   display: block;
-  font-size: 15px;
+  font-size: 16px;
   color: #013c70;
-  margin-bottom: 4px;
+  line-height: 1.3;
+  align-self: start;
+  margin-top: 10px;
 }
 
-.activity-item span {
+/* --- 內容 (右半邊：中) --- */
+.activityItem span {
+  grid-area: desc;
   display: block;
-  font-size: 13px;
+  font-size: 14px;
   color: #666;
-  margin-bottom: 6px;
+  line-height: 1.4;
+  margin-top: 4px;
 
-  /* 限制兩行 */
+  /* 限制行數 */
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
-.activity-item small {
-  display: block;
+/* --- 日期 (右半邊：下) --- */
+.activityItem small {
+  grid-area: date;
   font-size: 12px;
   color: #999;
-  margin-top: auto; /* 推到底部 */
+  align-self: end;
+  justify-self: end;
 }
 
 /* 無活動提示 */
-.no-activity {
+.noActivity {
   text-align: center;
   color: #999;
   margin-top: 40px;

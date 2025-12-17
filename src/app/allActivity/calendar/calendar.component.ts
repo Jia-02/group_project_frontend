@@ -9,6 +9,7 @@ import { ActivityReadDialogComponent } from '../activity-read-dialog/activity-re
 import { ActivityDialogComponent, DialogResult } from '../activity-dialog/activity-dialog.component';
 import { ActivityCreateDialogComponent } from '../activity-create-dialog/activity-create-dialog.component';
 import { BoardDialogComponent } from '../../board-dialog/board-dialog.component';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-calendar',
@@ -16,6 +17,7 @@ import { BoardDialogComponent } from '../../board-dialog/board-dialog.component'
     DatePipe,
     FormsModule,
     NgClass,
+    MatIconModule
   ],
   templateUrl: './calendar.component.html',
   styleUrl: './calendar.component.scss'

@@ -1,3 +1,4 @@
+<div class="box">
 @if(ordersType == 'A'){
   <h2>{{ displayOrderType }} 桌號: {{ displayTableId }}</h2>
 } @else {
@@ -29,3 +30,4 @@
   }
 </div>
 <button class="buttonCss" (click)="submitCart()">送出購物車<span class="countCss">{{ this.currentCart.length }}</span></button>
+</div>

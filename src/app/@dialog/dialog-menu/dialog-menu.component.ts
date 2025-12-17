@@ -7,6 +7,8 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { DialogNoticeComponent } from '../dialog-notice/dialog-notice.component';
+import { LoadingServiceService } from '../../@service/loading-service.service';
+
 
 @Component({
   selector: 'app-dialog-menu',
@@ -16,7 +18,7 @@ import { DialogNoticeComponent } from '../dialog-notice/dialog-notice.component'
     MatDialogTitle,
     FormsModule,
     CommonModule,
-    MatIconModule
+    MatIconModule,
   ],
   templateUrl: './dialog-menu.component.html',
   styleUrl: './dialog-menu.component.scss'
@@ -25,7 +27,9 @@ export class DialogMenuComponent {
 
   constructor(
     private httpClientService: HttpClientService,
-    private dataService: DataService) { }
+    private dataService: DataService,
+    private loadingServiceService: LoadingServiceService
+  ) { }
 
   readonly dialogRef = inject(MatDialogRef<DialogMenuComponent>);
   readonly data = inject<any>(MAT_DIALOG_DATA);
@@ -72,12 +76,10 @@ export class DialogMenuComponent {
     if (!this.productList.productName || this.productList.productPrice == null
       || !this.productList.productDescription || (!this.isEditMode && !this.selectedFile)) {
       const dialogRef = this.dialog.open(DialogNoticeComponent, {
-        data: { noticeType: 'addMenu'}
+        data: { noticeType: 'addMenu' }
       });
       return;
     }
-
-
 
     // 處理圖片路徑邏輯 (如果有選新檔案才處理)
     if (this.selectedFile) {
@@ -99,6 +101,7 @@ export class DialogMenuComponent {
       this.updateProduct(); // >更新
     } else {
       this.addProduct(); // >新增
+      console.log(123);
     }
   }
 
@@ -107,6 +110,7 @@ export class DialogMenuComponent {
   addProduct() {
     this.countNextProductId();
 
+    this.loadingServiceService.show();
     this.httpClientService.postApi('product/add', this.productList)
       .subscribe((res: any) => {
         if (res.code == 200) {
@@ -127,7 +131,7 @@ export class DialogMenuComponent {
 
 
   // 計算商品id
-countNextProductId() {
+  countNextProductId() {
     const categories = this.dataService.allCategoryDto;
 
     // 如果完全沒分類，就從 1 開始
