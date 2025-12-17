@@ -230,31 +230,43 @@ export class MenuComponent {
   }
 
   submitCart() {
-    if (this.currentCart.length === 0) {
-      alert('請至少選擇一個商品！');
-      return;
-    }
-
-    const originalOrder = this.orderService.currentOrder;
-
-    const cleanedOrderDetailsList = originalOrder.orderDetailsList.map(item => {
-      const { itemDetail, ...rest } = item;
-      return rest;
-    });
-
-    const finalPayload = {
-      ...originalOrder,
-      orderDetailsList: cleanedOrderDetailsList
-    };
-
-    console.log(finalPayload);
-
-    this.dialog.open(SendOrderDialogComponent, {
-      width: '500px',
-      height: '900px',
-      data: finalPayload,
-    })
+  if (this.currentCart.length === 0) {
+    alert('請至少選擇一個商品！');
+    return;
   }
+
+  const originalOrder = this.orderService.currentOrder;
+
+  const cleanedOrderDetailsList = originalOrder.orderDetailsList.map(item => {
+    const { itemDetail, ...rest } = item;
+    return rest;
+  });
+
+  const finalPayload = {
+    ...originalOrder,
+    orderDetailsList: cleanedOrderDetailsList
+  };
+
+  const dialogRef = this.dialog.open(SendOrderDialogComponent, {
+    width: '500px',
+    height: '900px',
+    data: finalPayload,
+  });
+
+  dialogRef.afterClosed().subscribe(result => {
+    if (result && result.action === 'add') {
+      const updatedData = result.updatedData;
+
+      this.orderService.currentOrder = {
+        ...this.orderService.currentOrder,
+        orderDetailsList: updatedData.orderDetailsList,
+      };
+
+      console.log('已同步彈窗修改後的數量至 Service:', this.orderService.currentOrder);
+
+    }
+  });
+}
 }
 
 interface Product {
