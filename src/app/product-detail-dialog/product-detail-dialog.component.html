@@ -9,13 +9,6 @@
   <img [src]="data.imageUrl" alt="{{ data.productName }}">
   <span>NT$ {{ data.productPrice }}</span>
   <p>{{ data.productDescription }}</p>
-  <p>可能過敏原:
-    @if(data.productNote.length > 0){
-      {{ data.productNote }}
-    } @else {
-      無
-    }
-  </p>
   <h3>客製化選項</h3>
   @if (data.optionList.length) {
     @for (optionGroup of data.optionList; track optionGroup.optionId) {

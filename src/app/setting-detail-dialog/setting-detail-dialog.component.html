@@ -24,12 +24,6 @@
           [checked]="selectedMainProduct.get(categoryGroup.categoryId) === productGroup.productId"
           (change)="handleMainProductChange(categoryGroup, productGroup)">
         {{ productGroup.productName }} (單點價格: {{ productGroup.productPrice }})<br>
-        過敏原:
-        @if(productGroup.productNote.length > 0){
-        {{ productGroup.productNote }}
-        } @else {
-        無
-        }
       </h4>
       }
 
