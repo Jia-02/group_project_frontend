@@ -495,9 +495,9 @@ export class TableComponent {
       let timePercent = (((nowHour + nowMinute - 36000) / 3600) / 12) * 100
       let str = timePercent + "%";
       console.log(str)
-      myDiv.style.height = str;
+      myDiv.style.width = str;
     } else {
-      myDiv.style.height = "0%"
+      myDiv.style.width = "0%"
     }
     let url = "reservation/date_list?reservationDate=" + this.reservation_date;
     this.service.getApi(url).subscribe((reservationListToday: ReservationListTodayRes) => {

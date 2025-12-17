@@ -7,7 +7,6 @@
 
     <div class="timelineBody">
       <div id="progressBar" class="progressBar"></div>
-
       <div class="timeTicksContainer">
         @for(time of timeList; track time){
         <div class="timeTickItem">
@@ -115,46 +114,6 @@
 
     <div class="mapContainer">
       <div class="mapGridWrapper">
-
-<<<<<<< HEAD
-  </div>
-  <span style="flex:1 1 auto"></span>
-  <div style="display: flex; align-items: center;">
-    <span>y軸</span>
-  </div>
-
-  <div style="display: flex; align-items: center; margin-top: -40px;">
-    <div style="text-align: right; height: 500px;">
-      @for(item of len;track item){
-      @if(item != 0){
-        <p style="margin-top: 80px;">{{item}}</p>
-      }@else {
-        <p>{{item}}</p>
-      }
-      }
-
-    </div>
-  </div>
-
-  <div>
-    <div style="margin-top: 15%;">
-      <div style="display: flex;">
-        <span style="flex: 1 1 auto;"></span>
-        <span style="display: flex;align-items: center; margin-right: 5%;">可預約: <div
-            style="height: 10px; width: 10px; background-color: green;"></div></span>
-        <span style="display: flex;align-items: center;margin-right: 5%;">已預約: <div
-            style="height: 10px; width: 10px; background-color: yellow;"></div></span>
-        <span style="display: flex;align-items: center;margin-right: 5%;">使用中: <div
-            style="height: 10px; width: 10px; background-color: red;"></div></span>
-        <span style="display: flex;align-items: center;">未開放: <div
-            style="height: 10px; width: 10px; background-color: gray;"></div></span>
-      </div>
-      <div>
-        <div style="display: flex;">
-          <span style="flex: 1 1 auto;"></span>
-          <span>x軸</span>
-          <span style="flex: 1 1 auto;"></span>
-=======
         <div class="legendColumn">
           <div class="legendItem">
             <div class="dotGreen"></div>
@@ -172,9 +131,7 @@
             <div class="dotGray"></div>
             <span>未開放</span>
           </div>
->>>>>>> mergec
         </div>
-
         <div class="yAxisGroup">
           <div class="axisLabel vertical">Y軸</div>
           <div class="yAxisValues">
