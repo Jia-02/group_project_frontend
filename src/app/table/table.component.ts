@@ -129,7 +129,6 @@ export class TableComponent {
         })
       }
     })
-
   }
 
   //即時搜尋功能 手機號碼/姓名
