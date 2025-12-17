@@ -1,35 +1,78 @@
-<div style="padding: 5%;">
+<div class="dialogContainer">
+
   @if(data.mod == "資訊"){
-  @for(item of reservation; track item){
-  <div style="display: flex;">
-    <span style="flex: 1 1 auto;"></span>
-    <div style="width: 100px; border: 1px solid black;">
-      <span>姓名: {{item.reservationName}}</span> <br> <br>
-      <span>人數: {{item.reservationCount}}</span> <br> <br>
-      <span>兒童: {{item.reservationChildCount}}</span> <br> <br>
-      <span>大人: {{item.reservationAdultCount}}</span> <br> <br>
+    <div class="infoListContainer">
+      @for(item of reservation; track item){
+      <div class="infoCard">
+        <div class="infoRow">
+          <span class="infoLabel">姓名:</span>
+          <span class="infoValue">{{item.reservationName}}</span>
+        </div>
+        <div class="infoRow">
+          <span class="infoLabel">人數:</span>
+          <span class="infoValue">{{item.reservationCount}}</span>
+        </div>
+        <div class="infoRow">
+          <span class="infoLabel">兒童:</span>
+          <span class="infoValue">{{item.reservationChildCount}}</span>
+        </div>
+        <div class="infoRow">
+          <span class="infoLabel">大人:</span>
+          <span class="infoValue">{{item.reservationAdultCount}}</span>
+        </div>
+      </div>
+      }
     </div>
-    <span style="flex: 1 1 auto;"></span>
-  </div>
-  <br> <br>
-  }
-  }@else {
-  @if(data.mod == "編輯"){
-  <span>桌號:</span>{{tableId}} <br> <br>
-  }@else {
-  <span>桌號:</span> <input type="text" [(ngModel)]="tableId"> <br> <br>
-  }
-  <span>容納人數:</span> <input type="text" [(ngModel)]="tableCapacity" placeholder="最小值2"> <br> <br>
-  <span>座標x軸</span> <input type="text" [(ngModel)]="tablePositionX" placeholder="0~440"> <br> <br>
-  <span>座標y軸</span> <input type="text" [(ngModel)]="tablePositionY" placeholder="0~440"> <br> <br>
-  <span>x軸長度</span> <input type="text" [(ngModel)]="lengthX" placeholder="最小值60"> <br> <br>
-  <span>y軸長度</span> <input type="text" [(ngModel)]="lengthY" placeholder="最小值60"> <br> <br>
-  @if(data.mod == "編輯"){
-  <button (click)="tableEdit(true)">刪除座位</button>
-  <button (click)="tableEdit(false)">更新座位資訊</button>
-  }@else if(data.mod == "新增"){
-  <button (click)="tableEdit(true)">新增座位</button>
-  }
+  } @else {
+    <div class="formContainer">
+
+      <div class="formRow">
+        <div class="formField">
+          <label>桌號</label>
+          @if(data.mod == "編輯"){
+            <div class="readOnlyText">{{tableId}}</div>
+          } @else {
+            <input type="text" class="styledInput" [(ngModel)]="tableId">
+          }
+        </div>
+        <div class="formField">
+          <label>容納人數</label>
+          <input type="text" class="styledInput" [(ngModel)]="tableCapacity" placeholder="最小值2">
+        </div>
+      </div>
+
+      <div class="formRow">
+        <div class="formField">
+          <label>座標 X 軸</label>
+          <input type="text" class="styledInput" [(ngModel)]="tablePositionX" placeholder="0~440">
+        </div>
+        <div class="formField">
+          <label>座標 Y 軸</label>
+          <input type="text" class="styledInput" [(ngModel)]="tablePositionY" placeholder="0~440">
+        </div>
+      </div>
+
+      <div class="formRow">
+        <div class="formField">
+          <label>X 軸長度 (寬)</label>
+          <input type="text" class="styledInput" [(ngModel)]="lengthX" placeholder="最小值60">
+        </div>
+        <div class="formField">
+          <label>Y 軸長度 (高)</label>
+          <input type="text" class="styledInput" [(ngModel)]="lengthY" placeholder="最小值60">
+        </div>
+      </div>
+
+      <div class="actionButtons">
+        @if(data.mod == "編輯"){
+          <button class="dialogBtn deleteBtn" (click)="tableEdit(true)">刪除座位</button>
+          <button class="dialogBtn confirmBtn" (click)="tableEdit(false)">更新座位資訊</button>
+        } @else if(data.mod == "新增"){
+          <button class="dialogBtn confirmBtn fullBtn" (click)="tableEdit(true)">新增座位</button>
+        }
+      </div>
+
+    </div>
   }
 
 </div>

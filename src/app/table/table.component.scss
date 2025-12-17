@@ -1,0 +1,408 @@
+/* --- 全局容器設定 --- */
+.mainContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* 佔滿視窗高度 */
+  background-color: #f5f7fa;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  overflow: hidden;
+}
+
+/* --- 上方區塊：時間軸 (水平) --- */
+.timeSectionWrapper {
+  flex: 0 0 80px;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  gap: 15px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  z-index: 10;
+}
+
+.currentTimeBox {
+  background-color: #013c70;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.timelineBody {
+  flex: 1;
+  position: relative;
+  height: 50px;
+  background-color: #f0f0f0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.progressBar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%; /* 水平進度條佔滿高度 */
+  /* width 由程式控制 */
+  background-color: rgba(126, 211, 33, 0.4);
+  border-right: 2px solid #7ed321;
+  z-index: 1;
+}
+
+.timeTicksContainer {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
+  padding: 0 20px;
+  position: relative;
+  z-index: 2;
+  align-items: center;
+}
+
+.timeTickItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 12px;
+  color: #666;
+}
+
+.tickMark {
+  width: 1px;
+  height: 5px;
+  background-color: #999;
+  margin-top: 4px;
+}
+
+/* --- 下方內容區塊 (左右分割) --- */
+.contentContainer {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+/* --- 左側：訂位列表 --- */
+.reservationListContainer {
+  flex: 0 0 360px; /* 固定寬度 */
+  background-color: #fff;
+  border-right: 1px solid #ddd;
+  display: flex;
+  flex-direction: column;
+}
+
+.reservationHeader {
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+  background-color: #fff;
+}
+
+.dateTitle {
+  font-size: 18px;
+  font-weight: bold;
+  color: #013c70;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.searchBox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+}
+
+.styledInput {
+  flex: 1;
+  padding: 6px 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  outline: none;
+}
+
+.listScrollArea {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* 訂位卡片項目 */
+.reservationItem {
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+  transition: all 0.2s;
+  min-height: 85px;
+}
+
+.reservationItem:hover {
+  border-color: #013c70;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+}
+
+.itemLeftGroup {
+  flex: 1.2;
+  display: flex;
+  flex-direction: column;
+}
+
+.nameText {
+  font-weight: bold;
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 6px;
+}
+
+.phoneText {
+  font-size: 12px;
+  color: gray;
+  margin-bottom: 6px;
+}
+
+.tableBadge {
+  display: inline-block;
+  background-color: #eef4fa;
+  color: #013c70;
+  padding: 2px 6px;
+  border-radius: 4px;
+  width: fit-content;
+  font-weight: 600;
+}
+
+.fontSize12 {
+  font-size: 12px;
+}
+
+.itemCenterGroup {
+  flex: 1.5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.countBadge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.countBadge.main {
+  color: #013c70;
+  font-weight: bold;
+  font-size: 12px;
+  margin-right: 5px;
+}
+
+.fontSize20 { font-size: 20px; line-height: 1;}
+
+.countBadge.sub {
+  color: #999;
+}
+
+.countBadge.sub mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+.countBadge.sub span {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.itemRightGroup {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.timeText {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.iconSuccess {
+  color: #4caf50;
+}
+
+.actionBtn {
+  background-color: #013c70;
+  color: #fff;
+  border: none;
+  padding: 5px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.actionBtn:hover {
+  background-color: #fe6d13;
+}
+
+/* --- 右側：地圖與座標區塊 --- */
+.mapContainer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #fafafa;
+  padding: 20px;
+  overflow: auto;
+}
+
+.legendRow {
+  display: flex;
+  gap: 20px;
+  background: #fff;
+  padding: 10px 20px;
+  border-radius: 20px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  margin-bottom: 20px;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: #555;
+}
+
+.dotGreen { height: 10px; width: 10px; background-color: green; border-radius: 50%; }
+.dotYellow { height: 10px; width: 10px; background-color: yellow; border-radius: 50%; }
+.dotRed { height: 10px; width: 10px; background-color: red; border-radius: 50%; }
+.dotGray { height: 10px; width: 10px; background-color: gray; border-radius: 50%; }
+
+/* Grid 地圖佈局 */
+.mapContainer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #fafafa;
+  padding: 20px;
+  overflow: auto;
+}
+
+/* Grid 地圖佈局設定 */
+.mapGridWrapper {
+  display: grid;
+  grid-template-columns: 100px 40px auto;
+  grid-template-rows: auto 60px;
+  gap: 20px;
+}
+
+/* 1. 圖例區樣式 (第1欄) */
+.legendColumn {
+  grid-column: 1;
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+  padding-right: 20px;
+  border-right: 1px dashed #eee;
+  margin-right: 10px;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: #555;
+  font-weight: 500;
+}
+
+/* 圓點樣式 */
+.dotGreen { height: 12px; width: 12px; background-color: green; border-radius: 50%; }
+.dotYellow { height: 12px; width: 12px; background-color: yellow; border-radius: 50%; }
+.dotRed { height: 12px; width: 12px; background-color: red; border-radius: 50%; }
+.dotGray { height: 12px; width: 12px; background-color: gray; border-radius: 50%; }
+
+
+/* 2. Y軸區 (第2欄) */
+.yAxisGroup {
+  grid-column: 2; /* 第2欄 */
+  grid-row: 1;
+  display: flex;
+  align-items: center;
+}
+
+.yAxisValues {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 500px;
+  text-align: right;
+  width: 100%;
+  padding-right: 5px;
+}
+
+.axisLabel {
+  font-size: 12px;
+  font-weight: bold;
+  color: #999;
+}
+
+.axisLabel.vertical {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  margin-right: 5px;
+  white-space: nowrap;
+}
+
+/* 3. 畫布區 (第3欄) */
+.canvasBox {
+  grid-column: 3; /* 第3欄 (原本這裡寫錯成 2，導致重疊) */
+  grid-row: 1;
+  width: 500px;
+  height: 500px;
+}
+
+.canvasElement {
+  border: 1px solid #999;
+  background-color: #fff;
+  cursor: crosshair;
+  display: block;
+}
+
+/* 4. X軸區 (第3欄，第2列) */
+.xAxisGroup {
+  grid-column: 3; /* 第3欄 */
+  grid-row: 2;    /* 第2列 (畫布下方) */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.xAxisValues {
+  display: flex;
+  justify-content: space-between;
+  width: 500px;
+  margin-top: 5px;
+}
+
+.axisLabel.horizontal {
+  margin-top: 5px;
+}
+
+.axisVal {
+  font-size: 12px;
+  color: #666;
+}

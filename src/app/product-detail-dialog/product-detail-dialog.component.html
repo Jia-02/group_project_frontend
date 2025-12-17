@@ -1,62 +1,92 @@
-<h2 mat-dialog-title>
-    {{ data.productName }}
-  <button (click)="dialogRef.close()">
+<h2 mat-dialog-title class="dialogHeader">
+  <span class="headerTitle">{{ data.productName }}</span>
+  <button class="closeBtn" (click)="dialogRef.close()">
     <mat-icon>close</mat-icon>
   </button>
 </h2>
 
-<mat-dialog-content>
-  <img [src]="data.imageUrl" alt="{{ data.productName }}">
-  <span>NT$ {{ data.productPrice }}</span>
-  <p>{{ data.productDescription }}</p>
-  <p>可能過敏原:
-    @if(data.productNote.length > 0){
-      {{ data.productNote }}
-    } @else {
-      無
-    }
-  </p>
-  <h3>客製化選項</h3>
-  @if (data.optionList.length) {
-    @for (optionGroup of data.optionList; track optionGroup.optionId) {
-      {{ optionGroup.optionName }}    最多選擇 {{ optionGroup.maxSelect }} 項<br>
-      @for (optionItem of optionGroup.optionDetail; track optionItem.option) {
-        @if (currentSelections.get(optionGroup.optionId); as selectedSet) {
-          @if (optionGroup.maxSelect > 1) {
-            <input type="checkbox" [checked]="selectedSet.has(optionItem.option)"
-            [disabled]="!selectedSet.has(optionItem.option) && selectedSet.size >= optionGroup.maxSelect"
-            (change)="selectedSet.has(optionItem.option) ? selectedSet.delete(optionItem.option)
-            : selectedSet.add(optionItem.option);calculateTotalPrice();">
-          } @else {
-            <input
-              type="radio"
-              [name]="'optionGroup_' + optionGroup.optionId"
-              [checked]="selectedSet.has(optionItem.option)"
-              (change)="
-                selectedSet.clear();
-                selectedSet.add(optionItem.option);
-                calculateTotalPrice();
-              ">
-          }
+<mat-dialog-content class="dialogContent">
+  <img [src]="data.imageUrl" alt="{{ data.productName }}" class="heroImage">
 
-          {{ optionItem.option }} (+NT$ {{ optionItem.addPrice }})<br>
-        }
+  <div class="productInfoSection">
+    <div class="productHeader">
+      <h3 class="productTitle">{{ data.productName }}</h3>
+      <span class="basePrice">NT$ {{ data.productPrice }}</span>
+    </div>
+
+    <p class="productDesc">{{ data.productDescription }}</p>
+
+    <div class="allergenBox">
+      <span class="allergenLabel">可能過敏原:</span>
+      <span class="allergenText">
+        @if(data.productNote.length > 0){ {{ data.productNote }} } @else { 無 }
+      </span>
+    </div>
+  </div>
+
+  <div class="customizationSection">
+    <h3 class="sectionTitle">客製化選項</h3>
+
+    @if (data.optionList.length) {
+      @for (optionGroup of data.optionList; track optionGroup.optionId) {
+
+        <div class="optionGroup">
+          <div class="groupHeader">
+            <span class="groupName">{{ optionGroup.optionName }}</span>
+            <span class="groupLimit">(最多選 {{ optionGroup.maxSelect }} 項)</span>
+          </div>
+
+          <div class="optionList">
+            @for (optionItem of optionGroup.optionDetail; track optionItem.option) {
+              @if (currentSelections.get(optionGroup.optionId); as selectedSet) {
+
+                <label class="optionRow"
+                       [class.selected]="selectedSet.has(optionItem.option)"
+                       [class.disabled]="!selectedSet.has(optionItem.option) && selectedSet.size >= optionGroup.maxSelect">
+
+                  <div class="inputWrapper">
+                    @if (optionGroup.maxSelect > 1) {
+                      <input type="checkbox"
+                             class="nativeInput"
+                             [checked]="selectedSet.has(optionItem.option)"
+                             [disabled]="!selectedSet.has(optionItem.option) && selectedSet.size >= optionGroup.maxSelect"
+                             (change)="selectedSet.has(optionItem.option) ? selectedSet.delete(optionItem.option) : selectedSet.add(optionItem.option);calculateTotalPrice();">
+                    } @else {
+                      <input type="radio"
+                             [name]="'optionGroup_' + optionGroup.optionId"
+                             class="nativeInput"
+                             [checked]="selectedSet.has(optionItem.option)"
+                             (change)="selectedSet.clear(); selectedSet.add(optionItem.option); calculateTotalPrice();">
+                    }
+                  </div>
+
+                  <span class="optName">{{ optionItem.option }}</span>
+                  <span class="optPrice">+NT$ {{ optionItem.addPrice }}</span>
+                </label>
+              }
+            }
+          </div>
+        </div>
       }
     }
-  }
+  </div>
 </mat-dialog-content>
 
-<mat-dialog-actions>
-  <button (click)="decrementQuantity()"><mat-icon>remove</mat-icon></button>
-  <input type="number" [(ngModel)]="quantity" min="1" class="numberCss">
-  <button (click)="incrementQuantity()"><mat-icon>add</mat-icon></button>
-</mat-dialog-actions>
+<div class="footerContainer">
+  <mat-dialog-actions class="quantityPanel">
+    <button class="qtyBtn" (click)="decrementQuantity()">
+      <mat-icon>remove</mat-icon>
+    </button>
+    <input type="number" [(ngModel)]="quantity" min="1" class="qtyInput" readonly>
+    <button class="qtyBtn" (click)="incrementQuantity()">
+      <mat-icon>add</mat-icon>
+    </button>
+  </mat-dialog-actions>
 
-<mat-dialog-actions>
-  <h3>總價格:{{ currentPrice }}</h3>
-  <button [disabled]="!quantity || quantity <= 0" (click)="addToCart()" class="buttonCss">
-    加入購物車
-  </button>
-</mat-dialog-actions>
-
-
+  <mat-dialog-actions class="cartPanel">
+    <button [disabled]="!quantity || quantity <= 0" (click)="addToCart()" class="addToCartBtn">
+      <span class="cartText">加入購物車</span>
+      <span class="totalPrice">NT$ {{ currentPrice }}</span>
+    </button>
+  </mat-dialog-actions>
+</div>

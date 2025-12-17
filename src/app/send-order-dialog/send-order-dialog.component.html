@@ -1,77 +1,120 @@
-<h2 mat-dialog-title>點餐資訊</h2>
+<h2 mat-dialog-title class="dialog-header">確認訂單</h2>
 
-<mat-dialog-content>
-  <p>訂單類型:{{ data.ordersType }}</p>
-  @if(data.ordersType === 'A'){
-  <p>桌號:{{ data.tableId }}</p>
-  } @else if(data.ordersType === 'T'){
-  <p>顧客姓名:{{ data.customerName }}</p>
-  <p>顧客電話:{{ data.customerPhone }}</p>
-  } @else if(data.ordersType === 'D'){
-  <p>顧客姓名:{{ data.customerName }}</p>
-  <p>顧客電話:{{ data.customerPhone }}</p>
-  <p>顧客地址:{{ data.customerAddress }}</p>
-  }
-  <span class="labelCss">付款方式：</span>
-    <select [(ngModel)]="paymentType" class="inputCss">
-      <option value="現金">現金</option>
-      <option value="信用卡">信用卡</option>
-      <option value="電子支付">電子支付</option>
-    </select>
+<mat-dialog-content class="dialog-content">
+  <div class="info-card">
+    <p class="info-row">
+      <span class="info-label">訂單類型</span>
+      <span class="info-value">{{ data.ordersType }}</span>
+    </p>
 
-  <hr>
-  <h3>🛒 訂單細節</h3>
-  @for (item of data.orderDetailsList; track item.orderDetailsId) {
-    <div>
-      <div>
-        <span>
-          @if(item.settingId > 0){
-            [套餐]
-          } @else {
-            [單點]
-          }
-        </span>
-        <span><button (click)="reduce(item)">-</button><button (click)="add(item)">+</button>{{ item.quantity }}項 合計{{ item.orderDetailsPrice }}元</span>
-      </div>
-      @if (item.orderDetails && item.orderDetails.length > 0) {
-        @if(item.settingId > 0) {
-          <div>
-            <div>
+    @if(data.ordersType === 'A'){
+      <p class="info-row">
+        <span class="info-label">桌號</span>
+        <span class="info-value highlight">{{ data.tableId }}</span>
+      </p>
+    } @else if(data.ordersType === 'T'){
+      <p class="info-row">
+        <span class="info-label">顧客姓名</span>
+        <span class="info-value">{{ data.customerName }}</span>
+      </p>
+      <p class="info-row">
+        <span class="info-label">顧客電話</span>
+        <span class="info-value">{{ data.customerPhone }}</span>
+      </p>
+    } @else if(data.ordersType === 'D'){
+      <p class="info-row">
+        <span class="info-label">顧客姓名</span>
+        <span class="info-value">{{ data.customerName }}</span>
+      </p>
+      <p class="info-row">
+        <span class="info-label">顧客電話</span>
+        <span class="info-value">{{ data.customerPhone }}</span>
+      </p>
+      <p class="info-row">
+        <span class="info-label">顧客地址</span>
+        <span class="info-value">{{ data.customerAddress }}</span>
+      </p>
+    }
+  </div>
+
+  <div class="payment-card">
+    <span class="labelCss">付款方式</span>
+    <div class="select-wrapper">
+      <select [(ngModel)]="paymentType" class="inputCss">
+        <option value="現金">現金</option>
+        <option value="信用卡">信用卡</option>
+        <option value="電子支付">電子支付</option>
+      </select>
+    </div>
+  </div>
+
+  <hr class="hidden-divider">
+
+  <h3 class="section-title">🛒 訂單細節</h3>
+
+  <div class="order-list">
+    @for (item of data.orderDetailsList; track item.orderDetailsId) {
+      <div class="order-item-card">
+        <div class="item-header">
+          <span class="type-tag" [class.is-set]="item.settingId > 0">
+            @if(item.settingId > 0){ [套餐] } @else { [單點] }
+          </span>
+
+          <div class="qty-price-group">
+            <div class="qty-controls">
+              <button class="qty-btn" (click)="reduce(item)">-</button>
+              <span class="qty-text">{{ item.quantity }}</span>
+              <button class="qty-btn" (click)="add(item)">+</button>
+            </div>
+            <span class="item-total-price">NT$ {{ item.orderDetailsPrice }}</span>
+          </div>
+        </div>
+
+        @if (item.orderDetails && item.orderDetails.length > 0) {
+          @if(item.settingId > 0) {
+            <div class="set-content-header">
               {{ item.settingName || '套餐' }} 內容:
             </div>
-          </div>
-        } @else {}
-      }
-
-      @for (product of item.orderDetails; track product.productId) {
-        <div>
-          -{{ product.productName }}
-          @if(item.settingId > 0){
-            (NT$ {{ product.productPrice }})
           }
+        }
 
-          @if (product.detailList && product.detailList.length > 0) {
-            <div>
-              客製化:
-              @for(detail of product.detailList; track detail.option) {
-                {{ detail.option }} (+NT${{ detail.addPrice }})
+        <div class="product-details">
+          @for (product of item.orderDetails; track product.productId) {
+            <div class="product-row">
+              <div class="product-name">
+                - {{ product.productName }}
+                @if(item.settingId > 0){
+                  <span class="product-price-sub">(NT$ {{ product.productPrice }})</span>
+                }
+              </div>
+
+              @if (product.detailList && product.detailList.length > 0) {
+                <div class="modifier-box">
+                  <span class="modifier-label">客製化:</span>
+                  @for(detail of product.detailList; track detail.option) {
+                    <span class="modifier-tag">
+                      {{ detail.option }} (+NT${{ detail.addPrice }})
+                    </span>
+                  }
+                </div>
               }
             </div>
           }
         </div>
-      }
-    </div>
-  }
+      </div>
+    }
+  </div>
 
-  <hr>
-  <div>
-    <span>總金額 (小計)</span>
-    <span>NT$ {{ data.totalPrice }}</span>
+  <hr class="hidden-divider">
+
+  <div class="total-section">
+    <span class="total-label">總金額 (小計)</span>
+    <span class="total-price">NT$ {{ data.totalPrice }}</span>
   </div>
 
 </mat-dialog-content>
 
-<mat-dialog-actions>
-  <button (click)="addOrder()">加點</button>
-  <button (click)="sendOut()">立刻下單</button>
+<mat-dialog-actions class="footer-actions">
+  <button class="secondary-btn" (click)="addOrder()">加點</button>
+  <button class="primary-btn" (click)="sendOut()">立刻下單</button>
 </mat-dialog-actions>

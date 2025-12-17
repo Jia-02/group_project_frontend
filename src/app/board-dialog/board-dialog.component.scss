@@ -1,91 +1,173 @@
-.store-announcement-container {
+/* --- Dialog 全局設定 --- */
+/* 建議在開啟 dialog 的 config 中設定 panelClass: 'mobile-dialog-panel' 來控制最大寬度，
+   但在這裡我們先針對內容做樣式 */
+
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  max-height: 80vh; /* 避免佔滿整個手機高度，留一點邊距 */
+  font-family: 'Roboto', sans-serif;
+}
+
+/* 1. 標題樣式 */
+.dialog-title {
+  margin: 0;
+  padding: 16px 20px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 700;
+  color: #013c70; /* 深藍色 */
+  border-bottom: 1px solid #eee;
+  background: #fff;
+}
+
+/* 2. 內容捲動區域 */
+.store-announcement-content {
+  padding: 16px !important; /* 覆蓋 mat-dialog 預設 */
+  background-color: #f5f7fa; /* 淺灰背景，突顯卡片 */
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow-y: auto; /* 確保內容過長時可捲動 */
+}
+
+/* --- 卡片設計 --- */
+.announcement-card {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s;
+}
+
+/* 圖片區塊 */
+.activity-photo {
+  width: 100%;
+  height: 0;
+  padding-bottom: 56.25%; /* 16:9 比例 */
+  background-size: cover;
+  background-position: center;
+  background-color: #eee; /* 圖片載入前的底色 */
+  position: relative;
+}
+
+/* 如果沒有圖片，給一個預設背景 */
+.activity-photo[style*="url('')"],
+.activity-photo[style*='url("")'] {
+  background-image: linear-gradient(135deg, #e0e0e0 0%, #f5f5f5 100%);
+}
+
+/* 卡片內文區塊 */
+.card-body {
+  padding: 16px;
+}
+
+.activity-title {
+  margin: 0 0 8px 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #333;
+  line-height: 1.4;
+}
+
+.activity-meta {
+  margin-bottom: 12px;
+}
+
+.activity-time {
+  display: inline-flex;
+  align-items: center;
+  font-size: 13px;
+  color: #013c70;
+  background-color: #eef4fa;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.time-icon {
+  font-size: 14px;
+  width: 14px;
+  height: 14px;
+  margin-right: 4px;
+}
+
+.activity-description {
+  margin: 0;
+  font-size: 14px;
+  color: #666;
+  line-height: 1.6;
+  /* 如果文字太多，可以在此限制行數 */
+  white-space: pre-wrap; /* 保留換行 */
+}
+
+/* --- 無資料狀態 --- */
+.no-activity {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  color: #999;
+  text-align: center;
+}
+
+.empty-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 10px;
+  color: #ddd;
+}
+
+/* --- 3. 底部按鈕區域 --- */
+/* 容器設定：移除背景色與邊框，讓它看起來是懸浮的 */
+.dialog-footer-transparent {
+  padding: 20px 0 !important; /* 上下留點空間 */
+  background: transparent;    /* 透明背景 */
+  border-top: none;           /* 移除分隔線 */
+  display: flex;
+  justify-content: center;
+  flex-shrink: 0;             /* 防止被壓縮 */
+}
+
+/* 圓形半透明按鈕 */
+.close-btn-circle {
+  /* 形狀與大小 */
+  width: 40px;
+  height: 40px;
+  border-radius: 50%; /* 變成正圓形 */
+
+  /* 顏色與透明度 */
+  background-color: rgba(0, 0, 0, 0.4); /* 黑色背景，40% 透明度 */
+  color: #fff;                          /* 白色 X 圖示 */
+  border: 1px solid rgba(255, 255, 255, 0.2); /* 微微的白邊框增加質感 (可選) */
+  backdrop-filter: blur(4px);           /* (進階) 背景模糊效果，類似毛玻璃 */
+
+  /* 排版 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  /* 動畫 */
+  transition: all 0.2s ease;
   padding: 0;
-  max-width: 100vw;
-  max-height: 85vh; // 限制高度，超出則滾動
-  overflow-y: auto;
-  padding-bottom: 20px;
+  outline: none;
+}
 
-  .dialog-header {
-    position: sticky; // 標題欄固定在頂部
-    top: 0;
-    z-index: 100;
-    text-align: center;
-    padding: 10px 0;
-    background-color: white; // 確保滾動時不透視
-    border-bottom: 1px solid #eee;
+/* 按鈕內的 Icon 大小 */
+.close-btn-circle mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
 
-    h3 {
-      margin: 0;
-      font-weight: bold;
-      color: #333;
-    }
-
-    .close-button {
-      position: absolute;
-      top: 5px;
-      left: 10px;
-      color: #444;
-    }
-  }
-
-  .announcement-card {
-    margin: 15px 15px 0;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); // 輕微陰影，讓卡片浮起
-    overflow: hidden; // 確保圖片邊角圓潤
-
-    // 1. 圖片區域
-    .activity-photo {
-      width: 100%;
-      height: 270px;
-      background-size: cover;
-      background-position: center;
-      background-color: #f0f0f0; // 預設背景
-    }
-
-    .activity-info {
-      padding: 15px;
-
-      // 2. 標題
-      .activity-title {
-        font-size: 1.2em;
-        font-weight: bold;
-        margin-top: 0;
-        margin-bottom: 8px;
-        color: #333;
-      }
-
-      // 3. 內容
-      .activity-description {
-        font-size: 0.9em;
-        color: #555;
-        margin-bottom: 15px;
-        line-height: 1.5;
-        // 限制行數以保持整潔
-        overflow: hidden;
-        display: -webkit-box;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
-      }
-
-      // 4. 時間
-      .activity-footer {
-        border-top: 1px solid #eee;
-        padding-top: 10px;
-
-        .activity-time {
-          font-size: 0.8em;
-          color: #888;
-          display: block;
-        }
-      }
-    }
-  }
-
-  .no-activity {
-    text-align: center;
-    padding: 50px;
-    color: #666;
-  }
+/* 按下或滑過時的狀態：變深一點 */
+.close-btn-circle:hover,
+.close-btn-circle:active {
+  background-color: rgba(0, 0, 0, 0.7); /* 70% 透明度 */
 }

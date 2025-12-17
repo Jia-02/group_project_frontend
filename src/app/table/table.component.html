@@ -1,167 +1,167 @@
-<div style="display: flex">
-  <span style="flex:1 1 auto"></span>
-  <div
-    style="width: 300px; height: 500px; border: 1px solid black; margin-top: 5%; overflow-y: auto;overflow-x: hidden; ">
-    <div style="width: 300px; text-align: center;">
-      <span>{{reservation_date}}</span> <br> <br>
-      <span>查詢:</span><input type="text" [(ngModel)]="inputSearch" (ngModelChange)="search()">
-    </div> <br>
-    @if(searchRes && inputSearch){
-    @for(item of searchRes;track item){
-    <div
-      style="border-top: 1px solid black; height: 100px; display: flex; padding-left: 5%; padding-right: 5%; border-left: 0px; border-right: 0px;">
-      <div style="display: flex; align-items: center;">
-        <div>
-          <span>{{item.reservationName}}</span> <br>
-          <span style="font-size: 12px; color: gray;">{{item.reservationPhone}}</span> <br>
-          <div style="width: 40px; background-color: #d9dadb; display: flex; padding: 5%; border-radius: 10px;">
-            <span style="flex: 1 1 auto;"></span>
-            <span style="font-size: 12px;">{{item.tableId}}</span>
-            <span style="flex: 1 1 auto;"></span>
-          </div>
+<div class="mainContainer">
+
+  <div class="timeSectionWrapper">
+    <div class="currentTimeBox">
+      <span>{{currentTime}}</span>
+    </div>
+
+    <div class="timelineBody">
+      <div id="progressBar" class="progressBar"></div>
+
+      <div class="timeTicksContainer">
+        @for(time of timeList; track time){
+        <div class="timeTickItem">
+          <span>{{time}}</span>
+          <div class="tickMark"></div>
         </div>
-      </div>
-      <span style="flex: 1 1 auto;"></span>
-      <div style="display: flex; align-items: center;">
-        <span style="font-size: 50px;">{{item.reservationCount}}</span>
-        <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="child_care"></mat-icon>
-        <span style="font-size: 30px;">{{item.reservationChildCount}}</span>
-        <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="child_friendly"></mat-icon>
-        <span style="font-size: 30px;">{{item.childSeat}}</span>
-      </div>
-      <span style="flex:1 1 auto ;"></span>
-      <div>
-        <span>{{item.reservationTime}}</span> <br> <br>
-        @if(item.reservationStatus){
-        <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="check_small"></mat-icon>
-        }@else {
-        <button (click)="arrive(item.tableId,item.reservationName,
-        item.reservationPhone,item.childSeat,item.reservationAdultCount,
-        item.reservationChildCount,item.reservationNote,
-        item.reservationTime,item.reservationCount)">報到</button>
         }
       </div>
     </div>
-    }
-    }@else {
-    @for(item of reservation; track item){
-    @if(item){
-    <div
-      style="border-top: 1px solid black; height: 100px; display: flex; padding-left: 5%; padding-right: 5%; border-left: 0px; border-right: 0px;">
-      <div style="display: flex; align-items: center;">
-        <div>
-          <span>{{item.reservationName}}</span> <br>
-          <span style="font-size: 12px; color: gray;">{{item.reservationPhone}}</span> <br>
-          <div style="width: 40px; background-color: #d9dadb; display: flex; padding: 5%; border-radius: 10px;">
-            <span style="flex: 1 1 auto;"></span>
-            <span style="font-size: 12px;">{{item.tableId}}</span>
-            <span style="flex: 1 1 auto;"></span>
+  </div>
+
+  <div class="contentContainer">
+
+    <div class="reservationListContainer">
+      <div class="reservationHeader">
+        <div class="dateTitle">{{reservation_date}}</div>
+        <div class="searchBox">
+          <span>查詢:</span>
+          <input type="text" [(ngModel)]="inputSearch" (ngModelChange)="search()" class="styledInput">
+        </div>
+      </div>
+
+      <div class="listScrollArea">
+        @if(searchRes && inputSearch){
+        @for(item of searchRes; track item){
+        <div class="reservationItem">
+          <div class="itemLeftGroup">
+            <div class="nameText">{{item.reservationName}}</div>
+            <div class="phoneText">{{item.reservationPhone}}</div>
+            <div class="tableBadge">
+              <span class="fontSize12">{{item.tableId}} 桌</span>
+            </div>
+          </div>
+
+          <div class="itemCenterGroup">
+            <div class="countBadge main">
+              <span class="fontSize20">{{item.reservationCount}}</span> 位
+            </div>
+            <div class="countBadge sub">
+              <mat-icon fontIcon="child_care"></mat-icon>
+              <span>{{item.reservationChildCount}}</span>
+            </div>
+            <div class="countBadge sub">
+              <mat-icon fontIcon="child_friendly"></mat-icon>
+              <span>{{item.childSeat}}</span>
+            </div>
+          </div>
+
+          <div class="itemRightGroup">
+            <span class="timeText">{{item.reservationTime}}</span>
+            @if(item.reservationStatus){
+            <mat-icon fontIcon="check_circle" class="iconSuccess"></mat-icon>
+            } @else {
+            <button class="actionBtn" (click)="arrive(item.tableId,item.reservationName,
+                    item.reservationPhone,item.childSeat,item.reservationAdultCount,
+                    item.reservationChildCount,item.reservationNote,
+                    item.reservationTime,item.reservationCount)">報到</button>
+            }
           </div>
         </div>
-      </div>
-      <span style="flex: 1 1 auto;"></span>
-      <div style="display: flex; align-items: center;">
-        <span style="font-size: 50px;">{{item.reservationCount}}</span>
-        <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="child_care"></mat-icon>
-        <span style="font-size: 30px;">{{item.reservationChildCount}}</span>
-        <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="child_friendly"></mat-icon>
+        }
+        } @else {
+        @for(item of reservation; track item){
+        @if(item){
+        <div class="reservationItem">
+          <div class="itemLeftGroup">
+            <div class="nameText">{{item.reservationName}}</div>
+            <div class="phoneText">{{item.reservationPhone}}</div>
+            <div class="tableBadge">
+              <span class="fontSize12">{{item.tableId}} 桌</span>
+            </div>
+          </div>
 
-        <span style="font-size: 30px;">{{item.childSeat}}</span>
-      </div>
-      <span style="flex:1 1 auto ;"></span>
-      <div style="text-align: center;">
-        <span>{{item.reservationTime}}</span> <br> <br>
-        @if(item.reservationStatus){
-        <div>
-          <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="check_small"></mat-icon>
+          <div class="itemCenterGroup">
+            <div class="countBadge main">
+              <span class="fontSize20">{{item.reservationCount}}</span> 位
+            </div>
+            <div class="countBadge sub">
+              <mat-icon fontIcon="child_care"></mat-icon>
+              <span>{{item.reservationChildCount}}</span>
+            </div>
+            <div class="countBadge sub">
+              <mat-icon fontIcon="child_friendly"></mat-icon>
+              <span>{{item.childSeat}}</span>
+            </div>
+          </div>
+
+          <div class="itemRightGroup">
+            <span class="timeText">{{item.reservationTime}}</span>
+            @if(item.reservationStatus){
+            <mat-icon fontIcon="check_circle" class="iconSuccess"></mat-icon>
+            } @else {
+            <button class="actionBtn" (click)="arrive(item.tableId,item.reservationName,
+                      item.reservationPhone,item.childSeat,item.reservationAdultCount,
+                      item.reservationChildCount,item.reservationNote,
+                      item.reservationTime,item.reservationCount)">報到</button>
+            }
+          </div>
         </div>
-        }@else {
-        <button (click)="arrive(item.tableId,item.reservationName,
-        item.reservationPhone,item.childSeat,item.reservationAdultCount,
-        item.reservationChildCount,item.reservationNote,
-        item.reservationTime,item.reservationCount)">報到</button>
+        }
+        }
         }
       </div>
     </div>
-    }
-    }
-    }
 
+    <div class="mapContainer">
+      <div class="mapGridWrapper">
 
-  </div>
-  <span style="flex:1 1 auto"></span>
-  <div style="display: flex; align-items: center;">
-    <span>y軸</span>
-  </div>
-  <div style="display: flex; align-items: center; margin-top: -30px;">
-    <div style="text-align: right; height: 500px;">
-      @for(item of len;track item){
-      @if(item == 500){
-      <span>{{item}}</span>
-      }@else {
-      <p>{{item}}</p> <br> <br> <br>
-      }
-      }
-
-    </div>
-  </div>
-
-  <div>
-    <div style="margin-top: 15%;">
-      <div style="display: flex;">
-        <span style="flex: 1 1 auto;"></span>
-        <span style="display: flex;align-items: center; margin-right: 5%;">可預約: <div
-            style="height: 10px; width: 10px; background-color: green;"></div></span>
-        <span style="display: flex;align-items: center;margin-right: 5%;">已預約: <div
-            style="height: 10px; width: 10px; background-color: yellow;"></div></span>
-        <span style="display: flex;align-items: center;margin-right: 5%;">使用中: <div
-            style="height: 10px; width: 10px; background-color: red;"></div></span>
-        <span style="display: flex;align-items: center;">未開放: <div
-            style="height: 10px; width: 10px; background-color: gray;"></div></span>
-      </div>
-      <div>
-        <div style="display: flex;">
-          <span style="flex: 1 1 auto;"></span>
-          <span>x軸</span>
-          <span style="flex: 1 1 auto;"></span>
+        <div class="legendColumn">
+          <div class="legendItem">
+            <div class="dotGreen"></div>
+            <span>可預約</span>
+          </div>
+          <div class="legendItem">
+            <div class="dotYellow"></div>
+            <span>已預約</span>
+          </div>
+          <div class="legendItem">
+            <div class="dotRed"></div>
+            <span>使用中</span>
+          </div>
+          <div class="legendItem">
+            <div class="dotGray"></div>
+            <span>未開放</span>
+          </div>
         </div>
-        <div style="display: flex;">
-          @for(item of len;track item){
-          @if(item == 0){
-          <span>{{item}}</span>
-          }@else {
-          <span style="flex:1 1 auto;"></span>
-          <span>{{item}}</span>
-          }
 
-          }
+        <div class="yAxisGroup">
+          <div class="axisLabel vertical">Y軸</div>
+          <div class="yAxisValues">
+            @for(item of len; track item){
+            <div class="axisVal">{{item}}</div>
+            }
+          </div>
         </div>
+
+        <div class="canvasBox">
+          <canvas #canvas class="canvasElement" width="500" height="500" (mousemove)="handleMove($event)"
+            (mouseup)="handleUp()" (mouseout)="handleUp()" (mouseleave)="handleUp()" (click)="click($event)"
+            (mousedown)="handleDown($event)">
+          </canvas>
+        </div>
+
+        <div class="xAxisGroup">
+          <div class="xAxisValues">
+            @for(item of len; track item){
+            <span class="axisVal">{{item}}</span>
+            }
+          </div>
+          <div class="axisLabel horizontal">X軸</div>
+        </div>
+
       </div>
-      <canvas #canvas style="border: 1px solid black;" width="500" height="500" (mousemove)="handleMove($event)"
-        (mouseup)="handleUp()" (mouseout)="handleUp()" (mouseleave)="handleUp()" (click)="click($event)"
-        (mousedown)="handleDown($event)"></canvas>
-    </div>
-    <!-- @if(admin){
-    <button (click)="edit(false)">編輯模式</button>
-    }@else {
-    <button (click)="edit(true)">營業模式</button>
-    } -->
-  </div>
-  <span style="flex:1 1 auto"></span>
-  <div style="margin-top: 1%;">
-    <div style="border: 1px solid black;">
-      <span>{{currentTime}} </span>
-    </div> <br>
-    <div
-      style="border: 1px solid black;height: 90%; text-align: center; overflow: hidden;  position: relative; z-index: 1;">
-      <div id="progressBar"
-        style="width: 100%; background-color: greenyellow; height: 10%;position: absolute; top: 0; left: 0; z-index: -1;">
-      </div>
-      @for(time of timeList;track time){
-      {{time}} <br> <br> <br>
-      }
     </div>
 
   </div>
-  <span style="flex:1 1 auto"></span>
 </div>

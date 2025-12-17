@@ -1,50 +1,91 @@
+/* --- 全局背景設定 --- */
 .backgroundCss {
-  background-color: aqua;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
+  /* 讓背景佔滿整個手機螢幕 */
   width: 100%;
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
+
+  /* 設定一個柔和的背景色，或是品牌色的漸層 */
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  /* 或者簡單的淺灰背景： background-color: #f5f5f5; */
+
+  font-family: -apple-system, BlinkMacSystemFont, "Roboto", sans-serif;
+  padding: 20px; /* 避免手機邊緣貼太緊 */
+  box-sizing: border-box;
 }
 
+/* --- 中間的卡片區塊 --- */
 .Box {
-  background-color: rgba(255, 255, 255, 0.8);
-  padding: 40px;
-  border-radius: 15px;
+  background-color: #fff;
+  width: 100%;
+  max-width: 320px; /* 限制最大寬度，避免在平板/電腦上太寬 */
+  padding: 40px 30px;
+  border-radius: 20px; /* 圓潤的邊角 */
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); /* 漂亮的浮起陰影 */
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  align-items: center;
+  gap: 30px; /* 標題與按鈕的間距 */
+  text-align: center;
+
+  /* 添加一個簡單的進場動畫 */
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* --- 桌號標題 --- */
+.Box h3 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: #333;
+  letter-spacing: 1px;
+}
+
+/* 可以在標題上方加一個裝飾圖示 (選用) */
+.Box h3::before {
+  display: block;
+  font-size: 48px;
+  margin-bottom: 15px;
+}
+
+/* --- 開始點餐按鈕 --- */
+.buttonCss {
+  width: 100%;
+  height: 54px;
+  background-color: #013c70; /* 您的品牌深藍色 */
+  color: #fff;
+  border: none;
+  border-radius: 27px; /* 膠囊形狀 */
+  font-size: 18px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(1, 60, 112, 0.3); /* 按鈕陰影 */
+  transition: transform 0.2s, box-shadow 0.2s;
+
+  /* 讓按鈕內容置中 */
+  display: flex;
+  justify-content: center;
   align-items: center;
 }
 
-.buttonCss {
-  width: 250px;
-  padding: 10px;
-  background-color: white;
-  border: 1px solid black;
-  border-radius: 15px;
-  cursor: pointer;
-  font-size: 1.1em;
+/* 按鈕點擊效果 */
+.buttonCss:active {
+  transform: scale(0.96); /* 微微縮小 */
+  box-shadow: 0 2px 6px rgba(1, 60, 112, 0.2);
+  background-color: #012a50;
 }
 
-@media screen and (max-width: 768px) {
-  .Box {
-    width: 90%;
-    max-width: 400px;
-    padding: 30px 20px;
+/* --- 進場動畫定義 --- */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
   }
-
-  .Box h3 {
-    font-size: 1.5em;
-  }
-
-  .buttonCss {
-    width: 100%;
-    max-width: 300px;
-    padding: 15px;
-    font-size: 1.2em;
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

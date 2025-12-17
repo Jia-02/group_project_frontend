@@ -3,6 +3,7 @@ import { MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle, MAT_D
 import { Activity } from '../calendar/calendar.component';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-activity-read-dialog',
@@ -13,6 +14,7 @@ import { FormsModule } from '@angular/forms';
     MatDialogContent,
     MatDialogActions,
     MatDialogTitle,
+    MatIconModule
   ],
   templateUrl: './activity-read-dialog.component.html',
   styleUrl: './activity-read-dialog.component.scss'

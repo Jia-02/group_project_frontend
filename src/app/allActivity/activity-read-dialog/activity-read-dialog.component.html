@@ -1,20 +1,40 @@
-<h2 mat-dialog-title>{{ activity.calendarTitle }}</h2>
+<h2 mat-dialog-title class="dialogTitle">
+  {{ activity.calendarTitle }}
+</h2>
 
-<mat-dialog-content>
-  <p>{{ activity.calendarDescription }}</p>
-  <div class="activity-photo-container">
+<mat-dialog-content class="dialogContent">
+
+  <div class="imageWrapper">
+    <label>活動圖片</label>
     @if (activity.calendarPhoto) {
-    <img [src]="activity.calendarPhoto" alt="{{ activity.calendarTitle }} 活動照片" style="width: 200px; height: 200px;">
+      <img [src]="activity.calendarPhoto" alt="{{ activity.calendarTitle }}" class="displayImage">
     } @else {
-    <p>此活動沒有可顯示的圖片。</p>
+      <div class="noImagePlaceholder">
+        <mat-icon>image_not_supported</mat-icon>
+        <span>此活動沒有圖片</span>
+      </div>
     }
   </div>
-  <small>
-    {{ activity.calendarStartDate | date:'yyyy/MM/dd ' }}~{{ activity.calendarEndDate | date:'yyyy/MM/dd ' }}
-  </small>
+
+  <div class="formRow">
+    <div class="formField">
+      <label>活動時間</label>
+      <div class="styledText">
+        <mat-icon class="prefixIcon">calendar_today</mat-icon>
+        {{ activity.calendarStartDate | date:'yyyy/MM/dd' }} ~ {{ activity.calendarEndDate | date:'yyyy/MM/dd' }}
+      </div>
+    </div>
+  </div>
+
+  <div class="formField">
+    <label>活動內容</label>
+    <div class="styledText descriptionText">
+      {{ activity.calendarDescription }}
+    </div>
+  </div>
+
 </mat-dialog-content>
 
-
-<mat-dialog-actions>
-  <button (click)="close()">關閉</button>
+<mat-dialog-actions class="dialogActions">
+  <button (click)="close()" class="dialogBtn confirmBtn">關閉</button>
 </mat-dialog-actions>

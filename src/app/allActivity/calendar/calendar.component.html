@@ -23,8 +23,7 @@
             @for (week of monthWeeks; track $index) {
             <tr class="calendarWeek">
               @for (day of week; track $index) {
-              <td class="calendarDay"
-                [class.isCurrentMonth]="day && (day | date:'MM') === (currentMonth | date:'MM')"
+              <td class="calendarDay" [class.isCurrentMonth]="day && (day | date:'MM') === (currentMonth | date:'MM')"
                 [class.selectedDay]="selectedDay && day && (day | date:'yyyy-MM-dd') === (selectedDay | date:'yyyy-MM-dd')"
                 [class.isToday]="day && (day | date:'yyyy-MM-dd') === (today | date:'yyyy-MM-dd')"
                 (click)="selectDay(day)">
@@ -66,6 +65,12 @@
             <li
               [ngClass]="{ 'detailPublished': activity.calendarStatus === 'published', 'detailDraft': activity.calendarStatus === 'draft' }"
               class="activityItem" (click)="openActivity(activity)">
+
+              @if (activity.calendarStatus == 'draft') {
+              <div class="editBadge" title="編輯草稿">
+                <mat-icon fontIcon="edit"></mat-icon>
+              </div>
+              }
 
               <img [src]="activity.calendarPhoto" alt="{{ activity.calendarTitle }}" class="activityImage">
 

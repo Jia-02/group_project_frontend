@@ -1,0 +1,188 @@
+/* --- 沿用原有樣式 (標題、Layout、Input) --- */
+
+.diaTitle {
+  margin: 0;
+  padding: 10px 30px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #fdfdfd;
+  background-color: #013c70;
+  border-bottom: 1px solid #eee;
+}
+
+.dialogContent {
+  padding: 30px !important;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 500px; /* 保持寬度 */
+}
+
+.formRow {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+}
+
+.formField {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.formField label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 6px;
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+/* 輸入框樣式 */
+.styledInput {
+  padding: 10px 12px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  outline: none;
+  background-color: #fff;
+  transition: all 0.2s;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.styledInput:focus {
+  border-color: #013c70;
+  background-color: #fdfdfd;
+}
+
+textarea.styledInput {
+  resize: vertical;
+  min-height: 100px;
+  line-height: 1.5;
+}
+
+/* --- 新增：圖片預覽區塊樣式 --- */
+
+.imagePreviewContainer {
+  width: 100%;
+  background-color: #f9f9f9;
+  border: 1px dashed #ccc;
+  border-radius: 6px;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+  min-height: 150px;
+}
+
+.previewImg {
+  max-width: 100%;
+  max-height: 250px;
+  object-fit: contain;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.noImagePlaceholder {
+  color: #999;
+  font-size: 14px;
+  text-align: center;
+}
+
+.fileInput {
+  font-size: 14px;
+  color: #555;
+}
+
+/* --- 新增：文字提示樣式 --- */
+.infoText {
+  color: #888;
+  font-size: 13px;
+  margin-top: -10px; /* 稍微拉近一點 */
+}
+
+/* --- 按鈕區域調整 --- */
+
+.dialogActions {
+  padding: 16px 40px !important;
+  border-top: 1px solid #eee;
+  display: flex;
+  align-items: center;
+}
+
+/*讓刪除按鈕靠左，其他靠右*/
+.spaceBetween {
+  justify-content: space-between;
+}
+
+.rightActions {
+  display: flex;
+  gap: 15px;
+}
+
+.dialogBtn {
+  padding: 8px 25px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+}
+
+/* 取消按鈕 (沿用) */
+.cancelBtn {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  color: #666;
+}
+.cancelBtn:hover {
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+/* 發布按鈕 (沿用 Confirm) */
+.confirmBtn {
+  background-color: #013c70;
+  color: #fff;
+}
+.confirmBtn:hover {
+  background-color: #fe6d13; /* 配合原本的 hover 效果 */
+  box-shadow: 0 2px 4px rgba(1, 60, 112, 0.25);
+}
+.confirmBtn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* 新增：暫存按鈕 (綠色系或次要色) */
+.draftBtn {
+  background-color: #fff;
+  border: 1px solid #013c70;
+  color: #013c70;
+}
+.draftBtn:hover {
+  background-color: #eef4fa;
+}
+.draftBtn:disabled {
+  border-color: #ccc;
+  color: #ccc;
+  cursor: not-allowed;
+}
+
+/* 新增：刪除按鈕 (紅色系) */
+.deleteBtn {
+  background-color: #fff;
+  border: 1px solid #ff4d4f;
+  color: #ff4d4f;
+}
+.deleteBtn:hover {
+  background-color: #fff1f0;
+  color: #d9363e;
+}
