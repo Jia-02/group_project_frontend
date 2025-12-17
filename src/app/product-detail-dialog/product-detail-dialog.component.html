@@ -40,9 +40,7 @@
             @for (optionItem of optionGroup.optionDetail; track optionItem.option) {
               @if (currentSelections.get(optionGroup.optionId); as selectedSet) {
 
-                <label class="optionRow"
-                       [class.selected]="selectedSet.has(optionItem.option)"
-                       [class.disabled]="!selectedSet.has(optionItem.option) && selectedSet.size >= optionGroup.maxSelect">
+                <label class="optionRow">
 
                   <div class="inputWrapper">
                     @if (optionGroup.maxSelect > 1) {

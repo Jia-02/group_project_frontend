@@ -1,34 +1,77 @@
-<div style="width: 81%; height: 100vh; display: flex; justify-content: center; align-items: center;">
-  <div style="display: flex;">
-    <span style="flex: 1 1 auto;"></span>
-    @if(mealStatus){
-    <div style="border: 1px solid black; border-radius: 10px; padding: 5%; width: 300px;">
-      <span>訂單ID: {{mealStatus.ordersId}}</span> <br> <br>
-      <span>訂單狀態:{{mealStatus.mealStatus}}</span> <br> <br>
-      <span>完成時間剩餘:{{mealStatus.estimatedTime}}分鐘</span> <br> <br>
-      <span>預計訂單送達時間:{{mealStatus.finishTime}}</span> <br> <br>
-      @if(mealStatus.order.ordersType == "T"){
-        <span>類型:外帶</span> <br> <br>
-      }@else if(mealStatus.order.ordersType == "D"){
-        <span>類型:外送</span> <br> <br>
-      }@else {
-        <span>內用桌號:{{mealStatus.order.tableId}}</span> <br> <br>
-      }
-      <span>價錢:{{mealStatus.order.totalPrice}}元</span> <br> <br>
-      <span>餐點狀態:</span> <br> <br>
-      <div style="height: auto; border: 1px solid black;  border-radius: 10px; padding: 10px;">
-      @for(order of mealStatus.orderDetailsList;track order){
-        @for(product of order.orderDetails;track product){
-          <span>{{product.productName}} : {{product.mealStatus}}</span>  <br> <br>
-        }
-      }
+<div class="page-container">
+
+  @if(mealStatus){
+  <div class="card status-card">
+    <div class="card-header">
+      <span class="label">訂單 ID</span>
+      <span class="value-id">#{{mealStatus.ordersId}}</span>
+    </div>
+
+    <div class="info-row highlight-row">
+      <span class="label">訂單狀態</span>
+      <span class="value-status">{{mealStatus.mealStatus}}</span>
+    </div>
+
+    <div class="time-grid">
+      <div class="time-box">
+        <span class="time-label">剩餘時間</span>
+        <span class="time-value">{{mealStatus.estimatedTime}} <small>分</small></span>
+      </div>
+      <div class="time-box">
+        <span class="time-label">預計送達</span>
+        <span class="time-value">{{mealStatus.finishTime}}</span>
       </div>
     </div>
-    }@else {
-    <span>訂單編號:</span>
-    <input type="text" [(ngModel)]="orderId">
-    <button (click)="search()">查詢</button>
-    }
-    <span style="flex: 1 1 auto;"></span>
+
+    <div class="divider"></div>
+
+    <div class="info-row">
+      <span class="label">用餐類型</span>
+      <span class="value">
+        @if(mealStatus.order.ordersType == "T"){
+          外帶
+        }@else if(mealStatus.order.ordersType == "D"){
+          外送
+        }@else {
+          內用 (桌號: {{mealStatus.order.tableId}})
+        }
+      </span>
+    </div>
+
+    <div class="info-row">
+      <span class="label">訂單金額</span>
+      <span class="value-price">NT$ {{mealStatus.order.totalPrice}}</span>
+    </div>
+
+    <div class="item-section">
+      <p class="section-title">餐點製作狀態</p>
+      <div class="item-list">
+        @for(order of mealStatus.orderDetailsList;track order){
+          @for(product of order.orderDetails;track product){
+          <div class="item-row">
+            <span class="item-name">{{product.productName}}</span>
+            <span class="item-status"
+                  [class.done]="product.mealStatus === '完成'"
+                  [class.cooking]="product.mealStatus === '製作中'">
+              {{product.mealStatus}}
+            </span>
+          </div>
+          }
+        }
+      </div>
+    </div>
   </div>
+
+  } @else {
+
+  <div class="card search-card">
+    <h3 class="search-title">訂單查詢</h3>
+    <div class="input-group">
+      <span>訂單編號</span>
+      <input type="text" [(ngModel)]="orderId" placeholder="請輸入編號" class="search-input">
+    </div>
+    <button (click)="search()" class="search-btn">查詢</button>
+  </div>
+
+  }
 </div>
