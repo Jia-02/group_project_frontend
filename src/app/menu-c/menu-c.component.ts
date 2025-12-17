@@ -258,9 +258,9 @@ export class MenuCComponent implements OnInit {
             let productName: string;
 
             if (isSetting) {
-              productName = res.settingDetail?.settingName || '未知套餐';
+              productName = res.settingName;
             } else {
-              productName = res.productDetail?.productName || '未知產品';
+              productName = res.productName;
             }
 
             const itemWithProductName = {
