@@ -87,7 +87,7 @@ export class DialogMenuComponent {
         '套餐': 'set',
         '飲料': 'drink',
         '義大利麵': 'pasta',
-        '點心': 'snack',
+        '甜點': 'snack',
         '披薩': 'pizza',
         '火鍋': 'hotpot',
         '炸物': 'fried'

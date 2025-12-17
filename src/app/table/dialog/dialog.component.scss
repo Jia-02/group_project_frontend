@@ -1,0 +1,81 @@
+/* --- Dialog 外層容器 --- */
+.background {
+  padding: 8px 0;
+  text-align: center;
+  /* 確保在較小螢幕也能正常顯示 */
+  box-sizing: border-box;
+}
+
+/* --- 標題樣式 --- */
+.diaTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: #fe6d13; /* 品牌橘色 */
+  margin: 0 0 16px 0;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #eee;
+}
+
+/* --- 內容區域 --- */
+mat-dialog-content {
+  font-size: 16px;
+  color: #444;
+  line-height: 1.5;
+  min-height: 60px; /* 保持最小高度，避免文字太少時視窗太扁 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 限制文字寬度，讓長文字自動換行比較美觀 */
+mat-dialog-content p {
+  margin: 0; /* 移除預設 margin */
+  max-width: 260px;
+  line-height: 1.6;
+  text-align: center;
+}
+
+/* --- 按鈕容器 --- */
+.btnBox {
+  display: flex;
+  justify-content: center;
+  gap: 16px; /* 按鈕之間的間距 */
+  width: 100%;
+  margin-top: 8px;
+}
+
+/* --- 按鈕通用樣式 --- */
+.btn {
+  padding: 8px 24px; /* 左右稍微加寬一點 */
+  font-size: 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+  min-width: 80px; /* 確保按鈕不會縮得太小 */
+}
+
+/* 取消按鈕 (白底灰框) */
+.btn:first-child {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  color: #666;
+}
+
+.btn:first-child:hover {
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+/* 確定按鈕 (橘底白字) */
+.btn:last-child {
+  background-color: #fe6d13;
+  color: #fff;
+  font-weight: 500;
+  border: 1px solid #fe6d13; /* 加上 border 保持高度一致 */
+}
+
+.btn:last-child:hover {
+  background-color: #e05b0c;
+  box-shadow: 0 2px 5px rgba(254, 109, 19, 0.3);
+}
