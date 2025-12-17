@@ -1,4 +1,11 @@
 <app-header *ngIf="showHeader"></app-header>
 <main>
+  <!-- loading -->
+  @if (loading$) {
+  <div class="overlay"></div>
+  <mat-spinner [diameter]="70"></mat-spinner>
+  }
+
+
   <router-outlet></router-outlet>
 </main>

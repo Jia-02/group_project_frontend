@@ -22,11 +22,18 @@
   <label>套餐圖片</label>
   <div class="fileInputWrapper">
     <input type="file" id="setFileInput" (change)="onFileSelected($event)" accept="image/*" hidden>
+
     <label for="setFileInput" class="uploadBtn">
       <mat-icon>upload</mat-icon>
       <span>點擊選擇圖片</span>
     </label>
   </div>
+  @if (selectedFile) {
+  <div class="fileStatus">
+    <mat-icon>check_circle</mat-icon>
+    已選取檔案: {{ selectedFile.name }}
+  </div>
+  }
 
   <label>選擇主餐分類</label>
   <select class="styledInput" [(ngModel)]="selections.mainCatId" (change)="onMainCategoryChange()">

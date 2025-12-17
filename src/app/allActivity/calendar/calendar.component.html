@@ -1,17 +1,17 @@
-<div class="calendar-container">
+<div class="calendarContainer">
 
   <div class="display">
 
-    <div class="calendar-left-content">
+    <div class="calendarLeftContent">
 
-      <div class="month-header-control">
+      <div class="monthHeaderControl">
         <button (click)="prevMonth()">◀</button>
         <h3>{{ currentMonth | date: 'yyyy年 MM月' }}</h3>
         <button (click)="nextMonth()">▶</button>
       </div>
 
-      <div class="calendar-wrapper">
-        <table class="calendar-table">
+      <div class="calendarWrapper">
+        <table class="calendarTable">
           <thead>
             <tr>
               @for (dayName of dayNames; track $index) {
@@ -21,22 +21,22 @@
           </thead>
           <tbody>
             @for (week of monthWeeks; track $index) {
-            <tr class="calendar-week">
+            <tr class="calendarWeek">
               @for (day of week; track $index) {
-              <td class="calendar-day"
-                [class.is-current-month]="day && (day | date:'MM') === (currentMonth | date:'MM')"
-                [class.selected-day]="selectedDay && day && (day | date:'yyyy-MM-dd') === (selectedDay | date:'yyyy-MM-dd')"
-                [class.is-today]="day && (day | date:'yyyy-MM-dd') === (today | date:'yyyy-MM-dd')"
+              <td class="calendarDay"
+                [class.isCurrentMonth]="day && (day | date:'MM') === (currentMonth | date:'MM')"
+                [class.selectedDay]="selectedDay && day && (day | date:'yyyy-MM-dd') === (selectedDay | date:'yyyy-MM-dd')"
+                [class.isToday]="day && (day | date:'yyyy-MM-dd') === (today | date:'yyyy-MM-dd')"
                 (click)="selectDay(day)">
                 @if (day) {
-                <span class="day-number">{{ day | date:'d' }}</span>
-                <div class="activity-bar-container">
+                <span class="dayNumber">{{ day | date:'d' }}</span>
+                <div class="activityBarContainer">
                   @for (act of getDayActivities(day); track act.calendarId) {
-                  <div class="activity-bar" [class.multi-day]="isMultiDay(act)"
+                  <div class="activityBar" [class.multiDay]="isMultiDay(act)"
                     [title]="act.calendarTitle + ' (' + act.calendarStatus + ')'"
-                    [ngClass]="{'activity-published': act.calendarStatus === 'published', 'activity-draft': act.calendarStatus === 'draft'}">
+                    [ngClass]="{'activityPublished': act.calendarStatus === 'published', 'activityDraft': act.calendarStatus === 'draft'}">
                     @if (isActivityStartDay(act, day) || !isMultiDay(act)) {
-                    <span class="activity-title">{{ act.calendarTitle }}</span>
+                    <span class="activityTitle">{{ act.calendarTitle }}</span>
                     }
                   </div>
                   }
@@ -50,24 +50,24 @@
         </table>
       </div>
 
-      <button (click)="openDialog()" class="add-btn">新增活動</button>
+      <button (click)="openDialog()" class="addBtn">新增活動</button>
     </div>
 
     <div>
-      <div class="sidebar-card">
+      <div class="sidebarCard">
         <h3>{{ selectedDay | date:'MM/dd' }} 的活動</h3>
-        <div class="sidebar-line"></div>
+        <div class="sidebarLine"></div>
 
-        <div class="activities-content">
+        <div class="activitiesContent">
 
           @if (selectedDayActivities.length > 0) {
           <ul>
             @for (activity of selectedDayActivities; track activity.calendarId) {
             <li
-              [ngClass]="{ 'detail-published': activity.calendarStatus === 'published', 'detail-draft': activity.calendarStatus === 'draft' }"
-              class="activity-item" (click)="openActivity(activity)">
+              [ngClass]="{ 'detailPublished': activity.calendarStatus === 'published', 'detailDraft': activity.calendarStatus === 'draft' }"
+              class="activityItem" (click)="openActivity(activity)">
 
-              <img [src]="activity.calendarPhoto" alt="{{ activity.calendarTitle }}" class="activity-image">
+              <img [src]="activity.calendarPhoto" alt="{{ activity.calendarTitle }}" class="activityImage">
 
               <strong>{{ activity.calendarTitle }}</strong>
               <span>{{ activity.calendarDescription }}</span>
@@ -78,7 +78,7 @@
             }
           </ul>
           } @else {
-          <p class="no-activity">本日沒有活動。</p>
+          <p class="noActivity">本日沒有活動。</p>
           }
         </div>
       </div>

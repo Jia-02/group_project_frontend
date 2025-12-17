@@ -30,6 +30,12 @@ export class DialogNoticeComponent {
       this.noticeMessage = '該分類下存在商品，不可刪除分類';
     } else if (this.data.noticeType == 'addMenu') {
       this.noticeMessage = '必填欄位(名稱、價格、描述、圖片)不可為空';
+    } else if (this.data.noticeType == 'peopleCount') {
+      this.noticeMessage = '預約人數超過桌位可容納人數';
+    } else if (this.data.noticeType == 'setHasMeal') {
+      this.noticeMessage = '套餐開放使用中，不可以下架此餐點';
+    } else if (this.data.noticeType == 'selling') {
+      this.noticeMessage = '商品販售中，不可刪除';
     }
 
   }

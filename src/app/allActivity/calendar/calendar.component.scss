@@ -1,5 +1,5 @@
 /* --- 全局容器設定 --- */
-.calendar-container {
+.calendarContainer {
   padding: 20px 20px 10px 20px;
   margin: 0 auto;
 }
@@ -13,7 +13,7 @@
 /* =========================================
    左側：月曆主體
    ========================================= */
-.calendar-left-content {
+.calendarLeftContent {
   flex: 1; /* 佔據剩餘空間 (約 70%) */
   background: #fff;
   border-radius: 8px;
@@ -23,7 +23,7 @@
 }
 
 /* --- 月份切換控制列 --- */
-.month-header-control {
+.monthHeaderControl {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -61,18 +61,18 @@
 }
 
 /* --- 月曆表格 --- */
-.calendar-wrapper {
+.calendarWrapper {
   width: 100%;
 }
 
-.calendar-table {
+.calendarTable {
   width: 100%;
   border-collapse: collapse;
   table-layout: fixed; /* 固定列寬，確保每格一樣大 */
 }
 
 /* 星期標頭 */
-.calendar-table th {
+.calendarTable th {
   padding: 5px;
   text-align: center;
   font-weight: 600;
@@ -82,7 +82,7 @@
 }
 
 /* 日期格子 */
-.calendar-day {
+.calendarDay {
   height: 80px; /* 設定固定高度，讓活動條有空間 */
   vertical-align: top; /* 內容靠上對齊 */
   border: 1px solid #f0f0f0;
@@ -96,22 +96,22 @@
   }
 
   /* 非本月日期 (變灰) */
-  &:not(.is-current-month) {
+  &:not(.isCurrentMonth) {
     background-color: #f9f9f9;
     color: #ccc;
     pointer-events: none; /* 禁止點擊非本月 */
 
-    .day-number { color: #ccc !important; }
+    .dayNumber { color: #ccc !important; }
   }
 }
 
 /* 選中日期的樣式 */
-.calendar-day.selected-day {
+.calendarDay.selectedDay {
   border: 2px solid #fe6d13; /* 橘色邊框 */
 }
 
 /* "今天" 的樣式 */
-.calendar-day.is-today .day-number {
+.calendarDay.isToday .dayNumber {
   background-color: #013c70;
   color: #fff;
   width: 24px;
@@ -123,7 +123,7 @@
   box-shadow: 0 2px 4px rgba(1, 60, 112, 0.3);
 }
 
-.day-number {
+.dayNumber {
   font-size: 14px;
   font-weight: 600;
   color: #333;
@@ -133,7 +133,7 @@
 }
 
 /* --- 活動條 (Activity Bar) --- */
-.activity-bar-container {
+.activityBarContainer {
   display: flex;
   flex-direction: column;
   gap: 3px;
@@ -141,7 +141,7 @@
   max-height: 85px; /* 限制最大高度以免撐破格子 */
 }
 
-.activity-bar {
+.activityBar {
   font-size: 12px;
   padding: 2px 6px;
   border-radius: 4px;
@@ -153,13 +153,13 @@
   box-shadow: 0 1px 2px rgba(0,0,0,0.1);
 
   /* 狀態顏色：已發布 */
-  &.activity-published {
+  &.activityPublished {
     background-color: #fe6d13; /* 綠色代表已發布 */
     border-left: 3px solid #fe6d13;
   }
 
   /* 狀態顏色：草稿 */
-  &.activity-draft {
+  &.activityDraft {
     background-color: #9e9e9e; /* 灰色代表草稿 */
     border-left: 3px solid #616161;
     opacity: 0.9;
@@ -167,7 +167,7 @@
 }
 
 /* 新增活動按鈕 (懸浮或置底) */
-.add-btn {
+.addBtn {
   margin-top: 20px;
   padding: 10px 24px;
   background-color: #013c70;
@@ -188,10 +188,8 @@
   }
 }
 
-/* =========================================
-   右側：側邊欄 (Sidebar)
-   ========================================= */
-.sidebar-card {
+/* 右側：側邊欄 (Sidebar) */
+.sidebarCard {
   width: 400px; /* 固定寬度 */
   background: #fff;
   border-radius: 12px;
@@ -203,7 +201,7 @@
   box-sizing: border-box;
 }
 
-.sidebar-card h3 {
+.sidebarCard h3 {
   margin: 0 0 10px 0;
   font-size: 18px;
   color: #333;
@@ -212,14 +210,14 @@
   gap: 8px;
 }
 
-.sidebar-line {
+.sidebarLine {
   height: 1px;
   background-color: #eee;
   margin-bottom: 15px;
 }
 
 /* 活動列表容器 */
-.activities-content {
+.activitiesContent {
   flex: 1;
   overflow-y: auto; /* 內容多時滾動 */
 
@@ -229,7 +227,7 @@
   &::-webkit-scrollbar-thumb { background: #ddd; border-radius: 10px; }
 }
 
-.activities-content ul {
+.activitiesContent ul {
   list-style: none;
   padding: 0;
   margin: 0;
@@ -239,7 +237,7 @@
 }
 
 /* 單個活動卡片 */
-.activity-item {
+.activityItem {
   display: flex;
   gap: 12px;
   padding: 12px;
@@ -256,12 +254,12 @@
   }
 
   /* 左側狀態線 */
-  &.detail-published { border-left: 4px solid #4caf50; }
-  &.detail-draft { border-left: 4px solid #9e9e9e; }
+  &.detailPublished { border-left: 4px solid #4caf50; }
+  &.detailDraft { border-left: 4px solid #9e9e9e; }
 }
 
 /* 活動圖片 */
-.activity-image {
+.activityImage {
   width: 60px;
   height: 60px;
   border-radius: 6px;
@@ -270,14 +268,14 @@
 }
 
 /* 文字排版 */
-.activity-item strong {
+.activityItem strong {
   display: block;
   font-size: 15px;
   color: #013c70;
   margin-bottom: 4px;
 }
 
-.activity-item span {
+.activityItem span {
   display: block;
   font-size: 13px;
   color: #666;
@@ -290,7 +288,7 @@
   overflow: hidden;
 }
 
-.activity-item small {
+.activityItem small {
   display: block;
   font-size: 12px;
   color: #999;
@@ -298,7 +296,7 @@
 }
 
 /* 無活動提示 */
-.no-activity {
+.noActivity {
   text-align: center;
   color: #999;
   margin-top: 40px;
