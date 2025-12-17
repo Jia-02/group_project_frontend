@@ -28,32 +28,34 @@
     <div class="divider"></div>
 
     @if(data.ordersType === 'A'){
-      <div class="infoGroup">
-        <label>桌號</label>
-        <div class="infoValue highlight">{{ data.tableId }} 桌</div>
-      </div>
+    <div class="infoGroup">
+      <label>桌號</label>
+      <div class="infoValue highlight">{{ data.tableId }} 桌</div>
+    </div>
     } @else {
-      <div class="infoGroup">
-        <label>顧客姓名</label>
-        <div class="infoValue">{{ data.customerName }}</div>
-      </div>
-      <div class="infoGroup">
-        <label>顧客電話</label>
-        <div class="infoValue">{{ data.customerPhone }}</div>
-      </div>
-      @if(data.ordersType === 'D'){
-        <div class="infoGroup">
-          <label>外送地址</label>
-          <div class="infoValue address">{{ data.customerAddress }}</div>
-        </div>
-      }
+    <div class="infoGroup">
+      <label>顧客姓名</label>
+      <div class="infoValue">{{ data.customerName }}</div>
+    </div>
+    <div class="infoGroup">
+      <label>顧客電話</label>
+      <div class="infoValue">{{ data.customerPhone }}</div>
+    </div>
+    @if(data.ordersType === 'D'){
+    <div class="infoGroup">
+      <label>外送地址</label>
+      <div class="infoValue address">{{ data.customerAddress }}</div>
+    </div>
+    }
     }
 
     <div class="divider"></div>
 
     <div class="infoGroup">
       <label>付款狀態</label>
-      <div class="infoValue statusPaid">已付款</div>
+      <div class="infoValue statusPaid">
+          {{ data.paid ?  '已付' : '未付' }}
+      </div>
     </div>
     <div class="infoGroup">
       <label>付款方式</label>
@@ -69,30 +71,30 @@
 
     <div class="orderList">
       @for(group of data.order_detailsList; track group.orderDetailsId; let i = $index){
-        <div class="orderItem">
-          <div class="itemIndex">{{ i + 1 }}</div>
+      <div class="orderItem">
+        <div class="itemIndex">{{ i + 1 }}</div>
 
-          <div class="itemDetails">
-            @for(item of group.orderDetails; track item.productId){
-              <div class="productRow">
-                <div class="productName">{{ item.productName }}</div>
-                <div class="productPrice">${{ item.productPrice }}</div>
-              </div>
+        <div class="itemDetails">
+          @for(item of group.orderDetails; track item.productId){
+          <div class="productRow">
+            <div class="productName">{{ item.productName }}</div>
+            <div class="productPrice">${{ item.productPrice }}</div>
+          </div>
 
-              @if(item.detailList && item.detailList.length > 0){
-                <div class="optionsRow">
-                  @for(detail of item.detailList; track detail.option){
-                    <span>{{detail.option}} (+{{detail.addPrice}})</span>
-                  }
-                </div>
-              }
+          @if(item.detailList && item.detailList.length > 0){
+          <div class="optionsRow">
+            @for(detail of item.detailList; track detail.option){
+            <span>{{detail.option}} (+{{detail.addPrice}})</span>
             }
           </div>
-
-          <div class="itemSubtotal">
-            ${{ group.orderDetailsPrice }}
-          </div>
+          }
+          }
         </div>
+
+        <div class="itemSubtotal">
+          ${{ group.orderDetailsPrice }}
+        </div>
+      </div>
       }
     </div>
 
