@@ -294,6 +294,10 @@ export class MenuCComponent implements OnInit {
   }
 
   getTotalPrice(): number {
+    //此方法舊產品計算正確，但新加入產品數量>1計算錯誤
+    // return this.currentCart.reduce((total, item) =>
+    //   total + (item.orderDetailsPrice * item.quantity), 0)
+    //此方法新加入產品計算正確，但舊產品數量>1計算錯誤
     return this.currentCart.reduce((total, item) => {
       const pricePerUnit = item.orderDetailsPrice / item.quantity;
       const quantity = item.quantity || 0;
