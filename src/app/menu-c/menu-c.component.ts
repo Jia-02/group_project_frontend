@@ -71,7 +71,9 @@ export class MenuCComponent implements OnInit {
         this.loadOrderDataFromService();
       }
       this.loadInitialData();
+      console.log(this.currentCart)
     });
+
   }
 
   groupOrderDetails(apiList: any[]): any[] {
@@ -91,6 +93,7 @@ export class MenuCComponent implements OnInit {
       if (map.has(key)) {
         const existing = map.get(key);
         existing.quantity += 1;
+        existing.orderDetailsPrice += singleUnitPrice;
       } else {
         map.set(key, {
           ...item,
