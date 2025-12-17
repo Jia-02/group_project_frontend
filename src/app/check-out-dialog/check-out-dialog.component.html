@@ -80,12 +80,6 @@
               <div class="productRow">
                 <div class="productName">
                   {{ item.productName }}
-                  @if(isEditing) {
-                    <div class="iconActions">
-                      <mat-icon fontIcon="edit" class="actionIcon edit" (click)="changeDetail(i)"></mat-icon>
-                      <mat-icon fontIcon="delete" class="actionIcon delete" (click)="deleteDetail(i)"></mat-icon>
-                    </div>
-                  }
                 </div>
                 <div class="productPrice">${{ item.productPrice }}</div>
               </div>
@@ -95,10 +89,6 @@
                   @for(detail of item.detailList; track detail.option; let k = $index){
                     <span class="optionPill">
                       {{detail.option}} (+{{detail.addPrice}})
-                      @if(isEditing) {
-                         <mat-icon fontIcon="edit" class="tinyIcon edit" (click)="changeOptions(i, j, k)"></mat-icon>
-                         <mat-icon fontIcon="delete" class="tinyIcon delete" (click)="deleteOptions(i, j, k)"></mat-icon>
-                      }
                     </span>
                   }
                 </div>
@@ -130,5 +120,5 @@
 <mat-dialog-actions class="dialogFooter">
   <button class="footerBtn secondary" (click)="close()">關閉</button>
   <button class="footerBtn primary" (click)="checkOut()" [disabled]="isEditing" [class.disabled]="isEditing">結帳</button>
-  <button class="footerBtn edit" (click)="toggleEditMode()">{{ isEditing ? '儲存修改' : '修改訂單' }}</button>
+  <button class="footerBtn edit" (click)="editOrder()">修改訂單</button>
 </mat-dialog-actions>

@@ -175,7 +175,7 @@ export class SendOrderDialogComponent {
         console.log('下單成功', res);
         const orderId = res.ordersId
         console.log(res.ordersId);
-        this.dialogRef.close(finalPayload);
+        this.dialogRef.close();
         this.goToPage(orderId);
       }
       );

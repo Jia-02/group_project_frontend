@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { DataService, MealStatus, MealStatusRes, Order } from '../@service/data.service';
+import { DataService, MealStatus, MealStatusRes } from '../@service/data.service';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 

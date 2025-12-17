@@ -49,7 +49,7 @@ export class AppComponent {
 
 }
 
-// angular.json設定
+// angular.json設定，75行追加
 // "options": {
 //   "host": "0.0.0.0",
 //   "disableHostCheck": true

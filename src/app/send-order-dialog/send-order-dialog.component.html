@@ -1,11 +1,13 @@
 <h2 mat-dialog-title class="dialog-header">確認訂單</h2>
 
+
 <mat-dialog-content class="dialog-content">
   <div class="info-card">
     <p class="info-row">
       <span class="info-label">訂單類型</span>
       <span class="info-value">{{ data.ordersType }}</span>
     </p>
+
 
     @if(data.ordersType === 'A'){
       <p class="info-row">

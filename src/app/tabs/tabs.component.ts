@@ -206,7 +206,6 @@ export class TabsComponent {
   }
 
   ngOnInit(): void {
-
     let url = "workstation/list"
     this.service.getApi(url).subscribe((res: WorkTableListRes) => {
       this.links = res.workStationList;

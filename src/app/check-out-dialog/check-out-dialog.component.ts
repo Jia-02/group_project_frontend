@@ -26,6 +26,8 @@ export class CheckOutDialogComponent {
   ) { }
 
   isEditing: boolean = false;
+  currentlyEditing: { groupIndex: number, itemIndex: number } | null = null;
+  customizationOptions: any[] | null = null;
 
   calculateTotalPrice() {
     let newTotal = 0;
@@ -62,30 +64,9 @@ export class CheckOutDialogComponent {
 
     this.dataService.postApi(apiUrl, updateData)
       .subscribe((res: any) => {
-          console.log('訂單修改成功:', res);
-        }
+        console.log('訂單修改成功:', res);
+      }
       );
-  }
-
-  deleteDetail(groupIndex: number){
-    this.data.order_detailsList.splice(groupIndex, 1);
-    this.calculateTotalPrice();
-  }
-
-  changeDetail(groupIndex: number) {
-    const detailGroup = this.data.order_detailsList[groupIndex];
-  }
-
-  deleteOptions(groupIndex: number, itemIndex: number, optionIndex: number){
-    const detailList = this.data.order_detailsList[groupIndex].orderDetails[itemIndex].detailList;
-    if (detailList) {
-        detailList.splice(optionIndex, 1);
-        this.calculateTotalPrice();
-    }
-  }
-
-  changeOptions(groupIndex: number, itemIndex: number, optionIndex: number) {
-    const option = this.data.order_detailsList[groupIndex].orderDetails[itemIndex].detailList[optionIndex];
   }
 
   close(): void {
@@ -96,17 +77,10 @@ export class CheckOutDialogComponent {
     this.data.paid = true;
     this.saveChanges();
     console.log('訂單付款狀態已更新為：已付 (true)', this.data.paid);
-    this.dialogRef.close();
+    this.dialogRef.close(true);
   }
 
-  toggleEditMode() {
-    if (this.isEditing) {
-      this.calculateTotalPrice();
-      this.saveChanges();
-      this.isEditing = false;
-    } else {
-      this.isEditing = true;
-    }
-
+  editOrder(): void {
+    this.dialogRef.close('edit');
   }
 }
