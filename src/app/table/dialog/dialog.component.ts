@@ -1,9 +1,13 @@
 import { Component, inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-dialog',
-  imports: [],
+  imports: [
+    MatDialogActions,
+    MatDialogContent,
+    MatDialogTitle,
+  ],
   templateUrl: './dialog.component.html',
   styleUrl: './dialog.component.scss'
 })

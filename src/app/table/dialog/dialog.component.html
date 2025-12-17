@@ -1,10 +1,25 @@
-<div style="padding: 5%;">
-  <span style="color: red;">{{data.message}}</span> <br> <br>
-  <!-- data.flag 判斷 是否因為api的res報錯 是的話為true 只會顯示一個button   false的話為兩個button去決定是否執行刪除或更新 -->
-  @if(data.flag){
-    <button (click)="next(false)">確定</button>
-  }@else {
-    <button (click)="next(false)">取消</button>
-    <button (click)="next(true)">確定</button>
-  }
+<div class="background">
+
+  <div mat-dialog-title class="diaTitle">
+    ＊提示＊
+  </div>
+
+  <mat-dialog-content>
+    <div>
+      <p>{{ data.message }}</p>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions>
+    <div class="btnBox">
+      @if(data.flag){
+        <button (click)="next(false)" class="btn">確定</button>
+      } @else {
+        <button (click)="next(false)" class="btn">取消</button>
+
+        <button (click)="next(true)" class="btn">確定</button>
+      }
+    </div>
+  </mat-dialog-actions>
+
 </div>
