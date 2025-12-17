@@ -52,9 +52,7 @@
           @for (optionItem of optionGroup.optionDetail; track optionItem.option) {
           @if (currentSelections.get(categoryGroup.categoryId)?.get(optionGroup.optionId); as selectedSet) {
 
-          <label class="modifierItem"
-                 [class.active]="selectedSet.has(optionItem.option)"
-                 [class.disabled]="!selectedSet.has(optionItem.option) && selectedSet.size >= optionGroup.maxSelect">
+          <label class="modifierItem">
 
             @if (optionGroup.maxSelect > 1) {
             <input type="checkbox"
