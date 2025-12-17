@@ -81,11 +81,12 @@ export class MenuCComponent implements OnInit {
       if (!item.orderDetails || item.orderDetails.length === 0) return;
 
       const mainProduct = item.orderDetails[0];
+      const singleUnitPrice = item.orderDetailsPrice;
 
       const detailList = mainProduct.detailList || [];
       const optionKey = JSON.stringify(detailList.sort((a: any, b: any) => a.option.localeCompare(b.option)));
 
-      const key = `${mainProduct.productId}-${item.orderDetailsPrice}-${optionKey}`;
+      const key = `${mainProduct.productId}-${singleUnitPrice}-${optionKey}`;
 
       if (map.has(key)) {
         const existing = map.get(key);
@@ -93,6 +94,7 @@ export class MenuCComponent implements OnInit {
       } else {
         map.set(key, {
           ...item,
+          orderDetailsPrice: singleUnitPrice,
           quantity: 1,
           productName: mainProduct.productName,
         });
@@ -108,6 +110,7 @@ export class MenuCComponent implements OnInit {
     this.dataService.getApi(apiUrl).subscribe((res: any) => {
       if (res.code === 200 && res.ordersId) {
         const groupedDetails = this.groupOrderDetails(res.orderDetailsList || []);
+        console.log('分組後的購物車項目:', groupedDetails);
 
         this.orderService.currentOrder = {
           ordersId: res.ordersId,
@@ -227,49 +230,48 @@ export class MenuCComponent implements OnInit {
       detailUrl = `product/detail?categoryId=${categoryId}&productId=${itemId}`;
     }
 
-    this.dataService.getApi(detailUrl).subscribe({
-      next: (res: any) => {
-        if (res.code == 200) {
-          console.log('獲取詳情成功:', res);
-          let dialogRef;
+    this.dataService.getApi(detailUrl).subscribe((res: any) => {
+      if (res.code == 200) {
+        console.log('獲取詳情成功:', res);
+        let dialogRef;
 
-          if (isSetting) {
-            dialogRef = this.dialog.open(SettingDetailDialogComponent, {
-              width: '400px',
-              height: '900px',
-              data: res
-            });
-          } else {
-            dialogRef = this.dialog.open(ProductDetailDialogComponent, {
-              width: '400px',
-              height: '900px',
-              data: res
-            });
-          }
-
-          dialogRef.afterClosed().subscribe((result: any) => {
-            if (result && result.quantity && result.quantity > 0) {
-
-              let productName: string;
-
-              if (isSetting) {
-                productName = res.settingDetail?.settingName || '未知套餐';
-              } else {
-                productName = res.productDetail?.productName || '未知產品';
-              }
-
-              const itemWithProductName = {
-                ...result,
-                productName: productName,
-                orderDetailsId: Date.now() + Math.random(),
-              };
-
-              this.addOrderDetailItemToCart(itemWithProductName);
-            }
+        if (isSetting) {
+          dialogRef = this.dialog.open(SettingDetailDialogComponent, {
+            width: '400px',
+            height: '900px',
+            data: res
+          });
+        } else {
+          dialogRef = this.dialog.open(ProductDetailDialogComponent, {
+            width: '400px',
+            height: '900px',
+            data: res
           });
         }
+
+        dialogRef.afterClosed().subscribe((result: any) => {
+          if (result && result.quantity && result.quantity > 0) {
+
+            let productName: string;
+
+            if (isSetting) {
+              productName = res.settingDetail?.settingName || '未知套餐';
+            } else {
+              productName = res.productDetail?.productName || '未知產品';
+            }
+
+            const itemWithProductName = {
+              ...result,
+              productName: productName,
+              orderDetailsId: Date.now() + Math.random(),
+            };
+
+            this.addOrderDetailItemToCart(itemWithProductName);
+          }
+        });
       }
-    });
+    }
+    );
   }
 
   addOrderDetailItemToCart(item: any): void {
@@ -293,7 +295,7 @@ export class MenuCComponent implements OnInit {
 
   getTotalPrice(): number {
     return this.currentCart.reduce((total, item) => {
-      const pricePerUnit = item.orderDetailsPrice || 0;
+      const pricePerUnit = item.orderDetailsPrice / item.quantity;
       const quantity = item.quantity || 0;
       return total + (pricePerUnit * quantity);
     }, 0);
@@ -304,6 +306,8 @@ export class MenuCComponent implements OnInit {
       alert('請至少選擇一個商品！');
       return;
     }
+
+    console.log('當前購物車總價:', this.getTotalPrice());
 
     const originalOrder = this.orderService.currentOrder;
 
@@ -319,7 +323,7 @@ export class MenuCComponent implements OnInit {
       }));
 
       const cleanedApiItem = {
-        orderDetailsPrice: apiItem.orderDetailsPrice,
+        orderDetailsPrice: apiItem.orderDetailsPrice / quantity,
         settingId: apiItem.settingId || 0,
         orderDetails: updatedOrderDetails
       };

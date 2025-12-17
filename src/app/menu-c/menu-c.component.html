@@ -42,7 +42,7 @@
                 (click)="deleteCartItem(item); $event.stopPropagation()">🗑️</button>
                 <span class="item-name">{{ item.productName }}</span>
                 <span class="item-quantity"> x {{ item.quantity }}</span>
-                <span class="item-price">$NT{{ item.orderDetailsPrice * item.quantity }}</span>
+                <span class="item-price">單價:$NT{{ item.orderDetailsPrice / item.quantity }}</span>
                 <br>
                 @if (item.orderDetails && item.orderDetails[0] && item.orderDetails[0].detailList?.length) {
                   <small style="color: #888;">
