@@ -20,17 +20,22 @@ export class AppComponent {
   title = 'GroupProject';
 
   showHeader = true;
+
   constructor(private router: Router,
     private loadingServiceService: LoadingServiceService) {
     router.events.forEach((event) => {
       if (event instanceof NavigationStart) {
         if (event['url'].match('meal/status/user') ||
           event['url'].match('inner-start-page') ||
-          event['url'] == '/non-inner-start-page' ||
-          event['url'] == '/customer-information' ||
+          event['url'].match('/non-inner-start-page') ||
+          event['url'].match('/customer-information') ||
           event['url'] == '/menu') {
+          let header = document.getElementById('myHeader') as HTMLHeadElement
+          header.style.display = "none";
           this.showHeader = false;
         } else {
+          let header = document.getElementById('myHeader') as HTMLHeadElement
+          header.style.display = "block";
           this.showHeader = true;
         }
       }

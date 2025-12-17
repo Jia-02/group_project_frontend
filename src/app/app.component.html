@@ -1,11 +1,19 @@
-<app-header *ngIf="showHeader"></app-header>
+<app-header id="myHeader"></app-header>
+@if(showHeader){
 <main>
   <!-- loading -->
   @if (loading$) {
   <div class="overlay"></div>
   <mat-spinner [diameter]="70"></mat-spinner>
   }
-
-
   <router-outlet></router-outlet>
 </main>
+}@else {
+  <!-- loading -->
+  @if (loading$) {
+  <div class="overlay"></div>
+  <mat-spinner [diameter]="70"></mat-spinner>
+  }
+  <router-outlet></router-outlet>
+}
+
