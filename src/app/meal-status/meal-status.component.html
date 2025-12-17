@@ -40,6 +40,8 @@
                 }@else {
                   <span class="badge unpaid">尚未付款</span>
                 }
+                <span style="flex: 1 1 auto;"></span>
+                <span>{{order.orderTime}}</span>
               </div>
 
               <div class="product-list">
@@ -110,6 +112,16 @@
                     外送
                   }
                 </span>
+              </div>
+
+              <div class="payment-row">
+                @if(order.paid){
+                  <span class="badge paid">已付款</span>
+                }@else {
+                  <span class="badge unpaid">尚未付款</span>
+                }
+                <span style="flex: 1 1 auto;"></span>
+                <span>{{order.orderTime}}</span>
               </div>
 
               <div class="product-list">
@@ -225,6 +237,16 @@
                     外送
                   }
                 </span>
+              </div>
+
+              <div class="payment-row">
+                @if(order.paid){
+                  <span class="badge paid">已付款</span>
+                }@else {
+                  <span class="badge unpaid">尚未付款</span>
+                }
+                <span style="flex: 1 1 auto;"></span>
+                <span>{{order.orderTime}}</span>
               </div>
 
               <div class="product-list">

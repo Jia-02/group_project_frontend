@@ -40,7 +40,7 @@ export class DataService {
   // 附餐與飲料列表
   sideDishList: productList[] = [];
   drinkDishList: productList[] = [];
-  baseUrl = 'http://localhost:8080/'
+  baseUrl = 'https://25097f6e8903.ngrok-free.app/'
 
 
   getApi(url: string): any {
@@ -182,6 +182,7 @@ export interface Rect {
 export interface Order {
   orderId: number;
   orderCode: string;
+  orderTime:string;
   orderProductList: OrderDetailsList[];
   tableId: string;
   status: string[];
@@ -272,6 +273,7 @@ export interface MealStatusRes {
 export interface MealStatus {
   mealStatusId: number;
   mealStatus: string;
+  paid:boolean;
   estimatedTime: number;
   finishTime: string;
   ordersId: number;

@@ -20,15 +20,19 @@
     <div class="formRow">
       <div class="formField">
         <label>訂位日期</label>
-        <input type="date" class="styledInput" [(ngModel)]="reservation.reservationDate" [min]="currentDate">
+        <input type="date" class="styledInput" [(ngModel)]="reservation.reservationDate" [min]="currentDate" (change)="changeDate()" >
       </div>
 
       <div class="formField">
         <label>訂位時間</label>
-        <select class="styledInput" [(ngModel)]="reservation.reservationTime">
-          <option value="">--請選擇--</option>
+        <select class="styledInput" [(ngModel)]="reservation.reservationTime" (ngModelChange)="changeTime()">
+          <option value="--請選擇--" disabled>--請選擇--</option>
           @for (time of timeList; track time) {
-          <option [value]="time">{{ time }}</option>
+            @if(time < nowTime && currentDate == reservation.reservationDate){
+              <option [value]="time" disabled>{{ time }}</option>
+            }@else {
+              <option [value]="time" >{{ time }}</option>
+            }
           }
         </select>
       </div>
@@ -38,7 +42,7 @@
       <div class="formField">
         <label>總人數</label>
         <select class="styledInput" [(ngModel)]="reservation.reservationCount" (change)="updateTotal()">
-          <option value="''">--請選擇--</option>
+          <option value="--請選擇--" disabled>--請選擇--</option>
           @for (data of totalPeople; track data) {
           <option [value]="data">{{ data }} 位</option>
           }
@@ -47,8 +51,8 @@
 
       <div class="formField">
         <label>桌號</label>
-        <select class="styledInput" [(ngModel)]="reservation.tableId">
-          <option value="">--請選擇--</option>
+        <select class="styledInput" [(ngModel)]="reservation.tableId" (ngModelChange)="changeTotal()">
+          <option value="--請選擇--" disabled>--請選擇--</option>
           @for (data of tableIdList; track data) {
           <option [value]="data">{{ data }} 桌</option>
           }

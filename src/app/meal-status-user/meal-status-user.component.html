@@ -8,8 +8,14 @@
     </div>
 
     <div class="info-row highlight-row">
-      <span class="label">訂單狀態</span>
-      <span class="value-status">{{mealStatus.mealStatus}}</span>
+      @if(mealStatus.paid){
+        <span class="label">訂單狀態</span>
+        <span class="value-status">{{mealStatus.mealStatus}}</span>
+      }@else {
+        <span class="label">訂單狀態</span>
+        <span class="value-status">尚未付款</span>
+      }
+
     </div>
 
     <div class="time-grid">
@@ -62,7 +68,8 @@
     </div>
   </div>
 
-  } @else {
+  }
+  @else {
 
   <div class="card search-card">
     <h3 class="search-title">訂單查詢</h3>

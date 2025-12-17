@@ -30,10 +30,12 @@ export class DialogReserveComponent {
   readonly data = inject<any>(MAT_DIALOG_DATA);
   readonly dialog = inject(MatDialog);
 
-  totalPeople = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
-  adultList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
-  childList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-  childSeatList = [1, 2, 3];
+  tableList!: Table[];
+
+  totalPeople:number[] = [];
+  adultList = [];
+  childList = [];
+  childSeatList = [];
   timeList = ['10:00', '12:00', '14:00', '16:00', '18:00', '20:00'];
   reservation: reservation = {
     reservationId: 0,
@@ -55,14 +57,30 @@ export class DialogReserveComponent {
   isEditMode: boolean = false; // 判斷是否為編輯模式
   originalPhone: string = '';
   originalDate: string = '';
+  nowTime!: string;
 
   ngOnInit(): void {
+    let today = new Date();
+    this.currentDate = this.formatDateStr(today);
+    this.nowTime = this.formatNowTimeStr(today);
+    console.log(this.currentDate)
+    console.log(this.nowTime)
+    let nowTime;
+    for (const time of this.timeList) {
+      if (time > this.nowTime) {
+        nowTime = time;
+        break;
+      }
+    }
+    nowTime += ":00"
     // 桌號api
-    this.httpClientService.getApi('table/list')
+    let reservationDate = "reservation/time_list?reservationDate=" + this.currentDate + "&reservationTime=" + nowTime;
+    this.httpClientService.getApi(reservationDate)
       .subscribe((res: any) => {
+        console.log(res)
         if (res.code == 200) {
           const availableTables = [];
-          for (let data of res.tableList) {
+          for (let data of res.reservationAndTableByTimeList) {
             if (data.tableStatus == "可預約") {
               availableTables.push(data.tableId);
             }
@@ -115,6 +133,48 @@ export class DialogReserveComponent {
         this.reservation.reservationTime = this.data.defaultTime;
       }
     }
+  }
+
+  changeTotal() {
+    this.totalPeople = [];
+    for (let i = 0; i < this.tableList.length; i++) {
+      if (this.tableList[i].tableId == this.reservation.tableId) {
+        for (let j = 1; j <= this.tableList[i].capacity; j++) {
+          this.totalPeople.push(j);
+        }
+      }
+    }
+  }
+
+  changeDate() {
+    this.reservation.reservationTime = "--請選擇--";
+    this.tableIdList = [];
+    console.log(this.reservation.reservationTime)
+  }
+
+  changeTime() {
+    console.log(this.reservation.reservationDate)
+    console.log(this.reservation.reservationTime)
+    let nowTime = this.reservation.reservationTime + ":00"
+    let reservationDate = "reservation/time_list?reservationDate=" + this.reservation.reservationDate + "&reservationTime=" + nowTime;
+    console.log(reservationDate)
+    this.tableList = [];
+    this.httpClientService.getApi(reservationDate)
+      .subscribe((res: any) => {
+        console.log(res)
+        if (res.code == 200) {
+          const availableTables = [];
+          for (let data of res.reservationAndTableByTimeList) {
+            if (data.tableStatus == "可預約") {
+              availableTables.push(data.tableId);
+              this.tableList.push({ tableId: data.tableId, capacity: data.capacity })
+            }
+          }
+          this.tableIdList = availableTables;
+          this.reservation.tableId = "--請選擇--"
+          console.log(this.tableIdList)
+        }
+      });
   }
 
 
@@ -234,4 +294,16 @@ export class DialogReserveComponent {
     input.value = input.value.replace(/[^0-9]/g, '');
     this.reservation.reservationPhone = input.value;
   }
+
+  formatNowTimeStr(date: Date): string {
+    let hour = date.getHours().toString().padStart(2, '0');
+    let minutes = date.getMinutes().toString().padStart(2, '0');
+    let second = date.getSeconds()
+    return hour + ":" + minutes + ":" + second;
+  }
+}
+
+interface Table {
+  tableId: string;
+  capacity: number;
 }
