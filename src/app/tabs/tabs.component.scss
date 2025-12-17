@@ -1,12 +1,200 @@
-.TabsComponent {
-  background-color: #e32738;
-  /* 設定為紅色 */
+/* --- 整體容器 --- */
+.main-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  background-color: #f5f5f5; /* 淺灰背景，讓白卡片更明顯 */
+  min-height: 100vh;
 }
 
-.mat-tab {
+.content-wrapper {
+  width: 95%; /* 稍微加寬以容納更多卡片 */
+  margin-top: 20px;
+}
+
+/* --- Tab 樣式優化 --- */
+.custom-tab-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 10px;
+}
+
+.tab-text {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+}
+
+.tab-actions {
+  display: flex;
+  flex-direction: column; /* 原本的垂直排列 */
+  gap: 2px;
+}
+
+/* 讓 Tab 上的 icon 按鈕化，增加點擊回饋 */
+.icon-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 2px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100px;
-  height: 48px;
+}
+
+.icon-btn:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.icon-btn mat-icon {
+  font-size: 18px; /* 稍微縮小圖示以免 Tab 太高 */
+  width: 18px;
+  height: 18px;
+  color: #999;
+}
+
+.icon-btn.remove:hover mat-icon { color: #e53935; } /* 刪除變紅 */
+.icon-btn.edit:hover mat-icon { color: #1976d2; }   /* 編輯變藍 */
+
+/* 新增 Tab 按鈕 */
+.add-tab-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+}
+
+/* --- 訂單卡片網格佈局 --- */
+.orders-grid {
+  display: flex;
+  flex-wrap: wrap; /* 自動換行 */
+  gap: 20px;
+  padding: 20px;
+  align-items: flex-start; /* 靠上對齊 */
+}
+
+/* --- 單張訂單卡片 --- */
+.order-card {
+  background-color: #fff;
+  width: 300px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  border-left: 5px solid #013c70; /* 左側加入色條增加識別度 */
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s;
+}
+
+.order-card:hover {
+  transform: translateY(-2px); /* 滑鼠懸停微微浮起 */
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+/* 卡片標頭 */
+.card-header {
+  padding: 15px 15px 5px 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.order-code {
+  font-size: 20px;
+  font-weight: 800;
+  color: #333;
+}
+
+.order-type {
+  background-color: #e3f2fd;
+  color: #0d47a1;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+/* 付款狀態 */
+.payment-status {
+  padding: 0 15px 10px 15px;
+  font-size: 13px;
+  color: #4caf50; /* 已付款綠色 */
+  font-weight: 500;
+}
+
+.payment-status .unpaid {
+  color: #f44336; /* 未付款紅色 */
+}
+
+/* 分隔線 */
+.divider {
+  height: 1px;
+  background-color: #eee;
+  margin: 0 15px;
+}
+
+/* --- 餐點列表 --- */
+.order-items {
+  padding: 10px 15px 15px 15px;
+}
+
+.item-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.item-row {
+  display: flex;
+  align-items: flex-start; /* 按鈕與文字頂部對齊 */
+  gap: 10px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed #f0f0f0;
+}
+
+.item-row:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+/* 準備完成按鈕 */
+.ready-btn {
+  background-color: #013c70;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: bold;
+  white-space: nowrap; /* 不換行 */
+  transition: background-color 0.2s;
+}
+
+.ready-btn:active {
+  background-color: #00254a;
+}
+
+/* 餐點資訊 */
+.item-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.product-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  line-height: 1.4;
+}
+
+.product-options {
+  font-size: 13px;
+  color: #666;
+  margin-top: 2px;
 }

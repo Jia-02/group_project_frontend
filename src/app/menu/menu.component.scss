@@ -1,62 +1,89 @@
-/* --- 1. 全局容器 (模擬 App 視窗) --- */
+/* --- 1. 全局容器：設定為滿版 App 模式 --- */
 .box {
+  /* 關鍵：鎖定高度為螢幕高度，禁止整頁滾動 */
+  height: 100vh;
+  display: flex;
+  flex-direction: column; /* 上下排列模式 */
+  overflow: hidden;
   background-color: #fff;
-  min-height: 100vh;
-  padding-bottom: 100px; /* 底部留白，避免內容被購物車按鈕擋住 */
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   color: #333;
   position: relative;
 }
 
-/* --- 2. 頂部標題 (Sticky Header) --- */
+/* --- 2. 標題：固定在最上方 (因為外層不滾動，所以它自然會固定) --- */
 .box h2 {
-  position: sticky; /* 關鍵：讓標題黏在頂部 */
-  top: 0;
-  z-index: 100;
-  background-color: #fff;
+  flex-shrink: 0; /* 禁止被壓縮 */
   margin: 0;
   padding: 16px 20px;
+  background-color: #fff;
+  z-index: 10;
   font-size: 18px;
   font-weight: 700;
-  color: #333;
-  border-bottom: 1px solid #f0f0f0; /* 極細分隔線 */
-  box-shadow: 0 2px 4px rgba(0,0,0,0.02); /* 極淡的陰影 */
+  border-bottom: 1px solid #f0f0f0;
+  /* 加一點陰影，讓它浮在內容上面 */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
   display: flex;
   align-items: center;
 }
 
 /* --- 3. 內容容器 --- */
 .content-container {
-  padding: 0;
+  flex: 1; /* 自動填滿標題下方的所有空間 */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* 防止溢出 */
 }
 
-/* --- 4. Tab 分類優化 (Angular Material 覆蓋) --- */
+/* --- 4. Tab 結構重組 (關鍵修正) --- */
+/* 讓 Tab 組件填滿空間 */
+::ng-deep .mat-mdc-tab-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Tab Header (分類按鈕)：固定不動 */
 ::ng-deep .mat-mdc-tab-header {
+  flex-shrink: 0; /* 禁止縮小 */
   background-color: #fff;
-  position: sticky; /* 讓 Tab 也黏在標題下方 */
-  top: 54px; /* 依照 h2 的高度調整，讓它接在標題下方 */
-  z-index: 99;
-  border-bottom: 1px solid #f0f0f0;
+  z-index: 5;
+  border-bottom: 1px solid #eee;
 }
 
-::ng-deep .mat-mdc-tab-labels {
-  background-color: #fff;
+/* Tab Body Wrapper：佔滿剩下空間 */
+::ng-deep .mat-mdc-tab-body-wrapper {
+  flex: 1;
+  height: 100%; /* 重要 */
 }
 
+/* Tab 內容區：只有這裡會滾動 (Scroll Area) */
+::ng-deep .mat-mdc-tab-body-content {
+  height: 100%;
+  overflow-y: auto !important; /* 啟用垂直滾動 */
+  transform: none !important; /* 避免部分手機渲染問題 */
+
+  /* 這裡設定 padding 是為了美觀，和避免最後一個商品被懸浮按鈕擋住 */
+  padding-top: 10px;
+  padding-bottom: 100px;
+}
+
+/* Tab 文字樣式 */
 ::ng-deep .mat-mdc-tab .mdc-tab__text-label {
-  color: #757575; /* 未選中為灰色 */
+  color: #757575;
   font-size: 15px;
   font-weight: 500;
 }
 
 ::ng-deep .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
-  color: #013c70 !important; /* 選中為品牌色 */
+  color: #013c70 !important;
   font-weight: 800;
   font-size: 16px;
 }
 
 ::ng-deep .mat-mdc-tab-indicator__content--underline {
-  border-color: #013c70 !important; /* 指示線顏色 */
+  border-color: #013c70 !important;
   border-top-width: 3px !important;
 }
 
@@ -65,111 +92,102 @@
   width: 100%;
   display: flex;
   justify-content: space-between;
-  align-items: center; /* 垂直置中 */
-  padding: 20px; /* 舒適的點擊範圍 */
+  align-items: center;
+  padding: 20px 20px;
   background-color: #fff;
-  border-bottom: 1px solid #f0f0f0; /* 細分隔線 */
+  border-bottom: 1px solid #f5f5f5;
   box-sizing: border-box;
   cursor: pointer;
-  position: relative; /* 為了定位偽元素 */
-  transition: background-color 0.1s;
 }
 
-/* 點擊回饋 */
 .productCss:active {
-  background-color: #f5f5f5;
+  background-color: #f9f9f9;
 }
 
-/* 左側：商品名稱與資訊 */
 .productCss > span {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  flex: 1; /* 佔據剩餘空間 */
-  padding-right: 15px; /* 避免跟右邊價格太近 */
+  flex: 1;
+  padding-right: 15px;
 }
 
-/* 商品名稱 */
-.productCss > span::first-line, /* 這是一種技巧，或者你可以直接針對裡面的文字 */
+.productCss > span::first-line,
 .productCss span:not(.priceCss) {
   font-size: 17px;
   font-weight: 600;
-  color: #333;
+  color: #222;
   line-height: 1.4;
 }
 
-/* --- 6. 價格與加入按鈕 --- */
+/* --- 6. 價格與按鈕 --- */
 .priceCss {
-  font-size: 15px;
-  color: #333;
-  font-weight: 500;
-  white-space: nowrap; /* 價格不換行 */
+  font-size: 16px;
+  color: #e65100;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
-/* [視覺優化] 在右側加入一個 "+" 號，暗示可以加入購物車 */
 .productCss::after {
   content: '+';
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
-  background-color: #f0f4f8; /* 淺藍色底 */
+  width: 32px;
+  height: 32px;
+  background-color: #f0f4f8;
   color: #013c70;
   border-radius: 50%;
-  font-size: 18px;
+  font-size: 20px;
   font-weight: bold;
   margin-left: 15px;
   flex-shrink: 0;
 }
 
-/* --- 7. 底部懸浮按鈕 (Floating Action Button) --- */
+.productCss:active::after {
+  background-color: #013c70;
+  color: #fff;
+}
+
+/* --- 7. 底部懸浮按鈕 --- */
 .buttonCss {
   position: fixed;
-  bottom: 30px; /* 離底部稍微遠一點，避開手機手勢條 */
+  bottom: 30px;
   left: 50%;
   transform: translateX(-50%);
-  width: 90%;
+  width: 88%;
   max-width: 400px;
-  height: 52px;
-
+  height: 54px;
   background-color: #013c70;
   color: #fff;
   border: none;
-  border-radius: 26px; /* 膠囊形狀 */
-
-  font-size: 16px;
+  border-radius: 27px;
+  font-size: 17px;
   font-weight: 700;
-  letter-spacing: 0.5px;
-
-  box-shadow: 0 6px 16px rgba(1, 60, 112, 0.3); /* 漂亮的深色陰影 */
+  box-shadow: 0 8px 20px rgba(1, 60, 112, 0.25);
   cursor: pointer;
   z-index: 999;
-
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 12px;
-  transition: transform 0.1s, box-shadow 0.1s;
 }
 
-/* 按鈕點擊效果 */
 .buttonCss:active {
   transform: translateX(-50%) scale(0.96);
-  box-shadow: 0 2px 8px rgba(1, 60, 112, 0.2);
+  box-shadow: 0 4px 10px rgba(1, 60, 112, 0.2);
 }
 
-/* 購物車數量標籤 */
 .countCss {
-  background-color: #fe6d13; /* 亮橘色，與深藍形成對比 */
+  background-color: #ff5722;
   color: #fff;
-  font-size: 13px;
-  min-width: 22px;
-  height: 22px;
+  font-size: 14px;
+  min-width: 24px;
+  height: 24px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: bold;
+  font-weight: 800;
   padding: 0 4px;
 }

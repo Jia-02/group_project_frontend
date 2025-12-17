@@ -1,81 +1,93 @@
-<div style="display: flex;">
-  <span style="flex: 1 1 auto;"></span>
-  <div style="width: 90%; margin-top: 5%;">
-    <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="center">
+<div class="main-container">
+  <div class="content-wrapper">
+    <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="center" class="custom-tab-group">
       @if(links && links.length > 0){
-      @for(link of links;track link){
-      <mat-tab>
-        <ng-template mat-tab-label>
-          <div class="mat-tab" style="display: flex; width: auto;">
-            <span>{{link.workStationName}}</span>
-            <div>
-              <div>
-              <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="remove"
-              style="color: rgba(128, 128, 128, 0.5);"
-              (click)="removeLink(link.workStationId,$event)"></mat-icon>
-            </div>
-            <div>
-              <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="edit"
-              style="color: rgba(128, 128, 128, 0.5);"
-              (click)="updateLink(link.workStationId,$event)"></mat-icon>
-            </div>
-            </div>
-          </div>
-        </ng-template>
+        @for(link of links; track link){
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <div class="custom-tab-label">
+                <span class="tab-text">{{link.workStationName}}</span>
+                <div class="tab-actions">
+                  <button class="icon-btn remove" (click)="removeLink(link.workStationId, $event)">
+                    <mat-icon fontIcon="remove"></mat-icon>
+                  </button>
+                  <button class="icon-btn edit" (click)="updateLink(link.workStationId, $event)">
+                    <mat-icon fontIcon="edit"></mat-icon>
+                  </button>
+                </div>
+              </div>
+            </ng-template>
 
-        @for(order of orders;track order){
-        @if(order.status.includes("製作中") && order.workStationId.includes(link.workStationId)){
-        <div
-          style="height: auto; width: 300px; border: 1px solid black; margin: 20px  ; padding: 20px; border-radius: 10px;">
-          <span>訂單編號:{{order.orderCode}}</span> <br> <br>
-          @if(order.tableId){
-          <span>內用桌號:{{order.tableId}}</span> <br> <br>
-          }@else if(order.orderCode.includes("T")){
-          <span>外帶</span> <br> <br>
-          }@else if(order.orderCode.includes("D")){
-          <span>外送</span> <br> <br>
-          }
-          @if(order.paid){
-            <span>已付款</span> <br> <br>
-          }@else {
-            <span>尚未付款</span> <br> <br>
-          }
-          <span>餐點:</span> <br>
-          <ul style="padding: 10px; margin-top: 0px;">
-          @for(product of order.orderProductList;track product){
-          @for(detail of product.orderDetails;track detail){
-          @if(detail.mealStatus == "製作中" && detail.workStationId == link.workStationId){
-          <button (click)="waitDelivery(order.orderId,product.orderDetailsId,detail.productId)">準備完成</button><span>{{detail.productName}} </span> &#40;
-          @for(option of detail.detailList;track option){
-          <span>{{option.option}}</span>
-          @if(option.id != detail.detailList.length){
-            <span>，</span>
-          }
-          }
-          &#41;
-          <br>
-          }
-          }
-          }
-          </ul>
-        </div>
+            <div class="orders-grid">
+              @for(order of orders; track order){
+                @if(order.status.includes("製作中") && order.workStationId.includes(link.workStationId)){
+                  <div class="order-card">
+                    <div class="card-header">
+                      <span class="order-code">#{{order.orderCode}}</span>
+                      <span class="order-type">
+                        @if(order.tableId){
+                          內用 {{order.tableId}}
+                        }@else if(order.orderCode.includes("T")){
+                          外帶
+                        }@else if(order.orderCode.includes("D")){
+                          外送
+                        }
+                      </span>
+                    </div>
+
+                    <div class="payment-status" [class.paid]="order.paid">
+                      @if(order.paid){
+                        <span>已付款</span>
+                      }@else {
+                        <span class="unpaid">尚未付款</span>
+                      }
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <div class="order-items">
+                      <ul class="item-list">
+                        @for(product of order.orderProductList; track product){
+                          @for(detail of product.orderDetails; track detail){
+                            @if(detail.mealStatus == "製作中" && detail.workStationId == link.workStationId){
+                              <li class="item-row">
+                                <button class="ready-btn" (click)="waitDelivery(order.orderId, product.orderDetailsId, detail.productId)">
+                                  準備完成
+                                </button>
+                                <div class="item-info">
+                                  <span class="product-name">{{detail.productName}}</span>
+                                  <div class="product-options">
+                                    (
+                                    @for(option of detail.detailList; track option){
+                                      <span>{{option.option}}</span>
+                                      @if(option.id != detail.detailList.length){ <span>，</span> }
+                                    }
+                                    )
+                                  </div>
+                                </div>
+                              </li>
+                            }
+                          }
+                        }
+                      </ul>
+                    </div>
+                  </div>
+                }
+              }
+            </div>
+          </mat-tab>
         }
-
-        }
-
-      </mat-tab>
       }
-      }
+
       @if(links){
-      <mat-tab>
-        <ng-template mat-tab-label>
-          <div class="mat-tab" (click)="addLink($event)">
-            <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="add"></mat-icon>
-          </div>
-        </ng-template>
-      </mat-tab>
+        <mat-tab disabled>
+          <ng-template mat-tab-label>
+            <div class="add-tab-btn" (click)="addLink($event)">
+              <mat-icon fontIcon="add"></mat-icon>
+            </div>
+          </ng-template>
+        </mat-tab>
       }
     </mat-tab-group>
   </div>
-  <span style="flex: 1 1 auto;"></span>
 </div>

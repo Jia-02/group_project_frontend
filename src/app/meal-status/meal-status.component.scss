@@ -1,14 +1,257 @@
-.divCss1 {
-  height: auto;
-  width: auto;
-  border-radius: 10px;
-  border: 1px solid black;
-  background-color: black;
-  padding-left: 10px;
-  padding-right: 10px;
-  color: white;
+/* --- 全局容器設定 --- */
+.kds-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #f0f2f5;
+  font-family: -apple-system, BlinkMacSystemFont, "Roboto", sans-serif;
+  overflow: hidden;
 }
 
-ul{
-  margin: 0px;
+/* --- 頂部標題列 --- */
+.top-bar {
+  background-color: #fff;
+  padding: 15px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  flex-shrink: 0;
+  z-index: 10;
+}
+
+.top-bar h1 {
+  margin: 0;
+  font-size: 20px;
+  color: #333;
+}
+
+.pending-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pending-status h3 {
+  margin: 0;
+  font-size: 16px;
+  color: #555;
+}
+
+.count-badge {
+  background-color: #fe6d13;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+/* --- 看板主體 (可水平捲動) --- */
+.kanban-board {
+  display: flex;
+  flex: 1;
+  padding: 30px;
+  gap: 40px;
+  scrollbar-width: thin;
+}
+
+/* --- 通用欄位設定 --- */
+.kanban-column {
+  min-width: 300px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px;
+  overflow: hidden;
+  max-width: 400px;
+}
+
+.column-header {
+  padding: 12px;
+  text-align: center;
+  color: #fff;
+  font-weight: bold;
+}
+
+.column-header h3 { margin: 0; font-size: 18px; }
+
+.column-content {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto; /* 欄位內部垂直捲動 */
+}
+
+/* --- 第一欄：準備中 --- */
+.col-preparing {
+  background-color: #e0e4e8;
+}
+.col-preparing .column-header {
+  background-color: #546e7a;
+}
+
+/* --- 第二欄：待送餐 (強調) --- */
+.col-ready {
+  background-color: #fff3e0; /* 淺橘底 */
+  border: 2px solid #fe6d13;
+}
+.col-ready .column-header {
+  background-color: #fe6d13; /* 亮橘頭 */
+}
+
+/* --- 第三欄：已送達 --- */
+.col-served {
+  background-color: #e0e4e8;
+}
+.col-served .column-header {
+  background-color: #9ca3af;
+}
+
+/* --- 訂單卡片 --- */
+.order-card {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ready-card {
+  border-left: 5px solid #fe6d13; /* 左側橘線強調 */
+}
+
+.served-card {
+  opacity: 0.8;
+}
+
+/* 卡片標頭 */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px dashed #eee;
+  padding-bottom: 8px;
+}
+
+.order-id {
+  font-size: 18px;
+  font-weight: 800;
+  color: #333;
+}
+
+.order-type {
+  background-color: #f5f5f5;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #555;
+  font-weight: 600;
+}
+
+/* 付款徽章 */
+.payment-row {
+  display: flex;
+}
+.badge {
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+.badge.paid { background-color: #e8f5e9; color: #2e7d32; }
+.badge.unpaid { background-color: #ffebee; color: #c62828; }
+
+/* 餐點清單 */
+.product-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.product-group {
+  border-bottom: 1px solid #f9f9f9;
+  padding-bottom: 4px;
+}
+.product-group:last-child { border-bottom: none; }
+
+.set-title {
+  font-weight: bold;
+  color: #013c70;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.sub-items {
+  padding-left: 10px;
+  border-left: 2px solid #eee;
+}
+
+.item-row {
+  font-size: 15px;
+  color: #333;
+  line-height: 1.4;
+  margin-bottom: 4px;
+}
+
+.item-row.faded {
+  color: #999;
+  text-decoration: line-through;
+}
+
+.item-row.simple {
+  margin-left: 5px;
+}
+
+.modifiers {
+  font-size: 13px;
+  color: #888;
+}
+
+/* --- 待送餐的操作區 --- */
+.action-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+  background: #fff;
+  padding: 5px;
+  border-radius: 6px;
+}
+
+.item-info {
+  flex: 1;
+}
+
+/* 送出按鈕 */
+.serve-btn {
+  background-color: #013c70;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.serve-btn:active {
+  background-color: #00254a;
+  transform: scale(0.95);
+}
+
+.serve-btn.full {
+  width: 100%;
+  background-color: #fe6d13; /* 整單送出用橘色 */
+  font-size: 16px;
+  padding: 10px;
+  margin-top: 5px;
+}
+
+.full-order-action {
+  margin-top: 10px;
+  border-top: 1px solid #eee;
+  padding-top: 10px;
 }
