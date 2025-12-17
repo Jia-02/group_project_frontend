@@ -34,7 +34,7 @@ export class MenuComponent {
   constructor(
     private dataService: DataService,
     private dialog: MatDialog,
-    private orderService: OrderService
+    private orderService: OrderService,
   ) { }
 
   ngOnInit(): void {

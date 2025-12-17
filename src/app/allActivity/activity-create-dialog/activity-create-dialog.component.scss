@@ -1,0 +1,166 @@
+/* --- Header --- */
+.diaTitle {
+  margin: 0;
+  padding: 10px 30px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #fdfdfd;
+  background-color: #013c70;
+  border-bottom: 1px solid #eee;
+}
+
+/* --- Content --- */
+.dialogContent {
+  padding: 25px !important;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 500px;
+}
+
+/* 標籤文字 */
+.dialogContent label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 4px; /* 微調：讓標籤跟輸入框近一點 */
+}
+
+/* --- Form Layout --- */
+.formRow {
+  display: flex;
+  gap: 15px;
+  width: 100%;
+}
+
+.formField {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.formField label {
+  margin-bottom: 6px;
+}
+
+/* --- Inputs --- */
+.styledInput {
+  padding: 10px 12px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  outline: none;
+  background: #fff;
+  transition: border-color 0.2s;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.styledInput:focus {
+  border-color: #013c70;
+  background-color: #fdfdfd;
+}
+
+textarea.styledInput {
+  resize: vertical;
+  min-height: 80px; /* 稍微加高一點 */
+}
+
+/* --- File Upload --- */
+.fileInputWrapper {
+  width: 100%;
+}
+
+.uploadBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 12px; /* 增加一點點擊範圍 */
+  background-color: #f8f9fa;
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.uploadBtn mat-icon {
+  color: #888;
+}
+
+.uploadBtn:hover {
+  background-color: #eef4fc;
+  border-color: #013c70;
+  color: #013c70;
+}
+
+.uploadBtn:hover mat-icon {
+  color: #013c70;
+}
+
+.uploadBtn:active {
+  background-color: #dde9f7;
+  transform: scale(0.99);
+}
+
+/* --- Image Preview (新增樣式) --- */
+.imagePreviewBox {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  background: #f5f5f5;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #eee;
+}
+
+.imagePreviewBox img {
+  max-width: 100%;
+  max-height: 200px;
+  object-fit: contain;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* --- Actions --- */
+.dialogActions {
+  padding: 16px 40px !important;
+  border-top: 1px solid #eee;
+  gap: 15px;
+  display: flex;
+  justify-content: flex-end; /* 靠右對齊 */
+}
+
+.dialogBtn {
+  padding: 10px 25px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+}
+
+.cancelBtn {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  color: #666;
+}
+
+.cancelBtn:hover {
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+.confirmBtn {
+  background-color: #013c70;
+  color: #fff;
+}
+
+.confirmBtn:hover {
+  background-color: #fe6d13;
+  box-shadow: 0 2px 4px rgba(1, 60, 112, 0.25);
+}

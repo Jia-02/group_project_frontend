@@ -1,31 +1,73 @@
-<h2 mat-dialog-title>編輯活動：{{ data.calendarTitle }}</h2>
+<div class="background">
+  <h2 mat-dialog-title class="diaTitle">編輯活動：{{ data.calendarTitle }}</h2>
 
-<mat-dialog-content>
-  <h3>活動標題:</h3><input type="text" [(ngModel)]="data.calendarTitle">
-  <h3>活動內容:</h3><input type="textarea" [(ngModel)]="data.calendarDescription">
-  <h3>活動圖片:</h3>
-  <div class="activity-photo-container">
-    @if (newPhotoUrl) {
-    <img [src]="newPhotoUrl" alt="{{ data.calendarTitle }} 活動照片"
-      style="width: 200px; height: 200px; object-fit: cover;">
-    } @else {
-    <p>此活動沒有可顯示的圖片。</p>
-    }
-  </div>
-  <input type="file" (change)="onFileSelected($event)" accept="image/*"><br>
-  <small>
-    原本時間:{{ data.calendarStartDate | date:'yyyy/MM/dd ' }}~{{ data.calendarEndDate | date:'yyyy/MM/dd ' }}
-  </small><br>
-  <input type="date" [(ngModel)]="data.calendarStartDate">~<input type="date" [(ngModel)]="data.calendarEndDate">
-</mat-dialog-content>
+  <mat-dialog-content class="dialogContent">
 
-<mat-dialog-actions>
-  <button (click)="onDeleteClick()">刪除</button>
-  <button (click)="onCancelClick()">取消</button>
-  <button [disabled]="form.invalid" (click)="onSaveDraftClick()">
-    暫存
-  </button>
-  <button [disabled]="form.invalid" (click)="onPublishClick()">
-    發布
-  </button>
-</mat-dialog-actions>
+    <div class="formRow">
+      <div class="formField fullWidth">
+        <label>活動標題</label>
+        <input type="text" class="styledInput" [(ngModel)]="data.calendarTitle" placeholder="請輸入標題">
+      </div>
+    </div>
+
+    <div class="formRow">
+      <div class="formField fullWidth">
+        <label>活動圖片</label>
+        <div class="imagePreviewContainer">
+          @if (newPhotoUrl) {
+            <img [src]="newPhotoUrl" alt="{{ data.calendarTitle }} 活動照片" class="previewImg">
+          } @else {
+            <div class="noImagePlaceholder">
+              <p>此活動沒有可顯示的圖片</p>
+            </div>
+          }
+        </div>
+        <input type="file" (change)="onFileSelected($event)" accept="image/*" class="fileInput">
+      </div>
+    </div>
+
+    <div class="formRow">
+      <div class="formField">
+        <label>開始日期</label>
+        <input type="date" class="styledInput" [(ngModel)]="data.calendarStartDate">
+      </div>
+
+      <div class="formField">
+        <label>結束日期</label>
+        <input type="date" class="styledInput" [(ngModel)]="data.calendarEndDate">
+      </div>
+    </div>
+
+    <div class="formRow">
+      <div class="formField fullWidth">
+        <small class="infoText">
+          原本時間：{{ data.calendarStartDate | date:'yyyy/MM/dd' }} ~ {{ data.calendarEndDate | date:'yyyy/MM/dd' }}
+        </small>
+      </div>
+    </div>
+
+    <div class="formRow">
+      <div class="formField fullWidth">
+        <label>活動內容</label>
+        <textarea class="styledInput" [(ngModel)]="data.calendarDescription" rows="5" placeholder="請輸入活動內容..."></textarea>
+      </div>
+    </div>
+
+  </mat-dialog-content>
+
+  <mat-dialog-actions class="dialogActions spaceBetween">
+    <button (click)="onDeleteClick()" class="dialogBtn deleteBtn">刪除</button>
+
+    <div class="rightActions">
+      <button (click)="onCancelClick()" class="dialogBtn cancelBtn">取消</button>
+
+      <button [disabled]="form.invalid" (click)="onSaveDraftClick()" class="dialogBtn draftBtn">
+        暫存
+      </button>
+
+      <button [disabled]="form.invalid" (click)="onPublishClick()" class="dialogBtn confirmBtn">
+        發布
+      </button>
+    </div>
+  </mat-dialog-actions>
+</div>

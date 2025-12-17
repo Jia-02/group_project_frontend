@@ -23,29 +23,12 @@ html {
 html,
 body {
   height: 100%;
-  background-color: rgb(248, 249, 250);
-  overflow-x: hidden;
-}
-
-
-
-// Tab 內容區域
-.mat-mdc-tab-body-active>.mat-mdc-tab-body-content {
-  visibility: visible;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  gap: 20px;
-  padding: 10px;
-  max-width: 1000px;
+  margin: 0;
   box-sizing: border-box;
+  background-color: rgb(248, 249, 250);
 }
 
-mat-tab-group {
-  max-width: 1000px !important;
-  width: 100%;
-  flex-grow: 1;
-}
+
 
 
 mat-slide-toggle {
@@ -75,3 +58,5 @@ mat-slide-toggle {
   --mdc-switch-unselected-handle-color: #fff !important;
 
 }
+
+

@@ -1,78 +1,175 @@
-h2 {
-  text-align: center;
-  padding: 10px 0;
-  margin: 0;
+/* --- 1. 全局容器 (模擬 App 視窗) --- */
+.box {
+  background-color: #fff;
+  min-height: 100vh;
+  padding-bottom: 100px; /* 底部留白，避免內容被購物車按鈕擋住 */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: #333;
+  position: relative;
 }
 
-.productCss {
-  border: 1px solid gray;
-  padding: 10px;
-  border-radius: 15px;
-  width: 250px;
-  max-width: 500px;
-  margin: 20px auto;
-
+/* --- 2. 頂部標題 (Sticky Header) --- */
+.box h2 {
+  position: sticky; /* 關鍵：讓標題黏在頂部 */
+  top: 0;
+  z-index: 100;
+  background-color: #fff;
+  margin: 0;
+  padding: 16px 20px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #333;
+  border-bottom: 1px solid #f0f0f0; /* 極細分隔線 */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02); /* 極淡的陰影 */
   display: flex;
-  justify-content: space-between;
   align-items: center;
 }
 
+/* --- 3. 內容容器 --- */
+.content-container {
+  padding: 0;
+}
+
+/* --- 4. Tab 分類優化 (Angular Material 覆蓋) --- */
+::ng-deep .mat-mdc-tab-header {
+  background-color: #fff;
+  position: sticky; /* 讓 Tab 也黏在標題下方 */
+  top: 54px; /* 依照 h2 的高度調整，讓它接在標題下方 */
+  z-index: 99;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+::ng-deep .mat-mdc-tab-labels {
+  background-color: #fff;
+}
+
+::ng-deep .mat-mdc-tab .mdc-tab__text-label {
+  color: #757575; /* 未選中為灰色 */
+  font-size: 15px;
+  font-weight: 500;
+}
+
+::ng-deep .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
+  color: #013c70 !important; /* 選中為品牌色 */
+  font-weight: 800;
+  font-size: 16px;
+}
+
+::ng-deep .mat-mdc-tab-indicator__content--underline {
+  border-color: #013c70 !important; /* 指示線顏色 */
+  border-top-width: 3px !important;
+}
+
+/* --- 5. 商品項目 (列表式排版) --- */
+.productCss {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* 垂直置中 */
+  padding: 20px; /* 舒適的點擊範圍 */
+  background-color: #fff;
+  border-bottom: 1px solid #f0f0f0; /* 細分隔線 */
+  box-sizing: border-box;
+  cursor: pointer;
+  position: relative; /* 為了定位偽元素 */
+  transition: background-color 0.1s;
+}
+
+/* 點擊回饋 */
+.productCss:active {
+  background-color: #f5f5f5;
+}
+
+/* 左側：商品名稱與資訊 */
 .productCss > span {
   display: flex;
   flex-direction: column;
+  gap: 6px;
+  flex: 1; /* 佔據剩餘空間 */
+  padding-right: 15px; /* 避免跟右邊價格太近 */
 }
 
-.priceCss {
-  position: relative;
-  left: 300%;
-  font-weight: bold;
+/* 商品名稱 */
+.productCss > span::first-line, /* 這是一種技巧，或者你可以直接針對裡面的文字 */
+.productCss span:not(.priceCss) {
+  font-size: 17px;
+  font-weight: 600;
   color: #333;
+  line-height: 1.4;
 }
 
-.buttonCss {
-  width: 300px;
-  max-width: 500px;
-  height: 80px;
-  border-radius: 30px;
-  border-style: dashed;
-  font-size: 20px;
-  position: fixed;
-  bottom: 20px;
-  left: 60%;
-  transform: translateX(-50%);
+/* --- 6. 價格與加入按鈕 --- */
+.priceCss {
+  font-size: 15px;
+  color: #333;
+  font-weight: 500;
+  white-space: nowrap; /* 價格不換行 */
+}
+
+/* [視覺優化] 在右側加入一個 "+" 號，暗示可以加入購物車 */
+.productCss::after {
+  content: '+';
   display: flex;
-  justify-content: center;
   align-items: center;
-}
-
-.countCss {
-  position: absolute;
-  right: 10px;
-  background-color: red;
-  color: white;
-  padding: 4px;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background-color: #f0f4f8; /* 淺藍色底 */
+  color: #013c70;
   border-radius: 50%;
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  min-width: 35px;
-  height: 35px;
-  font-size: 25px;
+  font-size: 18px;
+  font-weight: bold;
+  margin-left: 15px;
+  flex-shrink: 0;
 }
 
-@media screen and (max-width: 768px) {
+/* --- 7. 底部懸浮按鈕 (Floating Action Button) --- */
+.buttonCss {
+  position: fixed;
+  bottom: 30px; /* 離底部稍微遠一點，避開手機手勢條 */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 400px;
+  height: 52px;
 
-  h2 {
-    font-size: 1.5em;
-  }
+  background-color: #013c70;
+  color: #fff;
+  border: none;
+  border-radius: 26px; /* 膠囊形狀 */
 
-  .buttonCss {
-    height: 70px;
-    bottom: 10px;
-    font-size: 18px;
-  }
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
 
-  body > div:nth-of-type(1) {
-    padding-bottom: 100px;
-  }
+  box-shadow: 0 6px 16px rgba(1, 60, 112, 0.3); /* 漂亮的深色陰影 */
+  cursor: pointer;
+  z-index: 999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+/* 按鈕點擊效果 */
+.buttonCss:active {
+  transform: translateX(-50%) scale(0.96);
+  box-shadow: 0 2px 8px rgba(1, 60, 112, 0.2);
+}
+
+/* 購物車數量標籤 */
+.countCss {
+  background-color: #fe6d13; /* 亮橘色，與深藍形成對比 */
+  color: #fff;
+  font-size: 13px;
+  min-width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  padding: 0 4px;
 }

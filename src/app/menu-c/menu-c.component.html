@@ -1,0 +1,72 @@
+@if(ordersType == 'A'){
+  <h2>{{ displayOrderType }} 桌號: {{ displayTableId }}</h2>
+} @else {
+  <h2>{{ displayOrderType }}</h2>
+}
+
+<div class="content-container">
+
+    <div class="menu-section">
+        @if (!isLoadingCategories) {
+        <mat-tab-group (selectedTabChange)="onTabChange($event)">
+          @for (category of categories; track category.categoryId) {
+          <mat-tab [label]="category.categoryType">
+            <div style="padding: 10px; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px;">
+              @if (category.products && !category.isLoadingProducts) {
+                @for (item of category.products; track item.productId) {
+                  <div (click)="openProductDetail(category.categoryId, item.productId)" class="productCss">
+                    <span>{{ item.productName }}<br>
+                      <span class="priceCss">$NT{{ item.productPrice }}</span></span>
+                  </div>
+                } @empty {
+                  <p>此分類暫無商品。</p>
+                }
+              } @else {
+                <p>商品載入中...</p>
+              }
+            </div>
+          </mat-tab>
+          }
+        </mat-tab-group>
+        } @else {
+            <p>分類載入中...</p>
+        }
+    </div>
+
+    <div class="cart-section">
+        <h3>🛒 當前訂單預覽</h3>
+        @if (currentCart.length > 0) {
+            @for (item of currentCart; track item.orderDetailsId) {
+              <div class="cart-item">
+                <button  style="float: right; margin-left: 5px;"
+                (click)="deleteCartItem(item); $event.stopPropagation()">🗑️</button>
+                <span class="item-name">{{ item.productName }}</span>
+                <span class="item-quantity"> x {{ item.quantity }}</span>
+                <span class="item-price">$NT{{ item.orderDetailsPrice * item.quantity }}</span>
+                <br>
+                @if (item.orderDetails && item.orderDetails[0] && item.orderDetails[0].detailList?.length) {
+                  <small style="color: #888;">
+                    客製化:
+                    @for (detail of item.orderDetails[0].detailList; track detail.option) {
+                      {{ detail.option }} (+{{ detail.addPrice }})
+                    }
+                  </small>
+                }
+              </div>
+            }
+            <div style="margin-top: 15px; padding-top: 10px; border-top: 2px solid #ddd;">
+                <strong>總計項目數: {{ currentCart.length }}</strong>
+                <br>
+                <strong>總金額: $NT{{ getTotalPrice() }}</strong>
+            </div>
+        } @else {
+            <p style="text-align: center; color: #888; padding-top: 50px;">購物車中暫無商品。</p>
+        }
+    </div>
+
+</div>
+
+<button class="buttonCss footer-button" (click)="submitCart()">
+    送出更新資料
+    <span class="countCss">{{ this.currentCart.length }}</span>
+</button>

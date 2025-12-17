@@ -1,120 +1,285 @@
-@media screen and (max-width: 768px) {
-  .mat-mdc-dialog-container .mat-mdc-dialog-surface {
-    width: 95vw !important;
-    max-height: 95vh;
-    max-width: none !important;
-  }
-
-  .mat-mdc-dialog-title {
-    font-size: 1.3em;
-    padding: 15px 20px;
-  }
-
-  mat-dialog-content {
-    padding: 0 20px 80px 20px !important;
-    overflow-y: auto;
-    line-height: 1.6;
-  }
-
-  mat-dialog-content p {
-    font-size: 1em;
-    margin: 5px 0;
-  }
+/* --- 全局容器設定 --- */
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  max-height: 90vh;
+  background-color: #f5f5f5; /* 灰色底色，區隔卡片 */
+  font-family: -apple-system, BlinkMacSystemFont, "Roboto", sans-serif;
+  overflow: hidden;
 }
 
-@media screen and (max-width: 768px) {
-  .labelCss {
-    font-weight: bold;
-    margin-right: 10px;
-    display: inline-block;
-  }
-
-  .inputCss {
-    width: 60%;
-    padding: 8px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    font-size: 1em;
-  }
+/* --- 標題列 (Sticky) --- */
+.dialog-header {
+  margin: 0;
+  padding: 16px;
+  background-color: #fff;
+  color: #333;
+  font-size: 18px;
+  font-weight: 700;
+  text-align: center;
+  border-bottom: 1px solid #eee;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+  z-index: 10;
 }
 
-@media screen and (max-width: 768px) {
-
-  mat-dialog-content h3 {
-    font-size: 1.2em;
-    margin-top: 20px;
-    margin-bottom: 15px;
-  }
-
-  .positionCss {
-    position: static;
-    left: auto;
-  }
-
-  mat-dialog-content > div {
-    margin-bottom: 10px;
-    padding-bottom: 10px;
-    border-bottom: 1px dashed #eee;
-  }
-
-  mat-dialog-content > div > div:nth-child(1) {
-    display: flex;
-    justify-content: space-between;
-    font-weight: bold;
-    font-size: 1.1em;
-    margin-bottom: 5px;
-  }
-
-  mat-dialog-content > div > div:nth-child(1) span:first-child {
-    color: #007bff;
-  }
-
-  mat-dialog-content > div > div:nth-child(1) span:last-child {
-    color: #cc0000;
-  }
-
-  mat-dialog-content > div > div:not(:nth-child(1)) {
-    margin-left: 10px;
-    font-size: 0.95em;
-    color: #555;
-  }
+/* --- 內容捲動區 --- */
+.dialog-content {
+  flex: 1;
+  padding: 16px !important;
+  overflow-y: auto;
+  padding-bottom: 20px !important;
 }
 
-@media screen and (max-width: 768px) {
+.hidden-divider {
+  display: none; /* 隱藏原本的 hr */
+}
 
-  .mat-mdc-dialog-actions {
-    padding: 10px 20px;
-    margin: 0;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 1000;
-    background-color: white;
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+/* --- 資訊卡片 (Info Card) --- */
+.info-card {
+  background-color: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
 
-    display: flex;
-    justify-content: space-around;
-    gap: 10px;
-  }
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  margin: 0;
+  border-bottom: 1px solid #f9f9f9;
+  font-size: 15px;
+}
+.info-row:last-child { border-bottom: none; }
 
-  .mat-mdc-dialog-actions button {
-    width: 45%;
-    padding: 12px 0;
-    font-size: 1.1em;
-    border-radius: 8px;
-    font-weight: bold;
-  }
+.info-label { color: #888; }
+.info-value { color: #333; font-weight: 500; }
+.info-value.highlight { color: #013c70; font-weight: 700; font-size: 16px; }
 
-  .mat-mdc-dialog-actions button:first-child {
-    background-color: #f0f0f0;
-    color: #333;
-    border: 1px solid #ccc;
-  }
+/* --- 付款方式卡片 --- */
+.payment-card {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
 
-  .mat-mdc-dialog-actions button:last-child {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-  }
+.labelCss {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.select-wrapper {
+  position: relative;
+}
+
+.inputCss {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background-color: #fff;
+  outline: none;
+}
+
+/* --- 訂單細節 --- */
+.section-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #555;
+  margin: 0 0 10px 4px;
+}
+
+.order-item-card {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  border: 1px solid #f0f0f0;
+}
+
+/* 項目標頭 (第一行) */
+.item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed #eee;
+}
+
+.type-tag {
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background-color: #e0f2f1; /* 淺綠 */
+  color: #00695c;
+  font-weight: 600;
+}
+.type-tag.is-set {
+  background-color: #fff3e0; /* 淺橘 */
+  color: #ef6c00;
+}
+
+/* 數量與價格群組 */
+.qty-price-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.qty-controls {
+  display: flex;
+  align-items: center;
+  background-color: #f5f5f5;
+  border-radius: 20px;
+  padding: 2px;
+}
+
+/* 圓形按鈕美化 */
+.qty-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+  background-color: #fff;
+  color: #013c70;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+.qty-btn:active { background-color: #f0f0f0; }
+
+.qty-text {
+  min-width: 24px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 14px;
+  color: #333;
+}
+
+.item-total-price {
+  font-weight: 700;
+  color: #333;
+  font-size: 15px;
+}
+
+/* 套餐標題 */
+.set-content-header {
+  font-weight: 600;
+  font-size: 15px;
+  color: #333;
+  margin-bottom: 6px;
+}
+
+/* 產品明細 */
+.product-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.product-row {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.4;
+}
+
+.product-price-sub {
+  color: #999;
+  font-size: 12px;
+}
+
+/* 客製化選項 */
+.modifier-box {
+  margin-top: 4px;
+  padding-left: 10px;
+  font-size: 13px;
+  color: #666;
+  border-left: 2px solid #eee;
+}
+
+.modifier-label {
+  color: #999;
+  font-size: 12px;
+  margin-right: 4px;
+}
+
+.modifier-tag {
+  display: inline-block;
+  margin-right: 6px;
+}
+
+/* --- 總金額區塊 --- */
+.total-section {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.total-label {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+}
+
+.total-price {
+  font-size: 24px;
+  font-weight: 800;
+  color: #fe6d13; /* 亮橘色 */
+}
+
+/* --- 底部按鈕區 --- */
+.footer-actions {
+  padding: 16px !important;
+  background-color: #fff;
+  border-top: 1px solid #f0f0f0;
+  display: flex;
+  gap: 12px;
+  padding-bottom: max(16px, env(safe-area-inset-bottom)) !important;
+  box-shadow: 0 -4px 10px rgba(0,0,0,0.05);
+}
+
+.footer-actions button {
+  height: 48px;
+  border-radius: 24px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+.footer-actions button:active { transform: scale(0.98); }
+
+/* 加點按鈕 (次要) */
+.secondary-btn {
+  flex: 1;
+  background-color: #fff;
+  border: 1px solid #013c70 !important;
+  color: #013c70;
+}
+
+/* 下單按鈕 (主要) */
+.primary-btn {
+  flex: 2;
+  background-color: #013c70;
+  color: #fff;
+  box-shadow: 0 4px 8px rgba(1, 60, 112, 0.2);
 }

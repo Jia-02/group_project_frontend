@@ -1,4 +1,4 @@
-<h2 mat-dialog-title class="dialogTitle">
+<h2 mat-dialog-title class="diaTitle">
   新增餐點 - {{ categoryType }}
 </h2>
 
@@ -15,7 +15,7 @@
 
     <div class="formField">
       <label>價格</label>
-      <input type="number" class="styledInput" [(ngModel)]="productList.productPrice" placeholder="0">
+      <input type="number" class="styledInput" [(ngModel)]="productList.productPrice" min="0" placeholder="0">
     </div>
 
   </div>
@@ -28,7 +28,12 @@
 
   <label>餐點圖片</label>
   <div class="fileInputWrapper">
-    <input type="file" (change)="onFileSelected($event)" accept="image/*">
+    <input type="file" id="fileInput" (change)="onFileSelected($event)" accept="image/*" hidden>
+
+    <label for="fileInput" class="uploadBtn">
+      <mat-icon>upload</mat-icon>
+      <span>點擊選擇圖片</span>
+    </label>
   </div>
 
   @if (selectedFile) {
@@ -46,3 +51,6 @@
 
   <button (click)="onAddClick()" class="dialogBtn confirmBtn">確定</button>
 </mat-dialog-actions>
+
+
+

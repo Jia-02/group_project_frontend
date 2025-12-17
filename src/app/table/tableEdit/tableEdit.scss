@@ -1,0 +1,153 @@
+/* 外層容器 */
+.dialogContainer {
+  padding: 30px;
+  max-width: 500px;
+  margin: 0 auto;
+  background-color: #fff;
+}
+
+/* --- 資訊模式 (Info Mode) --- */
+.infoListContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: stretch;
+}
+
+/* 單個資訊卡片 */
+.infoCard {
+  border: 1px solid #eee;
+  border-left: 4px solid #013c70; /* 左側藍色飾條 */
+  border-radius: 6px;
+  padding: 15px 20px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.infoRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px dashed #ddd;
+  padding-bottom: 4px;
+}
+
+.infoRow:last-child {
+  border-bottom: none;
+}
+
+.infoLabel {
+  color: #666;
+  font-weight: 500;
+}
+
+.infoValue {
+  color: #333;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+/* --- 編輯/新增模式 (Form Mode) --- */
+.formContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* 排版共用類別 (沿用之前的設計) */
+.formRow {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+}
+
+.formField {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.formField label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 6px;
+}
+
+/* 輸入框樣式 */
+.styledInput {
+  padding: 10px 12px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  outline: none;
+  background-color: #fff;
+  transition: all 0.2s;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.styledInput:focus {
+  border-color: #013c70;
+  background-color: #fdfdfd;
+}
+
+/* 唯讀文字樣式 */
+.readOnlyText {
+  padding: 10px 12px;
+  font-size: 14px;
+  background-color: #f0f0f0;
+  color: #333;
+  border-radius: 6px;
+  font-weight: bold;
+}
+
+/* --- 按鈕區域 --- */
+.actionButtons {
+  display: flex;
+  gap: 15px;
+  margin-top: 10px;
+  justify-content: flex-end; /* 按鈕靠右 */
+}
+
+.dialogBtn {
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+  min-width: 100px;
+}
+
+/* 確認/新增按鈕 (深藍) */
+.confirmBtn {
+  background-color: #013c70;
+  color: #fff;
+}
+
+.confirmBtn:hover {
+  background-color: #fe6d13;
+  box-shadow: 0 2px 4px rgba(1, 60, 112, 0.25);
+}
+
+/* 刪除按鈕 (紅色) */
+.deleteBtn {
+  background-color: #fff;
+  border: 1px solid #ff4d4f;
+  color: #ff4d4f;
+}
+
+.deleteBtn:hover {
+  background-color: #fff1f0;
+  color: #d9363e;
+}
+
+/* 全寬按鈕 (用於只有一個按鈕時) */
+.fullBtn {
+  flex: 1;
+}

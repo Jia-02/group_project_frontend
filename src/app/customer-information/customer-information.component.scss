@@ -1,62 +1,118 @@
+/* --- 全局背景 (全螢幕置中) --- */
 .backgroundCss {
-  background-color: aqua;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
   width: 100%;
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
+
+  /* 柔和的藍灰漸層背景 */
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  font-family: -apple-system, BlinkMacSystemFont, "Roboto", sans-serif;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
+/* --- 中間的白色卡片 --- */
 .Box {
-  background-color: rgba(255, 255, 255, 0.8);
-  padding: 40px;
-  border-radius: 15px;
+  background-color: #fff;
+  width: 100%;
+  max-width: 340px; /* 手機版適當寬度 */
+  padding: 30px 25px;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08); /* 懸浮陰影 */
+
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  align-items: center;
+
+  /* 這裡設定的是「標籤文字」的樣式 */
+  font-size: 14px;
+  font-weight: 700;
+  color: #555;
+  text-align: left;
+
+  /* 進場動畫 */
+  animation: slideUp 0.5s ease-out;
 }
 
-.buttonCss {
-  width: 250px;
-  padding: 10px;
-  background-color: white;
-  border: 1px solid black;
-  border-radius: 15px;
-  cursor: pointer;
-  font-size: 1.1em;
+/* --- 標題 (顧客資訊) --- */
+.Box h3 {
+  margin: 0 0 25px 0; /* 標題與下方內容的距離 */
+  font-size: 22px;
+  font-weight: 800;
+  color: #013c70; /* 品牌深藍色 */
+  text-align: center;
+  letter-spacing: 1px;
 }
 
+/* --- 輸入框樣式 --- */
 .inputCss {
-  width: 250px;
-  padding: 10px;
-  background-color: white;
-  border: 1px solid black;
-  border-radius: 15px;
+  /* 關鍵：設為 block 讓輸入框強迫換行，標籤就會自動在上方 */
+  display: block;
+  width: 100%;
+  height: 48px;
+
+  margin-top: 8px;   /* 與上方標籤的距離 */
+  margin-bottom: 20px; /* 與下一個欄位的距離 */
+
+  padding: 0 16px;
+  font-size: 16px;
+  color: #333;
+
+  background-color: #f9f9f9;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-sizing: border-box; /* 確保 padding 不會撐大寬度 */
+  outline: none;
+  transition: all 0.2s;
+}
+
+/* 輸入框聚焦時 */
+.inputCss:focus {
+  background-color: #fff;
+  border-color: #013c70;
+  box-shadow: 0 0 0 3px rgba(1, 60, 112, 0.1);
+}
+
+/* 輸入框內的 placeholder 顏色 (若有的話) */
+.inputCss::placeholder {
+  color: #bbb;
+}
+
+/* --- 開始點餐按鈕 --- */
+.buttonCss {
+  width: 100%;
+  height: 52px;
+  margin-top: 10px; /* 與上方欄位的距離 */
+
+  background-color: #013c70;
+  color: #fff;
+  border: none;
+  border-radius: 26px; /* 膠囊形狀 */
+
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 1px;
   cursor: pointer;
-  font-size: 1.1em;
+
+  box-shadow: 0 4px 10px rgba(1, 60, 112, 0.3);
+  transition: transform 0.1s, background-color 0.2s;
 }
 
-@media screen and (max-width: 768px) {
-  .Box {
-    width: 90%;
-    max-width: 400px;
-    padding: 30px 20px;
-  }
-
-  .Box h3 {
-    font-size: 1.5em;
-  }
-
-  .buttonCss {
-    width: 100%;
-    max-width: 300px;
-    padding: 15px;
-    font-size: 1.2em;
-  }
+/* 按鈕點擊效果 */
+.buttonCss:active {
+  transform: scale(0.96);
+  background-color: #012a50;
 }
 
-
+/* --- 動畫定義 --- */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

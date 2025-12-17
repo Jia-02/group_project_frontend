@@ -1,38 +1,282 @@
-@media screen and (max-width: 768px) {
-  .mat-mdc-dialog-container .mat-mdc-dialog-surface {
-    width: 95vw !important;
-    max-height: 95vh;
-    max-width: none !important;
-  }
+/* --- 全局容器 --- */
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  max-height: 90vh; /* 模擬手機彈窗高度 */
+  background-color: #fff;
+  font-family: -apple-system, BlinkMacSystemFont, "Roboto", sans-serif;
+  overflow: hidden;
+}
 
-  .mat-mdc-dialog-title {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 20px;
-    margin: 0;
-  }
+/* --- 1. 標題列 (Sticky) --- */
+.dialogHeader {
+  margin: 0;
+  padding: 12px 16px;
+  background-color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #f0f0f0;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
 
-  mat-dialog-content {
-    padding: 0 20px 100px 20px !important;
-    overflow-y: auto;
-  }
+.headerTitle {
+  font-size: 16px;
+  font-weight: 700;
+  color: #333;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 
-  mat-dialog-content img {
-    width: 100%;
-    height: auto;
-    border-radius: 8px;
-    margin-bottom: 10px;
-  }
+.closeBtn {
+  background: transparent;
+  border: none;
+  color: #333;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  border-radius: 50%;
+}
+.closeBtn:active { background-color: #f5f5f5; }
 
-  mat-dialog-content span,
-  mat-dialog-content p {
-    font-size: 1.1em;
-    line-height: 1.5;
-  }
+/* --- 2. 內容捲動區 --- */
+.dialogContent {
+  padding: 0 !important;
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 20px !important;
+  background-color: #f5f5f5; /* 背景灰底，區隔區塊 */
+}
 
-  mat-dialog-content h3 {
-    margin-top: 20px;
-    margin-bottom: 10px;
-  }
+/* 頂部大圖 */
+.heroImage {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  display: block;
+}
+
+/* 產品資訊區塊 */
+.productInfoSection {
+  background-color: #fff;
+  padding: 20px 16px;
+  margin-bottom: 10px;
+}
+
+.productHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.productTitle {
+  font-size: 22px;
+  font-weight: 800;
+  color: #333;
+  margin: 0;
+  flex: 1;
+}
+
+.basePrice {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin-left: 10px;
+}
+
+.productDesc {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.5;
+  margin: 0 0 12px 0;
+}
+
+.allergenBox {
+  font-size: 12px;
+  color: #888;
+  background-color: #f9f9f9;
+  padding: 6px 10px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+/* --- 3. 客製化選項區 --- */
+.customizationSection {
+  background-color: #f5f5f5;
+}
+
+.sectionTitle {
+  padding: 16px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #555;
+  margin: 0;
+}
+
+/* 選項群組 */
+.optionGroup {
+  background-color: #fff;
+  margin-bottom: 10px;
+}
+
+.groupHeader {
+  padding: 16px;
+  background-color: #fff;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.groupName {
+  font-size: 16px;
+  font-weight: 700;
+  color: #333;
+}
+
+.groupLimit {
+  font-size: 12px;
+  color: #666;
+  background: #eee;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+/* 選項列表 */
+.optionList {
+  display: flex;
+  flex-direction: column;
+}
+
+.optionRow {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid #f9f9f9;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.optionRow:active {
+  background-color: #f5f5f5;
+}
+
+.optionRow:last-child {
+  border-bottom: none;
+}
+
+.optionRow.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* 原生 Input 美化 */
+.nativeInput {
+  width: 20px;
+  height: 20px;
+  accent-color: #013c70; /* 品牌色 */
+  margin: 0;
+  cursor: pointer;
+}
+
+.inputWrapper {
+  margin-right: 16px;
+  display: flex;
+  align-items: center;
+}
+
+.optName {
+  flex: 1;
+  font-size: 15px;
+  color: #333;
+}
+
+.optPrice {
+  font-size: 14px;
+  color: #666;
+}
+
+/* --- 4. 底部固定操作區 --- */
+.footerContainer {
+  background-color: #fff;
+  border-top: 1px solid #eee;
+  padding: 10px 16px;
+  padding-bottom: max(10px, env(safe-area-inset-bottom)); /* iPhone 底部適配 */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: 0 -4px 10px rgba(0,0,0,0.05);
+}
+
+/* 數量控制 */
+.quantityPanel {
+  padding: 0 !important;
+  margin: 0 !important;
+  min-height: auto !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+.qtyBtn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid #e0e0e0;
+  background: #fff;
+  color: #013c70;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.qtyBtn:active { background: #f0f0f0; }
+
+.qtyInput {
+  width: 50px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 700;
+  border: none;
+  outline: none;
+}
+
+/* 加入購物車按鈕 */
+.cartPanel {
+  padding: 0 !important;
+  margin: 0 !important;
+  min-height: auto !important;
+}
+
+.addToCartBtn {
+  width: 100%;
+  height: 48px;
+  background-color: #013c70;
+  color: #fff;
+  border: none;
+  border-radius: 8px; /* App 風格圓角 */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(1, 60, 112, 0.2);
+}
+
+.addToCartBtn:disabled {
+  background-color: #ccc;
+  box-shadow: none;
+}
+
+.totalPrice {
+  font-weight: 600;
 }

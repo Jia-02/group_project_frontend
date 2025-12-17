@@ -1,50 +1,102 @@
+/* --- 全局背景設定 --- */
 .backgroundCss {
-  background-color: aqua;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
   width: 100%;
-  height: 100vh;
+  height: 100vh; /* 佔滿全螢幕 */
   display: flex;
   justify-content: center;
   align-items: center;
+
+  /* 柔和的漸層背景 */
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  font-family: -apple-system, BlinkMacSystemFont, "Roboto", sans-serif;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
+/* --- 中間的卡片區塊 --- */
 .Box {
-  background-color: rgba(255, 255, 255, 0.8);
-  padding: 40px;
-  border-radius: 15px;
+  background-color: #fff;
+  width: 100%;
+  max-width: 320px;
+  padding: 40px 25px;
+  border-radius: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  align-items: center;
+  gap: 20px; /* 按鈕之間的距離 */
+
+  /* 進場動畫 */
+  animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
+/* 可以在卡片上方加一個 Logo 或歡迎詞 (選用，透過 CSS 偽元素添加) */
+.Box::before {
+  content: '請選擇用餐方式';
+  font-size: 20px;
+  font-weight: 700;
+  color: #333;
+  text-align: center;
+  margin-bottom: 10px;
+  display: block;
+}
+
+/* --- 按鈕通用樣式 --- */
 .buttonCss {
-  width: 250px;
-  padding: 10px;
-  background-color: white;
-  border: 1px solid black;
-  border-radius: 15px;
+  width: 100%;
+  height: 64px; /* 加大高度，方便手指點擊 */
+  border: none;
+  border-radius: 16px;
+  font-size: 18px;
+  font-weight: bold;
+  letter-spacing: 1px;
   cursor: pointer;
-  font-size: 1.1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px; /* 圖示與文字的間距 */
+  transition: transform 0.1s, box-shadow 0.2s;
+  position: relative;
+  overflow: hidden;
 }
 
-@media screen and (max-width: 768px) {
-  .Box {
-    width: 90%;
-    max-width: 400px;
-    padding: 30px 20px;
-  }
+/* 按鈕點擊效果 */
+.buttonCss:active {
+  transform: scale(0.96);
+  filter: brightness(0.9);
+}
 
-  .Box h3 {
-    font-size: 1.5em;
-  }
+/* --- 針對「外帶」按鈕 (第一個按鈕) --- */
+.buttonCss:nth-of-type(1) {
+  background-color: #fff;
+  color: #013c70;
+  border: 2px solid #013c70; /* 描邊風格 */
+}
 
-  .buttonCss {
-    width: 100%;
-    max-width: 300px;
-    padding: 15px;
-    font-size: 1.2em;
+/* 加入外帶圖示 (使用 CSS Emoji 或 icon font) */
+.buttonCss:nth-of-type(1)::before {
+  font-size: 24px;
+}
+
+/* --- 針對「外送」按鈕 (第二個按鈕) --- */
+.buttonCss:nth-of-type(2) {
+  background-color: #013c70; /* 品牌深藍色 */
+  color: #fff;
+  box-shadow: 0 4px 15px rgba(1, 60, 112, 0.3);
+}
+
+/* 加入外送圖示 */
+.buttonCss:nth-of-type(2)::before {
+  font-size: 24px;
+}
+
+/* --- 進場動畫定義 --- */
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
   }
 }

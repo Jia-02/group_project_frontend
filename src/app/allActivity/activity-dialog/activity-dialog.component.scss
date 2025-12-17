@@ -1,0 +1,208 @@
+/* --- Header --- */
+.diaTitle {
+  margin: 0;
+  padding: 16px 24px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #fdfdfd;
+  background-color: #013c70;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  .headerSubtitle {
+    font-size: 15px;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 2px 10px;
+    border-radius: 4px;
+    font-weight: 400;
+    color: #fdfdfd;
+    max-width: 300px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+/* --- Content (左右佈局核心) --- */
+/* --- Content (左右佈局核心) --- */
+.dialogContent {
+  padding: 30px !important;
+  display: flex;
+  flex-direction: row;
+  gap: 30px;             /* 左右區塊間距 */
+  box-sizing: border-box;
+}
+
+/* 左側欄位 (設定 35%) */
+.leftColumn {
+  flex: 0 0 35%;         /* 【關鍵】固定佔用 35% 寬度 */
+  max-width: 35%;        /* 確保不超出 */
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+/* 右側欄位 (剩餘空間，約 65%) */
+.rightColumn {
+  flex: 1;               /* 【關鍵】自動填滿剩下的所有空間 */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;          /* 防止過大的圖片撐破 Flex 容器 */
+}
+
+/* 中間的垂直分隔線 (選用，若覺得太擠可移除 HTML 中的這行) */
+.verticalDivider {
+  width: 1px;
+  background-color: #eee;
+  margin: 0;             /* 因為外層有 gap，這裡 margin 設 0 即可 */
+}
+
+/* 資訊群組 */
+.infoGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #888;
+  }
+}
+
+.infoValue {
+  font-size: 15px;
+  color: #333;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+/* 日期樣式 */
+.dateRange {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: monospace, sans-serif;
+  font-size: 16px;
+  color: #013c70;
+}
+
+.arrowIcon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  color: #ccc;
+}
+
+/* 描述區塊 */
+.description {
+  white-space: pre-wrap;
+  background-color: #f9f9f9;
+  padding: 15px;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  flex: 1;               /* 讓描述區塊填滿左側剩餘高度 */
+  min-height: 120px;     /* 設定最小高度 */
+
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+.sectionLabel {
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+}
+
+/* --- 圖片預覽 --- */
+.imageContainer {
+  width: 100%;
+  height: 100%;          /* 填滿右側高度 */
+  min-height: 250px;     /* 最小高度 */
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.imageContainer img {
+  max-width: 100%;
+  max-height: 350px;     /* 限制圖片最大高度 */
+  object-fit: contain;   /* 保持比例 */
+}
+
+/* 無圖片時的佔位符 */
+.noImagePlaceholder {
+  width: 100%;
+  height: 100%;
+  min-height: 250px;
+  background-color: #f0f0f0;
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+  gap: 8px;
+
+  mat-icon {
+    font-size: 40px;
+    width: 40px;
+    height: 40px;
+    color: #bbb;
+  }
+}
+
+/* --- Buttons --- */
+.dialogActions {
+  padding: 16px 30px !important;
+  border-top: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.actionGroup {
+  display: flex;
+  gap: 12px;
+}
+
+.dialogBtn {
+  padding: 10px 24px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+}
+
+.cancelBtn {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  color: #666;
+  &:hover { background-color: #f5f5f5; color: #333; }
+}
+
+.secondaryBtn {
+  background-color: #fff;
+  border: 1px solid #013c70;
+  color: #013c70;
+  &:hover { background-color: #eef4fc; }
+}
+
+.confirmBtn {
+  background-color: #013c70;
+  color: #fff;
+  &:hover {
+    background-color: #fe6d13;
+    box-shadow: 0 2px 4px rgba(1, 60, 112, 0.25);
+  }
+}
