@@ -64,7 +64,7 @@ export class TableComponent {
     //每分鐘重新更新畫面資訊 搭配ngOnDestroy()
     this.timerId = setInterval(() => {
       this.screenRefreshMinute();
-    }, 60000); // 每60秒執行一次
+    }, 60000  ); // 每60秒執行一次
   }
 
   ngAfterViewInit() {
@@ -497,7 +497,7 @@ export class TableComponent {
       console.log(str)
       myDiv.style.width = str;
     } else {
-      myDiv.style.width = "0%"
+      myDiv.style.display = "none"
     }
     let url = "reservation/date_list?reservationDate=" + this.reservation_date;
     this.service.getApi(url).subscribe((reservationListToday: ReservationListTodayRes) => {

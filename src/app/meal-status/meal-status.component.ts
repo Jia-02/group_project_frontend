@@ -13,7 +13,7 @@ export class MealStatusComponent {
 
   constructor(private service: DataService) { }
 
-  count!: number;
+  count: number = 0;
   orders!: Order[];
   timerId!: any;
 

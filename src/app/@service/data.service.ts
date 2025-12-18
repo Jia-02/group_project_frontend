@@ -40,7 +40,7 @@ export class DataService {
   // 附餐與飲料列表
   sideDishList: productList[] = [];
   drinkDishList: productList[] = [];
-  baseUrl = 'https://25097f6e8903.ngrok-free.app/'
+  baseUrl = 'http://localhost:8080/'
 
 
   getApi(url: string): any {

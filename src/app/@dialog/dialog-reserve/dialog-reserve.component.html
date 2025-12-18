@@ -39,7 +39,7 @@
     </div>
 
     <div class="formRow">
-      <div class="formField">
+      <!-- <div class="formField">
         <label>總人數</label>
         <select class="styledInput" [(ngModel)]="reservation.reservationCount" (change)="updateTotal()">
           <option value="--請選擇--" disabled>--請選擇--</option>
@@ -47,11 +47,11 @@
           <option [value]="data">{{ data }} 位</option>
           }
         </select>
-      </div>
+      </div> -->
 
       <div class="formField">
         <label>桌號</label>
-        <select class="styledInput" [(ngModel)]="reservation.tableId" (ngModelChange)="changeTotal()">
+        <select class="styledInput" [(ngModel)]="reservation.tableId" (ngModelChange)="changeTable()">
           <option value="--請選擇--" disabled>--請選擇--</option>
           @for (data of tableIdList; track data) {
           <option [value]="data">{{ data }} 桌</option>
@@ -63,7 +63,7 @@
     <div class="formRow">
       <div class="formField">
         <label>大人</label>
-        <select class="styledInput" [(ngModel)]="reservation.reservationAdultCount" (change)="updateAdultChild()">
+        <select class="styledInput" [(ngModel)]="reservation.reservationAdultCount" (ngModelChange)="changePeople(true)">
           <option [ngValue]="0">0</option>
           @for (data of adultList; track data) {
           <option [value]="data">{{ data }}</option>
@@ -73,7 +73,7 @@
 
       <div class="formField">
         <label>小孩</label>
-        <select class="styledInput" [(ngModel)]="reservation.reservationChildCount" (change)="updateAdultChild()">
+        <select class="styledInput" [(ngModel)]="reservation.reservationChildCount" (ngModelChange)="changePeople(false)">
           <option [ngValue]="0">0</option>
           @for (data of childList; track data) {
           <option [value]="data">{{ data }}</option>

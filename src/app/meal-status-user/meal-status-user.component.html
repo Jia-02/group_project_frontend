@@ -20,13 +20,18 @@
 
     <div class="time-grid">
       <div class="time-box">
-        <span class="time-label">剩餘時間</span>
+        @if(mealStatus.mealStatus == "製作中"){
+          <span class="time-label">製作完成時間</span>
+        }
+        @else if(mealStatus.mealStatus == "已取餐"){
+          <span class="time-label">餐點送達時間</span>
+        }
         <span class="time-value">{{mealStatus.estimatedTime}} <small>分</small></span>
       </div>
-      <div class="time-box">
+      <!-- <div class="time-box">
         <span class="time-label">預計送達</span>
         <span class="time-value">{{mealStatus.finishTime}}</span>
-      </div>
+      </div> -->
     </div>
 
     <div class="divider"></div>
