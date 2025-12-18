@@ -73,16 +73,6 @@ export class SettingDetailDialogComponent {
     this.calculateTotalPrice();
   }
 
-  private _formBuilder = inject(FormBuilder);
-
-  firstFormGroup = this._formBuilder.group({
-    firstCtrl: ['', Validators.required],
-  });
-  secondFormGroup = this._formBuilder.group({
-    secondCtrl: ['', Validators.required],
-  });
-  isLinear = true;
-
   isCategoryValid(categoryId: number): boolean {
     return this.selectedMainProduct.has(categoryId);
   }

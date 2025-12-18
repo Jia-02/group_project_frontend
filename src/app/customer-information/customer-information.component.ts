@@ -26,6 +26,12 @@ export class CustomerInformationComponent {
     this.orderService.currentOrder.ordersType = this.ordersType as 'T' | 'D';
   }
 
+  onPhoneInput(event: any) {
+    const input = event.target as HTMLInputElement;
+    input.value = input.value.replace(/[^0-9]/g, '');
+    this.customerPhone = input.value;
+  }
+
   startNonInnerOrder() {
     if (!this.customerName || !this.customerPhone) {
       alert('請輸入顧客姓名和電話！');

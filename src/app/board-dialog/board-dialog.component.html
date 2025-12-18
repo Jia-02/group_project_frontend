@@ -5,7 +5,7 @@
 <mat-dialog-content class="store-announcement-content">
 
   @for (activity of activities; track activity.calendarStartDate) {
-    <div class="announcement-card">
+    <div class="announcement-card" (click)="watchActivity(activity)">
 
       <div class="activity-photo"
            [ngStyle]="{'background-image': getBackgroundStyle(activity.calendarPhoto)}">

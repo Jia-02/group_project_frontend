@@ -10,7 +10,8 @@
   <div class="formRow">
     <div class="formField">
       <label>開始時間</label>
-      <input type="date" class="styledInput" [(ngModel)]="data.calendarStartDate" [min]="todayDateString">
+      <input type="date" class="styledInput" [(ngModel)]="data.calendarStartDate"
+      [min]="todayDateString" (change)="onStartDateChange()">
     </div>
 
     <div class="formField">
