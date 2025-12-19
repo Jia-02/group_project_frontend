@@ -8,20 +8,36 @@
     </div>
 
     <div class="info-row highlight-row">
-      <span class="label">訂單狀態</span>
-      <span class="value-status">{{mealStatus.mealStatus}}</span>
+      @if(mealStatus.paid){
+        <span class="label">訂單狀態</span>
+        <span class="value-status">{{mealStatus.mealStatus}}</span>
+      }@else {
+        <span class="label">訂單狀態</span>
+        <span class="value-status">尚未付款</span>
+      }
+
     </div>
 
-    <div class="time-grid">
+    @if(mealStatus.mealStatus == "製作中" || mealStatus.mealStatus == "已取餐"){
+      <div class="time-grid">
       <div class="time-box">
-        <span class="time-label">剩餘時間</span>
-        <span class="time-value">{{mealStatus.estimatedTime}} <small>分</small></span>
+        @if(mealStatus.mealStatus == "製作中"){
+          <span class="time-label">製作完成時間剩餘</span>
+          <span class="time-value">{{mealStatus.estimatedTime}} <small>分</small></span>
+        }
+        @else if(mealStatus.mealStatus == "已取餐"){
+          <span class="time-label">餐點送達時間剩餘</span>
+          <span class="time-value">{{mealStatus.estimatedTime}} <small>分</small></span>
+        }
+
       </div>
-      <div class="time-box">
+      <!-- <div class="time-box">
         <span class="time-label">預計送達</span>
         <span class="time-value">{{mealStatus.finishTime}}</span>
-      </div>
+      </div> -->
     </div>
+    }
+
 
     <div class="divider"></div>
 
@@ -62,7 +78,8 @@
     </div>
   </div>
 
-  } @else {
+  }
+  @else {
 
   <div class="card search-card">
     <h3 class="search-title">訂單查詢</h3>

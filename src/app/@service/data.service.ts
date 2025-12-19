@@ -182,6 +182,7 @@ export interface Rect {
 export interface Order {
   orderId: number;
   orderCode: string;
+  orderTime:string;
   orderProductList: OrderDetailsList[];
   tableId: string;
   status: string[];
@@ -272,6 +273,7 @@ export interface MealStatusRes {
 export interface MealStatus {
   mealStatusId: number;
   mealStatus: string;
+  paid:boolean;
   estimatedTime: number;
   finishTime: string;
   ordersId: number;

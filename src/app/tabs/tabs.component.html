@@ -41,6 +41,8 @@
                       }@else {
                         <span class="unpaid">尚未付款</span>
                       }
+                      <span style="flex: 1 1 auto;"></span>
+                      <span style="font-size: 15px; color: black;">{{order.orderTime}}</span>
                     </div>
 
                     <div class="divider"></div>
@@ -80,7 +82,7 @@
       }
 
       @if(links){
-        <mat-tab disabled>
+        <mat-tab >
           <ng-template mat-tab-label>
             <div class="add-tab-btn" (click)="addLink($event)">
               <mat-icon fontIcon="add"></mat-icon>
