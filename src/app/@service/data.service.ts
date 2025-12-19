@@ -86,6 +86,7 @@ export interface Reservation {
   reservationDate: string;
   reservationPhone: string;
   reservationTime: string;
+  reservationTimeEnd: string;
   reservationName: string;
   reservationCount: number;
   reservationAdultCount: number;

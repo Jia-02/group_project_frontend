@@ -59,11 +59,13 @@
             <span class="timeText">{{item.reservationTime}}</span>
             @if(item.reservationStatus){
             <mat-icon fontIcon="check_circle" class="iconSuccess"></mat-icon>
-            } @else {
+            } @else if(item.reservationTime < reservationTime && item.reservationTimeEnd > currentTime){
             <button class="actionBtn" (click)="arrive(item.tableId,item.reservationName,
                     item.reservationPhone,item.childSeat,item.reservationAdultCount,
                     item.reservationChildCount,item.reservationNote,
                     item.reservationTime,item.reservationCount)">報到</button>
+            } @else{
+              <span>未報到</span>
             }
           </div>
         </div>
@@ -98,12 +100,15 @@
             <span class="timeText">{{item.reservationTime}}</span>
             @if(item.reservationStatus){
             <mat-icon fontIcon="check_circle" class="iconSuccess"></mat-icon>
-            } @else {
+            } @else if(item.reservationTime < reservationTime && item.reservationTimeEnd > currentTime){
             <button class="actionBtn" (click)="arrive(item.tableId,item.reservationName,
                       item.reservationPhone,item.childSeat,item.reservationAdultCount,
                       item.reservationChildCount,item.reservationNote,
                       item.reservationTime,item.reservationCount)">報到</button>
+            } @else{
+              <span>未報到</span>
             }
+
           </div>
         </div>
         }
@@ -143,7 +148,7 @@
 
         <div class="canvasBox">
           <canvas #canvas class="canvasElement" width="500" height="500" (mousemove)="handleMove($event)"
-            (mouseup)="handleUp()" (mouseout)="handleUp()" (mouseleave)="handleUp()" (click)="click($event)"
+            (mouseup)="handleUp()" (mouseleave)="handleLeave()" (click)="click($event)"
             (mousedown)="handleDown($event)">
           </canvas>
         </div>

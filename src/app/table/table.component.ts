@@ -44,6 +44,7 @@ export class TableComponent {
   len = [0, 100, 200, 300, 400, 500];
   mouseDownTime!: any;
   mouseUpTime!: any;
+  reservationTime!: string;
 
   cornerSize = 10;
   rects!: Rect[];
@@ -64,7 +65,7 @@ export class TableComponent {
     //每分鐘重新更新畫面資訊 搭配ngOnDestroy()
     this.timerId = setInterval(() => {
       this.screenRefreshMinute();
-    }, 60000  ); // 每60秒執行一次
+    }, 60000); // 每60秒執行一次
   }
 
   ngAfterViewInit() {
@@ -134,14 +135,12 @@ export class TableComponent {
   //即時搜尋功能 手機號碼/姓名
   search() {
     // console.log(this.inputSearch)
-    console.log(this.reservationListToday[1])
     if (this.inputSearch) {
       this.searchRes = [];
       for (const reservation of this.reservation) {
         if (reservation.reservationName.includes(this.inputSearch)) {
           this.searchRes.push(reservation);
-        }
-        if (reservation.reservationPhone.includes(this.inputSearch)) {
+        }else if (reservation.reservationPhone.includes(this.inputSearch)) {
           this.searchRes.push(reservation);
         }
       }
@@ -215,7 +214,7 @@ export class TableComponent {
 
   // ================= Mouse Events =================
   handleDown(event: MouseEvent) {
-
+    this.mouseDownTime = new Date().getTime();
     const { offsetX, offsetY } = event;
     if (!this.rects) {
       return
@@ -290,7 +289,8 @@ export class TableComponent {
   }
 
   click(event: MouseEvent) {
-    if (this.isEdit && this.mouseUpTime - this.mouseDownTime < 100) {
+    console.log(this.mouseUpTime - this.mouseDownTime)
+    if (this.isEdit && this.mouseUpTime - this.mouseDownTime < 200) {
       console.log(this.editTable)
       const dialogRef = this.dialog.open(TableEditComponent, {
         data: {
@@ -353,9 +353,6 @@ export class TableComponent {
       return;
     }
 
-
-
-
     // ------------- 拖曳角落（縮放）-------------
     if (this.draggingCorner) {
       const r = this.activeRect;
@@ -402,12 +399,22 @@ export class TableComponent {
       }
 
     }
+  }
 
+  handleLeave() {
+    if (this.isEdit || this.isResize) {
+      this.screenRefreshMinute();
+    }
+    this.isEdit = false;
+    this.isResize = false;
+    this.draggingCorner = null;
+    this.draggingWholeRect = false;
   }
 
   handleUp() {
     this.mouseUpTime = new Date().getTime();
-    if (this.isEdit && this.mouseUpTime - this.mouseDownTime > 100) {
+    console.log(this.mouseUpTime)
+    if (this.isEdit && this.mouseUpTime - this.mouseDownTime > 200) {
       let url = "table/update";
       for (const rect of this.rects) {
         if (rect.tableId == this.editTable.tableId) {
@@ -461,6 +468,7 @@ export class TableComponent {
         }
       }
     }
+
     this.draggingCorner = null;
     this.draggingWholeRect = false;
   }
@@ -481,13 +489,23 @@ export class TableComponent {
     let day = String(today.getDate()).padStart(2, '0');
     let hour = String(today.getHours()).padStart(2, '0');
     let minute = String(today.getMinutes()).padStart(2, '0');
+
+    today.setMinutes(today.getMinutes() + 30);
+
     this.currentTime = hour + ":" + minute;
-    console.log(this.currentTime)
+
+    hour = String(today.getHours()).padStart(2, '0');
+    minute = String(today.getMinutes()).padStart(2, '0');
+
+    this.reservationTime = hour + ":" + minute;
+    console.log(this.reservationTime)
+
     this.reservation_date = `${year}-${month}-${day}`;
 
     let myDiv = document.getElementById("progressBar") as HTMLDivElement;
 
     let nowTime = this.currentTime.split(':').map(Number);
+
     let nowHour = nowTime[0] * 3600;
     let nowMinute = nowTime[1] * 60;
 
@@ -533,7 +551,19 @@ export class TableComponent {
         return d;
       }
       //================
+
+      for (const reservation of this.reservation) {
+        let nowTime = reservation.reservationTime.split(':').map(Number);
+        let nowHour = String(nowTime[0]).padStart(2, '0');
+        let nowMinute = String(nowTime[1] + 30).padStart(2, '0');
+        let nowSecond = String(nowTime[2]).padStart(2, '0');
+        let reservationTimeEnd = nowHour + ":" + nowMinute + ":" + nowSecond
+        console.log(nowHour + ":" + nowMinute + ":" + nowSecond)
+        reservation.reservationTimeEnd = reservationTimeEnd;
+      }
+
       console.log(this.reservation)
+      console.log(this.currentTime)
       console.log(this.reservationListToday)
     })
 
