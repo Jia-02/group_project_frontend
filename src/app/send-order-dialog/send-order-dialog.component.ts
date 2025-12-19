@@ -94,9 +94,12 @@ export class SendOrderDialogComponent {
 
   sendOut(): void {
     const now = new Date();
-    const dateStr = now.toISOString().split('T')[0];
+
+    const dateStr = now.getFullYear() + '-' +
+      String(now.getMonth() + 1).padStart(2, '0') + '-' +
+      String(now.getDate()).padStart(2, '0');
+
     const timeStr = now.toTimeString().split(' ')[0];
-    console.log(dateStr)
 
     const expandedDetailsList: RawOrderDetailItem[] = this.data.orderDetailsList.flatMap(rawItem => {
       const quantity = rawItem.quantity && rawItem.quantity > 0 ? rawItem.quantity : 1;
