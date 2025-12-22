@@ -5,7 +5,7 @@
   font-size: 18px;
   font-weight: 600;
   color: #fdfdfd;
-  background-color: #013c70;
+  background-color: #001F4D;
   border-bottom: 1px solid #eee;
 }
 
@@ -36,8 +36,13 @@
 .formField label {
   font-size: 14px;
   font-weight: 600;
-  color: #555;
+  color: #333;
   margin-bottom: 6px;
+}
+
+.formField span {
+  color: #C00000;
+  font-size: 11px;
 }
 
 /* 輸入框通用樣式) */
@@ -55,7 +60,7 @@
 
 /* 輸入框 Focus */
 .styledInput:focus {
-  border-color: #013c70;
+  border-color: #001F4D;
   background-color: #fdfdfd;
 }
 
@@ -115,11 +120,11 @@ textarea.styledInput {
 
 /* 確定按鈕 */
 .confirmBtn {
-  background-color: #013c70;
+  background-color: #001F4D;
   color: #fff;
 }
 
 .confirmBtn:hover {
-  background-color: #fe6d13;
+  background-color: #F2C58E;
   box-shadow: 0 2px 4px rgba(1, 60, 112, 0.25);
 }

@@ -1,11 +1,12 @@
 // 顏色變數
-$color-primary: #013c70; // 藍色 (Blue-600)
-$color-secondary: #fe6d13; // 淺橙色 (用於活動區塊, 類似圖片顏色)
-$color-text: #333; // 深灰色
+$color-primary: #001F4D; // 藍色
+$color-secondary: #F2C58E; // 輔色1:金色
+$color-third: #9390A5; // 輔色2
+$color-text: #333; // 深灰色(文字)
 $color-card-bg: #ffffff; // 白色
 $color-page-bg: #F8F9FA; // 淺灰(背景色)
-$color-gray-bg: #cbcbcb; // 淺灰
-$color-muted: #9ca3af; // 灰色
+$color-gray: #F2F4F6; // 淺藍灰
+
 
 
 // 尺寸變數
@@ -42,7 +43,7 @@ $hour-height: 45px; // 每小時的高度
 // 日曆
 .calendarPanel {
   flex-shrink: 0;
-  height: 260px;
+  height: 270px;
   padding: 15px;
   background-color: $color-card-bg;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
@@ -54,7 +55,7 @@ $hour-height: 45px; // 每小時的高度
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 5px 5px;
+  padding: 3px 5px;
 }
 
 .monthTitle {
@@ -76,7 +77,7 @@ $hour-height: 45px; // 每小時的高度
   transition: background-color 0.3s; // 平滑過渡
 
   &:hover {
-    background-color: $color-gray-bg;
+    background-color: $color-third;
   }
 
   svg {
@@ -119,7 +120,7 @@ $hour-height: 45px; // 每小時的高度
   transition: background-color 0.3s;
 
   &:hover {
-    background-color: $color-gray-bg;
+    background-color: $color-gray;
   }
 }
 
@@ -137,12 +138,12 @@ $hour-height: 45px; // 每小時的高度
 
   &.selected {
     background-color: $color-primary;
-    color: #ffffff; // 白字
+    color: $color-card-bg; // 白字
     box-shadow: 0 2px 5px rgba(1, 60, 112, 0.3);
   }
 }
 
-// 橘色點點
+// 點點
 .activityDot {
   width: 5px;
   height: 5px;
@@ -152,10 +153,6 @@ $hour-height: 45px; // 每小時的高度
 
   &.dot-blue {
     background-color: $color-secondary;
-  }
-
-  &.dot-white {
-    background-color: $color-card-bg;
   }
 }
 
@@ -183,7 +180,7 @@ $hour-height: 45px; // 每小時的高度
     padding-top: 10px;
     margin-bottom: 10px;
     padding-bottom: 10px;
-    border-bottom: 1px solid $color-gray-bg;
+    border-bottom: 1px solid $color-third;
   }
 
   .detailContent p {
@@ -284,7 +281,7 @@ $hour-height: 45px; // 每小時的高度
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: $color-muted;
+  background-color: $color-third;
   transition: .4s;
   border-radius: 20px;
 }
@@ -332,7 +329,7 @@ input:checked:disabled+.slider {
   grid-column: 1;
   padding-right: 15px;
   font-size: 13px;
-  color: $color-muted;
+  color: $color-third;
   background-color: $color-card-bg;
   height: $hour-height;
   display: flex;
@@ -365,10 +362,10 @@ input:checked:disabled+.slider {
   // 允許點擊的時段 (白色底)
   &.allowedSlot {
     cursor: pointer;
-    background-color: #fff;
+    background-color: $color-card-bg;
 
     &:hover {
-      background-color: #e3f2fd;
+      background-color: $color-gray;
     }
   }
 
@@ -378,9 +375,7 @@ input:checked:disabled+.slider {
     cursor: not-allowed;
     opacity: 0.6;
 
-    &:hover {
-      background-color: #f5f5f5;
-    }
+
   }
 
   // 桌子關閉 (條紋)
@@ -404,7 +399,7 @@ input:checked:disabled+.slider {
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: rgba(249, 249, 249, 1);
-    color: $color-muted;
+    color: $color-third;
     padding: 4px 8px;
     border-radius: 4px;
     font-size: 12px;
@@ -430,9 +425,9 @@ input:checked:disabled+.slider {
   position: absolute;
   z-index: 99;
   background-color: $color-secondary;
-  border-left: 5px solid darken($color-secondary, 10%);
+  border-left: 5px solid darken($color-secondary, 20%);
   border-top: 1px solid darken($color-secondary, 10%);
-  border-bottom: 1px solid darken($color-secondary, 10%);
+  border-bottom: 1px solid darken($color-secondary, 20%);
   border-right: none;
   border-radius: 4px;
   padding: 2px 10px;
@@ -447,8 +442,8 @@ input:checked:disabled+.slider {
 
   &:hover {
     z-index: 100;
-    background-color: $color-muted;
-    border: 1px solid darken($color-muted, 10%);
+    background-color: darken($color-gray, 30%);
+    border: 1px solid lighten($color-third, 10%);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
   }
 }
@@ -462,16 +457,17 @@ input:checked:disabled+.slider {
 
 .customerName {
   font-weight: 600;
+  font-size: 13px;
 }
 
 .tableTime {
-  font-size: 12px;
-  font-weight: 500;
+  font-size: 13px;
+  font-weight: 600;
   color: $color-text;
 }
 
 .updateBtn {
-  color: $color-muted;
+  color: $color-third;
   cursor: pointer;
 
   &:hover {
@@ -480,7 +476,7 @@ input:checked:disabled+.slider {
 }
 
 .deleteBtn {
-  color: $color-muted;
+  color: $color-third;
   cursor: pointer;
 
   &:hover {
