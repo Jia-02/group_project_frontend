@@ -1,0 +1,114 @@
+/* 強制垂直佈局，防止並排 */
+.background {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #fff;
+}
+
+/* 標題 - 固定在頂部 */
+.diaTitle {
+  margin: 0 !important;
+  padding: 16px 20px !important;
+  font-size: 18px;
+  font-weight: 700;
+  color: #001F4D;
+  border-bottom: 1px solid #F2F4F6;
+  text-align: center;
+}
+
+/* 內容區 - 確保寬度 100% 撐開，迫使按鈕下移 */
+.contentBox {
+  display: block; /* 設為區塊，防止 flex 擠壓 */
+  width: 100%;
+  min-height: 100px;
+  padding: 24px 20px !important;
+  margin: 0 !important;
+  box-sizing: border-box;
+}
+
+/* 輸入框包裝 */
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  gap: 8px;
+}
+
+.inputGroup label {
+  font-size: 14px;
+  color: #9390A5;
+  font-weight: 600;
+}
+
+.styled-input {
+  width: 100%;
+  height: 48px;
+  padding: 0 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  background-color: #F8F9FA;
+  box-sizing: border-box;
+  outline: none;
+}
+
+/* 按鈕區 - 強制換行到最下面 */
+.actionArea {
+  display: flex;
+  padding: 12px 20px 20px !important; /* 手機版底部留白 */
+  margin: 0 !important;
+  border-top: 1px solid #F2F4F6; /* 增加一條線區隔內容 */
+}
+
+.btnBox {
+  display: flex;
+  width: 100%;
+  gap: 12px;
+}
+
+/* 按鈕樣式 */
+.btn {
+  flex: 1; /* 兩個按鈕平分寬度 */
+  height: 48px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: active 0.1s;
+}
+
+.btn.confirm {
+  background-color: #F2C58E;
+  color: #001F4D;
+}
+
+.btn.cancel {
+  background-color: #F2F4F6;
+  color: #9390A5;
+}
+
+/* 警告文字 */
+.alertArea {
+  text-align: center;
+  width: 100%;
+}
+
+.alertText {
+  color: #d32f2f;
+  font-weight: 700;
+  font-size: 17px;
+  margin: 0;
+}
+
+.errorText {
+  color: #d32f2f;
+  background: #fff5f5;
+  padding: 12px;
+  border-radius: 8px;
+  width: 100%;
+  margin: 0;
+}

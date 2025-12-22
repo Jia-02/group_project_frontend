@@ -8,6 +8,7 @@ import { ProductDetailDialogComponent } from '../product-detail-dialog/product-d
 import { SettingDetailDialogComponent } from '../setting-detail-dialog/setting-detail-dialog.component';
 import { OrderService } from '../order.service';
 import { DataService } from '../@service/data.service';
+import { MatIconModule } from '@angular/material/icon';
 
 interface Product {
   productId: number;
@@ -35,6 +36,7 @@ const ORDER_TYPE_MAP: { [key: string]: string } = {
   standalone: true, // 假設為獨立元件
   imports: [
     MatTabsModule,
+    MatIconModule
   ],
   templateUrl: './menu-c.component.html',
   styleUrl: './menu-c.component.scss'

@@ -10,11 +10,13 @@ import { SendOrderDialogComponent } from '../send-order-dialog/send-order-dialog
 import { DataService } from '../@service/data.service';
 import { BoardDialogComponent } from '../board-dialog/board-dialog.component';
 import { Activity } from '../allActivity/calendar/calendar.component';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-menu',
   imports: [
-    MatTabsModule
+    MatTabsModule,
+    MatIconModule
   ],
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.scss'
@@ -113,8 +115,8 @@ export class MenuComponent {
 
         this.dialog.open(BoardDialogComponent, {
           data: { activities: processedActivities },
-          width: '300px',
-          height: '90vh',
+          width: '80%',
+          height: 'auto',
           panelClass: 'full-screen-dialog'
         });
       });

@@ -154,12 +154,15 @@ export class TableComponent {
     ctx.strokeRect(rect.x, rect.y, rect.w, rect.h);
     ctx.fillStyle = color
     ctx.fillRect(rect.x, rect.y, rect.w, rect.h);
-    ctx.fillStyle = 'black'
+    ctx.fillStyle = 'white';
+    ctx.font = '14px Arial';
     let str = rect.tableId
-    ctx.fillText(str, rect.x + rect.w / 2, rect.y + rect.h / 2 - 10)
+    ctx.fillText(str, rect.x + rect.w / 2, rect.y + rect.h / 2 - 16)
+    ctx.font = '14px Arial';
     str = rect.capacity + "人";
     ctx.fillText(str, rect.x + rect.w / 2, rect.y + rect.h / 2)
     if (rect.reservationName) {
+      ctx.font = 'italic 12px Arial';
       ctx.fillText(rect.reservationName, rect.x + rect.w / 2, rect.y + rect.h / 2 + 10)
     }
   }
@@ -175,13 +178,13 @@ export class TableComponent {
       // ctx.textBaseline = 'middle'
       ctx.lineWidth = 5;
       if (rect.status == "可預約") {
-        this.drawByStatus(rect, "green");
+        this.drawByStatus(rect, "#52C41A");
       } else if (rect.status == "使用中") {
-        this.drawByStatus(rect, "red");
+        this.drawByStatus(rect, "#F2C58E");
       } else if (rect.status == "已預約") {
-        this.drawByStatus(rect, "yellow");
+        this.drawByStatus(rect, "#FF4D4F");
       } else {
-        this.drawByStatus(rect, "gray");
+        this.drawByStatus(rect, "#9390A5");
       }
 
 

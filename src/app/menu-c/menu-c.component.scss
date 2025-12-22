@@ -1,10 +1,9 @@
 /* 全局容器：設定為左右兩欄佈局 */
 :host {
-  display: block;
-  height: 100vh; /* 佔滿整個視窗高度 */
-  overflow: hidden; /* 防止最外層滾動 */
   display: flex;
   flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
 }
 
 /* 標題區域 */
@@ -21,38 +20,25 @@ h2 {
 /* 主要內容區塊：左邊菜單 + 右邊購物車 */
 .content-container {
   display: flex;
-  flex: 1; /* 填滿剩餘高度 */
+  flex: 1;
+  /* 填滿剩餘高度 */
   gap: 20px;
   padding: 20px;
-  background-color: #f5f7fa; /* 淺灰背景，突顯內容 */
-  overflow: hidden; /* 內部區塊自己滾動 */
+  background-color: #f5f7fa;
+  overflow: hidden;
 }
 
 /* --- 左側：菜單區塊 --- */
 .menu-section {
-  flex: 3; /* 佔據較寬的比例 (約 75%) */
+  flex: 3;
+  /* 佔據較寬的比例 (約 75%) */
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;
   overflow: hidden;
-}
 
-/* 調整 Angular Material Tab 的樣式以適應高度 */
-::ng-deep .mat-mdc-tab-group {
-  flex: 1;
-  overflow: hidden;
-}
-
-::ng-deep .mat-mdc-tab-body-wrapper {
-  height: 100%;
-}
-
-/* 讓 Tab 內容區域可以獨立滾動 */
-::ng-deep .mat-mdc-tab-body-content {
-  overflow-y: auto !important;
-  padding-bottom: 80px; /* 預留底部空間給按鈕 */
 }
 
 /* 商品卡片樣式 */
@@ -64,7 +50,7 @@ h2 {
   text-align: center;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -74,8 +60,9 @@ h2 {
 
 .productCss:hover {
   transform: translateY(-3px);
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-  border-color: #ff9800; /* Hover 時顯示強調色 */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  border-color: #F2C58E;
+  /* Hover 時顯示強調色 */
 }
 
 .productCss span {
@@ -85,25 +72,29 @@ h2 {
   line-height: 1.4;
 }
 
-.priceCss {
+.productCss .priceCss {
   display: block;
   margin-top: 8px;
   font-weight: bold;
-  color: #e65100; /* 價格使用醒目顏色 */
+  color: darken(#F2C58E, 10%);
+  /* 價格使用醒目顏色 */
   font-size: 1rem;
 }
 
 /* --- 右側：購物車區塊 --- */
 .cart-section {
-  flex: 1; /* 佔據較窄的比例 (約 25%) */
-  min-width: 320px; /* 最小寬度，避免擠壓 */
+  flex: 0 0 25%;
+  /* 佔據較窄的比例 (約 25%) */
+  min-width: 320px;
+  /* 最小寬度，避免擠壓 */
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   padding: 20px;
   display: flex;
   flex-direction: column;
-  overflow-y: auto; /* 內容過多時滾動 */
+  overflow-y: auto;
+  /* 內容過多時滾動 */
   position: relative;
 }
 
@@ -114,9 +105,15 @@ h2 {
   color: #444;
 }
 
+.cart-list {
+  flex: 1;
+  overflow-y: auto;
+  /* 只有清單部分滾動 */
+}
+
 /* 購物車單項 */
 .cart-item {
-  padding: 12px 0;
+  padding: 5px 0;
   border-bottom: 1px dashed #eee;
   position: relative;
 }
@@ -137,33 +134,94 @@ h2 {
   margin-left: 5px;
 }
 
+.item-info {
+  flex: 1;
+}
+
+.item-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .item-price {
-  float: right;
   font-weight: bold;
   color: #333;
-  margin-right: 40px; /* 避開刪除按鈕 */
+  font-size: 1rem;
 }
 
-/* 刪除按鈕樣式優化 */
-.cart-item button {
-  background: none;
-  border: none;
+/* --- 總計區域與按鈕 --- */
+.cart-footer {
+  margin-top: auto;
+  border-top: 2px solid #001F4D;
+  background: #fff;
+}
+
+.cart-summary {
+  padding: 15px 0;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #666;
+}
+
+.summary-value {
+  color: #333;
+  font-weight: 500;
+}
+
+.total-amount {
+  margin-top: 10px;
+}
+
+.total-amount span:first-child {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.price-text {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #001F4D;
+}
+
+.empty-msg {
+  text-align: center;
+  color: #aaa;
+  padding: 40px 0;
+}
+
+
+/* --- Delete Icon 優化 --- */
+.delete-btn {
+  color: #ff4d4f;
+  background: #fff5f5;
+  border-radius: 6px;
+  padding: 4px;
   cursor: pointer;
-  font-size: 1.2rem;
-  opacity: 0.6;
-  transition: opacity 0.2s;
-  padding: 0 5px;
+  transition: all 0.2s;
+  font-size: 20px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.cart-item button:hover {
-  opacity: 1;
-  transform: scale(1.1);
+.delete-btn:hover {
+  background: #ff4d4f;
+  color: #fff;
 }
 
 /* 客製化選項文字 */
 .cart-item small {
   display: block;
   margin-top: 4px;
+  margin-left: 20px;
   font-size: 0.85rem;
   color: #888;
   background: #f9f9f9;
@@ -172,52 +230,39 @@ h2 {
   width: fit-content;
 }
 
-/* 總計區域 */
-.cart-section > div:last-of-type {
-  margin-top: auto; /* 推到底部 */
-  background: #fff;
-  padding-top: 20px;
-  font-size: 1.1rem;
-}
 
-/* --- 底部懸浮按鈕 --- */
-.footer-button {
-  position: fixed;
-  bottom: 20px;
-  right: 40px; /* 放在右側購物車下方 */
-  width: 280px; /* 對齊購物車寬度大概 */
+.buttonCss {
+  width: 100%;
   height: 50px;
-  background-color: #2c3e50; /* 深色背景 */
+  background-color: #001F4D;
   color: white;
   border: none;
-  border-radius: 25px;
+  border-radius: 8px;
   font-size: 1.1rem;
-  font-weight: bold;
+  font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 10px;
-  transition: transform 0.1s, background-color 0.2s;
-  z-index: 1000;
+  gap: 12px;
+  transition: all 0.2s;
 }
 
-.footer-button:hover {
-  background-color: #1a252f;
-  transform: scale(1.02);
+.buttonCss:hover {
+  background-color: #002d6e;
+  transform: translateY(-2px);
 }
 
-.footer-button:active {
-  transform: scale(0.98);
-}
 
 .countCss {
-  background: #e74c3c;
-  color: white;
+  background: #F2C58E;
+  color: #001F4D;
   border-radius: 50%;
-  padding: 2px 8px;
-  font-size: 0.9rem;
-  min-width: 20px;
-  text-align: center;
+  width: 24px;
+  height: 24px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

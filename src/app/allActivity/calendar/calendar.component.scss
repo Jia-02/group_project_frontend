@@ -36,7 +36,7 @@
   h3 {
     margin: 0;
     font-size: 20px;
-    color: #013c70;
+    color: #001F4D;
     font-weight: 700;
     letter-spacing: 1px;
     min-width: 120px;
@@ -58,9 +58,9 @@
     justify-content: center;
 
     &:hover {
-      background-color: #013c70;
+      background-color: #001F4D;
       color: #fff;
-      border-color: #013c70;
+      border-color: #001F4D;
     }
   }
 }
@@ -120,7 +120,7 @@
 
 /* "今天" 的樣式 */
 .calendarDay.isToday .dayNumber {
-  background-color: #013c70;
+  background-color: #001F4D;
   color: #fff;
   width: 24px;
   height: 24px;
@@ -151,7 +151,7 @@
 
 .activityBar {
   font-size: 12px;
-  padding: 2px 6px;
+  padding: 5px 6px;
   border-radius: 4px;
   white-space: nowrap;
   overflow: hidden;
@@ -162,15 +162,16 @@
 
   /* 狀態顏色：已發布 */
   &.activityPublished {
-    background-color: #fe6d13;
-    border-left: 3px solid #AF4301;
+    color: #333;
+    background-color: #F2C58E;
+    border-left: 4px solid darken(#F2C58E, 20%);
     opacity: 0.9;
   }
 
   /* 狀態顏色：草稿 */
   &.activityDraft {
-    background-color: #9e9e9e;
-    border-left: 3px solid #616161;
+    background-color: #9390A5;
+    border-left: 4px solid darken(#9390A5, 20%);
     opacity: 0.9;
   }
 }
@@ -185,7 +186,7 @@
   height: 36px;
   border-radius: 50%;
   padding: 0;
-  background-color: #013c70;
+  background-color: #001F4D;
   border: none;
   box-shadow: 0 4px 6px rgba(1, 60, 112, 0.2);
   cursor: pointer;
@@ -208,7 +209,7 @@
 
   /* Hover 效果 */
   &:hover {
-    background-color: #fe6d13;
+    background-color: #F2C58E;
     transform: rotate(90deg);
   }
 }
@@ -219,7 +220,7 @@
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-  border-top: 5px solid #fe6d13;
+  border-top: 5px solid #F2C58E;
   padding: 25px;
   display: flex;
   flex-direction: column;
@@ -280,19 +281,19 @@
 
 /* Hover 效果保持不變 */
 .activityItem:hover {
-  border-color: #013c70;
+  border-color: #001F4D;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   transform: translateX(3px);
 }
 
 /* 左側狀態線 - 已發布 */
 .activityItem.detailPublished {
-  border-left: 4px solid #AF4301;
+  border-left: 4px solid darken(#F2C58E, 20%);
 }
 
 /* 左側狀態線 - 草稿 (修改背景色) */
 .activityItem.detailDraft {
-  border-left: 4px solid #9e9e9e;
+  border-left: 4px solid #9390A5;
   background-color: #f2f2f2; /* 淺灰色背景 */
 }
 
@@ -344,7 +345,7 @@
   grid-area: title;
   display: block;
   font-size: 16px;
-  color: #013c70;
+  color: #001F4D;
   line-height: 1.3;
   align-self: start;
   margin-top: 10px;

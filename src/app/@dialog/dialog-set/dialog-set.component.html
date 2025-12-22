@@ -10,16 +10,16 @@
 
   <div class="formRow">
     <div class="formField">
-      <label>套餐名稱</label>
+      <label><span class="starCss">* </span>套餐名稱</label>
       <input type="text" class="styledInput" [(ngModel)]="optionVo.settingName" placeholder="輸入套餐名稱">
     </div>
     <div class="formField">
-      <label>套餐價格</label>
+      <label><span class="starCss">* </span>套餐價格</label>
       <input type="number" class="styledInput" [(ngModel)]="optionVo.settingPrice" placeholder="0">
     </div>
   </div>
 
-  <label>套餐圖片</label>
+  <label><span class="starCss">* </span>套餐圖片</label>
   <div class="fileInputWrapper">
     <input type="file" id="setFileInput" (change)="onFileSelected($event)" accept="image/*" hidden>
 
@@ -35,7 +35,7 @@
   </div>
   }
 
-  <label>選擇主餐分類</label>
+  <label><span class="starCss">* </span>選擇主餐分類</label>
   <select class="styledInput" [(ngModel)]="selections.mainCatId" (change)="onMainCategoryChange()">
     <option [value]="0">請選擇分類</option>
     @for (cat of categoryList; track cat.categoryId) {

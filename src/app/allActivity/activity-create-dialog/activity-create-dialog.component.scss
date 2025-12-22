@@ -5,7 +5,7 @@
   font-size: 18px;
   font-weight: 600;
   color: #fdfdfd;
-  background-color: #013c70;
+  background-color: #001F4D;
   border-bottom: 1px solid #eee;
 }
 
@@ -24,6 +24,10 @@
   font-weight: 600;
   color: #555;
   margin-bottom: 4px; /* 微調：讓標籤跟輸入框近一點 */
+}
+
+.starCss {
+  color: #C00000;
 }
 
 /* --- Form Layout --- */
@@ -57,7 +61,7 @@
 }
 
 .styledInput:focus {
-  border-color: #013c70;
+  border-color: #001F4D;
   background-color: #fdfdfd;
 }
 
@@ -93,12 +97,12 @@ textarea.styledInput {
 
 .uploadBtn:hover {
   background-color: #eef4fc;
-  border-color: #013c70;
-  color: #013c70;
+  border-color: #001F4D;
+  color: #001F4D;
 }
 
 .uploadBtn:hover mat-icon {
-  color: #013c70;
+  color: #001F4D;
 }
 
 .uploadBtn:active {
@@ -156,11 +160,11 @@ textarea.styledInput {
 }
 
 .confirmBtn {
-  background-color: #013c70;
+  background-color: #001F4D;
   color: #fff;
 }
 
 .confirmBtn:hover {
-  background-color: #fe6d13;
+  background-color: #F2C58E;
   box-shadow: 0 2px 4px rgba(1, 60, 112, 0.25);
 }

@@ -13,7 +13,7 @@
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05); /* 柔和陰影 */
-  border-top: 5px solid #013c70; /* 頂部品牌色條 */
+  border-top: 5px solid #001F4D; /* 頂部品牌色條 */
   overflow: hidden;
   padding: 30px 40px 30px 40px;
 }
@@ -24,14 +24,14 @@
   gap: 8px;
   font-size: 18px;
   font-weight: 700;
-  color: #013c70;
+  color: #001F4D;
   margin-bottom: 10px;
   border-bottom: 1px solid #eee;
   padding-bottom: 10px;
 }
 
 .boxHeader mat-icon {
-  color: #fe6d13;
+  color: #F2C58E;
 }
 
 .selectBox {
@@ -68,7 +68,7 @@
 }
 
 .inputCss:focus {
-  border-color: #013c70;
+  border-color: #001F4D;
   background-color: #fff;
   box-shadow: 0 0 0 3px rgba(1, 60, 112, 0.1);
 }
@@ -102,13 +102,13 @@
 
 /* 搜尋按鈕 */
 .searchBtn {
-  background-color: #013c70;
+  background-color: #001F4D;
   color: white;
   box-shadow: 0 4px 6px rgba(1, 60, 112, 0.2);
 }
 
 .searchBtn:hover {
-  background-color: #fe6d13;
+  background-color: #F2C58E;
   transform: translateY(-1px);
 }
 
@@ -154,7 +154,7 @@ tr.mat-row:hover {
   color: #555;
 }
 
-/* --- 狀態膠囊 (Badges) --- */
+/* --- 狀態膠囊 --- */
 .status-badge {
   padding: 4px 12px;
   border-radius: 50px;
@@ -165,25 +165,25 @@ tr.mat-row:hover {
   text-align: center;
 }
 
-/* 已付 (綠色) */
+/* 已付 */
 .status-badge.paid {
   background-color: #F8F9FA;
-  color:  #9ca3af;
-  border: 1px solid  #9ca3af;
+  color:  #9390A5;
+  border: 1px solid  #9390A5;
 }
 
 /* 未付 */
 .status-badge.unpaid {
   background-color: #F8F9FA;
-  color: #fe6d13;
-  border: 1px solid #fe6d13;
+  color: darken(#F2C58E, 20%);
+  border: 1px solid darken(#F2C58E, 20%);
 }
 
 /* --- 操作按鈕 (Ghost Button) --- */
 .action-btn {
   background: transparent;
-  border: 1px solid #013c70;
-  color: #013c70;
+  border: 1px solid #001F4D;
+  color: #001F4D;
   padding: 6px 16px;
   border-radius: 6px;
   cursor: pointer;
@@ -193,7 +193,7 @@ tr.mat-row:hover {
 }
 
 .action-btn:hover {
-  background: #013c70;
+  background: #001F4D;
   color: #fff;
   box-shadow: 0 2px 4px rgba(1, 60, 112, 0.2);
 }
@@ -224,7 +224,7 @@ mat-tab-group {
   /* 表頭 */
   th.mat-header-cell,
   th.mat-mdc-header-cell {
-    background-color: #013c70 !important;
+    background-color: #001F4D !important;
     color: #fff !important;
     font-size: 15px;
     text-align: center !important;

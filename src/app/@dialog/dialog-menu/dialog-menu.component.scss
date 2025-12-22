@@ -1,10 +1,10 @@
 .diaTitle {
   margin: 0;
-  padding: 10px 30px;
+  padding: 8px 30px 10px 30px;
   font-size: 18px;
   font-weight: 600;
   color: #fdfdfd;
-  background-color: #013c70;
+  background-color: #001F4D;
   border-bottom: 1px solid #eee;
 }
 
@@ -22,6 +22,10 @@
   font-size: 14px;
   font-weight: 600;
   color: #555;
+}
+
+.starCss {
+  color: #C00000;
 }
 
 /* 每一排的容器 */
@@ -106,7 +110,7 @@ textarea.styledInput {
 
 /* 自訂上傳按鈕 (Label) */
 .uploadBtn {
-  display: flex;
+  display: flex !important;
   align-items: center;
   justify-content: center;
   gap: 5px;
@@ -129,12 +133,12 @@ textarea.styledInput {
 /* 滑鼠移上去的效果 */
 .uploadBtn:hover {
   background-color: #eef4fc;
-  border-color: #013c70;
-  color: #013c70;
+  border-color: #001F4D;
+  color: #001F4D;
 }
 
 .uploadBtn:hover mat-icon {
-  color: #013c70;
+  color: #001F4D;
 }
 
 /* 按下去的效果 */
@@ -175,12 +179,12 @@ textarea.styledInput {
 
 /* 確定按鈕 */
 .confirmBtn {
-  background-color: #013c70;
+  background-color: #001F4D;
   color: #fff;
 }
 
 .confirmBtn:hover {
-  background-color: #fe6d13;
+  background-color: #F2C58E;
   box-shadow: 0 2px 4px rgba(1, 60, 112, 0.25);
 }
 

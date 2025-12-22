@@ -108,5 +108,22 @@ export class DialogDeleteComponent {
           }
         });
     }
+
+    // 刪除分類
+    else if (this.data.deleteType == 'category') {
+      const payload = {
+        categoryId: this.data.categoryId
+      };
+      this.httpClientService.postApi('category/del', payload)
+      .subscribe((res: any) => {
+        if (res.code == 200) {
+          this.dialogRef.close(true);
+        } else if (res.message == '商品上架中。') {
+          this.dialog.open(DialogNoticeComponent, {
+              data: { noticeType: 'selling' }
+            });
+        }
+      });
+    }
   }
 }

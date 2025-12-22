@@ -56,7 +56,7 @@
       <div class="infoValue statusBadge" [class.paid]="data.paid" [class.unpaid]="!data.paid">
         {{ data.paid ? '已付' : '未付' }}
       </div>
-      <button (click)="cancel()">取消訂單</button>
+      <button class="cancelOrderBtn" (click)="cancel()">取消訂單</button>
     </div>
     <div class="infoGroup">
       <label>付款方式</label>
@@ -120,6 +120,6 @@
 
 <mat-dialog-actions class="dialogFooter">
   <button class="footerBtn secondary" (click)="close()">關閉</button>
-  <button class="footerBtn primary" (click)="checkOut()" [disabled]="isEditing" [class.disabled]="isEditing">結帳</button>
   <button class="footerBtn edit" (click)="editOrder()">修改訂單</button>
+  <button class="footerBtn primary" (click)="checkOut()" [disabled]="isEditing" [class.disabled]="isEditing">結帳</button>
 </mat-dialog-actions>

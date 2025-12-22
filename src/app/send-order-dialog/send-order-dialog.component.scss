@@ -57,7 +57,7 @@
 
 .info-label { color: #888; }
 .info-value { color: #333; font-weight: 500; }
-.info-value.highlight { color: #013c70; font-weight: 700; font-size: 16px; }
+.info-value.highlight { color: #001F4D; font-weight: 700; font-size: 16px; }
 
 /* --- 付款方式卡片 --- */
 .payment-card {
@@ -122,12 +122,12 @@
   padding: 2px 6px;
   border-radius: 4px;
   background-color: #e0f2f1; /* 淺綠 */
-  color: #00695c;
+  color: #9390A5;
   font-weight: 600;
 }
 .type-tag.is-set {
   background-color: #fff3e0; /* 淺橘 */
-  color: #ef6c00;
+  color: #F2C58E;
 }
 
 /* 數量與價格群組 */
@@ -152,7 +152,7 @@
   border-radius: 50%;
   border: none;
   background-color: #fff;
-  color: #013c70;
+  color: #001F4D;
   font-size: 18px;
   display: flex;
   align-items: center;
@@ -243,7 +243,7 @@
 .total-price {
   font-size: 24px;
   font-weight: 800;
-  color: #fe6d13; /* 亮橘色 */
+  color: darken(#F2C58E, 20%);
 }
 
 /* --- 底部按鈕區 --- */
@@ -272,14 +272,14 @@
 .secondary-btn {
   flex: 1;
   background-color: #fff;
-  border: 1px solid #013c70 !important;
-  color: #013c70;
+  border: 1px solid #001F4D !important;
+  color: #001F4D;
 }
 
 /* 下單按鈕 (主要) */
 .primary-btn {
   flex: 2;
-  background-color: #013c70;
+  background-color: #001F4D;
   color: #fff;
   box-shadow: 0 4px 8px rgba(1, 60, 112, 0.2);
 }

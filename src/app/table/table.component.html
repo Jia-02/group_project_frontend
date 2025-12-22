@@ -45,11 +45,11 @@
             <div class="countBadge main">
               <span class="fontSize20">{{item.reservationCount}}</span> 位
             </div>
-            <div class="countBadge sub">
+            <div class="countBadge-sub">
               <mat-icon fontIcon="child_care"></mat-icon>
               <span>{{item.reservationChildCount}}</span>
             </div>
-            <div class="countBadge sub">
+            <div class="countBadge-sub">
               <mat-icon fontIcon="child_friendly"></mat-icon>
               <span>{{item.childSeat}}</span>
             </div>
@@ -65,7 +65,7 @@
                     item.reservationChildCount,item.reservationNote,
                     item.reservationTime,item.reservationCount)">報到</button>
             } @else{
-              <span>未報到</span>
+              <span style="color: #9390A5; font-size: 14px;">未報到</span>
             }
           </div>
         </div>
@@ -106,7 +106,7 @@
                       item.reservationChildCount,item.reservationNote,
                       item.reservationTime,item.reservationCount)">報到</button>
             } @else{
-              <span>未報到</span>
+              <span style="color: #9390A5; font-size: 14px;">未報到</span>
             }
 
           </div>

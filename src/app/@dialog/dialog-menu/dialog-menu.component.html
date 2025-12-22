@@ -9,24 +9,24 @@
   <div class="formRow">
 
     <div class="formField">
-      <label>餐點名稱</label>
+      <label><span class="starCss">* </span>餐點名稱</label>
       <input type="text" class="styledInput" [(ngModel)]="productList.productName" placeholder="請輸入餐點名稱">
     </div>
 
     <div class="formField">
-      <label>價格</label>
+      <label><span class="starCss">* </span>價格</label>
       <input type="number" class="styledInput" [(ngModel)]="productList.productPrice" min="0" placeholder="0">
     </div>
 
   </div>
 
-  <label>餐點描述</label>
+  <label><span class="starCss">* </span>餐點描述</label>
   <textarea class="styledInput" [(ngModel)]="productList.productDescription" placeholder="簡短介紹餐點特色" rows="3"></textarea>
 
   <label>內部備註</label>
   <textarea class="styledInput" [(ngModel)]="productList.productNote" placeholder="廚房或內部查看用" rows="2"></textarea>
 
-  <label>餐點圖片</label>
+  <label><span class="starCss">* </span>餐點圖片</label>
   <div class="fileInputWrapper">
     <input type="file" id="fileInput" (change)="onFileSelected($event)" accept="image/*" hidden>
 

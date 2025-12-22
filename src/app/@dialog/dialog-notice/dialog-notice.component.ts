@@ -38,6 +38,8 @@ export class DialogNoticeComponent {
       this.noticeMessage = '商品販售中，不可刪除';
     } else if (this.data.noticeType == 'isRequired') {
       this.noticeMessage = '必填選項未填寫';
+    } else if (this.data.noticeType == 'timeCheck') {
+      this.noticeMessage = '時間錯誤，請重新輸入'
     }
   }
 

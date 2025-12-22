@@ -1,17 +1,36 @@
-<div style="padding: 10%;">
-  @if(data.mod == "新增"){
-  <span>工作檯名稱:</span> <input type="text" [(ngModel)]="workStationName" style="width: 50%;"> <br> <br>
-  }@else if(data.mod == "刪除"){
-  <span style="color: red;">是否確定刪除工作檯</span> <br> <br>
-  }@else if (data.mod == "更新"){
-  <span>工作檯名稱:</span> <input type="text" [(ngModel)]="workStationName" style="width: 50%;"> <br> <br>
-  }
-  @if(data.mod == "報錯"){
-  <span style="color: red;">{{data.message}}</span> <br> <br>
-  <button (click)="next(true)">確認</button>
-  }@else {
-  <button (click)="next(false)">取消</button>
-  <button (click)="next(true)">確認</button>
-  }
+<div class="background">
+  <div mat-dialog-title class="diaTitle">
+    {{ data.mod === '新增' ? '新增工作檯' :
+    data.mod === '更新' ? '編輯工作檯' :
+    data.mod === '刪除' ? '刪除確認' : '系統訊息' }}
+  </div>
+  <mat-dialog-content class="contentBox">
 
+    @if(data.mod == "新增" || data.mod == "更新"){
+    <div class="inputGroup">
+      <label>工作檯名稱:</label>
+      <input type="text" [(ngModel)]="workStationName" class="styled-input" placeholder="請輸入名稱">
+    </div>
+    }@else if(data.mod == "刪除"){
+    <div class="alertArea">
+      <p class="alertText">是否確定刪除工作檯</p>
+    </div>
+    }
+
+  </mat-dialog-content>
+
+  <mat-dialog-actions>
+    <div class="btnBox">
+      @if(data.mod == "報錯"){
+      <div class="errorBox">
+        <p class="errorText">{{data.message}}</p>
+      </div>
+      <button (click)="next(true)" class="btn confirm">確認</button>
+
+      }@else {
+      <button (click)="next(false)" class="btn cancel">取消</button>
+      <button (click)="next(true)" class="btn confirm">確認</button>
+      }
+    </div>
+  </mat-dialog-actions>
 </div>

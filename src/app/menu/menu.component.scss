@@ -1,6 +1,5 @@
 /* --- 1. 全局容器：設定為滿版 App 模式 --- */
 .box {
-  /* 關鍵：鎖定高度為螢幕高度，禁止整頁滾動 */
   height: 100vh;
   display: flex;
   flex-direction: column; /* 上下排列模式 */
@@ -11,7 +10,7 @@
   position: relative;
 }
 
-/* --- 2. 標題：固定在最上方 (因為外層不滾動，所以它自然會固定) --- */
+/* 標題：固定在最上方 */
 .box h2 {
   flex-shrink: 0; /* 禁止被壓縮 */
   margin: 0;
@@ -27,15 +26,15 @@
   align-items: center;
 }
 
-/* --- 3. 內容容器 --- */
+/* 內容容器 */
 .content-container {
   flex: 1; /* 自動填滿標題下方的所有空間 */
   display: flex;
   flex-direction: column;
-  overflow: hidden; /* 防止溢出 */
+  overflow: hidden;
 }
 
-/* --- 4. Tab 結構重組 (關鍵修正) --- */
+/* ab 結構重組 */
 /* 讓 Tab 組件填滿空間 */
 ::ng-deep .mat-mdc-tab-group {
   flex: 1;
@@ -63,8 +62,6 @@
   height: 100%;
   overflow-y: auto !important; /* 啟用垂直滾動 */
   transform: none !important; /* 避免部分手機渲染問題 */
-
-  /* 這裡設定 padding 是為了美觀，和避免最後一個商品被懸浮按鈕擋住 */
   padding-top: 10px;
   padding-bottom: 100px;
 }
@@ -77,13 +74,13 @@
 }
 
 ::ng-deep .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
-  color: #013c70 !important;
+  color: #001F4D !important;
   font-weight: 800;
   font-size: 16px;
 }
 
 ::ng-deep .mat-mdc-tab-indicator__content--underline {
-  border-color: #013c70 !important;
+  border-color: #001F4D !important;
   border-top-width: 3px !important;
 }
 
@@ -123,7 +120,7 @@
 /* --- 6. 價格與按鈕 --- */
 .priceCss {
   font-size: 16px;
-  color: #e65100;
+  color: darken(#F2C58E, 20%);
   font-weight: 600;
   white-space: nowrap;
 }
@@ -136,7 +133,7 @@
   width: 32px;
   height: 32px;
   background-color: #f0f4f8;
-  color: #013c70;
+  color: #001F4D;
   border-radius: 50%;
   font-size: 20px;
   font-weight: bold;
@@ -145,7 +142,7 @@
 }
 
 .productCss:active::after {
-  background-color: #013c70;
+  background-color: #001F4D;
   color: #fff;
 }
 
@@ -158,7 +155,7 @@
   width: 88%;
   max-width: 400px;
   height: 54px;
-  background-color: #013c70;
+  background-color: #001F4D;
   color: #fff;
   border: none;
   border-radius: 27px;
@@ -179,7 +176,7 @@
 }
 
 .countCss {
-  background-color: #ff5722;
+  background-color: #F2C58E;
   color: #fff;
   font-size: 14px;
   min-width: 24px;
@@ -190,4 +187,18 @@
   justify-content: center;
   font-weight: 800;
   padding: 0 4px;
+}
+
+.eventBtn {
+  margin: 12px 20px 0;
+  background: linear-gradient(135deg, #F2C58E 0%, #d4a76a 100%);
+  color: #001F4D;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 13px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
 }

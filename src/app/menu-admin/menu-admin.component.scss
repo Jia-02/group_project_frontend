@@ -5,14 +5,15 @@
 }
 
 .content {
-  flex: 1;
+  flex: 0 0 68%;
+  max-width: 70%;
 }
 
 .tabLabel {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
+  gap: 1px;
 }
 
 .labelText {
@@ -132,7 +133,7 @@
 .price {
   margin-top: 8px;
   font-weight: bold;
-  color: #fe6d13;
+  color: darken(#F2C58E, 20%);
 }
 
 
@@ -146,8 +147,8 @@
 
 
 .addCard {
-  border: 2px dashed #013c70;
-  color: #013c70;
+  border: 2px dashed #001F4D;
+  color: #001F4D;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -203,7 +204,7 @@
 
 
 .customizeSidebar {
-  width: 300px;
+  flex: 0 0 20%;
   background: #fff;
   border-radius: 10px;
   padding: 25px 45px 35px 45px;
@@ -257,7 +258,7 @@
 /* --- 編輯按鈕 (Edit) 特效 --- */
 /* 假設編輯是第一個 Icon */
 .customizeHeader mat-icon:first-of-type:hover {
-  color: #013c70;
+  color: #001F4D;
   background-color: #eef4fc;
   transform: scale(1.1);
 }
@@ -281,8 +282,8 @@
   width: 100%;
   height: 40px;
   background: #fff;
-  border: 2px dashed #013c70;
-  color: #013c70;
+  border: 2px dashed #001F4D;
+  color: #001F4D;
   border-radius: 8px;
   font-size: 16px;
   cursor: pointer;
@@ -300,7 +301,7 @@
 
 .extra {
   margin-left: auto;
-  color: #fe6d13;
+  color: darken(#F2C58E, 20%);
   font-weight: bold;
 }
 
@@ -321,7 +322,7 @@
 /* 標題樣式 */
 .addCategoryForm h3 {
   text-align: center;
-  color: #013c70;
+  color: #001F4D;
   margin: 0 0 8px 0;
   font-size: 20px;
   font-weight: bold;
@@ -350,7 +351,7 @@
 /* 輸入框 Focus 狀態 (點擊時變色) */
 .addCategoryForm input:focus,
 .addCategoryForm select:focus {
-  border-color: #013c70;
+  border-color: #001F4D;
   /* 變成主色 */
   background-color: #fff;
 }
@@ -359,7 +360,7 @@
 .addCategoryForm button {
   margin-top: 12px;
   padding: 12px;
-  background-color: #013c70;
+  background-color: #001F4D;
   color: white;
   font-size: 16px;
   font-weight: bold;
@@ -370,5 +371,5 @@
 }
 
 .addCategoryForm button:hover {
-  background-color: #fe6d13;
+  background-color: #F2C58E;
 }

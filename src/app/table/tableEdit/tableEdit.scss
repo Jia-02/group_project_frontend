@@ -17,7 +17,7 @@
 /* 單個資訊卡片 */
 .infoCard {
   border: 1px solid #eee;
-  border-left: 4px solid #013c70; /* 左側藍色飾條 */
+  border-left: 4px solid #001F4D; /* 左側藍色飾條 */
   border-radius: 6px;
   padding: 15px 20px;
   background-color: #f9f9f9;
@@ -91,7 +91,7 @@
 }
 
 .styledInput:focus {
-  border-color: #013c70;
+  border-color: #001F4D;
   background-color: #fdfdfd;
 }
 
@@ -126,12 +126,12 @@
 
 /* 確認/新增按鈕 (深藍) */
 .confirmBtn {
-  background-color: #013c70;
+  background-color: #001F4D;
   color: #fff;
 }
 
 .confirmBtn:hover {
-  background-color: #fe6d13;
+  background-color: #F2C58E;
   box-shadow: 0 2px 4px rgba(1, 60, 112, 0.25);
 }
 
