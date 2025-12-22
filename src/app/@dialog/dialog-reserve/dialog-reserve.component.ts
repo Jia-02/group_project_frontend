@@ -63,8 +63,6 @@ export class DialogReserveComponent {
     let today = new Date();
     this.currentDate = this.formatDateStr(today);
     this.nowTime = this.formatNowTimeStr(today);
-    console.log(this.currentDate)
-    console.log(this.nowTime)
     let nowTime;
     for (const time of this.timeList) {
       if (time > this.nowTime) {
@@ -73,8 +71,23 @@ export class DialogReserveComponent {
       }
     }
     nowTime += ":00"
+
+    let reservationTime;
+    //嘗試用reservationTime取代nowTime
+    if (this.data?.reservationTime) {
+      this.reservation.reservationTime = this.data.reservationTime;
+      reservationTime = this.reservation.reservationTime + ':00';
+    }
+
+    //編輯資料類型不同
+    if (this.data?.details?.reservationTime) {
+      this.reservation = this.data.details;
+      reservationTime = this.reservation.reservationTime;
+    }
+    console.log(this.reservation)
+
     // 桌號api
-    let reservationDate = "reservation/time_list?reservationDate=" + this.currentDate + "&reservationTime=" + nowTime;
+    let reservationDate = "reservation/time_list?reservationDate=" + this.currentDate + "&reservationTime=" + reservationTime;
     this.httpClientService.getApi(reservationDate)
       .subscribe((res: any) => {
         console.log(res)
@@ -99,7 +112,7 @@ export class DialogReserveComponent {
                 for (let i = 1; i <= table.capacity - this.reservation.reservationChildCount; i++) {
                   this.adultList.push(i);
                 }
-                for(let i = 1; i <= this.reservation.reservationChildCount;i++){
+                for (let i = 1; i <= this.reservation.reservationChildCount; i++) {
                   this.childSeatList.push(i);
                 }
               }
@@ -194,7 +207,7 @@ export class DialogReserveComponent {
     } else {
       this.adultList = [];
       this.childSeatList = [];
-      if (this.reservation.childSeat > this.reservation.reservationChildCount ) {
+      if (this.reservation.childSeat > this.reservation.reservationChildCount) {
         this.reservation.childSeat = 0;
       }
       for (let table of this.tableList) {

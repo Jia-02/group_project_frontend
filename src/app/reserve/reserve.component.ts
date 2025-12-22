@@ -319,15 +319,15 @@ export class ReserveComponent {
     }
 
     const currentTableId: any[] = [];
-    const currentTime: any[] = [];
+    // const currentTime: any[] = [];
 
-    for (let data of this.reservationAndTableByDateList) {
-      currentTableId.push(data.tableId);
-      for (let reservationData of data.reservations) {
-        currentTime.push(reservationData.reservationTime)
-      }
+    // for (let data of this.reservationAndTableByDateList) {
+    //   currentTableId.push(data.tableId);
+    //   for (let reservationData of data.reservations) {
+    //     currentTime.push(reservationData.reservationTime)
+    //   }
 
-    }
+    // }
 
     const dialogRef = this.dialog.open(DialogReserveComponent, {
       width: '80%',        // 設定寬一點 (原本預設約 50vw)
@@ -335,7 +335,7 @@ export class ReserveComponent {
       data: {
         tableId: currentTableId,
         reservationDate: this.selectedDay,
-        reservationTime: currentTime,
+        reservationTime: targetTime, //原本是currentTime
         defaultTableId: targetTableId,
         defaultTime: targetTime,
       },
