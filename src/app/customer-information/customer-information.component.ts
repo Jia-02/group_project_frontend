@@ -27,9 +27,9 @@ export class CustomerInformationComponent {
   }
 
   onPhoneInput(event: any) {
-    const input = event.target as HTMLInputElement;
-    input.value = input.value.replace(/[^0-9]/g, '');
-    this.customerPhone = input.value;
+    const cleanValue = event.target.value.replace(/[^0-9]/g, '');
+    this.customerPhone = cleanValue;
+    event.target.value = cleanValue;
   }
 
   startNonInnerOrder() {
@@ -38,8 +38,9 @@ export class CustomerInformationComponent {
       return;
     }
     // ✅ 新增：電話 7–10 碼限制
-    if (this.customerPhone.length < 7 || this.customerPhone.length > 10) {
-      alert('電話號碼需為 7 到 10 碼數字');
+    const phoneRegex = /^09\d{5,8}$/;
+    if (!phoneRegex.test(this.customerPhone)) {
+      alert('電話號碼格式錯誤！');
       return;
     }
     if (this.orderService.currentOrder.ordersType === 'D' && !this.customerAddress) {

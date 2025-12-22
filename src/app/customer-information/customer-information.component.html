@@ -3,7 +3,7 @@
         <h3>顧客資訊</h3>
         顧客姓名:<input type="text" class="inputCss" [(ngModel)]="customerName">
         顧客電話:<input type="text" class="inputCss" [(ngModel)]="customerPhone"
-        inputmode="numeric" pattern="[0-9]*" (input)="onPhoneInput($event)" placeholder="09xxxxxxxx">
+        inputmode="numeric" pattern="09[0-9]{8}" maxlength="10" (input)="onPhoneInput($event)" placeholder="09xxxxxxxx">
 
         @if(ordersType == "D")
         {

@@ -19,7 +19,7 @@
   flex-direction: column;
   gap: 16px;
   padding: 35px !important;
-  min-width: 500px;
+  min-width: 300px;
   max-width: 600px;
   box-sizing: border-box;
 }
@@ -147,4 +147,46 @@
 .confirmBtn:hover {
   background-color: #fe6d13;
   box-shadow: 0 2px 4px rgba(1, 60, 112, 0.25);
+}
+
+/* ============================================
+   RWD 自適應調整
+   ============================================ */
+@media screen and (max-width: 600px) {
+  /* 取消 Dialog 固定寬度限制 */
+  .dialogContent {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    padding: 20px !important;
+  }
+
+  /* 排版容器由橫變直 */
+  .formRow {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  /* 輸入框容器 */
+  .formField {
+    width: 100%;
+  }
+
+  /* 按鈕改為垂直堆疊，並讓寬度佔滿 */
+  .dialogActions {
+    display: flex;
+    flex-direction: column;
+    padding: 16px 20px !important;
+    gap: 10px;
+  }
+
+  .dialogBtn {
+    width: 100%;
+    margin: 0 !important; /* 清除可能存在的 margin-left */
+  }
+
+  /* 調整顯示文字框的高度，避免太擁擠 */
+  .styledText {
+    font-size: 15px; /* 手機版字體稍微放大一點點更易讀 */
+    padding: 12px;
+  }
 }
