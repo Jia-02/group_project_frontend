@@ -1,0 +1,208 @@
+.main {
+  max-width: 1200px;
+  margin: auto;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.title {
+  font-size: 56px;
+  background-color: #013c70;
+  color: #f8f9fa;
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.search {
+  text-align: center;
+  margin: 10px 0;
+}
+
+.search_input {
+  width: 120px;
+  margin-right: 10px;
+  border: 1px solid black;
+  border-radius: 8px;
+}
+
+.search i {
+  font-size: 18px;
+  line-height: 18px;
+  vertical-align: middle;
+}
+
+.co_worker {
+  display: flex;
+  flex-direction: row;
+  background-color: #f8f9fa;
+}
+
+.manager {
+  width: 100%;
+  display: grid;
+
+  /* --- 魔法就在這一行 --- */
+  /* 意思：盡量塞(auto-fit)，每張卡片最窄不能小於 280px，剩下的空間大家平分(1fr) */
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  /* 卡片之間的間距，不用再寫 margin */
+  gap: 20px;
+  max-width: 1200px;
+}
+
+.postcard,
+.postcard_f {
+  width: 100%;
+  max-width: 280px;
+  box-sizing: border-box;
+  border-radius: 8px;
+  margin: 0 auto;
+  // width: 80%;
+  // height: 300px;
+  // background-color: #fe6d13;
+  // text-align: center;
+  // margin: 0 auto;
+  // justify-content: space-between;
+  // border-radius: 8px;
+}
+
+.postcard {
+  background-color: #013c70;
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.postcard_f {
+  background-color: #f2f2f2;
+  border: 1px solid #e0e0e0;
+  position: relative;
+  font-size: 18px;
+  font-weight: 600;
+
+  // padding: 10px 10px;
+  // width: 80%;
+  // height: 300px;
+  // background-color: #013c70;
+  // color: #f8f9fa;
+  // text-align: center;
+  // margin: 0 auto;
+  // justify-content: space-between;
+  // border-radius: 8px;
+}
+
+.img_container {
+  height: 185px;
+  width: 100%;
+  overflow: hidden;
+  margin: 0 auto;
+  border-radius: 8px 8px 0 0;
+  object-fit: cover;
+}
+
+.animal_info_f {
+  filter: grayscale(20%); // 轉灰階
+  opacity: 0.3; // 透明度
+}
+
+.animal_info,
+.animal_info_f {
+  padding: 20px;
+}
+
+.animal_info > .about_pet {
+  width: 100%;
+  box-sizing: border-box; /* 確保 padding 不會撐爆寬度 */
+  white-space: pre-line; //超出容器時斷行，顯示所有空格
+  margin: 10px 0;
+  font-size: 14px;
+  font-weight: 400;
+
+  /* 截斷文字的關鍵屬性 */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3; /* 限制 3 行 */
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.animal_info_f > .about_pet {
+  width: 100%;
+  box-sizing: border-box; /* 確保 padding 不會撐爆寬度 */
+  white-space: pre-line; //超出容器時斷行，顯示所有空格
+  margin: 10px 0;
+  font-size: 14px;
+  font-weight: 400;
+
+  /* 截斷文字的關鍵屬性 */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3; /* 限制 3 行 */
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.test {
+  text-align: right; /* 把按鈕推到右邊，比較美觀 */
+  margin-top: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.animal_info > .about_pet.open {
+  cursor: pointer;
+  /* 取消行數限制 */
+  -webkit-line-clamp: unset;
+  /* 或者用 none，視瀏覽器支援度，unset 通常通用 */
+
+  /* 確保內容全部顯示 */
+  overflow: visible;
+}
+
+.no_work {
+  width: 150px;
+  margin: 0;
+  font-size: 24px;
+  text-align: center;
+  color: #f8f9fa;
+  background-color: rgba(0, 0, 0, 0.9);
+  position: absolute;
+  left: 50%;
+  top: 25%;
+  transform: translate(-50%, -50%);
+  border-radius: 8px;
+}
+
+.animal_img {
+  width: 100%;
+  height: 185px;
+  overflow: hidden;
+  border-radius: 8px 8px 0 0;
+  object-fit: cover;
+}
+
+.animal_img_d {
+  width: 100%;
+  height: 185px;
+  overflow: hidden;
+  border-radius: 8px 8px 0 0;
+  object-fit: cover;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  filter: grayscale(20%); // 轉灰階
+  opacity: 0.3; // 透明度
+}
+
+.btn {
+  font-size: 28px;
+  position: fixed; /* 關鍵：固定位置，不受滾動影響 */
+  bottom: 20px; /* 離底部 20px */
+  right: 20px; /* 離右側 20px */
+  z-index: 999;
+  border: none;
+  background-color: #f8f9fa;
+  cursor: pointer;
+  border-radius: 8px;
+}

@@ -12,6 +12,7 @@ import { NonInnerStartPageComponent } from './non-inner-start-page/non-inner-sta
 import { CustomerInformationComponent } from './customer-information/customer-information.component';
 import { MenuComponent } from './menu/menu.component';
 import { MenuCComponent } from './menu-c/menu-c.component';
+import { PetComponent } from './pet/pet.component';
 
 
 export const routes: Routes = [
@@ -28,6 +29,7 @@ export const routes: Routes = [
   { path: 'customer-information', component: CustomerInformationComponent },
   { path: 'menu', component: MenuComponent },
   { path: 'menuC', component: MenuCComponent },
+  { path: 'pet', component: PetComponent },
   { path: '**', component: ReserveComponent}
 ]
 

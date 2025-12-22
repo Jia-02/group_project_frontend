@@ -1,0 +1,56 @@
+<!-- 要記得弄個新增跟刪除鈕 還要給他們超連結 跟小手-->
+<!-- 還需要一個搜尋框/_>\ 才能串查詢 -->
+<header>
+  <div class="title">可愛卯咪們</div>
+  <div class="search">
+    <a style="cursor: pointer" type="button" (click)="search()">
+      <input class="search_input" (keyup)="changeInput($event)" />
+      <i class="fa-solid fa-magnifying-glass" style="line-height: 24px"></i>
+    </a>
+  </div>
+</header>
+<!-- 一個商品卡 記得用迴圈寫 吼唷 迴圈很難耶-->
+<main class="main">
+  <div class="manager">
+    @for(data of element_data ; track data){ @if(data.catStatus){
+    <div class="postcard">
+      <!-- 圖片 -->
+      <div class="img_container">
+        <img src="{{ data.catImg }}" class="animal_img" />
+      </div>
+      <!-- 詳細敘述 -->
+      <div class="animal_info">
+        <p>姓名：{{ data.catName }}</p>
+        <p>年齡：{{ data.age }}歲</p>
+        <p>關於我：</p>
+        <p class="about_pet" [class.open]="data.isExpanded" (click)="openInfo(data)">
+          {{ data.catInfo }}
+        </p>
+        <p class="test" (click)="openInfo(data)">
+          {{ data.isExpanded ? '(顯示更少)' : '(顯示更多)' }}
+        </p>
+      </div>
+    </div>
+    }@else if (!data.catStatus) {
+    <div class="postcard_f">
+      <p class="no_work">今天不上班</p>
+      <!-- 圖片 -->
+      <div class="img_container">
+        <div class="animal_img_d" [style.background-image]="'url(' + data.catImg + ')'"></div>
+      </div>
+      <!-- 詳細敘述 -->
+      <div class="animal_info_f">
+        <p>姓名：{{ data.catName }}</p>
+        <p>年齡：{{ data.age }}歲</p>
+        <p>關於我：</p>
+        <p class="about_pet" (click)="openInfo(data)">
+          {{ data.catInfo }}
+        </p>
+        <p class="test" (click)="openInfo(data)">
+          {{ data.isExpanded ? '(顯示更少)' : '(顯示更多)' }}
+        </p>
+      </div>
+    </div>
+    } }
+  </div>
+</main>
