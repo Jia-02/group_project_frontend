@@ -36,13 +36,11 @@ export class DialogNoticeComponent {
       this.noticeMessage = '套餐開放使用中，不可以下架此餐點';
     } else if (this.data.noticeType == 'selling') {
       this.noticeMessage = '商品販售中，不可刪除';
+    } else if (this.data.noticeType == 'isRequired') {
+      this.noticeMessage = '必填選項未填寫';
     }
-
   }
 
-  onNoClick() {
-    this.dialogRef.close();
-  }
 
   onCheckClick() {
     this.dialogRef.close(true);

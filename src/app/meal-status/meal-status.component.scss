@@ -54,7 +54,7 @@
   padding: 30px;
   gap: 40px;
   scrollbar-width: thin;
-  overflow: auto;
+  overflow-y: auto;
 }
 
 /* --- 通用欄位設定 --- */
@@ -64,8 +64,8 @@
   display: flex;
   flex-direction: column;
   border-radius: 12px;
-  overflow: hidden;
   max-width: 400px;
+  overflow: hidden;
 }
 
 .column-header {
