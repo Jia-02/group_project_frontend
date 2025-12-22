@@ -104,26 +104,26 @@ export class DialogReserveComponent {
           }
 
           // 編輯模式時，把自己原本的桌補回來
-      if (this.isEditMode && this.reservation.tableId) {
-        let exists = false;
-        for (let j = 0; j < this.tableList.length; j++) {
-          if (this.tableList[j].tableId === this.reservation.tableId) {
-            exists = true;
-            break;
-          }
-        }
+          if (this.isEditMode && this.reservation.tableId) {
+            let exists = false;
+            for (let j = 0; j < this.tableList.length; j++) {
+              if (this.tableList[j].tableId === this.reservation.tableId) {
+                exists = true;
+                break;
+              }
+            }
 
-        if (!exists) {
-          for (let k = 0; k < res.reservationAndTableByTimeList.length; k++) {
-            const table = res.reservationAndTableByTimeList[k];
-            if (table.tableId === this.reservation.tableId) {
-              this.tableList.unshift({ tableId: table.tableId, capacity: table.capacity });
-              availableTables.unshift(table.tableId);
-              break;
+            if (!exists) {
+              for (let k = 0; k < res.reservationAndTableByTimeList.length; k++) {
+                const table = res.reservationAndTableByTimeList[k];
+                if (table.tableId === this.reservation.tableId) {
+                  this.tableList.unshift({ tableId: table.tableId, capacity: table.capacity });
+                  availableTables.unshift(table.tableId);
+                  break;
+                }
+              }
             }
           }
-        }
-      }
 
           for (let table of this.tableList) {
             if (table.tableId == this.reservation.tableId) {
@@ -307,6 +307,11 @@ export class DialogReserveComponent {
     // 檢查必填
     if (!this.reservation.reservationDate || !this.reservation.reservationTime || !this.reservation.tableId
       || !this.reservation.reservationAdultCount) {
+      this.dialog.open(DialogNoticeComponent, {
+        width: '25%',
+        height: 'auto',
+        data: { noticeType: 'isRequired' }
+      });
       return;
     }
 

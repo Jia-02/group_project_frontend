@@ -6,34 +6,35 @@
 
     <div class="formRow">
       <div class="formField">
-        <label>訂位人</label>
+        <label><span>* </span>訂位人</label>
         <input type="text" class="styledInput" [(ngModel)]="reservation.reservationName" placeholder="顧客姓名">
       </div>
 
       <div class="formField">
-        <label>電話</label>
-        <input type="text" class="styledInput" [(ngModel)]="reservation.reservationPhone"
-               inputmode="numeric" pattern="[0-9]*" (input)="onPhoneInput($event)" placeholder="09xxxxxxxx">
+        <label><span>* </span>電話</label>
+        <input type="text" class="styledInput" [(ngModel)]="reservation.reservationPhone" inputmode="numeric"
+          pattern="[0-9]*" (input)="onPhoneInput($event)" placeholder="09xxxxxxxx">
       </div>
     </div>
 
     <div class="formRow">
       <div class="formField">
-        <label>訂位日期</label>
-        <input type="date" class="styledInput" [(ngModel)]="reservation.reservationDate" [min]="currentDate" (change)="changeDate()" >
+        <label><span>* </span>訂位日期</label>
+        <input type="date" class="styledInput" [(ngModel)]="reservation.reservationDate" [min]="currentDate"
+          (change)="changeDate()">
       </div>
 
       <div class="formField">
-        <label>訂位時間</label>
+        <label><span>* </span>訂位時間</label>
         <select class="styledInput" [(ngModel)]="reservation.reservationTime" (ngModelChange)="changeTime()">
           <option value="--請選擇--" disabled>--請選擇--</option>
           @for (time of timeList; track time) {
-            @if(time < nowTime && currentDate == reservation.reservationDate){
-              <option [value]="time" disabled>{{ time }}</option>
+          @if(time < nowTime && currentDate==reservation.reservationDate){ <option [value]="time" disabled>{{ time }}
+            </option>
             }@else {
-              <option [value]="time" >{{ time }}</option>
+            <option [value]="time">{{ time }}</option>
             }
-          }
+            }
         </select>
       </div>
     </div>
@@ -50,7 +51,7 @@
       </div> -->
 
       <div class="formField">
-        <label>桌號</label>
+        <label><span>* </span>桌號</label>
         <select class="styledInput" [(ngModel)]="reservation.tableId" (ngModelChange)="changeTable()">
           <option value="--請選擇--" disabled>--請選擇--</option>
           @for (data of tableIdList; track data) {
@@ -62,8 +63,9 @@
 
     <div class="formRow">
       <div class="formField">
-        <label>大人</label>
-        <select class="styledInput" [(ngModel)]="reservation.reservationAdultCount" (ngModelChange)="changePeople(true)">
+        <label><span>* </span>大人</label>
+        <select class="styledInput" [(ngModel)]="reservation.reservationAdultCount"
+          (ngModelChange)="changePeople(true)">
           <option [ngValue]="0">0</option>
           @for (data of adultList; track data) {
           <option [value]="data">{{ data }}</option>
@@ -73,7 +75,8 @@
 
       <div class="formField">
         <label>小孩</label>
-        <select class="styledInput" [(ngModel)]="reservation.reservationChildCount" (ngModelChange)="changePeople(false)">
+        <select class="styledInput" [(ngModel)]="reservation.reservationChildCount"
+          (ngModelChange)="changePeople(false)">
           <option [ngValue]="0">0</option>
           @for (data of childList; track data) {
           <option [value]="data">{{ data }}</option>
@@ -83,7 +86,8 @@
 
       <div class="formField">
         <label>兒童座椅</label>
-        <select class="styledInput" [(ngModel)]="reservation.childSeat" [disabled]="reservation.reservationChildCount === 0">
+        <select class="styledInput" [(ngModel)]="reservation.childSeat"
+          [disabled]="reservation.reservationChildCount === 0">
           <option [ngValue]="0">0</option>
           @for (data of childSeatList; track data) {
           <option [value]="data">{{ data }} 張</option>
@@ -95,7 +99,8 @@
     <div class="formRow">
       <div class="formField fullWidth">
         <label>備註</label>
-        <textarea class="styledInput" [(ngModel)]="reservation.reservationNote" rows="3" placeholder="特殊需求..."></textarea>
+        <textarea class="styledInput" [(ngModel)]="reservation.reservationNote" rows="3"
+          placeholder="特殊需求..."></textarea>
       </div>
     </div>
 

@@ -15,6 +15,12 @@ export class HeaderComponent {
   constructor(private router: Router) { }
   currentTab: string = ''; // 記錄目前在哪一頁
 
+  ngOnInit(): void {
+    // window.location.pathname這段是抓網址路徑
+    // 要抓路徑第一個字之後(因為開頭是/).slice(1)
+    this.currentTab = window.location.pathname.slice(1);
+  }
+
   menuAdmin() {
     this.currentTab = 'menuAdmin';
     this.router.navigateByUrl('menuAdmin');

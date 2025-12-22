@@ -7,7 +7,7 @@
 .diaTitle {
   font-size: 18px;
   font-weight: 600;
-  color: #fe6d13;
+  color: #001F4D;
   margin: 0 0 16px 0;
   padding-bottom: 12px;
   border-bottom: 1px solid #eee;
@@ -64,12 +64,13 @@ mat-dialog-content p {
 
 /* 第二個按鈕：確定 */
 .btn:last-child {
-  background-color: #fe6d13;
+  background-color: #9390A5;
   color: #fff;
   font-weight: 500;
 }
 
 .btn:last-child:hover {
-  background-color: #e05b0c;
-  box-shadow: 0 2px 5px rgba(211, 47, 47, 0.3);
+    background-color: #F2C58E;
+    color: #F2F4F6;
+    box-shadow: 0 2px 5px rgba(147, 144, 165, 0.3);
 }

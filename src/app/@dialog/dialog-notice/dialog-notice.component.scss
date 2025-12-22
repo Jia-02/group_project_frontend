@@ -7,7 +7,7 @@
 .diaTitle {
   font-size: 18px;
   font-weight: 600;
-  color: #fe6d13;
+  color: #9390A5;
   margin: 0 0 16px 0;
   padding-bottom: 12px;
   border-bottom: 1px solid #eee;
@@ -48,28 +48,12 @@ mat-dialog-content p {
   cursor: pointer;
   border: none;
   transition: all 0.2s;
-}
+  background-color: #F2C58E;
+  color: #F2F4F6;
 
-/* 第一個按鈕：取消 (白底灰框) */
-.btn:first-child {
-  background-color: #fff;
-  border: 1px solid #ddd;
-  color: #666;
-}
-
-.btn:first-child:hover {
-  background-color: #f5f5f5;
-  color: #333;
-}
-
-/* 第二個按鈕：確定 */
-.btn:last-child {
-  background-color: #fe6d13;
-  color: #fff;
-  font-weight: 500;
-}
-
-.btn:last-child:hover {
-  background-color: #e05b0c;
-  box-shadow: 0 2px 5px rgba(211, 47, 47, 0.3);
+  &:hover {
+    background-color: #9390A5;
+    color: #F2F4F6;
+    box-shadow: 0 2px 5px rgba(147, 144, 165, 0.3);
+  }
 }
