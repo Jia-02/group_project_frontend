@@ -529,6 +529,7 @@ export class TableComponent {
       }
       //=========gpt協助產生排序定位時間陣列=========
       const now = new Date();
+      now.setMinutes(now.getMinutes() - 90);
       this.reservation.sort((a, b) => {
         const timeA = buildTodayTime(a.reservationTime);
         const timeB = buildTodayTime(b.reservationTime);
