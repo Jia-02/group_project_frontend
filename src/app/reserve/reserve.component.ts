@@ -147,7 +147,6 @@ export class ReserveComponent {
       details: this.selectedReservationData, // 該筆預約的詳細資料
       originalDate: goldenDate,
     };
-    console.log(dialogData);
 
     const dialogRef = this.dialog.open(DialogReserveComponent, {
       data: dialogData,

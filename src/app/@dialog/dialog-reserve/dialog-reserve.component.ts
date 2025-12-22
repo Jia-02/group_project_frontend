@@ -84,7 +84,6 @@ export class DialogReserveComponent {
       this.reservation = this.data.details;
       reservationTime = this.reservation.reservationTime;
     }
-    console.log(this.reservation)
 
     // 桌號api
     let reservationDate = "reservation/time_list?reservationDate=" + this.currentDate + "&reservationTime=" + reservationTime;
@@ -103,6 +102,29 @@ export class DialogReserveComponent {
               this.tableList.push({ tableId: data.tableId, capacity: data.capacity })
             }
           }
+
+          // 編輯模式時，把自己原本的桌補回來
+      if (this.isEditMode && this.reservation.tableId) {
+        let exists = false;
+        for (let j = 0; j < this.tableList.length; j++) {
+          if (this.tableList[j].tableId === this.reservation.tableId) {
+            exists = true;
+            break;
+          }
+        }
+
+        if (!exists) {
+          for (let k = 0; k < res.reservationAndTableByTimeList.length; k++) {
+            const table = res.reservationAndTableByTimeList[k];
+            if (table.tableId === this.reservation.tableId) {
+              this.tableList.unshift({ tableId: table.tableId, capacity: table.capacity });
+              availableTables.unshift(table.tableId);
+              break;
+            }
+          }
+        }
+      }
+
           for (let table of this.tableList) {
             if (table.tableId == this.reservation.tableId) {
               if (this.isEditMode) {
@@ -236,15 +258,11 @@ export class DialogReserveComponent {
     this.adultList = [];
     this.childList = [];
     this.childSeatList = []
-    console.log(this.reservation.reservationTime)
   }
 
   changeTime() {
-    console.log(this.reservation.reservationDate)
-    console.log(this.reservation.reservationTime)
     let nowTime = this.reservation.reservationTime + ":00"
     let reservationDate = "reservation/time_list?reservationDate=" + this.reservation.reservationDate + "&reservationTime=" + nowTime;
-    console.log(reservationDate)
     this.tableList = [];
     this.adultList = [];
     this.childList = [];
@@ -265,7 +283,6 @@ export class DialogReserveComponent {
           }
           this.tableIdList = availableTables;
           this.reservation.tableId = "--請選擇--"
-          console.log(this.tableIdList)
         }
       });
   }
@@ -349,7 +366,7 @@ export class DialogReserveComponent {
 
     this.httpClientService.postApi('reservation/update', payload)
       .subscribe((res: any) => {
-        console.log('後端回傳結果:', res);
+        console.log(res);
         if (res.code == 200) {
           this.dataService.reservation = res;
           this.dialogRef.close(true);
