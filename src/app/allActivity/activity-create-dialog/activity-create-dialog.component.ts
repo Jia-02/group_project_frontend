@@ -58,6 +58,14 @@ export class ActivityCreateDialogComponent {
     private dialogRef: MatDialogRef<ActivityCreateDialogComponent>
   ) {}
 
+  onStartDateChange(): void {
+  if (this.data.calendarStartDate) {
+    if (!this.data.calendarEndDate || this.data.calendarStartDate > this.data.calendarEndDate) {
+      this.data.calendarEndDate = this.data.calendarStartDate;
+    }
+  }
+}
+
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
 

@@ -33,12 +33,19 @@ export class ActivityCheckDialogComponent {
   ) { }
 
   ngOnInit(): void {
+    if (this.data.calendarStartDate) {
+      this.data.calendarStartDate = this.formatDateForInput(this.data.calendarStartDate);
+    }
+    if (this.data.calendarEndDate) {
+      this.data.calendarEndDate = this.formatDateForInput(this.data.calendarEndDate);
+    }
+
     this.form = this.fb.group({
       calendarId: [this.data.calendarId],
       calendarTitle: [this.data.calendarTitle, Validators.required],
       calendarDescription: [this.data.calendarDescription, Validators.required],
-      calendarStartDate: [this.data.calendarStartDate ? this.formatDateForInput(this.data.calendarStartDate) : null],
-      calendarEndDate: [this.data.calendarEndDate ? this.formatDateForInput(this.data.calendarEndDate) : null],
+      calendarStartDate: [this.data.calendarStartDate, Validators.required],
+      calendarEndDate: [this.data.calendarEndDate, Validators.required],
     });
 
     this.newPhotoUrl = this.data.calendarPhoto;

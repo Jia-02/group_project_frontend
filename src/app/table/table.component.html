@@ -7,7 +7,6 @@
 
     <div class="timelineBody">
       <div id="progressBar" class="progressBar"></div>
-
       <div class="timeTicksContainer">
         @for(time of timeList; track time){
         <div class="timeTickItem">
@@ -60,11 +59,13 @@
             <span class="timeText">{{item.reservationTime}}</span>
             @if(item.reservationStatus){
             <mat-icon fontIcon="check_circle" class="iconSuccess"></mat-icon>
-            } @else {
+            } @else if(item.reservationTime < reservationTime && item.reservationTimeEnd > currentTime){
             <button class="actionBtn" (click)="arrive(item.tableId,item.reservationName,
                     item.reservationPhone,item.childSeat,item.reservationAdultCount,
                     item.reservationChildCount,item.reservationNote,
                     item.reservationTime,item.reservationCount)">報到</button>
+            } @else{
+              <span>未報到</span>
             }
           </div>
         </div>
@@ -99,12 +100,15 @@
             <span class="timeText">{{item.reservationTime}}</span>
             @if(item.reservationStatus){
             <mat-icon fontIcon="check_circle" class="iconSuccess"></mat-icon>
-            } @else {
+            } @else if(item.reservationTime < reservationTime && item.reservationTimeEnd > currentTime){
             <button class="actionBtn" (click)="arrive(item.tableId,item.reservationName,
                       item.reservationPhone,item.childSeat,item.reservationAdultCount,
                       item.reservationChildCount,item.reservationNote,
                       item.reservationTime,item.reservationCount)">報到</button>
+            } @else{
+              <span>未報到</span>
             }
+
           </div>
         </div>
         }
@@ -115,7 +119,6 @@
 
     <div class="mapContainer">
       <div class="mapGridWrapper">
-
         <div class="legendColumn">
           <div class="legendItem">
             <div class="dotGreen"></div>
@@ -134,7 +137,6 @@
             <span>未開放</span>
           </div>
         </div>
-
         <div class="yAxisGroup">
           <div class="axisLabel vertical">Y軸</div>
           <div class="yAxisValues">
@@ -146,7 +148,7 @@
 
         <div class="canvasBox">
           <canvas #canvas class="canvasElement" width="500" height="500" (mousemove)="handleMove($event)"
-            (mouseup)="handleUp()" (mouseout)="handleUp()" (mouseleave)="handleUp()" (click)="click($event)"
+            (mouseup)="handleUp()" (mouseleave)="handleLeave()" (click)="click($event)"
             (mousedown)="handleDown($event)">
           </canvas>
         </div>

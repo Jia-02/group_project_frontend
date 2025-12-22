@@ -21,7 +21,7 @@ export class OrderDialogComponent {
     public dialogRef: MatDialogRef<OrderDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: FullOrderData,
 
-  ){}
+  ) { }
 
   close(): void {
     this.dialogRef.close();

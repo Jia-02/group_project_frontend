@@ -29,6 +29,10 @@ export class InnerStartPageComponent {
 
   startDineInOrder() {
     this.orderService.currentOrder.ordersType = 'A';
+    if(!this.tableId){
+      alert("請重新掃碼");
+      return;
+    }
     this.orderService.currentOrder.tableId = this.tableId;
 
     this.enterMenu();

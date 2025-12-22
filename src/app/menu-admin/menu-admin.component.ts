@@ -449,6 +449,7 @@ export class MenuAdminComponent {
         // 將確認沒問題的資料推入陣列
         cleanDetail.push({
           categoryId: group.categoryId,
+          categoryType: group.categoryType,
           detailList: tempDetailList
         });
       }
@@ -464,11 +465,15 @@ export class MenuAdminComponent {
       categoryId: this.currentCategoryId,
       settingDetail: cleanDetail
     };
+    console.log(payload);
+
 
     this.httpClientService.postApi('setting/update', payload)
       .subscribe((res: any) => {
         if (res.code == 200) {
           this.loadSets(this.currentCategoryId);
+        }else{
+          console.log(res);
         }
       })
   }

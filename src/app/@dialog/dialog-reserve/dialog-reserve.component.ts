@@ -30,10 +30,12 @@ export class DialogReserveComponent {
   readonly data = inject<any>(MAT_DIALOG_DATA);
   readonly dialog = inject(MatDialog);
 
-  totalPeople = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
-  adultList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
-  childList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-  childSeatList = [1, 2, 3];
+  tableList!: Table[];
+
+
+  adultList!: number[];
+  childList!: number[];
+  childSeatList!: number[];
   timeList = ['10:00', '12:00', '14:00', '16:00', '18:00', '20:00'];
   reservation: reservation = {
     reservationId: 0,
@@ -42,8 +44,8 @@ export class DialogReserveComponent {
     reservationTime: '',
     reservationPhone: '',
     reservationName: '',
-    reservationCount: 1,
-    reservationAdultCount: 1,
+    reservationCount: 0,
+    reservationAdultCount: 0,
     reservationChildCount: 0,
     reservationStatus: false,
     reservationNote: '',
@@ -55,16 +57,61 @@ export class DialogReserveComponent {
   isEditMode: boolean = false; // 判斷是否為編輯模式
   originalPhone: string = '';
   originalDate: string = '';
+  nowTime!: string;
 
   ngOnInit(): void {
+    let today = new Date();
+    this.currentDate = this.formatDateStr(today);
+    this.nowTime = this.formatNowTimeStr(today);
+    console.log(this.currentDate)
+    console.log(this.nowTime)
+    let nowTime;
+    for (const time of this.timeList) {
+      if (time > this.nowTime) {
+        nowTime = time;
+        break;
+      }
+    }
+    nowTime += ":00"
     // 桌號api
-    this.httpClientService.getApi('table/list')
+    let reservationDate = "reservation/time_list?reservationDate=" + this.currentDate + "&reservationTime=" + nowTime;
+    this.httpClientService.getApi(reservationDate)
       .subscribe((res: any) => {
+        console.log(res)
         if (res.code == 200) {
           const availableTables = [];
-          for (let data of res.tableList) {
+          this.tableList = [];
+          this.adultList = [];
+          this.childList = [];
+          this.childSeatList = [];
+          for (let data of res.reservationAndTableByTimeList) {
             if (data.tableStatus == "可預約") {
               availableTables.push(data.tableId);
+              this.tableList.push({ tableId: data.tableId, capacity: data.capacity })
+            }
+          }
+          for (let table of this.tableList) {
+            if (table.tableId == this.reservation.tableId) {
+              if (this.isEditMode) {
+                for (let i = 1; i <= table.capacity - this.reservation.reservationAdultCount; i++) {
+                  this.childList.push(i);
+                }
+                for (let i = 1; i <= table.capacity - this.reservation.reservationChildCount; i++) {
+                  this.adultList.push(i);
+                }
+                for(let i = 1; i <= this.reservation.reservationChildCount;i++){
+                  this.childSeatList.push(i);
+                }
+              }
+              else {
+                for (let i = 1; i <= table.capacity; i++) {
+                  this.adultList.push(i);
+                  this.childList.push(i);
+                }
+                for (let i = 1; i <= this.reservation.reservationChildCount; i++) {
+                  this.childSeatList.push(i);
+                }
+              }
             }
           }
           this.tableIdList = availableTables;
@@ -96,7 +143,7 @@ export class DialogReserveComponent {
         tableId: detail.tableId,
         newDate: '',
       };
-
+      console.log(this.reservation)
     } else {
       // 設定日期
       if (this.data.reservationDate instanceof Date) {
@@ -115,6 +162,99 @@ export class DialogReserveComponent {
         this.reservation.reservationTime = this.data.defaultTime;
       }
     }
+  }
+
+  changeTable() {
+    this.adultList = [];
+    this.childList = [];
+    this.childSeatList = []
+    this.reservation.reservationChildCount = 0;
+    this.reservation.reservationAdultCount = 0;
+    this.reservation.childSeat = 0;
+    for (let table of this.tableList) {
+      if (table.tableId == this.reservation.tableId) {
+        for (let i = 1; i <= table.capacity; i++) {
+          this.adultList.push(i);
+          this.childList.push(i);
+        }
+      }
+    }
+  }
+
+  changePeople(flag: boolean) {
+    if (flag) {
+      this.childList = [];
+      for (let table of this.tableList) {
+        if (table.tableId == this.reservation.tableId) {
+          for (let i = 1; i <= table.capacity - this.reservation.reservationAdultCount; i++) {
+            this.childList.push(i);
+          }
+        }
+      }
+    } else {
+      this.adultList = [];
+      this.childSeatList = [];
+      if (this.reservation.childSeat > this.reservation.reservationChildCount ) {
+        this.reservation.childSeat = 0;
+      }
+      for (let table of this.tableList) {
+        if (table.tableId == this.reservation.tableId) {
+          for (let i = 1; i <= table.capacity - this.reservation.reservationChildCount; i++) {
+            this.adultList.push(i);
+          }
+          for (let i = 1; i <= this.reservation.reservationChildCount; i++) {
+            this.childSeatList.push(i);
+          }
+        }
+      }
+    }
+
+    this.reservation.reservationCount = Number(this.reservation.reservationAdultCount) + Number(this.reservation.reservationChildCount);
+
+  }
+
+  changeDate() {
+    this.reservation.reservationTime = "--請選擇--";
+    this.reservation.tableId = "--請選擇--"
+    this.reservation.reservationChildCount = 0;
+    this.reservation.reservationAdultCount = 0;
+    this.reservation.childSeat = 0;
+    this.tableIdList = [];
+    this.adultList = [];
+    this.childList = [];
+    this.childSeatList = []
+    console.log(this.reservation.reservationTime)
+  }
+
+  changeTime() {
+    console.log(this.reservation.reservationDate)
+    console.log(this.reservation.reservationTime)
+    let nowTime = this.reservation.reservationTime + ":00"
+    let reservationDate = "reservation/time_list?reservationDate=" + this.reservation.reservationDate + "&reservationTime=" + nowTime;
+    console.log(reservationDate)
+    this.tableList = [];
+    this.adultList = [];
+    this.childList = [];
+    this.childSeatList = []
+    this.reservation.reservationChildCount = 0;
+    this.reservation.reservationAdultCount = 0;
+    this.reservation.childSeat = 0;
+    this.httpClientService.getApi(reservationDate)
+      .subscribe((res: any) => {
+        console.log(res)
+        if (res.code == 200) {
+          const availableTables = [];
+          for (let data of res.reservationAndTableByTimeList) {
+            if (data.tableStatus == "可預約") {
+              availableTables.push(data.tableId);
+              this.tableList.push({ tableId: data.tableId, capacity: data.capacity })
+            }
+          }
+          this.tableIdList = availableTables;
+          this.reservation.tableId = "--請選擇--"
+          console.log(this.tableIdList)
+        }
+      });
   }
 
 
@@ -204,14 +344,11 @@ export class DialogReserveComponent {
       });
   }
 
-  // 僅輸入總人數，更改大人小孩人數
   updateTotal() {
-    let total = Number(this.reservation.reservationCount);
-    if (total > 0) {
-      this.reservation.reservationAdultCount = total;
-      this.reservation.reservationChildCount = 0;
+    this.adultList = [];
+    for (let i = 1; i <= this.reservation.reservationCount; i++) {
+      this.adultList.push(i);
     }
-
   }
   // 僅輸入大人或小孩，更新總人數
   updateAdultChild() {
@@ -234,4 +371,16 @@ export class DialogReserveComponent {
     input.value = input.value.replace(/[^0-9]/g, '');
     this.reservation.reservationPhone = input.value;
   }
+
+  formatNowTimeStr(date: Date): string {
+    let hour = date.getHours().toString().padStart(2, '0');
+    let minutes = date.getMinutes().toString().padStart(2, '0');
+    let second = date.getSeconds()
+    return hour + ":" + minutes + ":" + second;
+  }
+}
+
+interface Table {
+  tableId: string;
+  capacity: number;
 }

@@ -16,6 +16,7 @@ export class MealStatusUserComponent {
   orderId!: any;
   mealStatus!: MealStatus;
   timerId!: any;
+  message!: string;
 
   ngOnInit(): void {
     console.log(this.activatedRoute.snapshot.queryParamMap.get('orderId'))
@@ -25,7 +26,7 @@ export class MealStatusUserComponent {
       let url = "meal/status?orderId=" + this.orderId;
       this.service.getApi(url).subscribe((res: MealStatusRes) => {
         this.mealStatus = {
-          mealStatusId: res.mealStatus.mealStatusId
+          mealStatusId: res.mealStatus.mealStatusId,paid:res.order.paid
           , mealStatus: res.mealStatus.mealStatus, estimatedTime: res.mealStatus.estimatedTime,
           finishTime: res.mealStatus.finishTime, ordersId: res.mealStatus.ordersId,
           order: res.order, orderDetailsList: res.orderDetailsList
@@ -40,7 +41,7 @@ export class MealStatusUserComponent {
         let url = "meal/status?orderId=" + this.orderId;
         this.service.getApi(url).subscribe((res: MealStatusRes) => {
           this.mealStatus = {
-            mealStatusId: res.mealStatus.mealStatusId
+            mealStatusId: res.mealStatus.mealStatusId,paid:res.order.paid
             , mealStatus: res.mealStatus.mealStatus, estimatedTime: res.mealStatus.estimatedTime,
             finishTime: res.mealStatus.finishTime, ordersId: res.mealStatus.ordersId,
             order: res.order, orderDetailsList: res.orderDetailsList

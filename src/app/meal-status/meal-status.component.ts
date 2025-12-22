@@ -13,12 +13,11 @@ export class MealStatusComponent {
 
   constructor(private service: DataService) { }
 
-  count!: number;
+  count: number = 0;
   orders!: Order[];
   timerId!: any;
 
   ngOnInit(): void {
-    this.count = 0;
     let today = new Date();
     let year = today.getFullYear();
     let month = String(today.getMonth() + 1).padStart(2, '0');
@@ -29,6 +28,7 @@ export class MealStatusComponent {
       console.log(res)
       if (res.code == 200) {
         this.orders = [];
+        this.count = 0;
         for (const order of res.orders) {
           let status: string[] = [];
           let workstaionId: number[] = [];
@@ -82,7 +82,7 @@ export class MealStatusComponent {
             }
           }
           this.orders.push({
-            orderId: order.ordersId, orderCode: order.ordersCode, tableId: order.tableId,
+            orderId: order.ordersId, orderCode: order.ordersCode, tableId: order.tableId,orderTime:order.ordersTime,
             price: order.totalPrice, status: status, workStationId: workstaionId, orderProductList: order.orderDetailsList, paid: order.paid
           })
         }
@@ -90,7 +90,6 @@ export class MealStatusComponent {
       console.log(this.orders)
     })
     this.timerId = setInterval(() => {
-      this.count = 0;
       let today = new Date();
       let year = today.getFullYear();
       let month = String(today.getMonth() + 1).padStart(2, '0');
@@ -101,6 +100,7 @@ export class MealStatusComponent {
         console.log(res)
         if (res.code == 200) {
           this.orders = [];
+          this.count = 0;
           for (const order of res.orders) {
             let status: string[] = [];
             let workstaionId: number[] = [];
@@ -154,7 +154,7 @@ export class MealStatusComponent {
               }
             }
             this.orders.push({
-              orderId: order.ordersId, orderCode: order.ordersCode, tableId: order.tableId,
+              orderId: order.ordersId, orderCode: order.ordersCode, tableId: order.tableId,orderTime:order.ordersTime,
               price: order.totalPrice, status: status, workStationId: workstaionId, orderProductList: order.orderDetailsList, paid: order.paid
             })
           }
@@ -268,7 +268,7 @@ export class MealStatusComponent {
               product.status = settingStatus;
             }
             this.orders.push({
-              orderId: order.ordersId, orderCode: order.ordersCode, tableId: order.tableId,
+              orderId: order.ordersId, orderCode: order.ordersCode, tableId: order.tableId,orderTime:order.ordersTime,
               price: order.totalPrice, status: status, workStationId: workstaionId, orderProductList: order.orderDetailsList, paid: order.paid
             })
           }

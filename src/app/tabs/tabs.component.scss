@@ -122,6 +122,7 @@
 .payment-status {
   padding: 0 15px 10px 15px;
   font-size: 13px;
+  display: flex;
   color: #4caf50; /* 已付款綠色 */
   font-weight: 500;
 }

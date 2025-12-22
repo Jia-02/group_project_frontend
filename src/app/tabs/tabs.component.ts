@@ -193,7 +193,7 @@ export class TabsComponent {
               }
             }
             this.orders.push({
-              orderId: order.ordersId, orderCode: order.ordersCode, tableId: order.tableId,
+              orderId: order.ordersId, orderCode: order.ordersCode, tableId: order.tableId,orderTime:order.ordersTime,
               price: order.totalPrice, status: status, workStationId: workstaionId, orderProductList: order.orderDetailsList, paid: order.paid
             })
           }
@@ -240,7 +240,7 @@ export class TabsComponent {
               }
             }
             this.orders.push({
-              orderId: order.ordersId, orderCode: order.ordersCode, tableId: order.tableId,
+              orderId: order.ordersId, orderCode: order.ordersCode, tableId: order.tableId,orderTime:order.ordersTime,
               price: order.totalPrice, status: status, workStationId: workstaionId, orderProductList: order.orderDetailsList, paid: order.paid
             })
           }
@@ -282,7 +282,7 @@ export class TabsComponent {
               }
             }
             this.orders.push({
-              orderId: order.ordersId, orderCode: order.ordersCode, tableId: order.tableId,
+              orderId: order.ordersId, orderCode: order.ordersCode, tableId: order.tableId,orderTime:order.ordersTime,
               price: order.totalPrice, status: status, workStationId: workstaionId, orderProductList: order.orderDetailsList, paid: order.paid
             })
           }

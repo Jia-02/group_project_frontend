@@ -4,6 +4,7 @@
 } @else {
   <h2>{{ displayOrderType }}</h2>
 }
+<button (click)="openBoard()">活動</button>
 <div class="content-container">
   @if (!isLoadingCategories) {
   <mat-tab-group (selectedTabChange)="onTabChange($event)">
@@ -29,5 +30,5 @@
   </mat-tab-group>
   }
 </div>
-<button class="buttonCss" (click)="submitCart()">送出購物車<span class="countCss">{{ this.currentCart.length }}</span></button>
+<button class="buttonCss" (click)="submitCart()">送出購物車<span class="countCss">{{ totalItemsCount }}</span></button>
 </div>
