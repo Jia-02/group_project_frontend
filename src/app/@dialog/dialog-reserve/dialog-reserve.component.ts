@@ -275,7 +275,8 @@ export class DialogReserveComponent {
   // 新增
   createCheck() {
     // 檢查必填
-    if (!this.reservation.reservationDate || !this.reservation.reservationTime || !this.reservation.tableId) {
+    if (!this.reservation.reservationDate || !this.reservation.reservationTime || !this.reservation.tableId
+      || !this.reservation.reservationAdultCount) {
       return;
     }
 
