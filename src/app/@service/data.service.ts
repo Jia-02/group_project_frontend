@@ -40,10 +40,6 @@ export class DataService {
   // 附餐與飲料列表
   sideDishList: productList[] = [];
   drinkDishList: productList[] = [];
-<<<<<<< HEAD
-  baseUrl = 'http://localhost:8080/'
-=======
->>>>>>> main
 
   baseUrl = 'http://localhost:8080/'
 
