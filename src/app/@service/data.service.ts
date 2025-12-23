@@ -40,8 +40,8 @@ export class DataService {
   // 附餐與飲料列表
   sideDishList: productList[] = [];
   drinkDishList: productList[] = [];
-  // baseUrl = 'http://192.168.0.11:8080/'
-  baseUrl ='http://localhost:8080/';
+
+  baseUrl = 'http://localhost:8080/'
 
   getApi(url: string): any {
     url = this.baseUrl + url;

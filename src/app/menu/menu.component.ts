@@ -253,8 +253,8 @@ export class MenuComponent {
     };
 
     const dialogRef = this.dialog.open(SendOrderDialogComponent, {
-      width: '500px',
-      height: '900px',
+      width: '80%',
+      height: 'auto',
       data: finalPayload,
     });
 

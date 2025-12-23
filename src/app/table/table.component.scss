@@ -43,8 +43,8 @@
   left: 0;
   height: 100%; /* 水平進度條佔滿高度 */
   /* width 由程式控制 */
-  background-color: rgba(126, 211, 33, 0.4);
-  border-right: 2px solid #7ed321;
+  background-color: #F2C58E;
+  border-right: 2px solid #F2C58E;
   z-index: 1;
 }
 
@@ -367,7 +367,7 @@
 
 .axisLabel.vertical {
   writing-mode: vertical-rl;
-  transform: rotate(180deg);
+  text-orientation: upright;
   margin-right: 5px;
   white-space: nowrap;
 }
