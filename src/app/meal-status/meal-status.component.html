@@ -154,7 +154,7 @@
                         @for(detail of product.orderDetails;track detail){
                           @if(detail.mealStatus == "待送餐" || detail.mealStatus == "餐點已完成"){
                             <div class="action-row">
-                              <button class="serve-btn" (click)="delivery(order.orderId,true,product.orderDetailsId,detail.productId)">送出</button>
+
                               <div class="item-info">
                                 <span class="item-name">{{detail.productName}}</span>
                                 <div class="modifiers">
@@ -166,6 +166,7 @@
                                   )
                                 </div>
                               </div>
+                              <button class="serve-btn" (click)="delivery(order.orderId,true,product.orderDetailsId,detail.productId)">送出</button>
                             </div>
                           }
                         }
