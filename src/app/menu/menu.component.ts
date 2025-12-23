@@ -192,14 +192,14 @@ export class MenuComponent {
 
         if (isSetting) {
           dialogRef = this.dialog.open(SettingDetailDialogComponent, {
-            width: '400px',
-            height: '900px',
+            width: '80%',
+            height: 'auto',
             data: res
           });
         } else {
           dialogRef = this.dialog.open(ProductDetailDialogComponent, {
-            width: '400px',
-            height: '900px',
+            width: '80%',
+            height: 'auto',
             data: res
           });
         }

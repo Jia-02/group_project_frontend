@@ -1,12 +1,12 @@
-<h2 mat-dialog-title class="dialogHeader">
-  <span class="headerTitle">{{ data.productName }}</span>
+    <!-- 關閉 -->
   <button class="closeBtn" (click)="dialogRef.close()">
     <mat-icon>close</mat-icon>
   </button>
-</h2>
+
 
 <mat-dialog-content class="dialogContent">
   <img [src]="data.imageUrl" alt="{{ data.productName }}" class="heroImage">
+
   <div class="productInfoSection">
     <div class="productHeader">
       <h3 class="productTitle">{{ data.productName }}</h3>
@@ -19,44 +19,40 @@
     <h3 class="sectionTitle">客製化選項</h3>
 
     @if (data.optionList.length) {
-      @for (optionGroup of data.optionList; track optionGroup.optionId) {
+    @for (optionGroup of data.optionList; track optionGroup.optionId) {
 
-        <div class="optionGroup">
-          <div class="groupHeader">
-            <span class="groupName">{{ optionGroup.optionName }}</span>
-            <span class="groupLimit">(最多選 {{ optionGroup.maxSelect }} 項)</span>
-          </div>
+    <div class="optionGroup">
+      <div class="groupHeader">
+        <span class="groupName">{{ optionGroup.optionName }}</span>
+        <span class="groupLimit">(最多選 {{ optionGroup.maxSelect }} 項)</span>
+      </div>
 
-          <div class="optionList">
-            @for (optionItem of optionGroup.optionDetail; track optionItem.option) {
-              @if (currentSelections.get(optionGroup.optionId); as selectedSet) {
+      <div class="optionList">
+        @for (optionItem of optionGroup.optionDetail; track optionItem.option) {
+        @if (currentSelections.get(optionGroup.optionId); as selectedSet) {
 
-                <label class="optionRow">
+        <label class="optionRow">
 
-                  <div class="inputWrapper">
-                    @if (optionGroup.maxSelect > 1) {
-                      <input type="checkbox"
-                             class="nativeInput"
-                             [checked]="selectedSet.has(optionItem.option)"
-                             [disabled]="!selectedSet.has(optionItem.option) && selectedSet.size >= optionGroup.maxSelect"
-                             (change)="selectedSet.has(optionItem.option) ? selectedSet.delete(optionItem.option) : selectedSet.add(optionItem.option);calculateTotalPrice();">
-                    } @else {
-                      <input type="radio"
-                             [name]="'optionGroup_' + optionGroup.optionId"
-                             class="nativeInput"
-                             [checked]="selectedSet.has(optionItem.option)"
-                             (change)="selectedSet.clear(); selectedSet.add(optionItem.option); calculateTotalPrice();">
-                    }
-                  </div>
-
-                  <span class="optName">{{ optionItem.option }}</span>
-                  <span class="optPrice">+NT$ {{ optionItem.addPrice }}</span>
-                </label>
-              }
+          <div class="inputWrapper">
+            @if (optionGroup.maxSelect > 1) {
+            <input type="checkbox" class="nativeInput" [checked]="selectedSet.has(optionItem.option)"
+              [disabled]="!selectedSet.has(optionItem.option) && selectedSet.size >= optionGroup.maxSelect"
+              (change)="selectedSet.has(optionItem.option) ? selectedSet.delete(optionItem.option) : selectedSet.add(optionItem.option);calculateTotalPrice();">
+            } @else {
+            <input type="radio" [name]="'optionGroup_' + optionGroup.optionId" class="nativeInput"
+              [checked]="selectedSet.has(optionItem.option)"
+              (change)="selectedSet.clear(); selectedSet.add(optionItem.option); calculateTotalPrice();">
             }
           </div>
-        </div>
-      }
+
+          <span class="optName">{{ optionItem.option }}</span>
+          <span class="optPrice">+NT$ {{ optionItem.addPrice }}</span>
+        </label>
+        }
+        }
+      </div>
+    </div>
+    }
     }
   </div>
 </mat-dialog-content>
@@ -78,4 +74,7 @@
       <span class="totalPrice">NT$ {{ currentPrice }}</span>
     </button>
   </mat-dialog-actions>
+
+
+
 </div>

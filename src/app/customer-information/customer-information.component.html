@@ -1,18 +1,19 @@
 <div class="backgroundCss">
-    <div class="Box">
-        <h3>顧客資訊</h3>
-        <p><span class="starCss">* </span>顧客姓名</p>
-        <input type="text" class="inputCss" [(ngModel)]="customerName">
+  <div class="Box">
+    <h3>顧客資訊</h3>
+    <p><span class="starCss">* </span>顧客姓名</p>
+    <input type="text" class="inputCss" [(ngModel)]="customerName">
 
-        <p><span class="starCss">* </span>顧客電話</p>
-        <input type="text" class="inputCss" [(ngModel)]="customerPhone"
-        inputmode="numeric" pattern="[0-9]*" (input)="onPhoneInput($event)" placeholder="09xxxxxxxx">
+    <p><span class="starCss">* </span>顧客電話</p>
+    <input type="text" class="inputCss" [(ngModel)]="customerPhone" inputmode="numeric" pattern="[0-9]*"
+      (input)="onPhoneInput($event)" placeholder="09xxxxxxxx">
 
-        @if(ordersType == "D")
-        {
-            顧客地址:<input type="text" class="inputCss" [(ngModel)]="customerAddress">
-        }
+    @if(ordersType == "D")
+    {
+    <p><span class="starCss">* </span>顧客地址</p>
+    <input type="text" class="inputCss" [(ngModel)]="customerAddress">
+    }
 
-        <button class="buttonCss" (click)="startNonInnerOrder()">開始點餐</button>
-    </div>
+    <button class="buttonCss" (click)="startNonInnerOrder()">開始點餐</button>
+  </div>
 </div>

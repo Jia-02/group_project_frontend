@@ -236,6 +236,10 @@
   font-size: 14px;
   cursor: pointer;
   white-space: nowrap;
+
+  &:hover {
+    background-color: #F2C58E;
+  }
 }
 
 .serve-btn:active {
@@ -245,10 +249,14 @@
 
 .serve-btn.full {
   width: 100%;
-  background-color: #F2C58E; /* 整單送出用橘色 */
+  background-color: #001F4D;
   font-size: 16px;
   padding: 10px;
   margin-top: 5px;
+
+  &:hover {
+    background-color: #F2C58E;
+  }
 }
 
 .full-order-action {

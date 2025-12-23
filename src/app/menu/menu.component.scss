@@ -176,29 +176,27 @@
 }
 
 .countCss {
-  background-color: #F2C58E;
+background-color: #F2C58E;
   color: #fff;
   font-size: 14px;
-  min-width: 24px;
+  width: 24px;
   height: 24px;
+  flex-shrink: 0;
   border-radius: 50%;
+  padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 800;
-  padding: 0 4px;
+  line-height: 1;
 }
 
 .eventBtn {
-  margin: 12px 20px 0;
-  background: linear-gradient(135deg, #F2C58E 0%, #d4a76a 100%);
-  color: #001F4D;
-  border: none;
-  padding: 6px 14px;
-  border-radius: 4px;
-  font-weight: bold;
-  font-size: 13px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
+  position: fixed;
+  top: 15px;
+  right: 20px;
+  z-index: 999;
+}
+mat-icon {
+  color: #F2C58E;
 }
