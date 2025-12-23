@@ -182,6 +182,7 @@ export interface Rect {
 
 export interface Order {
   orderId: number;
+  orderType: string;
   orderCode: string;
   orderTime:string;
   orderProductList: OrderDetailsList[];

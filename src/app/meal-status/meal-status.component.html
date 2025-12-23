@@ -1,4 +1,4 @@
-<div class="kds-container">
+<!-- <div class="kds-container">
 
   <div class="top-bar">
     <h1>餐點狀態看板</h1>
@@ -9,7 +9,7 @@
       </div>
     </div>
   </div>
-
+s
   <div class="kanban-board">
 
     <div class="kanban-column col-preparing">
@@ -99,20 +99,20 @@
 
       <div class="column-content">
         @for(order of orders;track order){
-        @if(order.status.includes("待送餐")){
-        <div class="order-card ready-card">
-          <div class="card-header">
-            <span class="order-id">#{{order.orderCode}}</span>
-            <span class="order-type">
-              @if(order.tableId){
-              內用 {{order.tableId}}
-              }@else if(order.orderCode.includes("T")){
-              外帶
-              }@else {
-              外送
-              }
-            </span>
-          </div>
+          @if(order.status.includes("待送餐") || order.status.includes("餐點已完成")){
+            <div class="order-card ready-card">
+              <div class="card-header">
+                <span class="order-id">#{{order.orderCode}}</span>
+                <span class="order-type">
+                  @if(order.tableId){
+                    內用 {{order.tableId}}
+                  }@else if(order.orderCode.includes("T")){
+                    外帶
+                  }@else {
+                    外送
+                  }
+                </span>
+              </div>
 
           <div class="payment-row">
             @if(order.paid){
@@ -124,25 +124,90 @@
             <span>{{order.orderTime}}</span>
           </div>
 
-          <div class="product-list">
-            @for(product of order.orderProductList;track product){
-            @if(order.orderCode.includes("A")){
-            <div class="product-group">
-              @if(product.settingId > 0 && product.status.includes("待送餐")){
-              <div class="set-title">{{product.settingId}}號餐</div>
-              @for(detail of product.orderDetails;track detail){
-              @if(detail.mealStatus == "待送餐"){
-              <div class="action-row">
+              <div class="product-list">
+                @for(product of order.orderProductList;track product){
+                  @if(order.orderCode.includes("A")){
+                    <div class="product-group">
+                      @if(product.settingId > 0 && product.status.includes("待送餐") || product.settingId > 0 && product.status.includes("餐點已完成")){
+                        <div class="set-title">{{product.settingId}}號餐</div>
+                        @for(detail of product.orderDetails;track detail){
+                          @if(detail.mealStatus == "待送餐" || detail.mealStatus == "餐點已完成"){
+                            <div class="action-row">
 
-                <div class="item-info">
-                  <span class="item-name">{{detail.productName}}</span>
-                  <div class="modifiers">
-                    (
-                    @for(option of detail.detailList;track option){
-                    {{option.option}}
-                    @if(detail.detailList.length != option.id){ <span>, </span> }
-                    }
-                    )
+                              <div class="item-info">
+                                <span class="item-name">{{detail.productName}}</span>
+                                <div class="modifiers">
+                                  (
+                                  @for(option of detail.detailList;track option){
+                                    {{option.option}}
+                                    @if(detail.detailList.length != option.id){ <span>, </span> }
+                                  }
+                                  )
+                                </div>
+                              </div>
+                               <button class="serve-btn" (click)="delivery(order.orderId,true,product.orderDetailsId,detail.productId)">送出</button>
+                            </div>
+                          }
+                        }
+                      }@else {
+                        @for(detail of product.orderDetails;track detail){
+                          @if(detail.mealStatus == "待送餐" || detail.mealStatus == "餐點已完成"){
+                            <div class="action-row">
+                              <button class="serve-btn" (click)="delivery(order.orderId,true,product.orderDetailsId,detail.productId)">送出</button>
+                              <div class="item-info">
+                                <span class="item-name">{{detail.productName}}</span>
+                                <div class="modifiers">
+                                  (
+                                  @for(option of detail.detailList;track option){
+                                    {{option.option}}
+                                    @if(detail.detailList.length != option.id){ <span>, </span> }
+                                  }
+                                  )
+                                </div>
+                              </div>
+                            </div>
+                          }
+                        }
+                      }
+                    </div>
+                  }
+                  @else {
+                    <div class="product-group">
+                      @if(product.settingId > 0 && product.status.includes("待送餐") || product.settingId > 0 && product.status.includes("餐點已完成")){
+                        <div class="set-title">{{product.settingId}}號餐</div>
+                        @for(detail of product.orderDetails;track detail){
+                          @if(detail.mealStatus == "待送餐" || detail.mealStatus == "餐點已完成"){
+                            <div class="item-row simple">
+                              {{detail.productName}} (
+                              @for(option of detail.detailList;track option){
+                                {{option.option}}
+                                @if(detail.detailList.length != option.id){ <span>, </span> }
+                              }
+                              )
+                            </div>
+                          }
+                        }
+                      }@else {
+                        @for(detail of product.orderDetails;track detail){
+                          @if(detail.mealStatus == "待送餐" || detail.mealStatus == "餐點已完成"){
+                            <div class="item-row simple">
+                              {{detail.productName}} (
+                              @for(option of detail.detailList;track option){
+                                {{option.option}}
+                                @if(detail.detailList.length != option.id){ <span>, </span> }
+                              }
+                              )
+                            </div>
+                          }
+                        }
+                      }
+                    </div>
+                  }
+                }
+
+                @if(!order.status.includes("製作中") && !order.orderCode.includes("A")){
+                  <div class="full-order-action">
+                    <button class="serve-btn full" (click)="delivery(order.orderId,false)">整單已送餐</button>
                   </div>
                 </div>
                 <button class="serve-btn"
@@ -230,20 +295,20 @@
 
       <div class="column-content">
         @for(order of orders;track order){
-        @if(order.status.includes("已送達")){
-        <div class="order-card served-card">
-          <div class="card-header">
-            <span class="order-id">#{{order.orderCode}}</span>
-            <span class="order-type">
-              @if(order.tableId){
-              內用 {{order.tableId}}
-              }@else if(order.orderCode.includes("T")){
-              外帶
-              }@else {
-              外送
-              }
-            </span>
-          </div>
+          @if(order.status.includes("已送達") || order.status.includes("餐點已送出") ){
+            <div class="order-card served-card">
+              <div class="card-header">
+                <span class="order-id">#{{order.orderCode}}</span>
+                <span class="order-type">
+                  @if(order.tableId){
+                    內用 {{order.tableId}}
+                  }@else if(order.orderCode.includes("T")){
+                    外帶
+                  }@else {
+                    外送
+                  }
+                </span>
+              </div>
 
           <div class="payment-row">
             @if(order.paid){
@@ -255,18 +320,38 @@
             <span>{{order.orderTime}}</span>
           </div>
 
-          <div class="product-list">
-            @for(product of order.orderProductList;track product){
-            <div class="product-group">
-              @if(product.settingId > 0 && product.status.includes("已送達")){
-              <div class="set-title">{{product.settingId}}號餐</div>
-              @for(detail of product.orderDetails;track detail){
-              @if(detail.mealStatus == "已送達"){
-              <div class="item-row faded">
-                {{detail.productName}} (
-                @for(option of detail.detailList;track option){
-                {{option.option}}
-                @if(detail.detailList.length != option.id){ <span>, </span> }
+              <div class="product-list">
+                @for(product of order.orderProductList;track product){
+                  <div class="product-group">
+                    @if(product.settingId > 0 && product.status.includes("已送達") || product.settingId > 0 && product.status.includes("餐點已送出") ){
+                      <div class="set-title">{{product.settingId}}號餐</div>
+                      @for(detail of product.orderDetails;track detail){
+                        @if(detail.mealStatus == "已送達"){
+                          <div class="item-row faded">
+                            {{detail.productName}} (
+                            @for(option of detail.detailList;track option){
+                              {{option.option}}
+                              @if(detail.detailList.length != option.id){ <span>, </span> }
+                            }
+                            )
+                          </div>
+                        }
+                      }
+                    }@else {
+                      @for(detail of product.orderDetails;track detail){
+                        @if(detail.mealStatus == "已送達" || detail.mealStatus == "餐點已送出"){
+                          <div class="item-row faded">
+                            {{detail.productName}} (
+                            @for(option of detail.detailList;track option){
+                              {{option.option}}
+                              @if(detail.detailList.length != option.id){ <span>, </span> }
+                            }
+                            )
+                          </div>
+                        }
+                      }
+                    }
+                  </div>
                 }
                 )
               </div>
@@ -296,4 +381,4 @@
     </div>
 
   </div>
-</div>
+</div> -->

@@ -1,0 +1,24 @@
+<div class="header">
+  <div class="body">
+    <div class="card" [class.flipped]="flipped">
+      <!-- 正面：登入 -->
+      <div class="font">
+        <p>登入</p>
+        <p>帳號:<input type="text" required placeholder="輸入帳號" [(ngModel)]="loginAccount"></p>
+        <p>密碼:<input type="password" [(ngModel)]="loginPassword"></p>
+        <button class="btnsty" (click)="flipCard()">註冊</button>
+        <button (click)="onLogin()">登入</button>
+      </div>
+      <!-- 背面：註冊 -->
+      <div class="back">
+        <p>註冊</p>
+        <p>帳號:<input type="text" required placeholder="輸入帳號" [(ngModel)]="registerAccount"></p>
+        <p>密碼:<input type="password" [(ngModel)]="registerPassword"></p>
+        <p>姓名:<input type="text" required placeholder="輸入姓名" [(ngModel)]="registerName"></p>
+        <p>電話:<input type="text" required placeholder="輸入電話" [(ngModel)]="registerPhone"></p>
+        <button class="btnsty" (click)="flipCard()">返回</button>
+        <button (click)="onRegister()">註冊</button>
+      </div>
+    </div>
+  </div>
+</div>

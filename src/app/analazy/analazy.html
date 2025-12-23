@@ -1,0 +1,36 @@
+<div class="container">
+  <div class="header">
+
+    <p>外送員: {{name}}</p>
+    <p>電話: {{phone}}</p>
+    <button (click)="Signout()">登出</button>
+  </div>
+
+  <div class="main">
+    <div class="sidebar">
+      <nav>
+        <ul>
+          <li><a routerLink="/front">首頁</a></li>
+          <li><a routerLink="/todays/orders">今日已完成訂單</a></li>
+          <li><a routerLink="/analyze">薪資分析</a></li>
+          <li><a routerLink="/historyorders">歷史訂單</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="content">
+      <h3>本週: {{ dateRangeStr }}</h3>
+      <div class="week-buttons">
+        <button (click)="changeWeek(-1)">上一週</button>
+        <button (click)="changeWeek(1)">下一週</button>
+      </div>
+      <h2 style="margin: 10px 0; color: #2e7d32;">
+        本週收入：${{ weekTotal }}
+      </h2>
+      <div class="chart-wrapper">
+        <canvas id="barChart"></canvas>
+      </div>
+
+
+    </div>
+  </div>
+</div>

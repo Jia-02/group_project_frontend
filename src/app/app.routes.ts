@@ -13,6 +13,13 @@ import { CustomerInformationComponent } from './customer-information/customer-in
 import { MenuComponent } from './menu/menu.component';
 import { MenuCComponent } from './menu-c/menu-c.component';
 import { PetComponent } from './pet/pet.component';
+import { Frontpage } from './frontpage/frontpage';
+import { authGuard } from './guards/auth-guard';
+import { TodaysOrders } from './todays-orders/todays-orders';
+import { Historyorders } from './historyorders/historyorders';
+import { Login } from './login/login';
+import { MapDelivery } from './map-delivery/map-delivery';
+import { Analazy } from './analazy/analazy';
 
 
 export const routes: Routes = [
@@ -30,7 +37,13 @@ export const routes: Routes = [
   { path: 'menu', component: MenuComponent },
   { path: 'menuC', component: MenuCComponent },
   { path: 'pet', component: PetComponent },
-  { path: '**', component: ReserveComponent}
+  { path: 'front', component: Frontpage, canActivate: [authGuard] },
+  { path: 'todays/orders', component: TodaysOrders, canActivate: [authGuard] },
+  { path: 'historyorders', component: Historyorders, canActivate: [authGuard] },
+  { path: 'login', component: Login },
+  { path: 'map', component: MapDelivery },
+  { path: 'analyze', component: Analazy, canActivate: [authGuard] },
+  { path: '**', component: ReserveComponent }
 ]
 
 
