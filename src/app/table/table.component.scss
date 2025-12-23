@@ -315,21 +315,6 @@
   margin-right: 10px;
 }
 
-.legendItem {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 14px;
-  color: #555;
-  font-weight: 500;
-}
-
-/* 圓點樣式 */
-.dotGreen { height: 12px; width: 12px; background-color: #52C41A; border-radius: 50%; }
-.dotYellow { height: 12px; width: 12px; background-color: #F2C58E; border-radius: 50%; }
-.dotRed { height: 12px; width: 12px; background-color: #FF4D4F; border-radius: 50%; }
-.dotGray { height: 12px; width: 12px; background-color: #9390A5; border-radius: 50%; }
-.dotBlack { height: 12px; width: 12px; background-color: #474747ff; border-radius: 50%; }
 
 /* 2. Y軸區 (第2欄) */
 .yAxisGroup {

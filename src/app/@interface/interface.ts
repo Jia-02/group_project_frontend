@@ -56,6 +56,7 @@ export interface timeLabel {
 export interface calendarDay {
   date: Date;
   hasEvent: boolean;
+  isCurrentMonth: boolean
 }
 
 // 分類

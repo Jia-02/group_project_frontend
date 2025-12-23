@@ -3,7 +3,7 @@
   <div class="content">
 
     <mat-tab-group class="categoryTabs" [(selectedIndex)]="selectedTabIndex" (selectedTabChange)="onTabChange($event)">
-      @for (category of allCategoryDto; track $index) {
+      @for (category of allCategoryDto; track category.categoryId) {
       <mat-tab>
         <!-- tab區域 -->
         <ng-template mat-tab-label>

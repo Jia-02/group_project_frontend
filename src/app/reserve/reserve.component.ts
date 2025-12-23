@@ -69,11 +69,13 @@ export class ReserveComponent {
         const thisDate = new Date(currentLoopDate);
         // 轉字串比對 Set
         const dateStr = this.formatDateStr(thisDate);
+        const isCurrentMonth = thisDate.getMonth() == month;
 
         // 4. 【關鍵】產生物件，直接判斷 hasEvent
         week.push({
           date: thisDate,
-          hasEvent: this.eventDatesSet.has(dateStr)
+          hasEvent: this.eventDatesSet.has(dateStr),
+          isCurrentMonth: isCurrentMonth
         });
         currentLoopDate.setDate(currentLoopDate.getDate() + 1);  // 日期加1天
       }
@@ -318,19 +320,9 @@ export class ReserveComponent {
     }
 
     const currentTableId: any[] = [];
-    // const currentTime: any[] = [];
-
-    // for (let data of this.reservationAndTableByDateList) {
-    //   currentTableId.push(data.tableId);
-    //   for (let reservationData of data.reservations) {
-    //     currentTime.push(reservationData.reservationTime)
-    //   }
-
-    // }
-
     const dialogRef = this.dialog.open(DialogReserveComponent, {
-      width: '80%',        // 設定寬一點 (原本預設約 50vw)
-      height: 'auto',        // 讓高度自動適應內容
+      width: '80%',
+      height: 'auto',
       data: {
         tableId: currentTableId,
         reservationDate: this.selectedDay,

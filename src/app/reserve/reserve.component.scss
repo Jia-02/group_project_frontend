@@ -136,6 +136,11 @@ $hour-height: 45px; // 每小時的高度
   font-weight: 500;
   transition: all 0.2s;
 
+  // 非本月日期的顏色
+  &.not-current-month {
+    color: #ccc;
+  }
+
   &.selected {
     background-color: $color-primary;
     color: $color-card-bg; // 白字
