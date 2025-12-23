@@ -1,4 +1,3 @@
-<!-- 關閉 -->
 <button class="closeBtn" (click)="dialogRef.close()">
   <mat-icon>close</mat-icon>
 </button>
@@ -11,80 +10,87 @@
       <h3 class="productTitle">{{ data.settingName }}</h3>
       <div class="basePrice">NT$ {{ data.settingPrice }}</div>
     </div>
+    <p class="productDesc" style="margin-bottom: 0;">精選套餐組合</p>
   </div>
 
   <div class="customizationSection">
     @for (categoryGroup of data.settingDetail; track categoryGroup.categoryId) {
-    <div class="categorySection">
-      <div class="stepSectionTitle">選擇 {{ categoryGroup.categoryType }}</div>
+      <h3 class="sectionTitle">選擇 {{ categoryGroup.categoryType }}</h3>
 
-      @for (productGroup of categoryGroup.detailList; track productGroup.productId) {
-      <div class="productCard"
-        [class.selected]="selectedMainProduct.get(categoryGroup.categoryId) === productGroup.productId">
-        <label class="productLabel">
-          <input type="radio" [name]="'mainProduct_' + categoryGroup.categoryId" class="nativeRadio"
-            [checked]="selectedMainProduct.get(categoryGroup.categoryId) === productGroup.productId"
-            (change)="handleMainProductChange(categoryGroup, productGroup)">
-          <div class="productInfo">
-            <span class="productName">
-              {{ productGroup.productName }}
-              <span class="productPriceTag">(單點: {{ productGroup.productPrice }})</span>
-            </span>
-          </div>
-        </label>
+      <div class="optionGroup">
+        <div class="optionList">
+          @for (productGroup of categoryGroup.detailList; track productGroup.productId) {
+            <label class="optionRow">
+              <div class="inputWrapper">
+                <input type="radio"
+                       [name]="'mainProduct_' + categoryGroup.categoryId"
+                       class="nativeInput"
+                       [checked]="selectedMainProduct.get(categoryGroup.categoryId) === productGroup.productId"
+                       (change)="handleMainProductChange(categoryGroup, productGroup)">
+              </div>
+              <span class="optName">
+                {{ productGroup.productName }}
+                <small style="color: #888; font-weight: 400; margin-left: 4px;">(單點: {{ productGroup.productPrice }})</small>
+              </span>
+            </label>
+          }
+        </div>
       </div>
-      }
 
       @for (optionGroup of categoryGroup.optionList; track optionGroup.optionId) {
-      <div class="modifierGroup">
-        <div class="modifierHeader">
-          {{ optionGroup.optionName }}
-          <span class="limitText">(最多選 {{ optionGroup.maxSelect }} 項)</span>
-        </div>
+        <div class="optionGroup">
+          <div class="groupHeader">
+            <span class="groupName">{{ optionGroup.optionName }}</span>
+            <span class="groupLimit">(最多選 {{ optionGroup.maxSelect }} 項)</span>
+          </div>
 
-        <div class="modifierList">
-          @for (optionItem of optionGroup.optionDetail; track optionItem.option) {
-          @if (currentSelections.get(categoryGroup.categoryId)?.get(optionGroup.optionId); as selectedSet) {
-          <label class="modifierItem">
-            @if (optionGroup.maxSelect > 1) {
-            <input type="checkbox" class="nativeInput" [checked]="selectedSet.has(optionItem.option)"
-              [disabled]="!selectedSet.has(optionItem.option) && selectedSet.size >= optionGroup.maxSelect"
-              (change)="toggleOption(categoryGroup.categoryId, optionGroup.optionId, optionItem.option)">
-            } @else {
-            <input type="radio" [name]="'opt_' + categoryGroup.categoryId + '_' + optionGroup.optionId"
-              class="nativeInput" [checked]="selectedSet.has(optionItem.option)"
-              (change)="selectRadio(categoryGroup.categoryId, optionGroup.optionId, optionItem.option)">
+          <div class="optionList">
+            @for (optionItem of optionGroup.optionDetail; track optionItem.option) {
+              @if (currentSelections.get(categoryGroup.categoryId)?.get(optionGroup.optionId); as selectedSet) {
+                <label class="optionRow">
+                  <div class="inputWrapper">
+                    @if (optionGroup.maxSelect > 1) {
+                      <input type="checkbox" class="nativeInput"
+                             [checked]="selectedSet.has(optionItem.option)"
+                             [disabled]="!selectedSet.has(optionItem.option) && selectedSet.size >= optionGroup.maxSelect"
+                             (change)="toggleOption(categoryGroup.categoryId, optionGroup.optionId, optionItem.option)">
+                    } @else {
+                      <input type="radio"
+                             [name]="'opt_' + categoryGroup.categoryId + '_' + optionGroup.optionId"
+                             class="nativeInput"
+                             [checked]="selectedSet.has(optionItem.option)"
+                             (change)="selectRadio(categoryGroup.categoryId, optionGroup.optionId, optionItem.option)">
+                    }
+                  </div>
+                  <span class="optName">{{ optionItem.option }}</span>
+                  <span class="optPrice">+NT$ {{ optionItem.addPrice }}</span>
+                </label>
+              }
             }
-            <span class="modifierName">{{ optionItem.option }}</span>
-            <span class="modifierPrice">+NT$ {{ optionItem.addPrice }}</span>
-          </label>
-          }
-          }
+          </div>
         </div>
-      </div>
       }
-      <hr class="categoryDivider">
-    </div>
     }
   </div>
 </mat-dialog-content>
 
-<mat-dialog-actions class="quantityControlPanel">
-  <button class="qtyBtn" (click)="decrementQuantity()">
-    <mat-icon>remove</mat-icon>
-  </button>
-  <input type="number" [(ngModel)]="quantity" min="1" class="qtyInput" readonly>
-  <button class="qtyBtn" (click)="incrementQuantity()">
-    <mat-icon>add</mat-icon>
-  </button>
-</mat-dialog-actions>
+<div class="footerContainer">
+  <mat-dialog-actions class="quantityPanel">
+    <button class="qtyBtn" (click)="decrementQuantity()">
+      <mat-icon>remove</mat-icon>
+    </button>
+    <input type="number" [(ngModel)]="quantity" min="1" class="qtyInput" readonly>
+    <button class="qtyBtn" (click)="incrementQuantity()">
+      <mat-icon>add</mat-icon>
+    </button>
+  </mat-dialog-actions>
 
-<mat-dialog-actions class="footerCartPanel">
-  <div class="totalPriceDisplay">
-    <small>總金額</small>
-    <span>NT$ {{ currentPrice }}</span>
-  </div>
-  <button class="submitCartBtn" [disabled]="!quantity || quantity <= 0 || !isSelectionComplete" (click)="addToCart()">
-    加入購物車
-  </button>
-</mat-dialog-actions>
+  <mat-dialog-actions class="cartPanel">
+    <button class="addToCartBtn"
+            [disabled]="!quantity || quantity <= 0 || !isSelectionComplete"
+            (click)="addToCart()">
+      <span class="cartText">加入購物車</span>
+      <span class="totalPrice">NT$ {{ currentPrice }}</span>
+    </button>
+  </mat-dialog-actions>
+</div>

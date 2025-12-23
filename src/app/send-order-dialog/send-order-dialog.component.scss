@@ -5,14 +5,13 @@
   height: 100%;
   max-height: 90vh;
   background-color: #f5f5f5; /* 灰色底色，區隔卡片 */
-  font-family: -apple-system, BlinkMacSystemFont, "Roboto", sans-serif;
   overflow: hidden;
 }
 
 /* --- 標題列 (Sticky) --- */
 .dialog-header {
   margin: 0;
-  padding: 16px;
+  padding: 8px;
   background-color: #fff;
   color: #333;
   font-size: 18px;
@@ -88,6 +87,7 @@
   border-radius: 6px;
   background-color: #fff;
   outline: none;
+  color: #9390A5;
 }
 
 /* --- 訂單細節 --- */
@@ -121,12 +121,12 @@
   font-size: 12px;
   padding: 2px 6px;
   border-radius: 4px;
-  background-color: #e0f2f1; /* 淺綠 */
-  color: #9390A5;
+  background-color: #F2F4F6;
+  color: #F2C58E;
   font-weight: 600;
 }
 .type-tag.is-set {
-  background-color: #fff3e0; /* 淺橘 */
+  background-color: #F2F4F6;
   color: #F2C58E;
 }
 
@@ -241,7 +241,7 @@
 }
 
 .total-price {
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 800;
   color: darken(#F2C58E, 20%);
 }
