@@ -99,7 +99,7 @@
 
       <div class="column-content">
         @for(order of orders;track order){
-          @if(order.status.includes("待送餐")){
+          @if(order.status.includes("待送餐") || order.status.includes("餐點已完成")){
             <div class="order-card ready-card">
               <div class="card-header">
                 <span class="order-id">#{{order.orderCode}}</span>
@@ -128,10 +128,10 @@
                 @for(product of order.orderProductList;track product){
                   @if(order.orderCode.includes("A")){
                     <div class="product-group">
-                      @if(product.settingId > 0 && product.status.includes("待送餐")){
+                      @if(product.settingId > 0 && product.status.includes("待送餐") || product.settingId > 0 && product.status.includes("餐點已完成")){
                         <div class="set-title">{{product.settingId}}號餐</div>
                         @for(detail of product.orderDetails;track detail){
-                          @if(detail.mealStatus == "待送餐"){
+                          @if(detail.mealStatus == "待送餐" || detail.mealStatus == "餐點已完成"){
                             <div class="action-row">
 
                               <div class="item-info">
@@ -151,7 +151,7 @@
                         }
                       }@else {
                         @for(detail of product.orderDetails;track detail){
-                          @if(detail.mealStatus == "待送餐"){
+                          @if(detail.mealStatus == "待送餐" || detail.mealStatus == "餐點已完成"){
                             <div class="action-row">
                               <button class="serve-btn" (click)="delivery(order.orderId,true,product.orderDetailsId,detail.productId)">送出</button>
                               <div class="item-info">
@@ -173,10 +173,10 @@
                   }
                   @else {
                     <div class="product-group">
-                      @if(product.settingId > 0 && product.status.includes("待送餐")){
+                      @if(product.settingId > 0 && product.status.includes("待送餐") || product.settingId > 0 && product.status.includes("餐點已完成")){
                         <div class="set-title">{{product.settingId}}號餐</div>
                         @for(detail of product.orderDetails;track detail){
-                          @if(detail.mealStatus == "待送餐"){
+                          @if(detail.mealStatus == "待送餐" || detail.mealStatus == "餐點已完成"){
                             <div class="item-row simple">
                               {{detail.productName}} (
                               @for(option of detail.detailList;track option){
@@ -189,7 +189,7 @@
                         }
                       }@else {
                         @for(detail of product.orderDetails;track detail){
-                          @if(detail.mealStatus == "待送餐"){
+                          @if(detail.mealStatus == "待送餐" || detail.mealStatus == "餐點已完成"){
                             <div class="item-row simple">
                               {{detail.productName}} (
                               @for(option of detail.detailList;track option){
@@ -224,7 +224,7 @@
 
       <div class="column-content">
         @for(order of orders;track order){
-          @if(order.status.includes("已送達")){
+          @if(order.status.includes("已送達") || order.status.includes("餐點已送出") ){
             <div class="order-card served-card">
               <div class="card-header">
                 <span class="order-id">#{{order.orderCode}}</span>
@@ -252,7 +252,7 @@
               <div class="product-list">
                 @for(product of order.orderProductList;track product){
                   <div class="product-group">
-                    @if(product.settingId > 0 && product.status.includes("已送達")){
+                    @if(product.settingId > 0 && product.status.includes("已送達") || product.settingId > 0 && product.status.includes("餐點已送出") ){
                       <div class="set-title">{{product.settingId}}號餐</div>
                       @for(detail of product.orderDetails;track detail){
                         @if(detail.mealStatus == "已送達"){
@@ -268,7 +268,7 @@
                       }
                     }@else {
                       @for(detail of product.orderDetails;track detail){
-                        @if(detail.mealStatus == "已送達"){
+                        @if(detail.mealStatus == "已送達" || detail.mealStatus == "餐點已送出"){
                           <div class="item-row faded">
                             {{detail.productName}} (
                             @for(option of detail.detailList;track option){
