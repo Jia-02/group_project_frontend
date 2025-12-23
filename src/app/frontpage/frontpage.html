@@ -1,0 +1,97 @@
+<div class="container">
+  <div class="header">
+
+    <p>外送員: {{name}} /</p>
+    <p>電話: {{phone}}</p>
+    <button class="logout-btn" (click)="Signout()">登出</button>
+  </div>
+
+  <div class="main">
+    <div class="sidebar">
+      <nav>
+        <ul>
+          <li><a routerLink="/front">首頁</a></li>
+          <li><a routerLink="/todays/orders">今日已完成訂單</a></li>
+          <li><a routerLink="/analyze">薪資分析</a></li>
+          <li><a routerLink="/historyorders">歷史訂單</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <div class="content">
+      <!-- 已接單 -->
+      <!-- 已接單 -->
+      <div class="top-section">
+        <h2>已接單</h2>
+        <mat-accordion>
+          @for (item of items(); track item.orderNo) {
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>{{ item.orderNo }}</mat-panel-title>
+              <mat-panel-description>{{ item.distanceKm }}km / {{ item.money }}$</mat-panel-description>
+              <mat-panel-description>{{ item.date }}</mat-panel-description>
+            </mat-expansion-panel-header>
+
+            @for (p of item.products; track p.name) {
+            <p>{{ p.name }} - {{ p.options.join(', ') }}</p>
+            }
+
+            <p>總價: {{ item.totalPrice }}$</p>
+            <p>狀態: {{ statusTextMap[item.status] }}</p>
+
+            @if (item.customerAddress) {
+            <app-map-delivery [address]="item.customerAddress" [orderNo]="item.orderNo"
+              (distanceUpdated)="updateItemDistance($event)" (durationUpdated)="item.estimatedTime = $event ?? 0">
+            </app-map-delivery>
+            <!-- <app-map-delivery [address]="item.customerAddress" [orderNo]="item.orderNo"
+              [simulateMovement]="item === items()[0]" (distanceUpdated)="updateItemDistance($event)"
+              (durationUpdated)="item.estimatedTime = $event ?? 0">
+            </app-map-delivery> -->
+
+            }
+
+            @if (item.status === 'pending'){
+            <button (click)="markPickedUp(item)">已取餐</button>
+            }
+            @if (item.status === 'pickup'){
+            <button (click)="markDelivered(item)">已送達</button>
+            }
+
+          </mat-expansion-panel>
+          }
+        </mat-accordion>
+      </div>
+
+      <!-- 可接單 -->
+      <div class="bottom-section">
+        <h2>可接單列表</h2>
+        <mat-accordion>
+          @for (item of bottomItems; track item.orderNo) {
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>{{ item.orderNo }}</mat-panel-title>
+              <mat-panel-description>{{ item.distanceKm }}km / {{ item.money }}$</mat-panel-description>
+              <mat-panel-description>{{ item.date }}</mat-panel-description>
+            </mat-expansion-panel-header>
+
+            @for (p of item.products; track p.name) {
+            <p>{{ p.name }} - {{ p.options.join(', ') }}</p>
+            }
+
+            <p>總價: {{ item.totalPrice }}$</p>
+            <p>狀態: {{ statusTextMap[item.status] }}</p>
+
+            @if (item.customerAddress) {
+            <app-map-delivery [address]="item.customerAddress" [orderNo]="item.orderNo"
+              (distanceUpdated)="updateItemDistance($event)" (durationUpdated)="item.estimatedTime = $event ?? 0">
+            </app-map-delivery>
+            }
+
+            <button class="add-btn" (click)="addToTop(item); $event.stopPropagation();">
+              接單
+            </button>
+
+          </mat-expansion-panel>
+          }
+        </mat-accordion>
+      </div>
