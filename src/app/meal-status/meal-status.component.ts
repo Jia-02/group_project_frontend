@@ -77,7 +77,7 @@ export class MealStatusComponent {
               }
               product.status = settingStatus;
             }
-            if (!status.includes("製作中") && !status.includes("已送達")) {
+            if (!status.includes("製作中") && !status.includes("已送達") && !status.includes("餐點已送出")) {
               this.count++;
             }
           }
@@ -149,7 +149,7 @@ export class MealStatusComponent {
                 }
                 product.status = settingStatus;
               }
-              if (!status.includes("製作中") && !status.includes("已送達")) {
+              if (!status.includes("製作中") && !status.includes("已送達") && !status.includes("餐點已送出")) {
                 this.count++;
               }
             }

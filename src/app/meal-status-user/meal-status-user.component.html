@@ -8,12 +8,15 @@
     </div>
 
     <div class="info-row highlight-row">
-      @if(mealStatus.paid){
+      @if(mealStatus.paid && mealStatus.mealStatus != "取消"){
         <span class="label">訂單狀態</span>
         <span class="value-status">{{mealStatus.mealStatus}}</span>
-      }@else {
+      }@else if(mealStatus.mealStatus != "取消"){
         <span class="label">訂單狀態</span>
         <span class="value-status">請至櫃檯付款</span>
+      }@else{
+        <span class="label">訂單狀態</span>
+        <span class="value-status">取消</span>
       }
 
     </div>

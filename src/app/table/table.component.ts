@@ -140,7 +140,7 @@ export class TableComponent {
       for (const reservation of this.reservation) {
         if (reservation.reservationName.includes(this.inputSearch)) {
           this.searchRes.push(reservation);
-        }else if (reservation.reservationPhone.includes(this.inputSearch)) {
+        } else if (reservation.reservationPhone.includes(this.inputSearch)) {
           this.searchRes.push(reservation);
         }
       }
@@ -163,7 +163,7 @@ export class TableComponent {
     ctx.fillText(str, rect.x + rect.w / 2, rect.y + rect.h / 2)
     if (rect.reservationName) {
       ctx.font = 'italic 12px Arial';
-      ctx.fillText(rect.reservationName, rect.x + rect.w / 2, rect.y + rect.h / 2 + 10)
+      ctx.fillText(rect.reservationName, rect.x + rect.w / 2, rect.y + rect.h / 2 + 16)
     }
   }
 
@@ -180,11 +180,13 @@ export class TableComponent {
       if (rect.status == "可預約") {
         this.drawByStatus(rect, "#52C41A");
       } else if (rect.status == "使用中") {
-        this.drawByStatus(rect, "#F2C58E");
-      } else if (rect.status == "已預約") {
         this.drawByStatus(rect, "#FF4D4F");
-      } else {
+      } else if (rect.status == "已預約") {
+        this.drawByStatus(rect, "#F2C58E");
+      } else if (rect.status == "未開放") {
         this.drawByStatus(rect, "#9390A5");
+      } else if (rect.status == "未報到") {
+        this.drawByStatus(rect, "black");
       }
 
 
