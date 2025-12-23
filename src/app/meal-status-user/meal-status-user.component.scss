@@ -59,14 +59,14 @@
 
 /* 狀態列強調 */
 .highlight-row {
-  background-color: #eef4fa;
+  background-color: #F2F4F6;
   padding: 10px 12px;
   border-radius: 8px;
   margin-bottom: 20px;
 }
 
 .value-status {
-  color: #013c70;
+  color: #001F4D;
   font-weight: 800;
   font-size: 16px;
 }
@@ -113,7 +113,7 @@
 }
 
 .value-price {
-  color: #fe6d13; /* 亮橘色 */
+  color: darken(#F2C58E, 20%); /* 亮橘色 */
   font-weight: 800;
   font-size: 20px;
 }
@@ -161,11 +161,11 @@
 /* 動態改變狀態顏色 (選用) */
 .item-status.cooking {
   background-color: #fff3e0;
-  color: #ef6c00;
+  color: darken(#F2C58E, 20%);
 }
 .item-status.done {
   background-color: #e8f5e9;
-  color: #2e7d32;
+  color: #9390A5;
 }
 
 
@@ -177,7 +177,7 @@
 
 .search-title {
   margin: 0 0 30px 0;
-  color: #013c70;
+  color: #001F4D;
   font-size: 22px;
 }
 
@@ -206,13 +206,13 @@
 }
 
 .search-input:focus {
-  border-color: #013c70;
+  border-color: #001F4D;
 }
 
 .search-btn {
   width: 100%;
   height: 48px;
-  background-color: #013c70;
+  background-color: #001F4D;
   color: #fff;
   border: none;
   border-radius: 24px;

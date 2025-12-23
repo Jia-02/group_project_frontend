@@ -3,7 +3,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #013c70;
+  background-color: #001F4D;
   padding: 18px 24px;
   color: #fdfdfd;
 }
@@ -67,10 +67,10 @@
 .panelTitle {
   font-size: 15px;
   font-weight: 700;
-  color: #013c70;
+  color: #001F4D;
   margin-bottom: 8px;
   padding-left: 8px;
-  border-left: 4px solid #fe6d13;
+  border-left: 4px solid #F2C58E;
 }
 
 .infoGroup {
@@ -93,7 +93,7 @@
 
   &.highlight {
     font-size: 18px;
-    color: #fe6d13;
+    color: darken(#F2C58E, 20%);
     font-weight: bold;
   }
 
@@ -107,7 +107,7 @@
 .infoValue.badge {
   display: inline-block;
   padding: 4px 10px;
-  background: #e0e0e0;
+  background: darken(#F2F4F6, 10%);
   border-radius: 4px;
   font-size: 13px;
   width: fit-content;
@@ -136,6 +136,30 @@
   height: 1px;
   background: #e0e0e0;
   margin: 5px 0;
+}
+
+.cancelOrderBtn {
+  background: transparent;
+  border: 1px solid #e0e0e0;
+  color: #999;
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  white-space: nowrap;
+
+  &:hover {
+    color: #d32f2f;
+    background: #fff5f5;
+    border-color: #ffcdd2;
+    box-shadow: 0 2px 4px rgba(211, 47, 47, 0.1);
+  }
+
+  &:active {
+    transform: scale(0.96);   /* 點擊微縮 */
+  }
 }
 
 /* --- 右側面板 --- */
@@ -203,6 +227,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  margin-top: 8px;
 }
 
 /* 你的 Icon 樣式優化 */
@@ -219,7 +244,7 @@
   color: #999;
 
   &.edit:hover {
-    color: #013c70;
+    color: #001F4D;
   }
 
   &.delete:hover {
@@ -237,7 +262,7 @@
 .optionPill {
   font-size: 12px;
   color: #666;
-  background: #f1f1f1;
+  background: #F2F4F6;
   padding: 2px 8px;
   border-radius: 12px;
   display: flex;
@@ -253,7 +278,7 @@
   color: #999;
 
   &.edit:hover {
-    color: #013c70;
+    color: #001F4D;
   }
 
   &.delete:hover {
@@ -288,8 +313,8 @@
   transition: all 0.2s;
 
   &:hover {
-    border-color: #013c70;
-    color: #013c70;
+    border-color: #001F4D;
+    color: #001F4D;
     background: #eef4fc;
   }
 }
@@ -297,7 +322,7 @@
 .totalArea {
   margin-top: auto;
   padding-top: 15px;
-  border-top: 2px solid #013c70;
+  border-top: 2px solid #001F4D;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -310,9 +335,9 @@
   }
 
   .amount {
-    font-size: 24px;
+    font-size: 20px;
     font-weight: 800;
-    color: #fe6d13;
+    color: darken(#F2C58E, 20%);
   }
 }
 
@@ -348,8 +373,8 @@
 
   &.edit {
     background: #fff;
-    border: 1px solid #013c70;
-    color: #013c70;
+    border: 1px solid #001F4D;
+    color: #001F4D;
 
     &:hover {
       background: #eef4fc;
@@ -357,11 +382,11 @@
   }
 
   &.primary {
-    background: #013c70;
+    background: #001F4D;
     color: #fff;
 
     &:hover {
-      background: #fe6d13;
+      background: #F2C58E;
     }
 
     &.disabled {

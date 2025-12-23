@@ -69,13 +69,13 @@ mat-dialog-content p {
 
 /* 確定按鈕 (橘底白字) */
 .btn:last-child {
-  background-color: #fe6d13;
+  background-color: #F2C58E;
   color: #fff;
   font-weight: 500;
-  border: 1px solid #fe6d13; /* 加上 border 保持高度一致 */
+  border: 1px solid #F2C58E; /* 加上 border 保持高度一致 */
 }
 
 .btn:last-child:hover {
-  background-color: #e05b0c;
+  background-color: #F2C58E;
   box-shadow: 0 2px 5px rgba(254, 109, 19, 0.3);
 }

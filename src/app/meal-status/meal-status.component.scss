@@ -3,8 +3,6 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background-color: #f0f2f5;
-  font-family: -apple-system, BlinkMacSystemFont, "Roboto", sans-serif;
   overflow: hidden;
 }
 
@@ -39,7 +37,7 @@
 }
 
 .count-badge {
-  background-color: #fe6d13;
+  background-color: darken(#F2C58E, 20%);
   color: white;
   padding: 4px 12px;
   border-radius: 12px;
@@ -64,8 +62,9 @@
   display: flex;
   flex-direction: column;
   border-radius: 12px;
-  max-width: 400px;
+  max-width: 420px;
   overflow: hidden;
+  box-shadow: 3px 3px 10px rgba(0,0,0,0.1);
 }
 
 .column-header {
@@ -91,13 +90,13 @@
   background-color: #546e7a;
 }
 
-/* --- 第二欄：待送餐 (強調) --- */
+/* --- 第二欄：待送餐  --- */
 .col-ready {
   background-color: #fff3e0; /* 淺橘底 */
-  border: 2px solid #fe6d13;
+  border: 2px solid #F2C58E;
 }
 .col-ready .column-header {
-  background-color: #fe6d13; /* 亮橘頭 */
+  background-color: #F2C58E; /* 亮橘頭 */
 }
 
 /* --- 第三欄：已送達 --- */
@@ -112,8 +111,8 @@
 .order-card {
   background-color: #fff;
   border-radius: 8px;
-  padding: 12px;
-  margin-bottom: 12px;
+  padding: 25px;
+  margin: 8px 8px 20px 8px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.05);
   display: flex;
   flex-direction: column;
@@ -121,7 +120,7 @@
 }
 
 .ready-card {
-  border-left: 5px solid #fe6d13; /* 左側橘線強調 */
+  border-left: 5px solid #F2C58E;
 }
 
 .served-card {
@@ -138,17 +137,17 @@
 }
 
 .order-id {
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 800;
   color: #333;
 }
 
 .order-type {
-  background-color: #f5f5f5;
+  background-color: darken(#F2C58E, 20%);
   padding: 2px 8px;
   border-radius: 4px;
   font-size: 14px;
-  color: #555;
+  color: #fff;
   font-weight: 600;
 }
 
@@ -179,9 +178,10 @@
 
 .set-title {
   font-weight: bold;
-  color: #013c70;
+  color: #001F4D;
   font-size: 14px;
   margin-bottom: 4px;
+  margin-top: 5px;
 }
 
 .sub-items {
@@ -227,7 +227,7 @@
 
 /* 送出按鈕 */
 .serve-btn {
-  background-color: #013c70;
+  background-color: #001F4D;
   color: #fff;
   border: none;
   padding: 8px 12px;
@@ -245,7 +245,7 @@
 
 .serve-btn.full {
   width: 100%;
-  background-color: #fe6d13; /* 整單送出用橘色 */
+  background-color: #F2C58E; /* 整單送出用橘色 */
   font-size: 16px;
   padding: 10px;
   margin-top: 5px;

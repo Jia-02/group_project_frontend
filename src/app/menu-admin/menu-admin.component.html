@@ -11,15 +11,18 @@
             <span class="labelText">{{ category.categoryType }}</span>
 
             <div class="actionIcons">
-              <!-- 移除 -->
-              <button mat-icon-button color="warn" class="mini-btn" (click)="delCategory(category)">
-                <mat-icon>remove</mat-icon>
+              <button mat-icon-button [matMenuTriggerFor]="menu">
+                <mat-icon>more_vert</mat-icon>
               </button>
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="updateCategory(category)">
+                  <mat-icon>edit</mat-icon> 編輯
+                </button>
+                <button mat-menu-item (click)="delCategory(category)">
+                  <mat-icon>remove</mat-icon> 刪除
+                </button>
+              </mat-menu>
 
-              <!-- 編輯 -->
-              <button mat-icon-button class="mini-btn" (click)="updateCategory(category)">
-                <mat-icon>edit</mat-icon>
-              </button>
             </div>
 
           </div>
@@ -150,7 +153,7 @@
 
           <label>工作檯</label>
           <select [(ngModel)]="categoryDto.workstationId">
-            <option value="">請選擇</option>
+            <option value="">-- 請選擇 --</option>
             @for (ws of workstationList; track ws.workStationId) {
             <option [ngValue]="ws.workStationId">
               {{ ws.workStationName }}
@@ -194,8 +197,13 @@
 
       @for (detail of option.optionDetail; track $index) {
       <label class="customizeItem">
-        <input type="radio">
+        @if (option.optionType == 'S') {
+        <input type="radio" [disabled]="true">
+        } @else {
+        <input type="checkbox" [disabled]="true">
+        }
         {{ detail.option }}
+
         @if (detail.addPrice > 0) {
         <span class="extra">+ ${{ detail.addPrice }}</span>
         }

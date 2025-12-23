@@ -1,11 +1,12 @@
-import { optionVo } from './../../@interface/interface';
+import { optionVo, settingDetail } from './../../@interface/interface';
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
 import { HttpClientService } from '../../@service/http-client.service';
 import { categoryDto, productList } from '../../@interface/interface';
 import { MatIconModule } from '@angular/material/icon';
+import { DialogNoticeComponent } from '../dialog-notice/dialog-notice.component';
 
 @Component({
   selector: 'app-dialog-set',
@@ -25,6 +26,7 @@ export class DialogSetComponent {
   constructor(private httpClientService: HttpClientService) { }
   readonly dialogRef = inject(MatDialogRef<DialogSetComponent>);
   readonly data = inject<any>(MAT_DIALOG_DATA);
+  readonly dialog = inject(MatDialog);
 
   selectedFile: File | null = null; // 儲存使用者選中的檔案
   categoryList: categoryDto[] = []; // 給 主餐 分類選單用
@@ -100,8 +102,10 @@ export class DialogSetComponent {
   // 確定
   onAddClick() {
     // 檢查圖片 (新增模式必填；編輯模式若沒選檔案代表不換圖)
-    if (!this.isEditMode && !this.selectedFile) {
-      alert('新增商品必須上傳圖片');
+    if (!this.isEditMode && !this.selectedFile || !this.optionVo.settingName || !this.optionVo.settingPrice) {
+      this.dialog.open(DialogNoticeComponent, {
+        data: {noticeType: 'isRequired'}
+      })
       return;
     }
 
@@ -245,11 +249,8 @@ export class DialogSetComponent {
                 this.mainDishList.push(p);
               }
             }
-          }else{
-            alert('無法取得主餐列表，請稍後再試');
-        }
-        }
-      );
+          }
+        });
     }
   }
 

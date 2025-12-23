@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormsModule } from "@angular/forms";
 import { ActivatedRoute, Router } from '@angular/router';
 import { OrderService } from '../order.service';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogNoticeComponent } from '../@dialog/dialog-notice/dialog-notice.component';
 
 @Component({
   selector: 'app-customer-information',
@@ -14,6 +16,7 @@ export class CustomerInformationComponent {
   public customerName: string = '';
   public customerPhone: string = '';
   public customerAddress: string = '';
+  readonly dialog = inject(MatDialog);
 
   constructor(
     private route: ActivatedRoute,
@@ -34,17 +37,23 @@ export class CustomerInformationComponent {
 
   startNonInnerOrder() {
     if (!this.customerName || !this.customerPhone) {
-      alert('請輸入顧客姓名和電話！');
+      this.dialog.open(DialogNoticeComponent, {
+        data: { noticeType: 'isRequired' }
+      })
       return;
     }
-    // ✅ 新增：電話 7–10 碼限制
-    const phoneRegex = /^09\d{5,8}$/;
-    if (!phoneRegex.test(this.customerPhone)) {
-      alert('電話號碼格式錯誤！');
+
+    // 新增：電話 7–10 碼限制
+    if (this.customerPhone.length < 7 || this.customerPhone.length > 10) {
+      this.dialog.open(DialogNoticeComponent, {
+        data: { noticeType: 'isRequired' }
+      })
       return;
     }
     if (this.orderService.currentOrder.ordersType === 'D' && !this.customerAddress) {
-      alert('外送請輸入地址！');
+      this.dialog.open(DialogNoticeComponent, {
+        data: { noticeType: 'isRequired' }
+      })
       return;
 
     }

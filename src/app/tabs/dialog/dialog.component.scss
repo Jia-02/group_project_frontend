@@ -1,0 +1,111 @@
+.background {
+  padding: 8px 0;
+  text-align: center;
+}
+
+/* 標題 diaTitle */
+.diaTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: #9390A5;
+  margin: 0 0 16px 0;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #eee;
+}
+
+/* 內容區域 (自動對應 mat-dialog-content) */
+mat-dialog-content {
+  font-size: 16px;
+  color: #444;
+  line-height: 1.5;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 針對內容的 p 標籤設定 */
+mat-dialog-content p {
+  max-width: 180px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.errorBox {
+  margin-bottom: 20%;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 250px;
+  margin: 0 auto;
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.styled-input {
+  padding: 10px 12px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  outline: none;
+  background: #fff;
+  transition: border-color 0.2s;
+  width: 100%;
+  box-sizing: border-box;
+  box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* 按鈕容器 btnBox */
+.btnBox {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  width: 100%;
+  margin-top: 8px;
+  margin-bottom: 10px;
+}
+
+/* 通用按鈕樣式 btn */
+.btn {
+  padding: 8px 20px;
+  font-size: 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+}
+
+/* 第一個按鈕：取消 (白底灰框) */
+.btn:first-child {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  color: #666;
+}
+
+.btn:first-child:hover {
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+/* 第二個按鈕：確定 */
+.btn:last-child {
+  background-color: #9390A5;
+  color: #fff;
+  font-weight: 500;
+}
+
+.btn:last-child:hover {
+  background-color: #F2C58E;
+  color: #F2F4F6;
+  box-shadow: 0 2px 5px rgba(147, 144, 165, 0.3);
+}

@@ -2,13 +2,15 @@
 
   <div mat-dialog-title class="diaTitle">
     @if (data.deleteType == 'reservation') {
-      刪除訂位
+      ＊ 刪除訂位 ＊
     } @else if (data.deleteType == 'product') {
-      刪除餐點
+      ＊ 刪除餐點 ＊
     } @else if (data.deleteType == 'option') {
-      刪除客製化項目
+      ＊ 刪除客製化項目 ＊
     } @else if (data.deleteType == 'set') {
-      刪除套餐
+      ＊ 刪除套餐 ＊
+    } @else if (data.deleteType == 'category') {
+      ＊ 刪除分類 ＊
     }
   </div>
 
@@ -22,6 +24,8 @@
         確定是否刪掉此筆客製化?
       } @else if (data.deleteType == 'set'){
         確定是否刪掉此套餐?
+      } @else if (data.deleteType == 'category') {
+        確定是否刪掉此分類?
       }
     </div>
   </mat-dialog-content>

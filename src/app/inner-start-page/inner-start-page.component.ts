@@ -1,6 +1,9 @@
-import { Component } from '@angular/core';
+import { Dialog } from '@angular/cdk/dialog';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { OrderService } from '../order.service';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogNoticeComponent } from '../@dialog/dialog-notice/dialog-notice.component';
 
 @Component({
   selector: 'app-inner-start-page',
@@ -12,6 +15,7 @@ import { OrderService } from '../order.service';
 export class InnerStartPageComponent {
 
   tableId!: string;
+  readonly dialog = inject(MatDialog);
 
   constructor(
     private router: Router,
@@ -29,8 +33,10 @@ export class InnerStartPageComponent {
 
   startDineInOrder() {
     this.orderService.currentOrder.ordersType = 'A';
-    if(!this.tableId){
-      alert("請重新掃碼");
+    if (!this.tableId) {
+      this.dialog.open(DialogNoticeComponent, {
+        data: { noticeType: 'qrcode' }
+      });
       return;
     }
     this.orderService.currentOrder.tableId = this.tableId;

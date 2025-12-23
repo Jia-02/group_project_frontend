@@ -233,11 +233,13 @@ export class OrderPageComponent {
       if (isPaid || isCancel) {
         dialogRef = this.dialog.open(OrderDialogComponent, {
           width: '80%',
+          height: 'auto',
           data: dataToSendToDialog,
         });
       } else {
         dialogRef = this.dialog.open(CheckOutDialogComponent, {
           width: '80%',
+          height: '85%',
           data: dataToSendToDialog,
         });
       }

@@ -4,7 +4,11 @@
 } @else {
   <h2>{{ displayOrderType }}</h2>
 }
-<button (click)="openBoard()">活動</button>
+
+<button class="eventBtn" (click)="openBoard()">
+<mat-icon>campaign</mat-icon>活動
+</button>
+
 <div class="content-container">
   @if (!isLoadingCategories) {
   <mat-tab-group (selectedTabChange)="onTabChange($event)">

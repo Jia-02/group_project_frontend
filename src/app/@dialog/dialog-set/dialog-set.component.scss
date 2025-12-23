@@ -1,11 +1,11 @@
 /* --- Dialog 標題區域 --- */
 .dialogTitle {
   margin: 0;
-  padding: 10px 30px;
+  padding: 8px 30px 10px 30px;
   font-size: 18px;
   font-weight: 600;
   color: #fdfdfd;
-  background-color: #013c70;
+  background-color: #001F4D;
   border-bottom: 1px solid #eee;
 }
 
@@ -26,6 +26,10 @@
   color: #555;
   margin-bottom: 4px;
   display: block; /* 確保 label 獨佔一行 */
+}
+
+.starCss {
+  color: #C00000;
 }
 
 /* --- 排版容器 --- */
@@ -55,7 +59,7 @@
 }
 
 .styledInput:focus {
-  border-color: #013c70;
+  border-color: #001F4D;
   background-color: #fdfdfd;
 }
 
@@ -87,12 +91,12 @@
 
 .uploadBtn:hover {
   background-color: #eef4fc;
-  border-color: #013c70;
-  color: #013c70;
+  border-color: #001F4D;
+  color: #001F4D;
 }
 
 .uploadBtn:hover mat-icon {
-  color: #013c70;
+  color: #001F4D;
 }
 
 .uploadBtn:active {
@@ -121,7 +125,7 @@
 /* --- 主餐勾選列表 (Scrollable List) --- */
 div.styledInput.scrollableList {
   height: auto;
-  max-height: 220px;
+  max-height: 250px;
   padding: 0;
 }
 
@@ -145,7 +149,7 @@ div.styledInput.scrollableList {
   margin-right: 12px;
   transform: scale(1.2);
   cursor: pointer;
-  accent-color: #013c70;
+  accent-color: #001F4D;
 }
 
 .checkboxItem label {
@@ -160,7 +164,7 @@ div.styledInput.scrollableList {
 }
 
 .itemPrice {
-  color: #888;
+  color: darken(#F2C58E, 20%);
   font-size: 0.9em;
   font-weight: 400;
   background: #f5f5f5;
@@ -235,11 +239,50 @@ div.styledInput.scrollableList {
 }
 
 input:checked + .slider {
-  background-color: #013c70;
+  background-color: #001F4D;
 }
 
 input:checked + .slider:before {
   transform: translateX(22px);
+}
+
+/* 自訂上傳按鈕 (Label) */
+.uploadBtn {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  width: 100%;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+/* Icon 大小微調 */
+.dialogContent .uploadBtn mat-icon {
+  color: #888;
+}
+
+/* 滑鼠移上去的效果 */
+.dialogContent .uploadBtn:hover {
+  background-color: #eef4fc;
+  border-color: #001F4D;
+  color: #001F4D;
+}
+
+.dialogContent .uploadBtn:hover mat-icon {
+  color: #001F4D;
+}
+
+/* 按下去的效果 */
+.dialogContent .uploadBtn:active {
+  background-color: #dde9f7;
+  transform: scale(0.99);
 }
 
 /* 按鈕區域 */
@@ -274,11 +317,11 @@ input:checked + .slider:before {
 
 /* 確定按鈕 */
 .confirmBtn {
-  background-color: #013c70;
+  background-color: #001F4D;
   color: #fff;
 }
 
 .confirmBtn:hover {
-  background-color: #fe6d13;
+  background-color: #F2C58E;
   box-shadow: 0 2px 4px rgba(1, 60, 112, 0.25);
 }

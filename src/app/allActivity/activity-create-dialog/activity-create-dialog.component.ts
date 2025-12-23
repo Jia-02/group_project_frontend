@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
-import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
-import { MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle, MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { Component, inject } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle, MAT_DIALOG_DATA, MatDialog } from "@angular/material/dialog";
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { DialogNoticeComponent } from '../../@dialog/dialog-notice/dialog-notice.component';
 
 @Component({
   selector: 'app-activity-create-dialog',
@@ -33,6 +34,7 @@ export class ActivityCreateDialogComponent {
 
   selectedPhotoFile: File | null = null;
   photoUrl: string | null = null;
+  readonly dialog = inject(MatDialog);
 
   ngOnInit(): void {
     this.setTodayDateString();
@@ -47,24 +49,24 @@ export class ActivityCreateDialogComponent {
     this.todayDateString = `${year}-${month}-${day}`;
 
     if (this.data.calendarStartDate < this.todayDateString) {
-        this.data.calendarStartDate = this.todayDateString;
+      this.data.calendarStartDate = this.todayDateString;
     }
     if (this.data.calendarEndDate < this.todayDateString) {
-        this.data.calendarEndDate = this.todayDateString;
+      this.data.calendarEndDate = this.todayDateString;
     }
   }
 
   constructor(
     private dialogRef: MatDialogRef<ActivityCreateDialogComponent>
-  ) {}
+  ) { }
 
   onStartDateChange(): void {
-  if (this.data.calendarStartDate) {
-    if (!this.data.calendarEndDate || this.data.calendarStartDate > this.data.calendarEndDate) {
-      this.data.calendarEndDate = this.data.calendarStartDate;
+    if (this.data.calendarStartDate) {
+      if (!this.data.calendarEndDate || this.data.calendarStartDate > this.data.calendarEndDate) {
+        this.data.calendarEndDate = this.data.calendarStartDate;
+      }
     }
   }
-}
 
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
@@ -80,7 +82,9 @@ export class ActivityCreateDialogComponent {
   submit() {
     if (!this.data.calendarTitle || !this.data.calendarDescription || !this.data.calendarStartDate ||
       !this.data.calendarEndDate || !this.data.calendarPhoto) {
-      alert('請填寫所有必填欄位！');
+      this.dialog.open(DialogNoticeComponent, {
+        data: { noticeType: 'isRequired' }
+      });
       return;
     }
 
@@ -91,7 +95,9 @@ export class ActivityCreateDialogComponent {
     endDate.setHours(0, 0, 0, 0);
 
     if (startDate > endDate) {
-      alert('活動開始時間不能晚於活動結束時間！');
+      this.dialog.open(DialogNoticeComponent, {
+        data: { noticeType: 'timeCheck' }
+      });
       return;
     }
 
@@ -99,7 +105,9 @@ export class ActivityCreateDialogComponent {
     today.setHours(0, 0, 0, 0);
 
     if (startDate < today) {
-      alert('活動開始日期不能早於今天！');
+      this.dialog.open(DialogNoticeComponent, {
+        data: { noticeType: 'timeCheck' }
+      });
       return;
     }
 

@@ -347,7 +347,9 @@ export class DialogReserveComponent {
   // 更新
   updateCheck() {
     if (this.reservation.reservationPhone !== this.originalPhone) {
-      alert('目前系統不支援直接修改電話號碼，請刪除後重新預約，或改回原號碼。');
+      this.dialog.open(DialogNoticeComponent, {
+        data: { noticeType: 'phoneError'}
+      })
       // 強制把電話改回原本的，避免送出後報錯
       this.reservation.reservationPhone = this.originalPhone;
       return;

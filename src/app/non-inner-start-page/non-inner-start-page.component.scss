@@ -68,8 +68,8 @@
 /* --- 針對「外帶」按鈕 (第一個按鈕) --- */
 .buttonCss:nth-of-type(1) {
   background-color: #fff;
-  color: #013c70;
-  border: 2px solid #013c70; /* 描邊風格 */
+  color: #001F4D;
+  border: 2px solid #001F4D; /* 描邊風格 */
 }
 
 /* 加入外帶圖示 (使用 CSS Emoji 或 icon font) */
@@ -79,7 +79,7 @@
 
 /* --- 針對「外送」按鈕 (第二個按鈕) --- */
 .buttonCss:nth-of-type(2) {
-  background-color: #013c70; /* 品牌深藍色 */
+  background-color: #001F4D; /* 品牌深藍色 */
   color: #fff;
   box-shadow: 0 4px 15px rgba(1, 60, 112, 0.3);
 }

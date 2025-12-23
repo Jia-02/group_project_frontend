@@ -5,7 +5,7 @@
 <mat-dialog-content class="dialogContent">
 
   <div class="formField">
-    <label>客製化主題</label>
+    <label><span class="starCss">* </span>客製化主題</label>
     <input type="text" class="styledInput" placeholder="例：甜度、加料" [(ngModel)]="customizedData.optionName">
   </div>
 
@@ -23,7 +23,7 @@
 
   <div class="divider"></div>
 
-  <label class="sectionLabel">選項列表</label>
+  <label class="sectionLabel"><span class="starCss">* </span>選項列表</label>
 
   <div class="optionsContainer">
     @for (opt of customizedData.optionDetail; track $index; let i = $index) {

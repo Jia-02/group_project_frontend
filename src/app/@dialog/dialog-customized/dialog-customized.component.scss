@@ -1,11 +1,11 @@
 /* --- Dialog 標題區域 (統一風格) --- */
 .dialogTitle {
   margin: 0;
-  padding: 10px 30px;
+  padding: 8px 30px 10px 30px;
   font-size: 18px;
   font-weight: 600;
   color: #fdfdfd;            /* 白字 */
-  background-color: #013c70; /* 深藍底 */
+  background-color: #001F4D; /* 深藍底 */
   border-bottom: 1px solid #eee;
 }
 
@@ -27,6 +27,10 @@
   display: block;
 }
 
+.starCss {
+  color: #C00000;
+}
+
 /* 通用輸入框 */
 .styledInput {
   padding: 10px 12px;
@@ -41,7 +45,7 @@
 }
 
 .styledInput:focus {
-  border-color: #013c70;
+  border-color: #001F4D;
   box-shadow: 0 0 0 3px rgba(1, 60, 112, 0.1);
 }
 
@@ -80,9 +84,9 @@
 
 /* 選中狀態 */
 .typeBtn.active {
-  background: #013c70;
+  background: #001F4D;
   color: #fff;
-  border-color: #013c70;
+  border-color: #001F4D;
 }
 
 /* 分隔線 */
@@ -179,20 +183,19 @@
 }
 
 .addBtnArea:hover {
-  border-color: #013c70;
-  color: #013c70;
+  border-color: #001F4D;
+  color: #001F4D;
   background-color: #f0f7ff;
 }
 
-/* --- 底部按鈕 (統一風格) --- */
+/* 按鈕區域 */
 .dialogActions {
-  padding: 16px 24px !important;
+  padding: 16px 40px !important;
   border-top: 1px solid #eee;
   gap: 15px;
-  display: flex;
-  justify-content: flex-end;
 }
 
+/* 通用按鈕樣式 */
 .dialogBtn {
   padding: 10px 25px;
   font-size: 14px;
@@ -203,6 +206,7 @@
   transition: all 0.2s;
 }
 
+/* 取消按鈕 */
 .cancelBtn {
   background-color: #fff;
   border: 1px solid #ddd;
@@ -214,12 +218,13 @@
   color: #333;
 }
 
+/* 確定按鈕 */
 .confirmBtn {
-  background-color: #013c70;
+  background-color: #001F4D;
   color: #fff;
 }
 
 .confirmBtn:hover {
-  background-color: #fe6d13;
+  background-color: #F2C58E;
   box-shadow: 0 2px 4px rgba(1, 60, 112, 0.25);
 }

@@ -1,12 +1,11 @@
 /* --- 沿用原有樣式 (標題、Layout、Input) --- */
-
 .diaTitle {
   margin: 0;
   padding: 10px 30px;
   font-size: 18px;
   font-weight: 600;
   color: #fdfdfd;
-  background-color: #013c70;
+  background-color: #001F4D;
   border-bottom: 1px solid #eee;
 }
 
@@ -16,6 +15,10 @@
   flex-direction: column;
   gap: 16px;
   min-width: 500px; /* 保持寬度 */
+}
+
+.starCss {
+  color: #C00000;
 }
 
 .formRow {
@@ -55,7 +58,7 @@
 }
 
 .styledInput:focus {
-  border-color: #013c70;
+  border-color: #001F4D;
   background-color: #fdfdfd;
 }
 
@@ -148,11 +151,11 @@ textarea.styledInput {
 
 /* 發布按鈕 (沿用 Confirm) */
 .confirmBtn {
-  background-color: #013c70;
+  background-color: #001F4D;
   color: #fff;
 }
 .confirmBtn:hover {
-  background-color: #fe6d13; /* 配合原本的 hover 效果 */
+  background-color: #F2C58E; /* 配合原本的 hover 效果 */
   box-shadow: 0 2px 4px rgba(1, 60, 112, 0.25);
 }
 .confirmBtn:disabled {
@@ -164,8 +167,8 @@ textarea.styledInput {
 /* 新增：暫存按鈕 (綠色系或次要色) */
 .draftBtn {
   background-color: #fff;
-  border: 1px solid #013c70;
-  color: #013c70;
+  border: 1px solid #001F4D;
+  color: #001F4D;
 }
 .draftBtn:hover {
   background-color: #eef4fa;

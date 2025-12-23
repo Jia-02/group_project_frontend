@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTabChangeEvent, MatTabsModule } from '@angular/material/tabs';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -8,6 +8,8 @@ import { ProductDetailDialogComponent } from '../product-detail-dialog/product-d
 import { SettingDetailDialogComponent } from '../setting-detail-dialog/setting-detail-dialog.component';
 import { OrderService } from '../order.service';
 import { DataService } from '../@service/data.service';
+import { MatIconModule } from '@angular/material/icon';
+import { DialogNoticeComponent } from '../@dialog/dialog-notice/dialog-notice.component';
 
 interface Product {
   productId: number;
@@ -35,6 +37,7 @@ const ORDER_TYPE_MAP: { [key: string]: string } = {
   standalone: true, // 假設為獨立元件
   imports: [
     MatTabsModule,
+    MatIconModule
   ],
   templateUrl: './menu-c.component.html',
   styleUrl: './menu-c.component.scss'
@@ -310,7 +313,9 @@ export class MenuCComponent implements OnInit {
 
   submitCart() {
     if (this.currentCart.length === 0) {
-      alert('請至少選擇一個商品！');
+      const dialogRef = this.dialog.open(DialogNoticeComponent, {
+        data: { noticeType: 'chooseProduct' }
+      });
       return;
     }
 
@@ -361,10 +366,14 @@ export class MenuCComponent implements OnInit {
     this.dataService.postApi(apiUrl, finalPayload)
       .subscribe((res: any) => {
         if (res.code === 200) {
-          alert('訂單更新成功！');
+          this.dialog.open(DialogNoticeComponent, {
+            data: { noticeType: 'orderSuccess' }
+          });
           this.router.navigate(['/order-page'], { queryParams: { reopenOrderId: this.existingOrderId || res.ordersId } });
         } else {
-          alert(`訂單更新失敗: ${res.message || '未知錯誤'}`);
+          this.dialog.open(DialogNoticeComponent, {
+            data: { noticeType: 'orderFailed' }
+          });
           console.error('訂單更新 API 錯誤:', res);
         }
       }

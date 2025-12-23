@@ -1,9 +1,10 @@
-import { Component, Inject } from '@angular/core';
-import { MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle, MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { Component, inject, Inject } from '@angular/core';
+import { MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle, MAT_DIALOG_DATA, MatDialog } from "@angular/material/dialog";
 import { CommonModule, DatePipe } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DataService } from '../../@service/data.service';
+import { DialogNoticeComponent } from '../../@dialog/dialog-notice/dialog-notice.component';
 
 @Component({
   selector: 'app-activity-check-dialog',
@@ -24,6 +25,7 @@ export class ActivityCheckDialogComponent {
   form!: FormGroup;
   newPhotoFile: File | null = null;
   newPhotoUrl: string | ArrayBuffer | null = null;
+  readonly dialog = inject(MatDialog);
 
   constructor(
     public dialogRef: MatDialogRef<ActivityCheckDialogComponent>,
@@ -115,7 +117,9 @@ export class ActivityCheckDialogComponent {
 
     if (typeof id === 'undefined' || id === null) {
         console.error('刪除錯誤：無法獲取有效的 calendarId，請確認數據已正確傳入。', this.data);
-        alert('刪除失敗：缺少活動ID。');
+        this.dialog.open(DialogNoticeComponent, {
+          data: { noticeType: 'activityIdMiss'}
+        })
         this.dialogRef.close();
         return;
     }

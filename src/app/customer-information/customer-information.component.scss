@@ -40,9 +40,13 @@
   margin: 0 0 25px 0; /* 標題與下方內容的距離 */
   font-size: 22px;
   font-weight: 800;
-  color: #013c70; /* 品牌深藍色 */
+  color: #001F4D; /* 品牌深藍色 */
   text-align: center;
   letter-spacing: 1px;
+}
+
+.starCss{
+  color: #C00000;
 }
 
 /* --- 輸入框樣式 --- */
@@ -51,14 +55,11 @@
   display: block;
   width: 100%;
   height: 48px;
-
   margin-top: 8px;   /* 與上方標籤的距離 */
   margin-bottom: 20px; /* 與下一個欄位的距離 */
-
   padding: 0 16px;
   font-size: 16px;
   color: #333;
-
   background-color: #f9f9f9;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
@@ -70,7 +71,7 @@
 /* 輸入框聚焦時 */
 .inputCss:focus {
   background-color: #fff;
-  border-color: #013c70;
+  border-color: #001F4D;
   box-shadow: 0 0 0 3px rgba(1, 60, 112, 0.1);
 }
 
@@ -85,7 +86,7 @@
   height: 52px;
   margin-top: 10px; /* 與上方欄位的距離 */
 
-  background-color: #013c70;
+  background-color: #001F4D;
   color: #fff;
   border: none;
   border-radius: 26px; /* 膠囊形狀 */

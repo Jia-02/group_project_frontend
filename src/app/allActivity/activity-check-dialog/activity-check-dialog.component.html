@@ -5,14 +5,14 @@
   <mat-dialog-content class="dialogContent">
     <div class="formRow">
       <div class="formField fullWidth">
-        <label>活動標題</label>
+        <label><span class="starCss">* </span>活動標題</label>
         <input type="text" class="styledInput" [(ngModel)]="data.calendarTitle" placeholder="請輸入標題">
       </div>
     </div>
 
     <div class="formRow">
       <div class="formField fullWidth">
-        <label>活動圖片</label>
+        <label><span class="starCss">* </span>活動圖片</label>
         <div class="imagePreviewContainer">
           @if (newPhotoUrl) {
             <img [src]="newPhotoUrl" alt="{{ data.calendarTitle }} 活動照片" class="previewImg">
@@ -28,12 +28,12 @@
 
     <div class="formRow">
       <div class="formField">
-        <label>開始日期</label>
+        <label><span class="starCss">* </span>開始日期</label>
         <input type="date" class="styledInput" [(ngModel)]="data.calendarStartDate">
       </div>
 
       <div class="formField">
-        <label>結束日期</label>
+        <label><span class="starCss">* </span>結束日期</label>
         <input type="date" class="styledInput" [(ngModel)]="data.calendarEndDate">
       </div>
     </div>
@@ -48,7 +48,7 @@
 
     <div class="formRow">
       <div class="formField fullWidth">
-        <label>活動內容</label>
+        <label><span class="starCss">* </span>活動內容</label>
         <textarea class="styledInput" [(ngModel)]="data.calendarDescription" rows="5" placeholder="請輸入活動內容..."></textarea>
       </div>
     </div>

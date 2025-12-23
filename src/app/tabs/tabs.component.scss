@@ -56,7 +56,7 @@
 }
 
 .icon-btn.remove:hover mat-icon { color: #e53935; } /* 刪除變紅 */
-.icon-btn.edit:hover mat-icon { color: #1976d2; }   /* 編輯變藍 */
+.icon-btn.edit:hover mat-icon { color: #9390A5; }   /* 編輯變藍 */
 
 /* 新增 Tab 按鈕 */
 .add-tab-btn {
@@ -104,14 +104,14 @@
 }
 
 .order-code {
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 800;
   color: #333;
 }
 
 .order-type {
-  background-color: #e3f2fd;
-  color: #0d47a1;
+  background-color: darken(#F2C58E, 20%);
+  color: #fff;
   padding: 4px 8px;
   border-radius: 4px;
   font-weight: bold;
@@ -165,7 +165,7 @@
 
 /* 準備完成按鈕 */
 .ready-btn {
-  background-color: #013c70;
+  background-color: #001F4D;
   color: white;
   border: none;
   padding: 6px 10px;
@@ -175,6 +175,11 @@
   font-weight: bold;
   white-space: nowrap; /* 不換行 */
   transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #F2C58E;
+    color: #fff;
+  }
 }
 
 .ready-btn:active {
