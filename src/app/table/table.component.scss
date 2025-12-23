@@ -262,10 +262,10 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   background-color: #fafafa;
-  padding: 20px;
+  padding: 20px 20px 20px 80px;
   overflow: auto;
 }
 
@@ -291,19 +291,8 @@
 .dotYellow { height: 10px; width: 10px; background-color: #F2C58E; border-radius: 50%; }
 .dotRed { height: 10px; width: 10px; background-color: #FF4D4F; border-radius: 50%; }
 .dotGray { height: 10px; width: 10px; background-color: #9390A5; border-radius: 50%; }
-.dotBlack { height: 10px; width: 10px; background-color: black; border-radius: 50%; }
+.dotBlack { height: 10px; width: 10px; background-color: #474747ff; border-radius: 50%; }
 
-/* Grid 地圖佈局 */
-.mapContainer {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background-color: #fafafa;
-  padding: 20px;
-  overflow: auto;
-}
 
 /* Grid 地圖佈局設定 */
 .mapGridWrapper {
@@ -340,7 +329,7 @@
 .dotYellow { height: 12px; width: 12px; background-color: #F2C58E; border-radius: 50%; }
 .dotRed { height: 12px; width: 12px; background-color: #FF4D4F; border-radius: 50%; }
 .dotGray { height: 12px; width: 12px; background-color: #9390A5; border-radius: 50%; }
-
+.dotBlack { height: 12px; width: 12px; background-color: #474747ff; border-radius: 50%; }
 
 /* 2. Y軸區 (第2欄) */
 .yAxisGroup {

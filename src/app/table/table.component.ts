@@ -186,7 +186,7 @@ export class TableComponent {
       } else if (rect.status == "未開放") {
         this.drawByStatus(rect, "#9390A5");
       } else if (rect.status == "未報到") {
-        this.drawByStatus(rect, "black");
+        this.drawByStatus(rect, "#474747ff");
       }
 
 
