@@ -403,7 +403,8 @@ export class MenuAdminComponent {
   addSets() {
     this.prepareSetData(() => {
       const dialogRef = this.dialog.open(DialogSetComponent, {
-        width: '85%',
+        width: '80%',         // 您希望的寬度
+        maxWidth: '85%',    // 增加這行，防止被 Material 預設值限制
         height: 'auto',
         data: {
           allCategories: this.allCategoryDto,
@@ -429,7 +430,7 @@ export class MenuAdminComponent {
     // 附餐與飲料的選項清單
     this.prepareSetData(() => {
       const dialogRef = this.dialog.open(DialogSetComponent, {
-        width: '85%',
+        width: '80%',
         height: 'auto',
         data: {
           allCategories: this.allCategoryDto,

@@ -66,11 +66,18 @@ export class DialogSetComponent {
   };
 
   // 用來綁定使用者選了什麼 ID
+  // selections = {
+  //   mainCatId: 0,
+  //   mainIds: [] as number[], // 存多個 ProductID
+  //   sideId: 0,
+  //   drinkId: 0
+  // };
+  // 修改後
   selections = {
     mainCatId: 0,
-    mainIds: [] as number[], // 存多個 ProductID
-    sideId: 0,
-    drinkId: 0
+    mainIds: [] as number[],
+    sideIds: [] as number[],
+    drinkIds: [] as number[]
   };
 
   isEditMode: boolean = false;
@@ -104,7 +111,7 @@ export class DialogSetComponent {
     // 檢查圖片 (新增模式必填；編輯模式若沒選檔案代表不換圖)
     if (!this.isEditMode && !this.selectedFile || !this.optionVo.settingName || !this.optionVo.settingPrice) {
       this.dialog.open(DialogNoticeComponent, {
-        data: {noticeType: 'isRequired'}
+        data: { noticeType: 'isRequired' }
       })
       return;
     }
@@ -119,31 +126,11 @@ export class DialogSetComponent {
       this.optionVo.settingImg = `/${folderName}/${this.selectedFile.name}`;
     }
 
-    // 找出炸物 與 飲料 的 Category ID
-    let realSideCatId = 0;
-    let realDrinkCatId = 0;
-    let realSideCatType = '';
-    let realDrinkCatType = '';
-
-    for (const cat of this.categoryList) {
-      const typeName = cat.categoryType.trim();
-      if (typeName == '炸物') {
-        realSideCatId = cat.categoryId;
-        realSideCatType = cat.categoryType;
-      }
-      if (typeName == '飲料') {
-        realDrinkCatId = cat.categoryId;
-        realDrinkCatType = cat.categoryType;
-      }
-    }
-
     const details = []; // 組裝 settingDetail
 
-    // 主餐
+    // 1. 處理主餐 (原本的邏輯)
     if (this.selections.mainCatId > 0 && this.selections.mainIds.length > 0) {
-      const selectedProducts = [];
-
-      // 找主餐分類名稱
+      const selectedMainProducts = [];
       let mainCatName = '';
       for (const cat of this.categoryList) {
         if (cat.categoryId == this.selections.mainCatId) {
@@ -151,64 +138,69 @@ export class DialogSetComponent {
           break;
         }
       }
-
-      // 所有主餐清單，找出被勾選的項目
-      for (const p of this.mainDishList) {
-        if (this.selections.mainIds.includes(p.productId)) {
-          selectedProducts.push({
-            productId: p.productId,
-            productName: p.productName
-          });
+      for (const pId of this.selections.mainIds) {
+        for (const p of this.mainDishList) {
+          if (p.productId == pId) {
+            selectedMainProducts.push({ productId: p.productId, productName: p.productName });
+            break;
+          }
         }
       }
-
-      // 加入主餐細節
-      if (selectedProducts.length > 0) {
-        details.push({
-          categoryId: this.selections.mainCatId,
-          detailList: selectedProducts,
-          categoryType: mainCatName,
-        });
-      }
-    }
-
-    // 抓取附餐
-    if (this.selections.sideId > 0 && realSideCatId > 0) {
-      let sideName = '';
-
-      for (const side of this.sideDishList) {
-        if (side.productId == this.selections.sideId) {
-          sideName = side.productName;
-        }
-      }
-
       details.push({
-        categoryId: realSideCatId,
-        categoryType: realSideCatType,
-        detailList: [{
-          productId: this.selections.sideId,
-          productName: sideName
-        }]
+        categoryId: this.selections.mainCatId,
+        categoryType: mainCatName,
+        detailList: selectedMainProducts
       });
     }
 
-    // 抓取飲料
-    if (this.selections.drinkId > 0 && realDrinkCatId > 0) {
-      let drinkName = '';
-      for (const drink of this.drinkDishList) {
-        if (drink.productId == this.selections.drinkId) {
-          drinkName = drink.productName;
+    // 2. 處理附餐 (改為多選組裝)
+    if (this.selections.sideIds.length > 0) {
+      const selectedSideProducts = [];
+      let sideCatId = 0;
+      let sideCatType = '';
+
+      for (const cat of this.categoryList) {
+        if (cat.categoryType.trim() == '炸物') {
+          sideCatId = cat.categoryId;
+          sideCatType = cat.categoryType;
+          break;
         }
       }
 
-      details.push({
-        categoryId: realDrinkCatId,
-        categoryType: realDrinkCatType,
-        detailList: [{
-          productId: Number(this.selections.drinkId),
-          productName: drinkName
-        }]
-      });
+      for (const pId of this.selections.sideIds) {
+        for (const p of this.sideDishList) {
+          if (p.productId == pId) {
+            selectedSideProducts.push({ productId: p.productId, productName: p.productName });
+            break;
+          }
+        }
+      }
+      details.push({ categoryId: sideCatId, categoryType: sideCatType, detailList: selectedSideProducts });
+    }
+
+    // 3. 處理飲料 (改為多選組裝)
+    if (this.selections.drinkIds.length > 0) {
+      const selectedDrinkProducts = [];
+      let drinkCatId = 0;
+      let drinkCatType = '';
+
+      for (const cat of this.categoryList) {
+        if (cat.categoryType.trim() == '飲料') {
+          drinkCatId = cat.categoryId;
+          drinkCatType = cat.categoryType;
+          break;
+        }
+      }
+
+      for (const pId of this.selections.drinkIds) {
+        for (const p of this.drinkDishList) {
+          if (p.productId == pId) {
+            selectedDrinkProducts.push({ productId: p.productId, productName: p.productName });
+            break;
+          }
+        }
+      }
+      details.push({ categoryId: drinkCatId, categoryType: drinkCatType, detailList: selectedDrinkProducts });
     }
 
     // 將組裝好的內容放進 Payload
@@ -254,7 +246,7 @@ export class DialogSetComponent {
     }
   }
 
-  // 處理主餐勾選/取消勾選
+  // 處理主餐勾選
   toggleMainSelection(productId: number, event: any) {
     const isChecked = event.target.checked;
 
@@ -272,6 +264,44 @@ export class DialogSetComponent {
     }
   }
 
+  // 附餐勾選
+  toggleSideSelection(productId: number, event: any) {
+    const isChecked = event.target.checked;
+    if (isChecked) {
+      this.selections.sideIds.push(productId);
+    } else {
+      for (let i = 0; i < this.selections.sideIds.length; i++) {
+        if (this.selections.sideIds[i] == productId) {
+          this.selections.sideIds.splice(i, 1);
+          break;
+        }
+      }
+    }
+  }
+
+  isSideSelected(productId: number): boolean {
+    return this.selections.sideIds.includes(productId);
+  }
+
+  // 飲料勾選
+  toggleDrinkSelection(productId: number, event: any) {
+    const isChecked = event.target.checked;
+    if (isChecked) {
+      this.selections.drinkIds.push(productId);
+    } else {
+      for (let i = 0; i < this.selections.drinkIds.length; i++) {
+        if (this.selections.drinkIds[i] == productId) {
+          this.selections.drinkIds.splice(i, 1);
+          break;
+        }
+      }
+    }
+  }
+
+  isDrinkSelected(productId: number): boolean {
+    return this.selections.drinkIds.includes(productId);
+  }
+
   // 判斷是否已勾選
   isMainSelected(productId: number): boolean {
     return this.selections.mainIds.includes(productId);
@@ -280,72 +310,42 @@ export class DialogSetComponent {
 
   // 解析既有的 Detail 資料並回填
   existingDetails() {
-    // 檢查資料是否存在
-    if (!this.optionVo.settingDetail || this.optionVo.settingDetail.length == 0) {
-      return;
-    }
+    if (!this.optionVo.settingDetail || this.optionVo.settingDetail.length == 0) return;
 
-    // 找炸物與飲料的分類ID (設一個絕對不可能存在於資料庫的 ID)
     let realSideCatId = -1;
     let realDrinkCatId = -1;
-
     for (const cat of this.categoryList) {
       const typeName = cat.categoryType.trim();
-      console.log(typeName);
-
-      if (typeName == '炸物') {
-        realSideCatId = cat.categoryId;
-      }
-
-      if (typeName == '飲料') {
-        realDrinkCatId = cat.categoryId;
-      }
+      if (typeName == '炸物') realSideCatId = cat.categoryId;
+      if (typeName == '飲料') realDrinkCatId = cat.categoryId;
     }
 
     for (const group of this.optionVo.settingDetail) {
-      const cId = group.categoryId; // 這一組的分類 ID
+      const cId = group.categoryId;
+      if (!group.detailList || group.detailList.length == 0) continue;
 
-      // 如果沒有 detailList 或長度為 0
-      if (!group.detailList || group.detailList.length == 0) {
-        continue;
-      }
-
-
-      let currentTypeName = ''; // 用來存查到的分類名稱
-      for (const cat of this.categoryList) {
-        // 使用 == (雙等號) 讓 "5" (字串) 可以等於 5 (數字)
-        if (cat.categoryId == cId) {
-          currentTypeName = cat.categoryType.trim(); // 找到後去除空白
-          break; // 找到了就跳出迴圈，不用再找了
-        }
-      }
-
-      // 檢查是否為附餐
       if (cId == realSideCatId) {
-        const firstItem = group.detailList[0];
-        this.selections.sideId = firstItem.productId;
-        console.log(this.selections.sideId);
-        continue;
-      }
-
-      // 檢查是否為飲料
-      if (cId == realDrinkCatId) {
-        const firstItem = group.detailList[0];
-        this.selections.drinkId = firstItem.productId;
-        continue;
-      }
-
-      // 剩下的就是主餐
-      this.selections.mainCatId = cId;
-      this.selections.mainIds = [];
-
-      // 將該分類下的所有 productId 都推入 mainIds
-      for (const item of group.detailList) {
-        this.selections.mainIds.push(item.productId);
+        // 附餐回填
+        this.selections.sideIds = [];
+        for (const item of group.detailList) {
+          this.selections.sideIds.push(item.productId);
+        }
+      } else if (cId == realDrinkCatId) {
+        // 飲料回填
+        this.selections.drinkIds = [];
+        for (const item of group.detailList) {
+          this.selections.drinkIds.push(item.productId);
+        }
+      } else {
+        // 主餐回填
+        this.selections.mainCatId = cId;
+        this.selections.mainIds = [];
+        for (const item of group.detailList) {
+          this.selections.mainIds.push(item.productId);
+        }
       }
     }
 
-    // 如果有抓到主餐分類，就去後端抓該分類的所有產品列表
     if (this.selections.mainCatId > 0) {
       this.loadMainDishForEdit(this.selections.mainCatId);
     }
@@ -369,6 +369,29 @@ export class DialogSetComponent {
           }
         }
       });
+  }
+
+  get totalValue(): number {
+    let total = 0;
+    // 累加主餐價格
+    for (const id of this.selections.mainIds) {
+      for (const p of this.mainDishList) {
+        if (p.productId == id) { total += p.productPrice; break; }
+      }
+    }
+    // 累加附餐價格
+    for (const id of this.selections.sideIds) {
+      for (const p of this.sideDishList) {
+        if (p.productId == id) { total += p.productPrice; break; }
+      }
+    }
+    // 累加飲料價格
+    for (const id of this.selections.drinkIds) {
+      for (const p of this.drinkDishList) {
+        if (p.productId == id) { total += p.productPrice; break; }
+      }
+    }
+    return total;
   }
 
   // 處理檔案選取事件

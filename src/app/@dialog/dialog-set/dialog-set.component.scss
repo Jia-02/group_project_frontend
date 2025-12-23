@@ -1,7 +1,78 @@
-/* --- Dialog 標題區域 --- */
-.dialogTitle {
+/* --- 價格靠右對齊的核心邏輯 --- */
+
+/* 1. 主餐部分 */
+.checkboxItem {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #f5f5f5;
+  transition: background 0.2s;
+  cursor: pointer;
+}
+
+.checkboxItem label {
+  /* 讓 label 區塊佔滿除了 checkbox 以外的所有寬度 */
+  flex: 1;
+  display: flex;
+  align-items: center;
+  /* 關鍵：將名稱與價格分散到兩端 */
+  justify-content: space-between;
+  cursor: pointer;
+  /* 蓋掉原本 label 的預設樣式 */
+  margin-bottom: 0 !important;
+  font-weight: 500;
+  color: #333;
+}
+
+/* 2. 附餐與飲料部分 */
+.item-label {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #f5f5f5;
+  transition: background 0.2s;
+  cursor: pointer;
+  margin-bottom: 0 !important;
+  /* 蓋掉預設 margin */
+}
+
+.item-label .product-name {
+  /* 關鍵：讓名稱佔滿中間所有剩餘空間，把價格往右推 */
+  flex: 1;
+  text-align: left;
+  font-weight: 500;
+}
+
+/* 3. 統一價格樣式 */
+.itemPrice,
+.product-price {
+  color: darken(#F2C58E, 20%);
+  font-size: 12px;
+  background: #fdf5eb;
+  padding: 2px 8px;
+  border-radius: 4px;
+  /* 確保價格不會因為文字太長而被壓縮 */
+  flex-shrink: 0;
+  margin-left: 10px;
+}
+
+/* --- 其他原本的樣式 (維持不變) --- */
+
+.flex-2 {
+  flex: 1.5;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.align-end {
+  align-items: flex-end;
+}
+
+.diaTitle {
   margin: 0;
-  padding: 8px 30px 10px 30px;
+  padding: 10px 30px;
   font-size: 18px;
   font-weight: 600;
   color: #fdfdfd;
@@ -9,102 +80,50 @@
   border-bottom: 1px solid #eee;
 }
 
-/* --- Dialog 內容區域 --- */
 .dialogContent {
   display: flex;
   flex-direction: column;
-  gap: 16px; /* 增加間距讓畫面不擁擠 */
-  padding: 35px !important;
-  min-width: 500px;
-  max-width: 600px;
+  gap: 16px;
+  padding: 30px !important;
+  min-width: 600px;
+  max-width: 80vw;
+  width: 100%;
+  max-height: 70vh;
 }
 
-/* 所有標籤文字 */
 .dialogContent label {
   font-size: 14px;
   font-weight: 600;
   color: #555;
-  margin-bottom: 4px;
-  display: block; /* 確保 label 獨佔一行 */
+  margin-bottom: 6px;
+  display: block;
 }
 
 .starCss {
   color: #C00000;
 }
 
-/* --- 排版容器 --- */
-.formRow {
-  display: flex;
-  gap: 20px;
-  width: 100%;
-}
-
-.formField {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-/* --- 輸入元件樣式 --- */
-.styledInput {
-  padding: 10px 12px;
-  font-size: 14px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  outline: none;
-  background: #fff;
-  transition: border-color 0.2s, box-shadow 0.2s;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.styledInput:focus {
-  border-color: #001F4D;
-  background-color: #fdfdfd;
-}
-
-/* --- [新增] 檔案上傳按鈕樣式 --- */
-.fileInputWrapper {
-  width: 100%;
-}
-
-.dialogContent label.uploadBtn {
+.totalValueBanner {
+  margin-top: 0;
+  padding: 0 10px;
+  height: 45px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  width: 100%;
-  padding: 12px;
-  background-color: #f8f9fa;
-  border: 2px dashed #ccc;
+  background-color: #f9fbff;
+  border: 1px solid #dce6f2;
   border-radius: 8px;
-  color: #666;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-sizing: border-box;
-  margin-bottom: 0;
+  font-weight: 600;
+  color: #555;
+  white-space: nowrap;
+
+  span {
+    color: #001F4D;
+    font-size: 1.2em;
+    margin-left: 5px;
+  }
 }
 
-.uploadBtn mat-icon {
-  color: #888;
-}
-
-.uploadBtn:hover {
-  background-color: #eef4fc;
-  border-color: #001F4D;
-  color: #001F4D;
-}
-
-.uploadBtn:hover mat-icon {
-  color: #001F4D;
-}
-
-.uploadBtn:active {
-  background-color: #dde9f7;
-  transform: scale(0.99);
-}
-
-/* 檔案選取狀態提示 (綠色小條) */
 .fileStatus {
   display: flex;
   align-items: center;
@@ -114,144 +133,17 @@
   background: #e8f5e9;
   padding: 8px;
   border-radius: 4px;
-  margin-top: -8px; /* 稍微往上拉近按鈕 */
-}
-.fileStatus mat-icon {
-  font-size: 18px;
-  width: 18px;
-  height: 18px;
 }
 
-/* --- 主餐勾選列表 (Scrollable List) --- */
-div.styledInput.scrollableList {
-  height: auto;
-  max-height: 250px;
-  padding: 0;
-}
-
-.checkboxItem {
-  display: flex;
-  align-items: center;
-  padding: 10px 12px;
-  border-bottom: 1px solid #f0f0f0;
-  transition: background-color 0.2s;
-}
-
-.checkboxItem:last-child {
-  border-bottom: none;
-}
-
-.checkboxItem:hover {
-  background-color: #f8fbff;
-}
-
-.checkboxItem input[type="checkbox"] {
-  margin-right: 12px;
-  transform: scale(1.2);
-  cursor: pointer;
-  accent-color: #001F4D;
-}
-
-.checkboxItem label {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.fileInputWrapper {
   width: 100%;
-  cursor: pointer;
-  margin: 0;
-  font-weight: 500;
-  color: #333;
 }
 
-.itemPrice {
-  color: darken(#F2C58E, 20%);
-  font-size: 0.9em;
-  font-weight: 400;
-  background: #f5f5f5;
-  padding: 2px 6px;
-  border-radius: 4px;
-}
-
-/* 空狀態提示 */
-.emptyState {
-  padding: 16px;
-  text-align: center;
-  color: #999;
-  background: #f9f9f9;
-  border-radius: 4px;
-  border: 1px dashed #ddd;
-  font-size: 14px;
-}
-
-/* --- 上架狀態開關 (Switch) --- */
-.switchWrapper {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-top: 8px;
-  padding-top: 16px;
-  border-top: 1px solid #eee;
-}
-
-.switchLabel {
-  font-size: 15px;
-  font-weight: 600;
-  color: #333;
-}
-
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 48px;
-  height: 26px;
-  margin-bottom: 0;
-}
-
-.switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  transition: .4s;
-  border-radius: 34px;
-}
-
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 20px;
-  width: 20px;
-  left: 3px;
-  bottom: 3px;
-  background-color: white;
-  transition: .4s;
-  border-radius: 50%;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-}
-
-input:checked + .slider {
-  background-color: #001F4D;
-}
-
-input:checked + .slider:before {
-  transform: translateX(22px);
-}
-
-/* 自訂上傳按鈕 (Label) */
 .uploadBtn {
   display: flex !important;
   align-items: center;
   justify-content: center;
-  gap: 5px;
+  gap: 8px;
   width: 100%;
   padding: 10px;
   background-color: #f8f9fa;
@@ -259,69 +151,128 @@ input:checked + .slider:before {
   border-radius: 8px;
   color: #666;
   cursor: pointer;
-  transition: all 0.3s ease;
+  height: 46px;
   box-sizing: border-box;
+  transition: all 0.3s ease;
 }
 
-/* Icon 大小微調 */
-.dialogContent .uploadBtn mat-icon {
-  color: #888;
-}
-
-/* 滑鼠移上去的效果 */
-.dialogContent .uploadBtn:hover {
+.uploadBtn:hover {
   background-color: #eef4fc;
   border-color: #001F4D;
   color: #001F4D;
 }
 
-.dialogContent .uploadBtn:hover mat-icon {
-  color: #001F4D;
-}
-
-/* 按下去的效果 */
-.dialogContent .uploadBtn:active {
-  background-color: #dde9f7;
-  transform: scale(0.99);
-}
-
-/* 按鈕區域 */
-.dialogActions {
-  padding: 16px 40px !important;
+.divider {
+  border: 0;
   border-top: 1px solid #eee;
+  margin: 10px 0;
+}
+
+.selectionLayout {
+  display: flex;
+  gap: 25px;
+  width: 100%;
+  align-items: flex-start;
+}
+
+.leftColumn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.rightColumn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   gap: 15px;
 }
 
-/* 通用按鈕樣式 */
+.sectionTitle {
+  margin-bottom: 8px !important;
+  color: #001F4D !important;
+  border-left: 3px solid #F2C58E;
+  padding-left: 8px;
+}
+
+.mainListHeight {
+  height: 255px;
+  overflow-y: auto;
+  margin-top: 8px;
+}
+
+.sideDrinkListHeight {
+  height: 140px;
+  overflow-y: auto;
+  padding: 5px !important;
+  display: flex;
+  flex-direction: column;
+}
+
+.styledInput {
+  padding: 10px 12px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  outline: none;
+  background: #fff;
+  transition: all 0.2s;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.formRow {
+  display: flex;
+  gap: 20px;
+}
+
+.formField {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.checkboxItem:hover,
+.item-label:hover {
+  background-color: #f8fbff;
+}
+
+.checkboxItem input[type="checkbox"],
+.item-label input[type="checkbox"] {
+  margin-right: 12px;
+  accent-color: #001F4D;
+}
+
+.dialogActions {
+  padding: 20px 40px !important;
+  border-top: 1px solid #eee;
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+}
+
 .dialogBtn {
-  padding: 10px 25px;
+  padding: 10px 30px;
   font-size: 14px;
   font-weight: 500;
   border-radius: 8px;
   cursor: pointer;
   border: none;
-  transition: all 0.2s;
 }
 
-/* 取消按鈕 */
 .cancelBtn {
-  background-color: #fff;
+  background: #fff;
   border: 1px solid #ddd;
   color: #666;
 }
 
-.cancelBtn:hover {
-  background-color: #f5f5f5;
-  color: #333;
-}
-
-/* 確定按鈕 */
 .confirmBtn {
-  background-color: #001F4D;
+  background: #001F4D;
   color: #fff;
 }
 
 .confirmBtn:hover {
   background-color: #F2C58E;
-  box-shadow: 0 2px 4px rgba(1, 60, 112, 0.25);
 }
