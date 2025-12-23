@@ -266,7 +266,7 @@ export class MenuComponent {
           ...this.orderService.currentOrder,
           orderDetailsList: updatedData.orderDetailsList,
         };
-
+        this.currentCart = updatedData.orderDetailsList;
         console.log('已同步彈窗修改後的數量至 Service:', this.orderService.currentOrder);
 
       }
