@@ -1,114 +1,111 @@
-/* 強制垂直佈局，防止並排 */
 .background {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  box-sizing: border-box;
-  background-color: #fff;
-}
-
-/* 標題 - 固定在頂部 */
-.diaTitle {
-  margin: 0 !important;
-  padding: 16px 20px !important;
-  font-size: 18px;
-  font-weight: 700;
-  color: #001F4D;
-  border-bottom: 1px solid #F2F4F6;
+  padding: 8px 0;
   text-align: center;
 }
 
-/* 內容區 - 確保寬度 100% 撐開，迫使按鈕下移 */
-.contentBox {
-  display: block; /* 設為區塊，防止 flex 擠壓 */
-  width: 100%;
-  min-height: 100px;
-  padding: 24px 20px !important;
-  margin: 0 !important;
-  box-sizing: border-box;
+/* 標題 diaTitle */
+.diaTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: #9390A5;
+  margin: 0 0 16px 0;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #eee;
 }
 
-/* 輸入框包裝 */
+/* 內容區域 (自動對應 mat-dialog-content) */
+mat-dialog-content {
+  font-size: 16px;
+  color: #444;
+  line-height: 1.5;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 針對內容的 p 標籤設定 */
+mat-dialog-content p {
+  max-width: 180px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.errorBox {
+  margin-bottom: 20%;
+}
+
 .inputGroup {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   width: 100%;
-  gap: 8px;
+  max-width: 250px;
+  margin: 0 auto;
 }
 
-.inputGroup label {
+.label {
   font-size: 14px;
-  color: #9390A5;
   font-weight: 600;
+  color: #555;
+  margin-bottom: 10px;
+  text-align: left;
 }
 
 .styled-input {
-  width: 100%;
-  height: 48px;
-  padding: 0 12px;
+  padding: 10px 12px;
+  font-size: 14px;
   border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 16px;
-  background-color: #F8F9FA;
-  box-sizing: border-box;
+  border-radius: 4px;
   outline: none;
+  background: #fff;
+  transition: border-color 0.2s;
+  width: 100%;
+  box-sizing: border-box;
+  box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.05);
 }
 
-/* 按鈕區 - 強制換行到最下面 */
-.actionArea {
-  display: flex;
-  padding: 12px 20px 20px !important; /* 手機版底部留白 */
-  margin: 0 !important;
-  border-top: 1px solid #F2F4F6; /* 增加一條線區隔內容 */
-}
-
+/* 按鈕容器 btnBox */
 .btnBox {
   display: flex;
+  justify-content: center;
+  gap: 16px;
   width: 100%;
-  gap: 12px;
+  margin-top: 8px;
+  margin-bottom: 10px;
 }
 
-/* 按鈕樣式 */
+/* 通用按鈕樣式 btn */
 .btn {
-  flex: 1; /* 兩個按鈕平分寬度 */
-  height: 48px;
-  font-size: 16px;
-  font-weight: 600;
-  border-radius: 10px;
-  border: none;
+  padding: 8px 20px;
+  font-size: 14px;
+  border-radius: 6px;
   cursor: pointer;
-  transition: active 0.1s;
+  border: none;
+  transition: all 0.2s;
 }
 
-.btn.confirm {
+/* 第一個按鈕：取消 (白底灰框) */
+.btn:first-child {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  color: #666;
+}
+
+.btn:first-child:hover {
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+/* 第二個按鈕：確定 */
+.btn:last-child {
+  background-color: #9390A5;
+  color: #fff;
+  font-weight: 500;
+}
+
+.btn:last-child:hover {
   background-color: #F2C58E;
-  color: #001F4D;
-}
-
-.btn.cancel {
-  background-color: #F2F4F6;
-  color: #9390A5;
-}
-
-/* 警告文字 */
-.alertArea {
-  text-align: center;
-  width: 100%;
-}
-
-.alertText {
-  color: #d32f2f;
-  font-weight: 700;
-  font-size: 17px;
-  margin: 0;
-}
-
-.errorText {
-  color: #d32f2f;
-  background: #fff5f5;
-  padding: 12px;
-  border-radius: 8px;
-  width: 100%;
-  margin: 0;
+  color: #F2F4F6;
+  box-shadow: 0 2px 5px rgba(147, 144, 165, 0.3);
 }

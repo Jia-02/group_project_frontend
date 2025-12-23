@@ -1,12 +1,13 @@
 import { OrderDetailList } from './../@service/data.service';
-import { Component, Inject } from '@angular/core';
-import { MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle, MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { Component, inject, Inject } from '@angular/core';
+import { MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle, MAT_DIALOG_DATA, MatDialog } from "@angular/material/dialog";
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 
 import { FormsModule } from '@angular/forms';
 import { DataService } from '../@service/data.service';
 import { Router } from '@angular/router';
+import { DialogNoticeComponent } from '../@dialog/dialog-notice/dialog-notice.component';
 
 @Component({
   selector: 'app-send-order-dialog',
@@ -34,6 +35,7 @@ export class SendOrderDialogComponent {
   }
 
   paymentType: string = '信用卡';
+  readonly dialog = inject(MatDialog);
 
   reduce(item: RawOrderDetailItem): void {
     if (item.quantity > 1) {
@@ -157,7 +159,9 @@ export class SendOrderDialogComponent {
     }
 
     if (this.data.totalPrice == 0) {
-      alert("訂單不得為空");
+      this.dialog.open(DialogNoticeComponent, {
+        data: { noticeType: 'noOrder' }
+      });
     }
 
     const finalPayload: TargetOrderData = {

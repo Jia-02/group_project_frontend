@@ -104,13 +104,13 @@
 }
 
 .order-code {
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 800;
   color: #333;
 }
 
 .order-type {
-  background-color: #9390A5;
+  background-color: darken(#F2C58E, 20%);
   color: #fff;
   padding: 4px 8px;
   border-radius: 4px;
@@ -175,6 +175,11 @@
   font-weight: bold;
   white-space: nowrap; /* 不換行 */
   transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #F2C58E;
+    color: #fff;
+  }
 }
 
 .ready-btn:active {

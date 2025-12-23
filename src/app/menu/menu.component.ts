@@ -11,6 +11,7 @@ import { DataService } from '../@service/data.service';
 import { BoardDialogComponent } from '../board-dialog/board-dialog.component';
 import { Activity } from '../allActivity/calendar/calendar.component';
 import { MatIconModule } from '@angular/material/icon';
+import { DialogNoticeComponent } from '../@dialog/dialog-notice/dialog-notice.component';
 
 @Component({
   selector: 'app-menu',
@@ -233,7 +234,9 @@ export class MenuComponent {
 
   submitCart() {
     if (this.currentCart.length === 0) {
-      alert('請至少選擇一個商品！');
+      this.dialog.open(DialogNoticeComponent, {
+        data: { noticeType: 'chooseProduct' }
+      });
       return;
     }
 

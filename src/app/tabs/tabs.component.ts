@@ -7,10 +7,11 @@ import { DialogComponent } from './dialog/dialog.component';
 
 import { MatIcon } from "@angular/material/icon";
 import { DataService, WorkTable, Order, BasicRes, WorkTableListRes, OrdersTodayRes, UpdateOrderReq, OrderDetailList, Option, OrderDetail } from '../@service/data.service';
+import { MatMenuModule } from '@angular/material/menu';
 
 @Component({
   selector: 'app-tabs',
-  imports: [MatTabsModule, MatButtonModule, RouterLink, RouterOutlet, MatIcon],
+  imports: [MatTabsModule, MatButtonModule, RouterLink, RouterOutlet, MatIcon, MatMenuModule,],
   templateUrl: './tabs.component.html',
   styleUrl: './tabs.component.scss'
 })

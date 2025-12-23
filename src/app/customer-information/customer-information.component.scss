@@ -45,20 +45,21 @@
   letter-spacing: 1px;
 }
 
+.starCss{
+  color: #C00000;
+}
+
 /* --- 輸入框樣式 --- */
 .inputCss {
   /* 關鍵：設為 block 讓輸入框強迫換行，標籤就會自動在上方 */
   display: block;
   width: 100%;
   height: 48px;
-
   margin-top: 8px;   /* 與上方標籤的距離 */
   margin-bottom: 20px; /* 與下一個欄位的距離 */
-
   padding: 0 16px;
   font-size: 16px;
   color: #333;
-
   background-color: #f9f9f9;
   border: 1px solid #e0e0e0;
   border-radius: 8px;

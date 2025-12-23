@@ -40,6 +40,20 @@ export class DialogNoticeComponent {
       this.noticeMessage = '必填選項未填寫';
     } else if (this.data.noticeType == 'timeCheck') {
       this.noticeMessage = '時間錯誤，請重新輸入'
+    } else if (this.data.noticeType == 'phoneError') {
+      this.noticeMessage = '目前系統不支援直接修改電話號碼，請刪除後重新預約，或改回原號碼'
+    } else if (this.data.noticeType == 'activityIdMiss') {
+      this.noticeMessage = '刪除失敗：缺少活動ID'
+    } else if (this.data.noticeType == 'qrcode') {
+      this.noticeMessage = '請重新掃碼'
+    } else if (this.data.noticeType == 'chooseProduct') {
+      this.noticeMessage = '請至少選擇一個商品'
+    } else if (this.data.noticeType == 'noOrder') {
+      this.noticeMessage = '訂單不得為空'
+    } else if (this.data.noticeType == 'orderSuccess') {
+      this.noticeMessage = '更新成功'
+    } else if (this.data.noticeType == 'orderFailed') {
+      this.noticeMessage = '更新失敗'
     }
   }
 

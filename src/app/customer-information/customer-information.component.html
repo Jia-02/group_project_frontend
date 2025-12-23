@@ -1,8 +1,11 @@
 <div class="backgroundCss">
     <div class="Box">
         <h3>顧客資訊</h3>
-        顧客姓名:<input type="text" class="inputCss" [(ngModel)]="customerName">
-        顧客電話:<input type="text" class="inputCss" [(ngModel)]="customerPhone"
+        <p><span class="starCss">* </span>顧客姓名</p>
+        <input type="text" class="inputCss" [(ngModel)]="customerName">
+
+        <p><span class="starCss">* </span>顧客電話</p>
+        <input type="text" class="inputCss" [(ngModel)]="customerPhone"
         inputmode="numeric" pattern="[0-9]*" (input)="onPhoneInput($event)" placeholder="09xxxxxxxx">
 
         @if(ordersType == "D")
