@@ -21,3 +21,15 @@ export class HttpClientService {
     return this.http.post(url, postData);
   }
 }
+
+//寵物的interface
+export interface petList {
+  catName: string;
+  age: number;
+  catStatus: boolean;
+  catImg: string;
+  catInfo: string;
+  catId?: number;
+  selected?: boolean;
+  isExpanded?: boolean;
+}

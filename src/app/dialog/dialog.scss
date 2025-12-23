@@ -1,0 +1,68 @@
+.diaTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: #fe6d13;
+  margin: 0 0 16px 0;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #eee;
+  text-align: center;
+  display: block;
+}
+
+
+
+mat-dialog-content {
+  font-size: 16px;
+  color: #444;
+  line-height: 1.5;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+
+
+/* 按鈕容器 btnBox */
+.btnBox {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  width: 100%;
+  margin-top: 8px;
+}
+
+/* 通用按鈕樣式 btn */
+.btn {
+  padding: 8px 20px;
+  font-size: 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+}
+
+/* 第一個按鈕：取消 */
+.btn:first-child {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  color: #666;
+}
+
+.btn:first-child:hover {
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+/* 第二個按鈕：確定 */
+.btn:last-child {
+  background-color: #fe6d13;
+  color: #fff;
+  font-weight: 500;
+}
+
+.btn:last-child:hover {
+  background-color: #e05b0c;
+  box-shadow: 0 2px 5px rgba(211, 47, 47, 0.3);
+}

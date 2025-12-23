@@ -1,0 +1,6 @@
+<div #mapContainer class="map" style="height:300px; width:100%;"></div>
+
+@if(distance && duration) {
+  <p>距離: {{ distance }} / 預計時間: {{ duration }}</p>
+  <p>外送費: {{ calculateFee(distanceKm) }} NT$</p>
+}

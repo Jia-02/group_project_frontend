@@ -46,7 +46,7 @@ export class MealStatusComponent {
                 if (!settingStatus.includes(detail.mealStatus)) {
                   settingStatus.push(detail.mealStatus);
                 }
-                if (detail.mealStatus == "待送餐") {
+                if (detail.mealStatus == "待送餐"  || detail.mealStatus == "餐點已完成") {
                   this.count++;
                 }
                 for (const option of detail.detailList) {
@@ -82,7 +82,7 @@ export class MealStatusComponent {
             }
           }
           this.orders.push({
-            orderId: order.ordersId, orderCode: order.ordersCode, tableId: order.tableId,orderTime:order.ordersTime,
+            orderId: order.ordersId, orderType: order.ordersType, orderCode: order.ordersCode, tableId: order.tableId, orderTime: order.ordersTime,
             price: order.totalPrice, status: status, workStationId: workstaionId, orderProductList: order.orderDetailsList, paid: order.paid
           })
         }
@@ -118,7 +118,7 @@ export class MealStatusComponent {
                   if (!settingStatus.includes(detail.mealStatus)) {
                     settingStatus.push(detail.mealStatus);
                   }
-                  if (detail.mealStatus == "待送餐") {
+                  if (detail.mealStatus == "待送餐" || detail.mealStatus == "餐點已完成") {
                     this.count++;
                   }
                   for (const option of detail.detailList) {
@@ -154,14 +154,14 @@ export class MealStatusComponent {
               }
             }
             this.orders.push({
-              orderId: order.ordersId, orderCode: order.ordersCode, tableId: order.tableId,orderTime:order.ordersTime,
+              orderId: order.ordersId, orderType: order.ordersType, orderCode: order.ordersCode, tableId: order.tableId, orderTime: order.ordersTime,
               price: order.totalPrice, status: status, workStationId: workstaionId, orderProductList: order.orderDetailsList, paid: order.paid
             })
           }
         }
         console.log(this.orders)
       })
-    },1000)
+    }, 1000)
 
 
   }
@@ -188,7 +188,11 @@ export class MealStatusComponent {
             for (const detail of product.orderDetails) {
               options = [];
               if (detail.productId == productId && product.orderDetailsId == detailId) {
-                detail.mealStatus = "已送達";
+                if (order.orderType == "D") {
+                  detail.mealStatus = "餐點已送出";
+                } else {
+                  detail.mealStatus = "已送達";
+                }
               }
               for (const option of detail.detailList) {
                 options.push({ option: option.option, addPrice: option.addPrice });
@@ -210,7 +214,11 @@ export class MealStatusComponent {
             orderDetail = [];
             for (const detail of product.orderDetails) {
               options = [];
-              detail.mealStatus = "已送達"
+              if (order.orderType == "D") {
+                detail.mealStatus = "餐點已送出";
+              } else {
+                detail.mealStatus = "已送達";
+              }
               for (const option of detail.detailList) {
                 options.push({ option: option.option, addPrice: option.addPrice });
               }
@@ -257,7 +265,7 @@ export class MealStatusComponent {
                 if (!settingStatus.includes(detail.mealStatus)) {
                   settingStatus.push(detail.mealStatus)
                 }
-                if (detail.mealStatus == "待送餐") {
+                if (detail.mealStatus == "待送餐"  || detail.mealStatus == "餐點已完成") {
                   this.count++;
                 }
                 for (const option of detail.detailList) {
@@ -268,7 +276,7 @@ export class MealStatusComponent {
               product.status = settingStatus;
             }
             this.orders.push({
-              orderId: order.ordersId, orderCode: order.ordersCode, tableId: order.tableId,orderTime:order.ordersTime,
+              orderId: order.ordersId, orderType: order.ordersType, orderCode: order.ordersCode, tableId: order.tableId, orderTime: order.ordersTime,
               price: order.totalPrice, status: status, workStationId: workstaionId, orderProductList: order.orderDetailsList, paid: order.paid
             })
           }

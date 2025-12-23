@@ -1,0 +1,148 @@
+/* --- 整體頁面容器 (手機版全螢幕置中) --- */
+.header {
+  min-height: 100vh;
+  width: 100%;
+  background-color: #f0f2f5; /* 淺灰背景，突顯中間卡片 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+.body {
+  width: 100%;
+  max-width: 380px; /* 手機版寬度限制 */
+  perspective: 1000px; /* 3D 翻轉的景深 */
+}
+
+/* --- 卡片主體 (包含翻轉邏輯) --- */
+.card {
+  position: relative;
+  width: 100%;
+  min-height: 600px;
+  text-align: center;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+  background: transparent;
+}
+
+/* 當加上 .flipped class 時旋轉 180度 */
+.card.flipped {
+  transform: rotateY(180deg);
+}
+
+/* --- 卡片正反面共同樣式 --- */
+.font, .back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden; /* 背面隱藏 */
+  -webkit-backface-visibility: hidden;
+
+  background: #fff;
+  border-radius: 12px;
+  padding: 30px 25px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* 內容垂直置中 */
+}
+
+/* --- 正面 (登入) --- */
+.font {
+  z-index: 2;
+  transform: rotateY(0deg);
+}
+
+/* --- 背面 (註冊) --- */
+.back {
+  transform: rotateY(180deg);
+}
+
+/* --- 文字排版與標題 --- */
+p {
+  margin: 0 0 16px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+  width: 100%;
+}
+
+/* 第一個 p 標籤通常是標題，給予特殊樣式 */
+.font > p:first-child,
+.back > p:first-child {
+  align-items: center; /* 標題置中 */
+  font-size: 22px;
+  color: #013c70;
+  margin-bottom: 25px;
+  border-bottom: 2px solid #013c70;
+  padding-bottom: 10px;
+  display: block; /* 讓 border 寬度自適應 */
+}
+
+/* --- 輸入框 (沿用 Dialog 風格) --- */
+input[type="text"],
+input[type="password"] {
+  width: 100%;
+  padding: 12px 12px;
+  font-size: 15px; /* 手機版字體稍大好點擊 */
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  outline: none;
+  background: #fff;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+  margin-top: 2px;
+}
+
+input:focus {
+  border-color: #013c70;
+  box-shadow: 0 0 0 3px rgba(1, 60, 112, 0.1);
+}
+
+/* --- 按鈕樣式 --- */
+button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+}
+
+/* 主要按鈕 (登入/註冊確認) - 深藍色 */
+button:not(.btnsty) {
+  background-color: #013c70;
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+button:not(.btnsty):active {
+  background-color: #fe6d13; /* 按下時變橘色 */
+  transform: translateY(1px);
+}
+
+/* 次要按鈕 (切換/返回) - 白色/灰色 */
+.btnsty {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  color: #666;
+  margin-top: 0; /* 調整順序間距 */
+  order: 10;     /* 透過 Flex order 讓切換按鈕排在最下面 (選用) */
+}
+
+.btnsty:active {
+  background-color: #f5f5f5;
+  color: #333;
+}

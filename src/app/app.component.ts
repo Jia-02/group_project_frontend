@@ -27,8 +27,15 @@ export class AppComponent {
       if (event instanceof NavigationStart) {
         if (event['url'].match('meal/status/user') ||
           event['url'].match('inner-start-page') ||
+          event['url'].match('pet') ||
           event['url'].match('/non-inner-start-page') ||
           event['url'].match('/customer-information') ||
+          event['url'].match('front') ||
+          event['url'].match('todays/orders') ||
+          event['url'].match('historyorders') ||
+          event['url'].match('login') ||
+          event['url'].match('map') ||
+          event['url'].match('analyze') ||
           event['url'] == '/menu') {
           let header = document.getElementById('myHeader') as HTMLHeadElement
           header.style.display = "none";

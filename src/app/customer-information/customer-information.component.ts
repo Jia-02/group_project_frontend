@@ -30,9 +30,9 @@ export class CustomerInformationComponent {
   }
 
   onPhoneInput(event: any) {
-    const input = event.target as HTMLInputElement;
-    input.value = input.value.replace(/[^0-9]/g, '');
-    this.customerPhone = input.value;
+    const cleanValue = event.target.value.replace(/[^0-9]/g, '');
+    this.customerPhone = cleanValue;
+    event.target.value = cleanValue;
   }
 
   startNonInnerOrder() {
@@ -42,6 +42,7 @@ export class CustomerInformationComponent {
       })
       return;
     }
+
     // 新增：電話 7–10 碼限制
     if (this.customerPhone.length < 7 || this.customerPhone.length > 10) {
       this.dialog.open(DialogNoticeComponent, {

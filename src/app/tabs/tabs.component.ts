@@ -139,7 +139,10 @@ export class TabsComponent {
           for (const detail of product.orderDetails) {
             options = [];
             if (detail.productId == productId && product.orderDetailsId == detailId) {
-              detail.mealStatus = "待送餐";
+               if (order.orderType == "D") {
+                  detail.mealStatus = "餐點已完成";
+                } else {detail.mealStatus = "待送餐";
+                  }
             }
             for (const option of detail.detailList) {
               options.push({ option: option.option, addPrice: option.addPrice });
@@ -194,7 +197,7 @@ export class TabsComponent {
               }
             }
             this.orders.push({
-              orderId: order.ordersId, orderCode: order.ordersCode, tableId: order.tableId,orderTime:order.ordersTime,
+              orderId: order.ordersId, orderType:order.ordersType,  orderCode: order.ordersCode, tableId: order.tableId,orderTime:order.ordersTime,
               price: order.totalPrice, status: status, workStationId: workstaionId, orderProductList: order.orderDetailsList, paid: order.paid
             })
           }
@@ -241,7 +244,7 @@ export class TabsComponent {
               }
             }
             this.orders.push({
-              orderId: order.ordersId, orderCode: order.ordersCode, tableId: order.tableId,orderTime:order.ordersTime,
+              orderId: order.ordersId, orderType:order.ordersType, orderCode: order.ordersCode, tableId: order.tableId,orderTime:order.ordersTime,
               price: order.totalPrice, status: status, workStationId: workstaionId, orderProductList: order.orderDetailsList, paid: order.paid
             })
           }
@@ -283,7 +286,7 @@ export class TabsComponent {
               }
             }
             this.orders.push({
-              orderId: order.ordersId, orderCode: order.ordersCode, tableId: order.tableId,orderTime:order.ordersTime,
+              orderId: order.ordersId, orderType:order.ordersType, orderCode: order.ordersCode, tableId: order.tableId,orderTime:order.ordersTime,
               price: order.totalPrice, status: status, workStationId: workstaionId, orderProductList: order.orderDetailsList, paid: order.paid
             })
           }
