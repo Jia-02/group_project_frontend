@@ -1,9 +1,8 @@
-/* --- 全局設定與容器 --- */
+/* --- 全局容器 --- */
 :host {
   position: relative;
   display: flex;
   flex-direction: column;
-  height: 100%;
   background-color: #fff;
   overflow: hidden;
 }
@@ -48,7 +47,7 @@
   background-color: #f5f5f5;
 }
 
-/* 圖片 - 滿版呈現 */
+/* 頂部大圖 */
 .heroImage {
   width: 100%;
   height: 220px;
@@ -56,7 +55,28 @@
   display: block;
 }
 
-/* 基礎價格區塊 */
+/* 產品資訊區塊 */
+.productInfoSection {
+  background-color: #fff;
+  padding: 20px 16px;
+  margin-bottom: 10px;
+}
+
+.productHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.productTitle {
+  font-size: 22px;
+  font-weight: 800;
+  color: #333;
+  margin: 0;
+  flex: 1;
+}
+
 .basePrice {
   font-size: 18px;
   font-weight: 600;
@@ -64,250 +84,139 @@
   margin-left: 10px;
 }
 
-/* --- 3. Stepper 優化 (隱藏不必要的 Material 樣式) --- */
-.customStepper {
-  background: transparent;
-}
-
-::ng-deep .mat-horizontal-stepper-header-container,
-::ng-deep .mat-vertical-stepper-header {
-  display: none !important; /* 隱藏原本的圓圈步驟條，讓畫面更像一般點餐頁 */
-}
-
-::ng-deep .mat-horizontal-content-container {
-  padding: 0 !important;
-}
-
-/* --- 4. 選項區塊設計 (外送 App 風格) --- */
-
-/* 分類標題 */
-.stepSectionTitle {
-  background-color: #fff;
-  padding: 16px;
-  font-size: 18px;
-  font-weight: 700;
-  color: #333;
-  border-bottom: 1px solid #eee;
-  margin-top: 0;
-}
-
-/* 主產品卡片 (單選) */
-.productCard {
-  background-color: #fff;
-  margin-bottom: 1px; /* 用極細的間距做分隔線效果 */
-  transition: background-color 0.2s;
-}
-
-.productCard.selected {
-  background-color: #f6fbff; /* 選中時微微變藍 */
-}
-
-.productLabel {
-  display: flex;
-  align-items: flex-start; /* 對齊上方 */
-  padding: 16px;
-  cursor: pointer;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-/* 隱藏原生 Radio/Checkbox，或用 accent-color 美化 */
-.nativeRadio, .nativeInput {
-  width: 20px;
-  height: 20px;
-  margin-right: 16px;
-  accent-color: #001F4D; /* 品牌深藍色 */
-  margin-top: 2px;
-}
-
-.productInfo {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-}
-
-.productName {
-  font-size: 16px;
-  color: #333;
-  font-weight: 500;
-  display: flex;
-  justify-content: space-between;
-}
-
-.productPriceTag {
-  color: #666;
-  font-weight: normal;
+.productDesc {
   font-size: 14px;
+  color: #666;
+  line-height: 1.5;
+  margin: 10px 5px 12px 5px;
 }
 
-.allergenInfo {
+.allergenBox {
   font-size: 12px;
-  color: #999;
-  margin-top: 6px;
-  background: #f5f5f5;
-  padding: 2px 6px;
+  color: #888;
+  background-color: #f9f9f9;
+  padding: 6px 10px;
   border-radius: 4px;
-  width: fit-content;
+  display: inline-block;
 }
 
-/* --- 加購選項群組 (Modifier Groups) --- */
-.modifierGroup {
+/* --- 3. 客製化選項區 --- */
+.customizationSection {
+  background-color: #F2F4F6;
+}
+
+.sectionTitle {
+  padding: 10px 16px 10px 16px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #555;
+  margin: 0;
+}
+
+/* 選項群組 */
+.optionGroup {
   background-color: #fff;
-  margin-top: 10px; /* 每個群組間有灰色間隔 */
-  padding-bottom: 5px;
+  margin-bottom: 10px;
 }
 
-.modifierHeader {
+.groupHeader {
   padding: 16px;
+  background-color: #fff;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.groupName {
   font-size: 16px;
   font-weight: 700;
   color: #333;
-  background-color: #fff;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  /* 可以在這裡加一個灰色底線 */
-  /* border-bottom: 1px solid #f5f5f5; */
 }
 
-.limitText {
+.groupLimit {
   font-size: 12px;
   color: #666;
-  background-color: #eee;
+  background: #eee;
   padding: 2px 8px;
-  border-radius: 12px;
-  font-weight: normal;
+  border-radius: 10px;
 }
 
-.modifierList {
+/* 選項列表 */
+.optionList {
   display: flex;
   flex-direction: column;
 }
 
-.modifierItem {
+.optionRow {
   display: flex;
   align-items: center;
   padding: 16px;
-  background-color: #fff;
-  border-top: 1px solid #f9f9f9; /* 細分隔線 */
+  border-bottom: 1px solid #f9f9f9;
   cursor: pointer;
+  transition: background 0.1s;
 }
 
-/* 選中狀態的高亮 */
-.modifierItem.active {
-  background-color: #fafffb; /* 微微的綠色或品牌色背景 */
+.optionRow:active {
+  background-color: #f5f5f5;
 }
 
-/* 禁止狀態 */
-.modifierItem.disabled {
-  opacity: 0.4;
+.optionRow:last-child {
+  border-bottom: none;
+}
+
+.optionRow.disabled {
+  opacity: 0.5;
   pointer-events: none;
 }
 
-.modifierName {
+/* 原生 Input 美化 */
+.nativeInput {
+  width: 20px;
+  height: 20px;
+  accent-color: #001F4D; /* 品牌色 */
+  margin: 0;
+  cursor: pointer;
+}
+
+.inputWrapper {
+  margin-right: 16px;
+  display: flex;
+  align-items: center;
+}
+
+.optName {
   flex: 1;
   font-size: 15px;
   color: #333;
 }
 
-.modifierPrice {
+.optPrice {
   font-size: 14px;
   color: darken(#F2C58E, 20%);
-  font-weight: 500;
+  font-weight: 700;
 }
 
-/* --- 步驟按鈕 (上一步/下一步) --- */
-.stepActionBtns {
+/* --- 4. 底部固定操作區 --- */
+.footerContainer {
+  background-color: #fff;
+  border-top: 1px solid #eee;
   padding: 20px 16px;
-  background-color: #fff;
-  margin-top: 1px;
-  display: flex;
-  gap: 10px;
-}
-
-.prevBtn {
-  flex: 1;
-  border: 1px solid #ddd;
-  color: #666;
-  height: 35px;
-  border-radius: 8px;
-}
-
-.nextBtn {
-  flex: 2; /* 下一步按鈕大一點 */
-  background-color: #001F4D !important;
-  color: #fff !important;
-  height: 35px;
-  border-radius: 8px;
-  font-weight: bold;
-}
-
-/* --- 總結頁面 (Summary) --- */
-.summaryContainer {
-  padding: 16px;
-  background-color: #fff;
-  min-height: 200px;
-}
-
-.summaryCard {
-  border: 1px solid #eee;
-  border-radius: 8px;
-  padding: 16px;
-  margin-bottom: 15px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-}
-
-.summaryHeader {
   display: flex;
   flex-direction: column;
-  border-bottom: 1px dashed #eee;
-  padding-bottom: 10px;
-  margin-bottom: 10px;
+  gap: 20px;
+  box-shadow: 0 -4px 10px rgba(0,0,0,0.05);
 }
 
-.summaryCategory {
-  font-size: 12px;
-  color: #999;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.summaryProduct {
-  font-size: 16px;
-  font-weight: 700;
-  color: #001F4D;
-  margin-top: 4px;
-}
-
-.summaryOptionList {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.summaryOptionList li {
+/* 數量控制 */
+.quantityPanel {
+  padding: 0 !important;
+  margin: 0 !important;
+  min-height: auto !important;
   display: flex;
-  justify-content: space-between;
-  padding: 4px 0;
-  font-size: 14px;
-  color: #555;
-}
-
-.summaryAddPrice {
-  color: #fe6d13;
-}
-
-/* --- 底部固定操作區 (類似外送App底部) --- */
-/* 將數量與加入購物車分開為兩層，或整合 */
-
-.quantityControlPanel {
-  background: #fff;
-  padding: 10px 16px;
-  display: flex;
-  justify-content: center; /* 數量控制置中 */
+  justify-content: center;
   align-items: center;
   gap: 20px;
-  border-top: 1px solid #eee;
 }
 
 .qtyBtn {
@@ -320,13 +229,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
   cursor: pointer;
 }
-
-.qtyBtn:active {
-  background-color: #f0f0f0;
-}
+.qtyBtn:active { background: #f0f0f0; }
 
 .qtyInput {
   width: 50px;
@@ -337,53 +242,35 @@
   outline: none;
 }
 
-.footerCartPanel {
-  background: #fff;
-  padding: 12px 16px;
-  padding-bottom: max(12px, env(safe-area-inset-bottom)); /* 支援 iPhone 底部手勢條 */
-  box-shadow: 0 -4px 16px rgba(0,0,0,0.08); /* 明顯的上陰影 */
-  display: flex;
-  gap: 15px;
-  align-items: center;
+/* 加入購物車按鈕 */
+.cartPanel {
+  padding: 0 !important;
+  margin: 0 !important;
+  min-height: auto !important;
 }
 
-.totalPriceDisplay {
-  display: flex;
-  flex-direction: column;
-}
-
-.totalPriceDisplay small {
-  font-size: 11px;
-  color: #888;
-}
-
-.totalPriceDisplay span {
-  font-size: 20px;
-  font-weight: 800;
-  color: #333;
-}
-
-.submitCartBtn {
-  flex: 1;
+.addToCartBtn {
+  width: 100%;
+  height: 48px;
   background-color: #001F4D;
   color: #fff;
   border: none;
-  height: 48px;
-  border-radius: 8px; /* App 風格通常圓角較小，約 8-12px */
+  border-radius: 8px; /* App 風格圓角 */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
   font-size: 16px;
   font-weight: 700;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background-color 0.2s;
+  box-shadow: 0 4px 8px rgba(1, 60, 112, 0.2);
 }
 
-.submitCartBtn:active {
-  background-color: #001F4D;
-}
-
-.submitCartBtn:disabled {
+.addToCartBtn:disabled {
   background-color: #ccc;
-  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.totalPrice {
+  font-weight: 600;
 }
