@@ -200,3 +200,17 @@ background-color: #F2C58E;
 mat-icon {
   color: #F2C58E;
 }
+
+// 將上方Tab新增拖拉功能
+:host ::ng-deep .mat-mdc-tab-label-container {
+  overflow: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+
+::ng-deep .mat-mdc-tab-header-pagination-controls-enabled .mat-mdc-tab-header-pagination {
+  @media (max-width: 1024px) {
+    display: none !important;
+  }
+}

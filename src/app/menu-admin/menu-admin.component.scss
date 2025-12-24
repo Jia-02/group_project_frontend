@@ -163,21 +163,17 @@
 }
 
 /* --- 套餐內容詳情樣式 --- */
-
 .packageDetail {
   margin-top: 8px;
   padding-top: 8px;
   border-top: 1px dashed #eee;
-  /* 上方加一條虛線，與價格/備註區隔 */
 }
 
 .detailRow {
   display: flex;
   flex-wrap: wrap;
-  /* 內容太多時自動換行 */
   align-items: center;
   gap: 6px;
-  /* 標籤之間的間距 */
   margin-bottom: 5px;
 }
 
@@ -373,3 +369,4 @@
 .addCategoryForm button:hover {
   background-color: #F2C58E;
 }
+
