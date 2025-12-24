@@ -44,6 +44,7 @@ export class MenuComponent {
     this.loadOrderDataFromService();
     this.loadInitialData();
     this.openBoard();
+    this.totalItemsCount;
   }
 
   loadOrderDataFromService(): void {
