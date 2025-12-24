@@ -149,7 +149,7 @@ export class Historyorders {
 
   openDialog(message: string): void {
       this.dialog.open(Dialog, {
-        data: { message } // 將訊息傳遞給 DialogComponent
+        data: {  title:"提醒", message } // 將訊息傳遞給 DialogComponent
       });
     }
 

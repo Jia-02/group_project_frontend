@@ -256,7 +256,7 @@ export class Frontpage {
   }
 
   openDialog(message: string): void {
-    this.dialog.open(Dialog, { data: { message } });
+    this.dialog.open(Dialog, { data:  {title: '提醒', message } });
   }
 
   // ================= 手機判斷 =================
