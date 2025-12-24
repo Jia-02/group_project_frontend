@@ -81,9 +81,9 @@ p {
 .back > p:first-child {
   align-items: center; /* 標題置中 */
   font-size: 22px;
-  color: #013c70;
+  color: #001F4D;
   margin-bottom: 25px;
-  border-bottom: 2px solid #013c70;
+  border-bottom: 2px solid #001F4D;
   padding-bottom: 10px;
   display: block; /* 讓 border 寬度自適應 */
 }
@@ -104,7 +104,7 @@ input[type="password"] {
 }
 
 input:focus {
-  border-color: #013c70;
+  border-color: #001F4D;
   box-shadow: 0 0 0 3px rgba(1, 60, 112, 0.1);
 }
 
@@ -123,13 +123,13 @@ button {
 
 /* 主要按鈕 (登入/註冊確認) - 深藍色 */
 button:not(.btnsty) {
-  background-color: #013c70;
+  background-color: #001F4D;
   color: #fff;
   margin-bottom: 10px;
 }
 
 button:not(.btnsty):active {
-  background-color: #fe6d13; /* 按下時變橘色 */
+  background-color: #F2C58E; /* 按下時變橘色 */
   transform: translateY(1px);
 }
 

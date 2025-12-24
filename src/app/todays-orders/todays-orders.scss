@@ -9,7 +9,7 @@
 /* --- 頂部 Header --- */
 .header {
   flex-shrink: 0;
-  background-color: #013c70;
+  background-color: #001F4D;
   color: #fff;
   display: flex;
   align-items: center;
@@ -19,9 +19,9 @@
   z-index: 100;
 
   img {
-    height: 35px;
+    height: 60px;
     width: auto;
-    margin-right: 15px;
+    margin-right: 20px;
   }
 }
 
@@ -36,31 +36,32 @@
   display: flex;
   align-items: center;
   font-size: 14px;
+  margin-bottom: 2px;
+  margin-top: 2px;
 
   .nameLable {
-    background: rgba(255,255,255,0.2);
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-size: 11px;
-    margin-right: 8px;
-    border: 1px solid rgba(255,255,255,0.3);
-    font-weight: 600;
+  margin-right: 6px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 12px;
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #001F4D;
+  white-space: nowrap;
   }
 }
 
 .logout-btn {
   padding: 10px;
   cursor: pointer;
-  color: #fff;
   mat-icon { font-size: 24px; }
 }
 
-/* --- 橫向導覽列 --- */
+/* --- 導覽列 (側邊欄轉型) --- */
 .sidebar {
   background: #fff;
   overflow-x: auto;
   border-bottom: 1px solid #eee;
-  flex-shrink: 0;
 
   &::-webkit-scrollbar { display: none; }
 
@@ -68,7 +69,6 @@
     display: flex;
     padding: 12px 16px;
     list-style: none;
-    margin: 0;
     gap: 10px;
 
     li a {
@@ -82,9 +82,8 @@
       transition: all 0.3s;
 
       &.active {
-        background: #fe6d13;
+        background: darken(#F2C58E, 10%);
         color: #fff;
-        font-weight: bold;
       }
     }
   }
@@ -100,7 +99,7 @@
     font-size: 15px;
     color: #333;
     margin: 8px 0 12px 4px;
-    border-left: 4px solid #fe6d13;
+    border-left: 4px solid darken(#F2C58E, 10%);
     padding-left: 10px;
     font-weight: bold;
   }
@@ -132,7 +131,7 @@ mat-panel-description {
   margin: 0 !important;
 
   .info-row {
-    color: #fe6d13;
+    color: darken(#F2C58E, 10%);
     font-weight: 600;
     &.date { color: #888; font-weight: normal; }
   }
@@ -168,7 +167,7 @@ mat-panel-description {
 }
 
 /* 手機適配 */
-@media (max-width: 480px) {
-  .header img { margin-right: 10px; height: 30px; }
-  mat-panel-title { font-size: 14px; }
-}
+// @media (max-width: 480px) {
+//   .header img { margin-right: 10px; height: 30px; }
+//   mat-panel-title { font-size: 14px; }
+// }

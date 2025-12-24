@@ -9,7 +9,7 @@
 /* --- 頂部 Header --- */
 .header {
   flex-shrink: 0;
-  background-color: #013c70;
+  background-color: #001F4D;
   color: #fff;
   display: flex;
   align-items: center;
@@ -19,9 +19,9 @@
   z-index: 100;
 
   img {
-    height: 35px;
+    height: 60px;
     width: auto;
-    margin-right: 15px;
+    margin-right: 20px;
   }
 }
 
@@ -36,14 +36,18 @@
   display: flex;
   align-items: center;
   font-size: 14px;
+  margin-bottom: 2px;
+  margin-top: 2px;
 
   .nameLable {
-    background: rgba(255,255,255,0.2);
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-size: 11px;
-    margin-right: 8px;
-    border: 1px solid rgba(255,255,255,0.3);
+  margin-right: 6px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 12px;
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #001F4D;
+  white-space: nowrap;
   }
 }
 
@@ -53,7 +57,7 @@
   mat-icon { font-size: 24px; }
 }
 
-/* --- 橫向導覽列 (側邊欄轉型) --- */
+/* --- 導覽列 (側邊欄轉型) --- */
 .sidebar {
   background: #fff;
   overflow-x: auto;
@@ -78,7 +82,7 @@
       transition: all 0.3s;
 
       &.active {
-        background: #fe6d13;
+        background: darken(#F2C58E, 10%);
         color: #fff;
       }
     }
@@ -95,7 +99,7 @@
     font-size: 15px;
     color: #333;
     margin: 8px 0 12px 4px;
-    border-left: 4px solid #fe6d13;
+    border-left: 4px solid darken(#F2C58E, 10%);
     padding-left: 10px;
   }
 }
@@ -114,7 +118,7 @@ mat-expansion-panel {
 
 mat-panel-title {
   font-weight: bold;
-  color: #013c70;
+  color: #001F4D;
   margin-bottom: 4px !important;
 }
 
@@ -124,7 +128,7 @@ mat-panel-description {
   font-size: 12px;
 
   .info-row {
-    color: #fe6d13;
+    color: #F2C58E;
     font-weight: 600;
     &.date { color: #888; font-weight: normal; }
   }
@@ -166,12 +170,12 @@ button {
   font-weight: bold;
   cursor: pointer;
 
-  &.primary-btn { background: #013c70; color: #fff; width: 100%; }
-  &.add-btn { background: #fe6d13; color: #fff; width: 100%; }
+  &.primary-btn { background: #001F4D; color: #fff; width: 100%; }
+  &.add-btn { background: #F2C58E; color: #fff; width: 100%; }
 }
 
 /* --- 手機適配微調 --- */
-@media (max-width: 480px) {
-  .header img { margin-right: 10px; height: 30px; }
-  mat-panel-title { font-size: 14px; }
-}
+// @media (max-width: 480px) {
+//   .header img { margin-right: 10px; height: 30px; }
+//   mat-panel-title { font-size: 14px; }
+// }

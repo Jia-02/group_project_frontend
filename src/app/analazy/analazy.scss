@@ -1,122 +1,92 @@
-/* --- 全域設定 --- */
+/* --- 全域佈局 --- */
 .container {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background-color: #f0f2f5;
-  overflow: hidden;
-  font-family: sans-serif;
+  background-color: #f4f7f9;
 }
 
-/* --- Header (統一風格) --- */
+/* --- 頂部 Header --- */
 .header {
   flex-shrink: 0;
-  background-color: #013c70;
+  background-color: #001F4D;
   color: #fff;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  z-index: 10;
-  height: 70px;
+  height: 80px;
   padding: 0 16px;
-}
+  box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+  z-index: 100;
 
-.header img {
-  height: 45px;
-  width: auto;
-  object-fit: contain;
-  margin-right: 10px;
+  img {
+    height: 60px;
+    width: auto;
+    margin-right: 20px;
+  }
 }
 
 .nameBox {
-  margin: 0;
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  overflow: hidden;
+  gap: 2px;
 }
 
 .nameDiv {
   display: flex;
   align-items: center;
-  margin: 2px 0;
   font-size: 14px;
-}
+  margin-bottom: 2px;
+  margin-top: 2px;
 
-.nameLable {
+  .nameLable {
   margin-right: 6px;
   padding: 2px 6px;
   border-radius: 4px;
   font-weight: 600;
   font-size: 12px;
   background-color: rgba(255, 255, 255, 0.9);
-  color: #013c70;
+  color: #001F4D;
   white-space: nowrap;
+  }
 }
 
 .logout-btn {
-  background: transparent;
-  color: #fff;
-  padding: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  padding: 10px;
   cursor: pointer;
-  margin-left: 5px;
+  mat-icon { font-size: 24px; }
 }
 
-/* --- 導覽列 (橫向滑動) --- */
-.main {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  overflow: hidden;
-  position: relative;
-}
-
+/* --- 導覽列 (側邊欄轉型) --- */
 .sidebar {
-  flex-shrink: 0;
   background: #fff;
-  padding: 10px 0;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
   overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
+  border-bottom: 1px solid #eee;
 
-.sidebar::-webkit-scrollbar {
-  display: none;
-}
+  &::-webkit-scrollbar { display: none; }
 
-.sidebar nav ul {
-  display: flex;
-  list-style: none;
-  padding: 0 16px;
-  margin: 0;
-  gap: 12px;
-}
+  nav ul {
+    display: flex;
+    padding: 12px 16px;
+    list-style: none;
+    gap: 10px;
 
-.sidebar nav ul li a {
-  text-decoration: none;
-  color: #ffffff;
-  font-size: 1.2rem; /* 增大側邊欄文字 */
-  display: block;
-  text-decoration: none;
-  color: #555;
-  font-size: 14px;
-  font-weight: 500;
-  padding: 8px 16px;
-  background-color: #f5f5f5;
-  border-radius: 20px;
-  white-space: nowrap;
-  transition: all 0.2s;
-}
+    li a {
+      white-space: nowrap;
+      text-decoration: none;
+      color: #666;
+      background: #f0f2f5;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      transition: all 0.3s;
 
-.sidebar nav ul li a:active,
-.sidebar nav ul li a:hover {
-  background-color: #e3f2fd;
-  color: #013c70;
+      &.active {
+        background: darken(#F2C58E, 10%);
+        color: #fff;
+      }
+    }
+  }
 }
 
 /* --- 內容區 --- */
@@ -200,7 +170,7 @@
 
 /* --- 總金額卡片 --- */
 .summary-card {
-  background: linear-gradient(135deg, #013c70 0%, #025299 100%); /* 深藍漸層背景 */
+  background: linear-gradient(135deg, #F2C58E 0%, #F2C58E 100%); /* 深藍漸層背景 */
   border-radius: 12px;
   padding: 20px;
   text-align: center;
