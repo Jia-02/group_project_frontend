@@ -42,6 +42,7 @@ export class TableComponent {
   timeList = [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22];
   inputSearch!: string;
   len = [0, 100, 200, 300, 400, 500];
+  len1 = [0, 100, 200, 300, 400, 500, 600, 700];
   mouseDownTime!: any;
   mouseUpTime!: any;
   reservationTime!: string;
