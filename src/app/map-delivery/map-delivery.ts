@@ -58,72 +58,89 @@ export class MapDelivery implements OnInit {
       this.initMap(this.address);
     }
   }
+initMap(customerAddress: string) {
+  const geocoder = new google.maps.Geocoder();
 
-  initMap(customerAddress: string) {
-    const geocoder = new google.maps.Geocoder();
+  const storeIcon = {
+    url: 'https://maps.google.com/mapfiles/kml/shapes/dining.png',
+    scaledSize: new google.maps.Size(20, 20),
+  };
 
-    geocoder.geocode({ address: customerAddress }, (results: any, status: string) => {
-      if (status === 'OK') {
-        const customerLocation = results[0].geometry.location;
+  const customerIcon = {
+    url: 'https://maps.google.com/mapfiles/kml/shapes/homegardenbusiness.png',
+    scaledSize: new google.maps.Size(20, 20),
+  };
 
-        if (!this.map) {
-          this.map = new google.maps.Map(this.mapElement.nativeElement, {
-            center: customerLocation,
-            zoom: 15,
-          });
+  geocoder.geocode({ address: customerAddress }, (results: any, status: string) => {
+    if (status !== 'OK') {
+      console.error('Geocode failed:', status);
+      return;
+    }
+
+    const customerLocation = results[0].geometry.location;
+
+    if (!this.map) {
+      this.map = new google.maps.Map(this.mapElement.nativeElement, {
+        center: customerLocation,
+        zoom: 15,
+      });
+    }
+
+    // ===== 路線 =====
+    const directionsService = new google.maps.DirectionsService();
+    const directionsRenderer = new google.maps.DirectionsRenderer({
+      suppressMarkers: true, // 關掉 A / B
+    });
+    directionsRenderer.setMap(this.map);
+
+    directionsService.route(
+      {
+        origin: this.storeAddress,
+        destination: customerAddress,
+        travelMode: google.maps.TravelMode.DRIVING,
+      },
+      (result: any, status: string) => {
+        if (status !== 'OK') {
+          console.error('Directions request failed:', status);
+          return;
         }
 
-        const directionsService = new google.maps.DirectionsService();
-        const directionsRenderer = new google.maps.DirectionsRenderer();
-        directionsRenderer.setMap(this.map);
+        directionsRenderer.setDirections(result);
+        this.getDriverLocation();
+        const leg = result.routes[0].legs[0];
 
-        directionsService.route(
-          {
-            origin: this.storeAddress,
-            destination: customerAddress,
-            travelMode: google.maps.TravelMode.DRIVING,
-          },
-          (result: any, status: string) => {
-            if (status === 'OK') {
-              directionsRenderer.setDirections(result);
+        // ===== 店家 Marker =====
+        new google.maps.Marker({
+          position: leg.start_location,
+          map: this.map,
+          title: '店家',
+          icon: storeIcon,
+        });
 
-              const leg = result.routes[0].legs[0];
+        // ===== 顧客 Marker =====
+        new google.maps.Marker({
+          position: leg.end_location,
+          map: this.map,
+          title: '顧客',
+          icon: customerIcon,
+        });
 
-              this.distance = leg.distance.text;
-              const durationMinutes = Math.ceil(leg.duration.value / 60);
-              this.duration = `${durationMinutes} 分`;
-              this.durationUpdated.emit(durationMinutes);
+        // ===== 距離與時間 =====
+        this.distance = leg.distance.text;
+        const durationMinutes = Math.ceil(leg.duration.value / 60);
+        this.duration = `${durationMinutes} 分`;
+        this.durationUpdated.emit(durationMinutes);
 
-              this.distanceKm = leg.distance.value / 1000;
-              const deliveryFee = this.calculateFee(this.distanceKm);
-              this.updateDeliveryFee(this.orderNo, this.distanceKm, deliveryFee);
+        this.distanceKm = leg.distance.value / 1000;
+        const deliveryFee = this.calculateFee(this.distanceKm);
+        this.updateDeliveryFee(this.orderNo, this.distanceKm, deliveryFee);
 
-              // ===== 固定外送員 Marker（模擬功能已停用）=====
-              this.driverMarker = new google.maps.Marker({
-                position: {
-                  lat: leg.start_location.lat(),
-                  lng: leg.start_location.lng(),
-                },
-                map: this.map,
-                title: '外送員位置',
-                icon: 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png',
-              });
 
-              // =====（停用）模擬外送員移動 =====
-              // if (this.simulateMovement) {
-              //   this.simulateDriverMovement(result.routes[0].overview_path);
-              // }
-
-            } else {
-              console.error('Directions request failed:', status);
-            }
-          }
-        );
-      } else {
-        console.error('Geocode failed:', status);
       }
-    });
-  }
+    );
+  });
+}
+
 
   calculateFee(distanceKm: number): number {
     if (distanceKm <= this.Start_km) return this.Base;
@@ -142,25 +159,25 @@ export class MapDelivery implements OnInit {
   }
 
   // =====（停用）外送員實際定位 =====
-  // getDriverLocation() {
-  //   navigator.geolocation.getCurrentPosition(
-  //     (position) => {
-  //       this.driverLocation = {
-  //         lat: position.coords.latitude,
-  //         lng: position.coords.longitude,
-  //       };
-  //       this.driverMarker = new google.maps.Marker({
-  //         position: this.driverLocation,
-  //         map: this.map,
-  //         title: '外送員目前位置',
-  //         icon: 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png',
-  //       });
-  //     },
-  //     (error) => {
-  //       console.error('外送員定位失敗', error);
-  //     }
-  //   );
-  // }
+  getDriverLocation() {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        this.driverLocation = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+        this.driverMarker = new google.maps.Marker({
+          position: this.driverLocation,
+          map: this.map,
+          title: '外送員目前位置',
+          icon: 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png',
+        });
+      },
+      (error) => {
+        console.error('外送員定位失敗', error);
+      }
+    );
+  }
 
   // =====（停用）沿路線模擬外送員移動 =====
   // simulateDriverMovement(path: any[]) {

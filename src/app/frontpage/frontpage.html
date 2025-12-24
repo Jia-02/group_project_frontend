@@ -1,97 +1,118 @@
 <div class="container">
   <div class="header">
-
-    <p>外送員: {{name}} /</p>
-    <p>電話: {{phone}}</p>
-    <button class="logout-btn" (click)="Signout()">登出</button>
+    <img src="logo1.png" alt="Logo">
+    <div class="nameBox">
+      <div class="nameDiv">
+        <span class="nameLable">外送員</span>
+        <span>{{name}}</span>
+      </div>
+      <div class="nameDiv">
+        <span class="nameLable">電　話</span>
+        <span>{{phone}}</span>
+      </div>
+    </div>
+    <div class="logout-btn" (click)="Signout()">
+      <mat-icon fontIcon="logout"></mat-icon>
+    </div>
   </div>
 
   <div class="main">
     <div class="sidebar">
       <nav>
         <ul>
-          <li><a routerLink="/front">首頁</a></li>
-          <li><a routerLink="/todays/orders">今日已完成訂單</a></li>
-          <li><a routerLink="/analyze">薪資分析</a></li>
-          <li><a routerLink="/historyorders">歷史訂單</a></li>
+          <li><a routerLink="/front" routerLinkActive="active">首頁</a></li>
+          <li><a routerLink="/todays/orders" routerLinkActive="active">今日已完成</a></li>
+          <li><a routerLink="/analyze" routerLinkActive="active">薪資分析</a></li>
+          <li><a routerLink="/historyorders" routerLinkActive="active">歷史訂單</a></li>
         </ul>
       </nav>
     </div>
 
     <div class="content">
-      <!-- 已接單 -->
-      <!-- 已接單 -->
       <div class="top-section">
-        <h2>已接單</h2>
+        <h2>已接單 ({{ items().length }})</h2>
         <mat-accordion>
           @for (item of items(); track item.orderNo) {
-          <mat-expansion-panel>
+          <mat-expansion-panel (opened)="loadOrderDetail(item)">
             <mat-expansion-panel-header>
               <mat-panel-title>{{ item.orderNo }}</mat-panel-title>
-              <mat-panel-description>{{ item.distanceKm }}km / {{ item.money }}$</mat-panel-description>
-              <mat-panel-description>{{ item.date }}</mat-panel-description>
+              <mat-panel-description>
+
+                <span class="info-row date">{{ item.date }}</span>
+              </mat-panel-description>
             </mat-expansion-panel-header>
 
-            @for (p of item.products; track p.name) {
-            <p>{{ p.name }} - {{ p.options.join(', ') }}</p>
-            }
+            <div class="product-list">
+              @for (p of item.products; track $index) {
+              <div class="product-item">
+                <div class="product-info">
+                  <span class="p-name">{{ p.name }}</span>
+                  <span class="p-options">{{ p.options.join(', ') }}</span>
+                </div>
 
-            <p>總價: {{ item.totalPrice }}$</p>
-            <p>狀態: {{ statusTextMap[item.status] }}</p>
+              </div>
+              }
+            </div>
+
+            <div class="order-footer">
+              <p class="total-price">總價: <span>${{ item.totalPrice }}</span></p>
+              <p class="status-text">狀態: {{ statusTextMap[item.status] }}</p>
+            </div>
 
             @if (item.customerAddress) {
             <app-map-delivery [address]="item.customerAddress" [orderNo]="item.orderNo"
               (distanceUpdated)="updateItemDistance($event)" (durationUpdated)="item.estimatedTime = $event ?? 0">
             </app-map-delivery>
-            <!-- <app-map-delivery [address]="item.customerAddress" [orderNo]="item.orderNo"
-              [simulateMovement]="item === items()[0]" (distanceUpdated)="updateItemDistance($event)"
-              (durationUpdated)="item.estimatedTime = $event ?? 0">
-            </app-map-delivery> -->
-
             }
 
-            @if (item.status === 'pending'){
-            <button (click)="markPickedUp(item)">已取餐</button>
-            }
-            @if (item.status === 'pickup'){
-            <button (click)="markDelivered(item)">已送達</button>
-            }
-
+            <div class="action-buttons">
+              @if (item.status === 'pending') {
+              <button class="primary-btn" (click)="markPickedUp(item)">已取餐</button>
+              }
+              @if (item.status === 'pickup') {
+              <button class="primary-btn" (click)="markDelivered(item)">已送達</button>
+              }
+            </div>
           </mat-expansion-panel>
           }
         </mat-accordion>
       </div>
 
-      <!-- 可接單 -->
       <div class="bottom-section">
         <h2>可接單列表</h2>
         <mat-accordion>
           @for (item of bottomItems; track item.orderNo) {
-          <mat-expansion-panel>
+          <mat-expansion-panel (opened)="loadOrderDetail(item)">
             <mat-expansion-panel-header>
               <mat-panel-title>{{ item.orderNo }}</mat-panel-title>
-              <mat-panel-description>{{ item.distanceKm }}km / {{ item.money }}$</mat-panel-description>
-              <mat-panel-description>{{ item.date }}</mat-panel-description>
+              <mat-panel-description>
+
+                <span class="info-row date">{{ item.date }}</span>
+              </mat-panel-description>
             </mat-expansion-panel-header>
 
-            @for (p of item.products; track p.name) {
-            <p>{{ p.name }} - {{ p.options.join(', ') }}</p>
+            @for (p of item.products; track $index) {
+              <div class="product-item">
+                <span class="p-name">{{ p.name }}</span>
+
+              </div>
             }
 
-            <p>總價: {{ item.totalPrice }}$</p>
-            <p>狀態: {{ statusTextMap[item.status] }}</p>
+            <p class="total-price-simple">總價: ${{ item.totalPrice }}</p>
 
-            @if (item.customerAddress) {
+            @if (item.customerAddress && !item.calculated) {
             <app-map-delivery [address]="item.customerAddress" [orderNo]="item.orderNo"
-              (distanceUpdated)="updateItemDistance($event)" (durationUpdated)="item.estimatedTime = $event ?? 0">
+              (distanceUpdated)="updateBottomItemDistance($event)">
             </app-map-delivery>
             }
 
             <button class="add-btn" (click)="addToTop(item); $event.stopPropagation();">
               接單
             </button>
-
           </mat-expansion-panel>
           }
         </mat-accordion>
       </div>
+    </div>
+  </div>
+</div>

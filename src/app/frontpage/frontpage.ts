@@ -6,31 +6,37 @@ import { MatDialog } from '@angular/material/dialog';
 import { Dialog } from '../dialog/dialog';
 import { DeliveryTask, Http } from '../@service/http';
 import { MapDelivery } from '../map-delivery/map-delivery';
+import { MatIcon } from "@angular/material/icon";
+
+
 
 @Component({
   selector: 'app-frontpage',
-  imports: [MatExpansionModule, CommonModule, RouterOutlet, RouterLinkActive, RouterLink, MapDelivery],
+  imports: [MatExpansionModule, CommonModule, RouterOutlet, RouterLinkActive, RouterLink, MapDelivery, MatIcon],
   templateUrl: './frontpage.html',
   styleUrl: './frontpage.scss',
 
 })
 export class Frontpage {
-  name = '';
+   name = '';
   phone = '';
   userId: number = 0;
 
-  //是否是手機版 測試用
+  // 手機判斷
   isMobile = false;
   menuOpen = false;
 
-  //更改狀態顯示文字
+  // 狀態文字
   statusTextMap: Record<string, string> = {
-  pending: '待取餐',
-  pickup: '配送中',
-  completed: '已完成',
-};
+    pending: '待取餐',
+    pickup: '配送中',
+    completed: '已完成',
+  };
 
+  // 已接單（signal）
   items = signal<DeliveryTask[]>([]);
+
+  // 可接單
   bottomItems: DeliveryTask[] = [];
 
   constructor(
@@ -55,95 +61,119 @@ export class Frontpage {
 
     this.fetchTakingTasks();
     this.fetchAvailableTasks();
-     // 這裡先塞假資料
-       // 每 5 秒刷新已接單列表
-  setInterval(() => {
-    this.fetchAvailableTasks();
-  }, 10000);
 
+    // 每 10 秒刷新可接單
+    setInterval(() => {
+      this.fetchAvailableTasks();
+    }, 10000);
   }
 
- // 取得已接單列表
-fetchTakingTasks() {
-  this.httpService.getTakingTasks(this.userId).subscribe({
-    next: (res) => {
-      let tasks = res.dtaskList ?? [];
+  // ================= 已接單 =================
+  fetchTakingTasks() {
+    this.httpService.getTakingTasks(this.userId).subscribe({
+      next: (res) => {
+        let tasks = res.dtaskList ?? [];
 
-      // 過濾今天的訂單
-      const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
-      tasks = tasks.filter(task => task.date === today);
+        const today = new Date().toISOString().split('T')[0];
+        tasks = tasks.filter(task => task.date === today);
 
-      tasks.forEach((item, index) => {
-        // 假商品資料
-        item.products = [
-          { name: "炸雞", price: 70, options: ["大辣"] },
-          { name: "薯條", price: 40, options: ["大份"] }
-        ];
-        item.totalPrice = 110;
+        // 只做最小初始化（❌ 不塞假資料）
+        tasks.forEach(item => {
+          if (item.estimatedTime === undefined) item.estimatedTime = 0;
+          item.products = [];
+        });
 
-        // 假地址
-        const fakeAddresses = [
-           '高雄市前鎮區興漁四路7號',
+        this.items.set(tasks);
+      },
+      error: (err) => {
+        console.error('取得已接單錯誤', err);
+      }
+    });
+  }
 
-           '高雄市前鎮區民權二路76號',
-            '高雄市前鎮區復興四路12號',
-           '高雄市前鎮區復興四路10號',
-
-
-        ];
-        item.customerAddress = fakeAddresses[index % fakeAddresses.length];
-
-        // 預設 estimatedTime
-        if (item.estimatedTime === undefined) item.estimatedTime = 0;
-      });
-
-      this.items.set(tasks);
-    },
-    error: (err) => {
-      console.error('取得已接單錯誤', err);
-    }
-  });
+  // ================= 可接單 =================
+  updateBottomItemDistance(event: {
+  orderNo: string;
+  distanceKm: number;
+  money: number;
+}) {
+  this.bottomItems = this.bottomItems.map(item =>
+    item.orderNo === event.orderNo
+      ? {
+          ...item,
+          distanceKm: event.distanceKm,
+          money: event.money,
+          calculated: true // ⭐ 關鍵：標記算過
+        }
+      : item
+  );
 }
 
-
-  // 取得可接單列表
   fetchAvailableTasks() {
   this.httpService.getAvailableTasks().subscribe({
     next: (res) => {
       let available = res.dtaskList ?? [];
 
-      // 過濾今天的訂單
-      const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+      const today = new Date().toISOString().split('T')[0];
       available = available.filter(task => task.date === today);
 
-      available.forEach((item, index) => {
-        item.products = [
-          { name: "炸雞", price: 70, options: ["大辣"] },
-          { name: "薯條", price: 40, options: ["大份"] }
-        ];
-        item.totalPrice = 110;
-
-        const fakeAddresses = [
-            '高雄市前鎮區興漁四路7號',
-             '高雄市前鎮區民權二路76號',
-            '高雄市前鎮區復興四路12號',
-
-           '高雄市前鎮區復興四路10號',
-        ];
-        item.customerAddress = fakeAddresses[index % fakeAddresses.length];
-
-        if (item.estimatedTime === undefined) item.estimatedTime = 0;
-      });
-
-      this.bottomItems = available.filter(
-        task => !this.items().some(i => i.orderNo === task.orderNo)
-      );
+      this.bottomItems = available
+        .filter(task => !this.items().some(i => i.orderNo === task.orderNo))
+        .map(task => {
+          const old = this.bottomItems.find(b => b.orderNo === task.orderNo);
+          return old ? old : {
+            ...task,
+            products: [],
+            calculated: false
+          };
+        });
     }
   });
 }
 
 
-  // 接單
+  // ================= 展開時抓訂單詳細 =================
+ loadOrderDetail(item: DeliveryTask) {
+  if (item.products && item.products.length > 0) return;
+
+  console.log('loading details for', item.orderNo);
+
+  this.httpService.getOrderDetailByCode(item.orderNo).subscribe({
+    next: (res) => {
+      console.log('order detail response:', res);
+      const products = res.orderDetailsList.flatMap(od =>
+        od.orderDetails.map(p => ({
+          name: p.productName,
+          price: 0,
+          options: p.detailList?.map(d => d.option) ?? []
+        }))
+      );
+
+      // 更新已接單
+      this.items.update(list =>
+        list.map(i =>
+          i.orderNo === item.orderNo
+            ? { ...i, products, customerAddress: res.customerAddress, totalPrice: res.totalPrice }
+            : i
+        )
+      );
+
+      // 更新可接單
+      this.bottomItems = this.bottomItems.map(i =>
+        i.orderNo === item.orderNo
+          ? { ...i, products, customerAddress: res.customerAddress, totalPrice: res.totalPrice }
+          : i
+      );
+    },
+    error: (err) => console.error('取得訂單詳細失敗', err)
+  });
+}
+
+
+
+
+
+  // ================= 接單 =================
   addToTop(item: DeliveryTask) {
     if (this.items().length >= 3) {
       this.openDialog('最多只能選 3 個！');
@@ -153,7 +183,6 @@ fetchTakingTasks() {
     this.httpService.takeOrder(item.orderNo, this.userId).subscribe({
       next: (res) => {
         if (res.code === 200) {
-          // 預設 estimatedTime 避免 undefined
           if (item.estimatedTime === undefined) item.estimatedTime = 0;
 
           this.items.update(list => [...list, item]);
@@ -162,40 +191,35 @@ fetchTakingTasks() {
           this.openDialog('接單失敗: ' + res.message);
         }
       },
-      error: (err) => {
-        console.error(err);
+      error: () => {
         this.openDialog('接單錯誤');
       }
     });
   }
 
-  // 標記已取餐
+  // ================= 已取餐 =================
   markPickedUp(item: DeliveryTask) {
     const estimatedTime = item.estimatedTime ?? 0;
-    console.log('準備送到後端的資料:', {
-    orderNo: item.orderNo,
-    status: 'pickup',
-    estimatedTime
-  });
 
     this.httpService.updateStatus(item.orderNo, 'pickup', estimatedTime).subscribe({
       next: (res) => {
         if (res.code === 200) {
           this.items.update(list =>
-            list.map(i => i.orderNo === item.orderNo ? { ...i, status: 'pickup' } : i)
+            list.map(i =>
+              i.orderNo === item.orderNo ? { ...i, status: 'pickup' } : i
+            )
           );
         } else {
-          this.openDialog('更新取餐狀態失敗: ' + res.message);
+          this.openDialog('更新取餐狀態失敗');
         }
       },
-      error: (err) => {
-        console.error('更新取餐狀態錯誤', err);
+      error: () => {
         this.openDialog('更新取餐狀態錯誤');
       }
     });
   }
 
-  // 標記已送達
+  // ================= 已送達 =================
   markDelivered(item: DeliveryTask) {
     this.httpService.updateStatus(item.orderNo, 'completed', 0).subscribe({
       next: (res) => {
@@ -204,17 +228,28 @@ fetchTakingTasks() {
             list.filter(i => i.orderNo !== item.orderNo)
           );
         } else {
-          this.openDialog('更新取餐狀態失敗: ' + res.message);
+          this.openDialog('更新送達狀態失敗');
         }
       },
-      error: (err) => {
-        console.error('更新取餐狀態錯誤', err);
-        this.openDialog('更新取餐狀態錯誤');
+      error: () => {
+        this.openDialog('更新送達狀態錯誤');
       }
     });
   }
 
-  // 登出
+  // ================= 更新距離與費用 =================
+  updateItemDistance(event: { orderNo: string, distanceKm: number, money: number }) {
+  this.items.update(list =>
+    list.map(item =>
+      item.orderNo === event.orderNo
+        ? { ...item, distanceKm: event.distanceKm, money: event.money }
+        : item
+    )
+  );
+}
+
+
+  // ================= 登出 =================
   Signout() {
     localStorage.clear();
     this.router.navigate(['/login']);
@@ -224,23 +259,9 @@ fetchTakingTasks() {
     this.dialog.open(Dialog, { data: { message } });
   }
 
-  // 更新距離與費用
-  updateItemDistance(event: { orderNo: string, distanceKm: number, money: number }) {
-    this.items.update(list =>
-      list.map(item =>
-        item.orderNo === event.orderNo
-          ? { ...item, distanceKm: event.distanceKm, money: event.money }
-          : item
-      )
-    );
-  }
-
-  //手機測試
+  // ================= 手機判斷 =================
   @HostListener('window:resize')
-checkDevice() {
-  this.isMobile = window.innerWidth <= 768;
-}
-
-
-
+  checkDevice() {
+    this.isMobile = window.innerWidth <= 768;
+  }
 }

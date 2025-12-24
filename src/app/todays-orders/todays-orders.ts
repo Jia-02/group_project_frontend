@@ -2,9 +2,10 @@ import { Component, signal } from '@angular/core';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { DeliveryTask, Http } from '../@service/http';
+import { MatIcon } from "@angular/material/icon";
 @Component({
   selector: 'app-todays-orders',
-  imports: [MatExpansionModule,RouterLink, RouterLinkActive, RouterOutlet],
+  imports: [MatExpansionModule, RouterLink, RouterLinkActive, RouterOutlet, MatIcon],
   templateUrl: './todays-orders.html',
   styleUrl: './todays-orders.scss',
 })
@@ -56,19 +57,32 @@ export class TodaysOrders {
 
   this.http.getCompletedByDate(today, this.deliveryId).subscribe(res => {
     if (res.code === 200 && res.dtaskList) {
-      // 抓到今天訂單後補假餐點
-      this.items = res.dtaskList.map((item, index) => {
-        // 假餐點
-        item.products = [
-          { name: "炸雞", price: 70, options: ["大辣"] },
-          { name: "薯條", price: 40, options: ["大份"] }
-        ];
-        // 計算總價
-        item.totalPrice = item.products.reduce((sum, p) => sum + p.price, 0);
-        return item;
-      });
+      this.items = res.dtaskList.map(item => ({
+        ...item,
+        products: [],      // 一開始空
+        totalPrice: 0
+      }));
     } else {
       this.items = [];
+    }
+  });
+}
+
+loadOrderDetail(item: DeliveryTask) {
+  if (item.products.length > 0) return;
+
+  this.http.getOrderDetailByCode(item.orderNo).subscribe({
+    next: (res) => {
+      const products = res.orderDetailsList.flatMap(od =>
+        od.orderDetails.map(p => ({
+          name: p.productName,
+          price: 0, // 後端沒給就 0
+          options: p.detailList?.map(d => d.option) ?? []
+        }))
+      );
+
+      item.products = products;
+      item.totalPrice = res.totalPrice;
     }
   });
 }

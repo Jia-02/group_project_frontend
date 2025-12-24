@@ -3,10 +3,11 @@ import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/rou
 import { MatDialog } from '@angular/material/dialog';
 import { Http } from '../@service/http';
 import Chart from 'chart.js/auto';
+import { MatIcon } from "@angular/material/icon";
 
 @Component({
   selector: 'app-analazy',
-  imports: [RouterLink, RouterLinkActive, RouterOutlet],
+  imports: [RouterLink, RouterLinkActive, RouterOutlet, MatIcon],
   templateUrl: './analazy.html',
   styleUrl: './analazy.scss',
 })
@@ -134,31 +135,33 @@ renderChart() {
   this.chart = new Chart(ctx, {
     type: 'bar',
     data: {
-      labels: this.getWeekDates(), // X 軸顯示實際日期
+      labels: this.getWeekDates(),
       datasets: [{
         label: '每日薪資',
         data: this.weekSalary,
-        backgroundColor: '#00a6fb'
+        backgroundColor: '#013c70', // 改為深藍色，呼應 Header 顏色
+        borderRadius: 5,           // 讓長條圖圓角化更美觀
       }]
     },
     options: {
       responsive: true,
+      maintainAspectRatio: false, // 關鍵：允許圖表填滿 CSS 設定的高度
       plugins: {
         legend: { display: false }
       },
       scales: {
         x: {
-          title: { display: true, text: '日期' }
+          grid: { display: false }, // 隱藏 X 軸網格線，視覺更乾淨
+          ticks: { font: { size: 10 } } // 手機版字體縮小一點點
         },
         y: {
           beginAtZero: true,
-          title: { display: true, text: '薪資($)' }
+          grid: { color: '#eee' }   // 網格線顏色調淡
         }
       }
     }
   });
 }
-
 updateChart() {
   if (this.chart) {
     this.chart.data.datasets[0].data = this.weekSalary;
