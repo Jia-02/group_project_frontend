@@ -1,56 +1,100 @@
-
-
+/* --- 全域設定 --- */
 .container {
   display: flex;
   flex-direction: column;
-  height: 100vh; /* 確保整個頁面高度占滿 */
+  height: 100vh;
+  background-color: #f0f2f5;
+  overflow: hidden;
+  font-family: sans-serif;
 }
 
+/* --- Header (統一風格) --- */
 .header {
-  background-color:#fe6d13;
-  color: white;
-  padding: 20px;
-  font-size: 2rem;
   flex-shrink: 0;
+  background-color: #013c70;
+  color: #fff;
   display: flex;
   align-items: center;
-  position: relative; /* 允許絕對定位文字 */
+  justify-content: space-between;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  z-index: 10;
+  height: 70px;
+  padding: 0 16px;
 }
 
+.header img {
+  height: 45px;
+  width: auto;
+  object-fit: contain;
+  margin-right: 10px;
+}
 
+.nameBox {
+  margin: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+}
 
-.header button {
-  margin-left: auto;
-    background: #013c70;
+.nameDiv {
+  display: flex;
+  align-items: center;
+  margin: 2px 0;
+  font-size: 14px;
+}
+
+.nameLable {
+  margin-right: 6px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 12px;
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #013c70;
+  white-space: nowrap;
+}
+
+.logout-btn {
+  background: transparent;
   color: #fff;
-  box-shadow: 0 2px 4px rgba(1, 60, 112, 0.2);
-
-  border: none;
-  padding: 10px 18px;
-  border-radius: 6px;
-  font-size: 1rem;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
+  margin-left: 5px;
 }
 
+/* --- 導覽列 (橫向滑動) --- */
 .main {
   display: flex;
-  flex: 1; /* 主要區域佔據剩餘空間 */
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+  position: relative;
 }
 
 .sidebar {
-  width: 250px; /* 固定側邊欄寬度 */
-  background-color: #013c70;
-  padding: 20px; /* 增加側邊欄內邊距 */
-  height: 100%; /* 使側邊欄佔滿頁面高度 */
-
+  flex-shrink: 0;
+  background: #fff;
+  padding: 10px 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
+
+.sidebar::-webkit-scrollbar {
+  display: none;
+}
+
 .sidebar nav ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-.sidebar nav ul li {
-  margin: 10px 0;
+  display: flex;
+  list-style: none;
+  padding: 0 16px;
+  margin: 0;
+  gap: 12px;
 }
 
 .sidebar nav ul li a {
@@ -58,91 +102,181 @@
   color: #ffffff;
   font-size: 1.2rem; /* 增大側邊欄文字 */
   display: block;
+  text-decoration: none;
+  color: #555;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 16px;
+  background-color: #f5f5f5;
+  border-radius: 20px;
+  white-space: nowrap;
+  transition: all 0.2s;
 }
 
+.sidebar nav ul li a:active,
+.sidebar nav ul li a:hover {
+  background-color: #e3f2fd;
+  color: #013c70;
+}
+
+/* --- 內容區 --- */
 .content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  padding-bottom: 80px;
   display: flex;
-  flex-direction: column; /* 讓內容區域上下排列 */
-  flex: 1; /* 讓內容區域自動擴展 */
-  padding: 20px;
+  flex-direction: column;
+  gap: 16px; /* 卡片之間的間距 */
 }
 
-.top-section, .bottom-section {
-   background-color:#F8F9FA;
+/* --- 控制面板卡片 (日期與按鈕) --- */
+.control-card {
+    background-color:#F8F9FA;
   flex: 1; /* 讓上下兩個區域平分 */
   margin-bottom: 20px; /* 上下區域之間留一些間隔 */
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
-.bottom-section {
-  margin-bottom: 0; /* 最後一個區域不需要下邊距 */
+.date-display {
+  text-align: center;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
 }
 
+.date-display .label {
+  display: block;
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 4px;
+}
 
-//圖表
+.date-display .value {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.week-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.nav-btn {
+  flex: 1; /* 按鈕平均分配寬度 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  border-radius: 8px;
+  color: #555;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.nav-btn:active {
+  background-color: #f0f0f0;
+}
+
+/* Icon 微調 */
+.nav-btn mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.nav-btn.prev mat-icon { margin-right: 4px; }
+.nav-btn.next mat-icon { margin-left: 4px; }
+
+
+/* --- 總金額卡片 --- */
+.summary-card {
+  background: linear-gradient(135deg, #013c70 0%, #025299 100%); /* 深藍漸層背景 */
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(1, 60, 112, 0.2);
+}
+
+.summary-card h3 {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  opacity: 0.9;
+  font-weight: 400;
+}
+
+.money-text {
+  font-size: 36px; /* 特大數字 */
+  font-weight: 700;
+  color: #fff; /* 改為白色，因為背景是深藍 */
+  text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.money-text .unit {
+  font-size: 16px;
+  margin-left: 4px;
+  opacity: 0.8;
+}
+
+/* --- 圖表卡片 --- */
+/* --- 圖表卡片修正 --- */
+.chart-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  /* 確保卡片本身不會溢出 */
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .chart-wrapper {
-  width: 100%;      /* 可以限制最大寬度 */
-  max-width: 900px; /* 圖表最大寬度 */
-  height: 900px;    /* 圖表高度，可依需求調整 */
-  margin-top: 20px; /* 上方間距 */
+  position: relative;
+  /* 關鍵：設定為可視區域的高度，但限制寬度 */
+  height: 300px;
+  width: 100%;
+  /* 確保 Canvas 不會撐破容器 */
+  overflow: hidden;
 }
 
-
-
-
-
-@media (max-width: 768px) {
-
-  .header {
-    flex-direction: column;      /* 垂直排 */
-    align-items: center;
-    text-align: center;
-    padding: 15px;
-  }
-
-
-  .header p {
-    margin: 3px 0;
-    font-size: 1rem;
-    width: 100%;
-  }
-
-  .header button {
-    width: auto;           /* 不再滿版 */
-    padding: 8px 16px;
-    font-size: 0.9rem;
-    margin: 12px 0 0 0;    /* 上方留間距 */
-    margin-left: 0;         /*  清除靠右 */
-    align-self: center;    /* 置中 */
-  }
-
-  /* 其他保持一樣 ↓ */
-
-  .main {
-    flex-direction: column;
-  }
-
-  .sidebar {
-    width: 100%;
-    height: auto;
-    padding: 10px;
-    text-align: center;
-  }
-
-  .sidebar nav ul li {
-    display: inline-block;
-    margin: 0 10px;
-  }
-
-  .sidebar nav ul li a {
-    font-size: 1rem;
-  }
-
+/* --- 強制手機適配微調 --- */
+@media (max-width: 480px) {
   .content {
-    padding: 10px;
+    padding: 12px; /* 縮小邊距，爭取空間 */
+    gap: 12px;
   }
 
-  .top-section, .bottom-section {
-    margin-bottom: 5px;
-    flex: none;
+  .control-card {
+    padding: 12px;
+  }
+
+  /* 讓上一週、下一週按鈕在極窄螢幕下也能並排或縮小文字 */
+  .nav-btn {
+    font-size: 13px;
+    padding: 8px 4px;
+
+    mat-icon {
+      font-size: 18px;
+    }
+  }
+
+  .money-text {
+    font-size: 32px; /* 稍微縮小金額字體防止折行 */
+  }
+
+  .chart-wrapper {
+    height: 250px; /* 手機版圖表高度稍微降一點，視覺比例較好 */
   }
 }

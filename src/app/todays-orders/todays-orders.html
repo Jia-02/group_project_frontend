@@ -1,43 +1,67 @@
 <div class="container">
   <div class="header">
+    <img src="logo1.png" alt="Logo">
 
-    <p >外送員:{{name}}/</p>
-    <p>電話:{{phone}}</p>
-    <button class="logout-btn" (click)="Signout()">登出</button>
+    <div class="nameBox">
+      <div class="nameDiv">
+        <span class="nameLable">外送員</span>
+        <span>{{name}}</span>
+      </div>
+      <div class="nameDiv">
+        <span class="nameLable">電　話</span>
+        <span>{{phone}}</span>
+      </div>
+    </div>
+
+    <div class="logout-btn" (click)="Signout()">
+      <mat-icon fontIcon="logout"></mat-icon>
+    </div>
   </div>
+
   <div class="main">
     <div class="sidebar">
       <nav>
         <ul>
-          <li><a routerLink="/front">首頁</a></li>
-          <li><a routerLink="/todays/orders">今日已完成訂單</a></li>
-           <li><a routerLink="/analyze">薪資分析</a></li>
-          <li><a routerLink="/historyorders">歷史訂單</a></li>
+          <li><a routerLink="/front" routerLinkActive="active">首頁</a></li>
+          <li><a routerLink="/todays/orders" routerLinkActive="active">今日已完成訂單</a></li>
+          <li><a routerLink="/analyze" routerLinkActive="active">薪資分析</a></li>
+          <li><a routerLink="/historyorders" routerLinkActive="active">歷史訂單</a></li>
         </ul>
       </nav>
     </div>
+
     <div class="content">
       <div class="bottom-section">
-        <h1 class="h1">今日接單數 {{ items.length }} /  總收入{{totalMoney}}</h1>
-        <mat-accordion>
-          @for (item of items; track $index) {
-          <mat-expansion-panel hideToggle>
-            <mat-expansion-panel-header>
-             <mat-panel-title>{{ item.orderNo }}</mat-panel-title>
-              <mat-panel-description>{{ item.distanceKm }}km / {{item.money}}$</mat-panel-description>
-              <mat-panel-description>{{item.date}}</mat-panel-description>
-            </mat-expansion-panel-header>
-            <p>{{ item.date }}</p>
+        <h2>今日接單數 {{ items.length }} / 總收入 ${{ totalMoney }}</h2>
 
-         @for (p of item.products; track p.name) {
-          <p>{{ p.name }} - {{ p.options.join(', ') }}</p>
-        }
-         <p>總價: {{ item.totalPrice }}$</p>
-              </mat-expansion-panel>
+        <mat-accordion>
+          @for (item of items; track item.orderNo) {
+          <mat-expansion-panel (opened)="loadOrderDetail(item)" hideToggle>
+            <mat-expansion-panel-header>
+              <mat-panel-title>{{ item.orderNo }}</mat-panel-title>
+              <mat-panel-description>
+                <span class="info-row">{{ item.distanceKm }}km / ${{ item.money }}</span>
+                <span class="info-row date">{{ item.date }}</span>
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+
+            @for (p of item.products; track $index) {
+              <div class="product-item">
+                <div class="product-info">
+                  <span class="p-name">{{ p.name }}</span>
+                  <span class="p-options">({{ p.options.join(', ') }})</span>
+                </div>
+              </div>
             }
+
+            <div class="order-footer">
+              <p class="total-price">總價: <span>${{ item.totalPrice }}</span></p>
+            </div>
+
+          </mat-expansion-panel>
+          }
         </mat-accordion>
       </div>
     </div>
   </div>
 </div>
-

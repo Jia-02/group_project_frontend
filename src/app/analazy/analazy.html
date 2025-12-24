@@ -1,9 +1,19 @@
 <div class="container">
   <div class="header">
-
-    <p>外送員: {{name}}</p>
-    <p>電話: {{phone}}</p>
-    <button (click)="Signout()">登出</button>
+    <img src="logo1.png" alt="Logo">
+    <div class="nameBox">
+      <div class="nameDiv">
+        <span class="nameLable">外送員</span>
+        <span> {{name}}</span>
+      </div>
+      <div class="nameDiv">
+        <span class="nameLable">電　話</span>
+        <span> {{phone}}</span>
+      </div>
+    </div>
+    <div class="logout-btn">
+      <mat-icon fontIcon="logout" (click)="Signout()"></mat-icon>
+    </div>
   </div>
 
   <div class="main">
@@ -17,19 +27,34 @@
         </ul>
       </nav>
     </div>
+
     <div class="content">
-      <h3>本週: {{ dateRangeStr }}</h3>
-      <div class="week-buttons">
-        <button (click)="changeWeek(-1)">上一週</button>
-        <button (click)="changeWeek(1)">下一週</button>
-      </div>
-      <h2 style="margin: 10px 0; color: #2e7d32;">
-        本週收入：${{ weekTotal }}
-      </h2>
-      <div class="chart-wrapper">
-        <canvas id="barChart"></canvas>
+      <div class="control-card">
+        <div class="date-display">
+          <span class="label">統計區間</span>
+          <span class="value">{{ dateRangeStr }}</span>
+        </div>
+
+        <div class="week-buttons">
+          <button class="nav-btn prev" (click)="changeWeek(-1)">
+            <mat-icon>chevron_left</mat-icon> 上一週
+          </button>
+          <button class="nav-btn next" (click)="changeWeek(1)">
+            下一週 <mat-icon>chevron_right</mat-icon>
+          </button>
+        </div>
       </div>
 
+      <div class="summary-card">
+        <h3>本週總收入</h3>
+        <div class="money-text">${{ weekTotal }} <span class="unit"></span></div>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-wrapper">
+          <canvas id="barChart"></canvas>
+        </div>
+      </div>
 
     </div>
   </div>

@@ -77,6 +77,14 @@ export class Http {
     );
   }
 
+
+  // 抓取訂單詳細資料（依 orderNo）
+getOrderDetailByCode(orderNo: string): Observable<OrderDetailRes> {
+  return this.http.get<OrderDetailRes>(
+    `${this.baseUrl}/orders/code`,
+    { params: { orderNo } }
+  );
+}
 }
 
 
@@ -122,4 +130,20 @@ export interface DeliveryTask {
   money: number;
   receiveMoney: boolean;
   estimatedTime?: number;
+  calculated?: boolean;
+}
+export interface OrderDetailRes {
+  ordersCode: string;
+  customerAddress: string;
+  totalPrice: number;
+  orderDetailsList: {
+    orderDetails: {
+      productName: string;
+      productPrice: number;
+      detailList: {
+        option: string;
+        addPrice: number;
+      }[];
+    }[];
+  }[];
 }
