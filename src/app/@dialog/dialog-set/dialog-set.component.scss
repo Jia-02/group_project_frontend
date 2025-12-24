@@ -1,5 +1,3 @@
-/* --- 價格靠右對齊的核心邏輯 --- */
-
 /* 1. 主餐部分 */
 .checkboxItem {
   display: flex;
@@ -11,14 +9,11 @@
 }
 
 .checkboxItem label {
-  /* 讓 label 區塊佔滿除了 checkbox 以外的所有寬度 */
   flex: 1;
   display: flex;
   align-items: center;
-  /* 關鍵：將名稱與價格分散到兩端 */
   justify-content: space-between;
   cursor: pointer;
-  /* 蓋掉原本 label 的預設樣式 */
   margin-bottom: 0 !important;
   font-weight: 500;
   color: #333;
@@ -72,7 +67,7 @@
 
 .diaTitle {
   margin: 0;
-  padding: 10px 30px;
+  padding: 8px 30px 10px 30px;
   font-size: 18px;
   font-weight: 600;
   color: #fdfdfd;

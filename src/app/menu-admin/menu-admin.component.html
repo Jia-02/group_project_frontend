@@ -2,7 +2,7 @@
 
   <div class="content">
 
-    <mat-tab-group class="categoryTabs" [(selectedIndex)]="selectedTabIndex" (selectedTabChange)="onTabChange($event)">
+    <mat-tab-group class="categoryTabs" animationDuration="0ms" [(selectedIndex)]="selectedTabIndex" (selectedTabChange)="onTabChange($event)">
       @for (category of allCategoryDto; track category.categoryId) {
       <mat-tab>
         <!-- tab區域 -->

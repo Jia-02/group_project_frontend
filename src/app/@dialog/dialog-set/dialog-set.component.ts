@@ -371,28 +371,59 @@ export class DialogSetComponent {
       });
   }
 
-  get totalValue(): number {
-    let total = 0;
-    // 累加主餐價格
-    for (const id of this.selections.mainIds) {
-      for (const p of this.mainDishList) {
-        if (p.productId == id) { total += p.productPrice; break; }
+get totalValue(): number {
+  let total = 0;
+
+  // 1. 主餐：找出勾選中的最高價格
+  let maxMainPrice = 0;
+  for (let i = 0; i < this.selections.mainIds.length; i++) {
+    let id = this.selections.mainIds[i];
+    for (let j = 0; j < this.mainDishList.length; j++) {
+      let p = this.mainDishList[j];
+      if (p.productId == id) {
+        if (p.productPrice > maxMainPrice) {
+          maxMainPrice = p.productPrice;
+        }
+        break;
       }
     }
-    // 累加附餐價格
-    for (const id of this.selections.sideIds) {
-      for (const p of this.sideDishList) {
-        if (p.productId == id) { total += p.productPrice; break; }
-      }
-    }
-    // 累加飲料價格
-    for (const id of this.selections.drinkIds) {
-      for (const p of this.drinkDishList) {
-        if (p.productId == id) { total += p.productPrice; break; }
-      }
-    }
-    return total;
   }
+  total = total + maxMainPrice;
+
+  // 2. 附餐：找出勾選中的最高價格
+  let maxSidePrice = 0;
+  for (let i = 0; i < this.selections.sideIds.length; i++) {
+    let id = this.selections.sideIds[i];
+    for (let j = 0; j < this.sideDishList.length; j++) {
+      let p = this.sideDishList[j];
+      if (p.productId == id) {
+        if (p.productPrice > maxSidePrice) {
+          maxSidePrice = p.productPrice;
+        }
+        break;
+      }
+    }
+  }
+  total = total + maxSidePrice;
+
+  // 3. 飲料：找出勾選中的最高價格
+  let maxDrinkPrice = 0;
+  for (let i = 0; i < this.selections.drinkIds.length; i++) {
+    let id = this.selections.drinkIds[i];
+    for (let j = 0; j < this.drinkDishList.length; j++) {
+      let p = this.drinkDishList[j];
+      if (p.productId == id) {
+        if (p.productPrice > maxDrinkPrice) {
+          maxDrinkPrice = p.productPrice;
+        }
+        break;
+      }
+    }
+  }
+  total = total + maxDrinkPrice;
+
+  return total;
+}
 
   // 處理檔案選取事件
   onFileSelected(event: any) {
