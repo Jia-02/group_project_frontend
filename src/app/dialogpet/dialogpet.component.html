@@ -1,0 +1,22 @@
+<!-- 這是點選動物商品卡跳出來詳細資訊的dialog -->
+<h2>動物詳細訊息</h2>
+<mat-dialog-content class="mat-typography">
+  <!-- 圖片 -->
+  <img src="{{ img }}" width="252px" name="inputCatImg" style="border-radius: 8px" />
+  <!-- 詳細敘述 -->
+  <div class="animal_info">
+    <p>姓名：{{ name }}</p>
+    <p>年齡：{{ age }}歲</p>
+    <p>關於我：</p>
+    <pre>{{ info }}</pre>
+    <!-- <p class="about_pet">{{ catInfo }}</p> -->
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <!-- <button matButton mat-dialog-close>Cancel</button> -->
+  <div class="btn">
+    <!-- <button class="cancelBtn" [mat-dialog-close]="true" cdkFocusInitial>取消</button> -->
+    <button class="confirmBtn" [mat-dialog-close]="true" cdkFocusInitial>確認</button>
+  </div>
+  <!-- 修改按鈕串update api  -->
+</mat-dialog-actions>

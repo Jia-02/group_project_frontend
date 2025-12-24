@@ -1,7 +1,6 @@
-<!-- 要記得弄個新增跟刪除鈕 還要給他們超連結 跟小手-->
 <!-- 還需要一個搜尋框/_>\ 才能串查詢 -->
 <header>
-  <div class="title">可愛卯咪們</div>
+  <div class="title">貓咪名簿</div>
   <div class="search">
     <a style="cursor: pointer" type="button" (click)="search()">
       <input class="search_input" (keyup)="changeInput($event)" />
@@ -16,41 +15,44 @@
     <div class="postcard">
       <!-- 圖片 -->
       <div class="img_container">
-        <img src="{{ data.catImg }}" class="animal_img" />
+        <img src="{{ data.catImg }}" class="animal_img" (click)="openDialog(data)" />
       </div>
       <!-- 詳細敘述 -->
-      <div class="animal_info">
+      <div class="animal_info" (click)="openDialog(data)">
         <p>姓名：{{ data.catName }}</p>
-        <p>年齡：{{ data.age }}歲</p>
+        <!-- <p>年齡：{{ data.age }}歲</p>
         <p>關於我：</p>
-        <p class="about_pet" [class.open]="data.isExpanded" (click)="openInfo(data)">
+        <p class="about_pet" [class.open]="data.isExpanded">
           {{ data.catInfo }}
-        </p>
-        <p class="test" (click)="openInfo(data)">
-          {{ data.isExpanded ? '(顯示更少)' : '(顯示更多)' }}
-        </p>
+        </p> -->
       </div>
     </div>
     }@else if (!data.catStatus) {
     <div class="postcard_f">
       <p class="no_work">今天不上班</p>
       <!-- 圖片 -->
-      <div class="img_container">
-        <div class="animal_img_d" [style.background-image]="'url(' + data.catImg + ')'"></div>
-      </div>
+      <label>
+        <div class="img_container_f">
+          <img src="{{ data.catImg }}" class="animal_img" (click)="openDialog(data)" />
+        </div>
+      </label>
       <!-- 詳細敘述 -->
-      <div class="animal_info_f">
+      <div class="animal_info_f" (click)="openDialog(data)">
         <p>姓名：{{ data.catName }}</p>
-        <p>年齡：{{ data.age }}歲</p>
+        <!-- <p>年齡：{{ data.age }}歲</p>
         <p>關於我：</p>
-        <p class="about_pet" (click)="openInfo(data)">
+        <p class="about_pet">
           {{ data.catInfo }}
-        </p>
-        <p class="test" (click)="openInfo(data)">
-          {{ data.isExpanded ? '(顯示更少)' : '(顯示更多)' }}
-        </p>
+        </p> -->
       </div>
     </div>
     } }
   </div>
 </main>
+<!-- <button (click)="go()" class="btn">
+  <p>回首頁</p>
+  <ul>
+    <i class="fa-solid fa-house"></i>
+  </ul>
+</button> -->
+<footer></footer>

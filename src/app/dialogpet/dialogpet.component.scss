@@ -1,0 +1,82 @@
+h2 {
+  margin: 0;
+  padding: 20px 30px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #fdfdfd;
+  background-color: #001f4d;
+  border-bottom: 1px solid #eee;
+}
+
+.mat-typography {
+  padding: 30px !important;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.imgBtn {
+  width: 100px;
+  border-radius: 8px;
+  background-color: #001f4d;
+  color: #fdfdfd;
+}
+
+.imgBtn :hover {
+  background-color: #f2c58e;
+  box-shadow: 0 2px 4px rgba(1, 60, 112, 0.25);
+}
+
+.imgBtn p {
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+  text-align: center;
+}
+
+pre {
+  font-size: 14px;
+  white-space: pre-wrap;
+}
+
+.work {
+  display: flex;
+}
+
+button {
+  padding: 10px 25px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+}
+
+/* 取消按鈕 */
+.cancelBtn {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  color: #666;
+  margin-right: 20px;
+}
+
+.cancelBtn:hover {
+  background-color: #f8f9fa;
+  color: #333;
+}
+
+/* 確定按鈕 */
+.confirmBtn {
+  background-color: #001f4d;
+  color: #fff;
+}
+
+.confirmBtn:hover {
+  background-color: #f2c58e;
+  color: #333;
+  box-shadow: 0 2px 4px rgba(1, 60, 112, 0.25);
+}
