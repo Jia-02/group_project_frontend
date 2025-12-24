@@ -3,36 +3,49 @@
   @if(mealStatus){
   <div class="card status-card">
     <div class="card-header">
-      <span class="label">訂單 ID</span>
+      <span class="label">訂單編號</span>
       <span class="value-id">#{{mealStatus.ordersId}}</span>
+    </div>
+
+    <div class="info-row">
+      <span class="label">貼心提醒</span>
+      <span class="value">若為外送/外帶的顧客，欲離開畫面，請記住訂單編號以便查詢即時狀態。</span>
     </div>
 
     <div class="info-row highlight-row">
       @if(mealStatus.paid && mealStatus.mealStatus != "取消"){
-        <span class="label">訂單狀態</span>
-        <span class="value-status">{{mealStatus.mealStatus}}</span>
+      <span class="label">訂單狀態</span>
+      <span class="value-status">{{mealStatus.mealStatus}}</span>
       }@else if(mealStatus.mealStatus != "取消"){
-        <span class="label">訂單狀態</span>
-        <span class="value-status">請至櫃檯付款</span>
+      <span class="label">訂單狀態</span>
+      <span class="value-status">請至櫃檯付款</span>
       }@else{
-        <span class="label">訂單狀態</span>
-        <span class="value-status">取消</span>
+      <span class="label">訂單狀態</span>
+      <span class="value-status">取消</span>
       }
 
     </div>
 
-    @if(mealStatus.mealStatus == "製作中" || mealStatus.mealStatus == "已取餐"){
-      <div class="time-grid">
+    @if(mealStatus.mealStatus == "製作中" || mealStatus.mealStatus == "餐點製作完成"||mealStatus.mealStatus == "外送員已取餐"||
+    mealStatus.mealStatus == "外送員已在路上"){
+    <div class="time-grid">
       <div class="time-box">
         @if(mealStatus.mealStatus == "製作中"){
-          <span class="time-label">製作完成時間剩餘</span>
-          <span class="time-value">{{mealStatus.estimatedTime}} <small>分</small></span>
+        <span class="time-label">製作完成時間剩餘</span>
+        <span class="time-value">{{mealStatus.estimatedTime}} <small>分</small></span>
         }
-        @else if(mealStatus.mealStatus == "已取餐"){
-          <span class="time-label">餐點送達時間剩餘</span>
-          <span class="time-value">{{mealStatus.estimatedTime}} <small>分</small></span>
+        @else if(mealStatus.mealStatus == "餐點製作完成"){
+        <span class="time-label">外送員抵達餐廳時間剩餘</span>
+        <span class="time-value">5<small>分</small></span>
         }
-
+        @else if(mealStatus.mealStatus == "外送員已取餐"){
+        <span class="time-label">正在為您估算送達剩餘時間</span>
+        <span class="time-value">請稍後</span>
+        }
+        @else if(mealStatus.mealStatus == "外送員已在路上"){
+        <span class="time-label">餐點送達時間剩餘</span>
+        <span class="time-value">{{mealStatus.estimatedTime}} <small>分</small></span>
+        }
       </div>
       <!-- <div class="time-box">
         <span class="time-label">預計送達</span>
@@ -48,11 +61,11 @@
       <span class="label">用餐類型</span>
       <span class="value">
         @if(mealStatus.order.ordersType == "T"){
-          外帶
+        外帶
         }@else if(mealStatus.order.ordersType == "D"){
-          外送
+        外送
         }@else {
-          內用 (桌號: {{mealStatus.order.tableId}})
+        內用 (桌號: {{mealStatus.order.tableId}})
         }
       </span>
     </div>
@@ -66,16 +79,15 @@
       <p class="section-title">餐點製作狀態</p>
       <div class="item-list">
         @for(order of mealStatus.orderDetailsList;track order){
-          @for(product of order.orderDetails;track product){
-          <div class="item-row">
-            <span class="item-name">{{product.productName}}</span>
-            <span class="item-status"
-                  [class.done]="product.mealStatus === '完成'"
-                  [class.cooking]="product.mealStatus === '製作中'">
-              {{product.mealStatus}}
-            </span>
-          </div>
-          }
+        @for(product of order.orderDetails;track product){
+        <div class="item-row">
+          <span class="item-name">{{product.productName}}</span>
+          <span class="item-status" [class.done]="product.mealStatus === '完成'"
+            [class.cooking]="product.mealStatus === '製作中'">
+            {{product.mealStatus}}
+          </span>
+        </div>
+        }
         }
       </div>
     </div>
