@@ -308,7 +308,8 @@ export class TableComponent {
             tablePositionY: this.editTable.tablePositionY,
             lengthX: this.editTable.lengthX,
             lengthY: this.editTable.lengthY
-          }, flag: false, mod: "編輯"
+          }, flag: false, mod: "編輯",
+          disableClose: true
         },
         width: 'auto',
         height: 'auto'
