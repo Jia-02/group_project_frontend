@@ -45,7 +45,7 @@ export class DialogReserveComponent {
     reservationPhone: '',
     reservationName: '',
     reservationCount: 0,
-    reservationAdultCount: 0,
+    reservationAdultCount: 1,
     reservationChildCount: 0,
     reservationStatus: false,
     reservationNote: '',

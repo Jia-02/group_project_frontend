@@ -66,7 +66,7 @@
         <label><span>* </span>大人</label>
         <select class="styledInput" [(ngModel)]="reservation.reservationAdultCount"
           (ngModelChange)="changePeople(true)">
-          <option [ngValue]="0">0</option>
+          <!-- <option [ngValue]="1">1</option> -->
           @for (data of adultList; track data) {
           <option [value]="data">{{ data }}</option>
           }
