@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTabChangeEvent, MatTabsModule } from '@angular/material/tabs';
 
@@ -23,6 +23,8 @@ import { DialogNoticeComponent } from '../@dialog/dialog-notice/dialog-notice.co
   styleUrl: './menu.component.scss'
 })
 export class MenuComponent {
+  // 取得 tab header 的原生 DOM 元素
+  @ViewChild('tabGroup', { read: ElementRef }) tabGroup!: ElementRef;
   ordersType: string = '';
   tableId: string = '';
   currentCart: any[] = [];
@@ -125,6 +127,23 @@ export class MenuComponent {
 
   onTabChange(event: MatTabChangeEvent): void {
     if (event.index < this.categories.length) {
+      // 先載入資料
+      if (event.index < this.categories.length) {
+        this.loadProductsForCategory(event.index);
+      }
+
+      // 處理捲動位置：自動將選中的 Tab 移到可見範圍中心
+      // 使用 setTimeout 確保 MDC 狀態已更新 (mdc-tab--active)
+      setTimeout(() => {
+        const activeTab = this.tabGroup.nativeElement.querySelector('.mdc-tab--active');
+        if (activeTab) {
+          activeTab.scrollIntoView({
+            behavior: 'smooth',
+            inline: 'center', // 讓選中的 Tab 居中
+            block: 'nearest'
+          });
+        }
+      }, 100);
       this.loadProductsForCategory(event.index);
     }
   }
