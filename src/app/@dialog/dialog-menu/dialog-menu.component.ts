@@ -121,6 +121,7 @@ export class DialogMenuComponent {
 
   // 更新商品
   updateProduct() {
+    this.loadingServiceService.show();
     this.httpClientService.postApi('product/update', this.productList)
       .subscribe((res: any) => {
         if (res.code == 200) {
