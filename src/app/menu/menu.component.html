@@ -12,20 +12,20 @@
 
 <div class="content-container">
   @if (!isLoadingCategories) {
-  <mat-tab-group (selectedTabChange)="onTabChange($event)">
+  <mat-tab-group #tabGroup (selectedTabChange)="onTabChange($event)" disablePagination="true">
     @for (category of categories; track category.categoryId) {
     <mat-tab [label]="category.categoryType">
       <div>
         @if (category.products && !category.isLoadingProducts) {
-        @for (item of category.products; track item.productId) {
-        <div (click)="openProductDetail(category.categoryId, item.productId)" class="productCss">
-          <span>{{ item.productName }}<br>
-            <span class="priceCss">$NT{{ item.productPrice }}</span></span>
+          @for (item of category.products; track item.productId) {
+          <div (click)="openProductDetail(category.categoryId, item.productId)" class="productCss">
+            <span>{{ item.productName }}<br>
+              <span class="priceCss">$NT{{ item.productPrice }}</span></span>
 
-        </div>
-        } @empty {
-        <p>此分類暫無商品。</p>
-        }
+          </div>
+          } @empty {
+            <p>此分類暫無商品。</p>
+          }
         } @else {
         <p>商品載入中...</p>
         }
