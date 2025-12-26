@@ -33,8 +33,8 @@
         <h2 class="section-title">歷史訂單查詢</h2>
 
         <div class="filter-section">
-          <div class="filter-group">
-            <mat-form-field appearance="outline" class="full-width">
+          <div class="single-date-row">
+            <mat-form-field appearance="outline">
               <mat-label>選擇單一日期</mat-label>
               <input matInput [matDatepicker]="picker" [(ngModel)]="selectedDate" (dateChange)="filterBySingleDate($event)">
               <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>

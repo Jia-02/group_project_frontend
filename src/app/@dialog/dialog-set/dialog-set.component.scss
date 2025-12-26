@@ -271,3 +271,7 @@
 .confirmBtn:hover {
   background-color: #F2C58E;
 }
+
+::ng-deep .cdk-overlay-pane.mat-mdc-dialog-panel {
+  max-width: max-content !important;
+}
