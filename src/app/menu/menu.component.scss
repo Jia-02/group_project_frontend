@@ -2,7 +2,8 @@
 .box {
   height: 100vh;
   display: flex;
-  flex-direction: column; /* 上下排列模式 */
+  flex-direction: column;
+  /* 上下排列模式 */
   overflow: hidden;
   background-color: #fff;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -12,23 +13,20 @@
 
 /* 標題：固定在最上方 */
 .box h2 {
-  flex-shrink: 0; /* 禁止被壓縮 */
+  flex-shrink: 0;
   margin: 0;
-  padding: 16px 20px;
-  background-color: #fff;
+  padding: 0px 10px;
   z-index: 10;
   font-size: 18px;
   font-weight: 700;
-  border-bottom: 1px solid #f0f0f0;
-  /* 加一點陰影，讓它浮在內容上面 */
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
   display: flex;
   align-items: center;
 }
 
 /* 內容容器 */
 .content-container {
-  flex: 1; /* 自動填滿標題下方的所有空間 */
+  flex: 1;
+  /* 自動填滿標題下方的所有空間 */
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -45,7 +43,8 @@
 
 /* Tab Header (分類按鈕)：固定不動 */
 ::ng-deep .mat-mdc-tab-header {
-  flex-shrink: 0; /* 禁止縮小 */
+  flex-shrink: 0;
+  /* 禁止縮小 */
   background-color: #fff;
   z-index: 5;
   border-bottom: 1px solid #eee;
@@ -54,14 +53,17 @@
 /* Tab Body Wrapper：佔滿剩下空間 */
 ::ng-deep .mat-mdc-tab-body-wrapper {
   flex: 1;
-  height: 100%; /* 重要 */
+  height: 100%;
+  /* 重要 */
 }
 
 /* Tab 內容區：只有這裡會滾動 (Scroll Area) */
 ::ng-deep .mat-mdc-tab-body-content {
   height: 100%;
-  overflow-y: auto !important; /* 啟用垂直滾動 */
-  transform: none !important; /* 避免部分手機渲染問題 */
+  overflow-y: auto !important;
+  /* 啟用垂直滾動 */
+  transform: none !important;
+  /* 避免部分手機渲染問題 */
   padding-top: 10px;
   padding-bottom: 100px;
 }
@@ -101,7 +103,7 @@
   background-color: #f9f9f9;
 }
 
-.productCss > span {
+.productCss>span {
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -109,7 +111,7 @@
   padding-right: 15px;
 }
 
-.productCss > span::first-line,
+.productCss>span::first-line,
 .productCss span:not(.priceCss) {
   font-size: 17px;
   font-weight: 600;
@@ -176,7 +178,7 @@
 }
 
 .countCss {
-background-color: #F2C58E;
+  background-color: #F2C58E;
   color: #fff;
   font-size: 14px;
   width: 24px;
@@ -191,14 +193,39 @@ background-color: #F2C58E;
   line-height: 1;
 }
 
-.eventBtn {
-  position: fixed;
-  top: 15px;
-  right: 20px;
-  z-index: 999;
+.state {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  background-color: #f0f0f0;
 }
-mat-icon {
+
+.state h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #333;
+}
+
+.eventBtn {
+  background: transparent;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+}
+
+.eventBtn mat-icon {
   color: #F2C58E;
+  font-size: 26px;
+  width: 28px;
+  height: 28px;
+  background-color: #fff;
+  border-radius: 50px;
+  box-shadow: #d6d6d6 0px 2px 4px ;
 }
 
 // 將上方Tab新增拖拉功能
@@ -214,4 +241,3 @@ mat-icon {
     display: none !important;
   }
 }
-

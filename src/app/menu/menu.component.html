@@ -1,22 +1,25 @@
 <div class="box">
-@if(ordersType == 'A'){
-  <h2>{{ displayOrderType }} 桌號: {{ displayTableId }}</h2>
-} @else {
-  <h2>{{ displayOrderType }}</h2>
-}
+  <div class="state">
+    @if(ordersType == 'A'){
+    <h2>{{ displayOrderType }} 桌號: {{ displayTableId }}</h2>
+    } @else {
+    <h2>{{ displayOrderType }}</h2>
+    }
 
-<!-- 活動公告 -->
-<button class="eventBtn" (click)="openBoard()">
-<mat-icon>campaign</mat-icon>
-</button>
+    <!-- 活動公告 -->
+    <button class="eventBtn" (click)="openBoard()">
+      <mat-icon>campaign</mat-icon>
+    </button>
+  </div>
 
-<div class="content-container">
-  @if (!isLoadingCategories) {
-  <mat-tab-group #tabGroup (selectedTabChange)="onTabChange($event)" disablePagination="true">
-    @for (category of categories; track category.categoryId) {
-    <mat-tab [label]="category.categoryType">
-      <div>
-        @if (category.products && !category.isLoadingProducts) {
+
+  <div class="content-container">
+    @if (!isLoadingCategories) {
+    <mat-tab-group #tabGroup (selectedTabChange)="onTabChange($event)" disablePagination="true">
+      @for (category of categories; track category.categoryId) {
+      <mat-tab [label]="category.categoryType">
+        <div>
+          @if (category.products && !category.isLoadingProducts) {
           @for (item of category.products; track item.productId) {
           <div (click)="openProductDetail(category.categoryId, item.productId)" class="productCss">
             <span>{{ item.productName }}<br>
@@ -24,16 +27,16 @@
 
           </div>
           } @empty {
-            <p>此分類暫無商品。</p>
+          <p>此分類暫無商品。</p>
           }
-        } @else {
-        <p>商品載入中...</p>
-        }
-      </div>
-    </mat-tab>
+          } @else {
+          <p>商品載入中...</p>
+          }
+        </div>
+      </mat-tab>
+      }
+    </mat-tab-group>
     }
-  </mat-tab-group>
-  }
-</div>
-<button class="buttonCss" (click)="submitCart()">送出購物車<span class="countCss">{{ totalItemsCount }}</span></button>
+  </div>
+  <button class="buttonCss" (click)="submitCart()">送出購物車<span class="countCss">{{ totalItemsCount }}</span></button>
 </div>

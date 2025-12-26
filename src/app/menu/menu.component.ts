@@ -1,7 +1,7 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTabChangeEvent, MatTabsModule } from '@angular/material/tabs';
-
+import { Location } from '@angular/common';
 import { Observable, of } from 'rxjs';
 import { ProductDetailDialogComponent } from '../product-detail-dialog/product-detail-dialog.component';
 import { SettingDetailDialogComponent } from '../setting-detail-dialog/setting-detail-dialog.component';
@@ -40,12 +40,25 @@ export class MenuComponent {
     private dataService: DataService,
     private dialog: MatDialog,
     private orderService: OrderService,
+    private location: Location
   ) { }
 
   ngOnInit(): void {
     this.loadOrderDataFromService();
     this.loadInitialData();
-    this.openBoard();
+
+    if (this.displayOrderType === '未知模式') {
+      const dialogRef = this.dialog.open(DialogNoticeComponent, {
+        data: { noticeType: 'noOrderType' },
+        disableClose: true // 防止點背景關閉（可選）
+      });
+
+      dialogRef.afterClosed().subscribe(() => {
+        this.location.back(); // ✅ 使用者關掉後再回上一頁
+      });
+    } else {
+      this.openBoard();
+    }
   }
 
   loadOrderDataFromService(): void {

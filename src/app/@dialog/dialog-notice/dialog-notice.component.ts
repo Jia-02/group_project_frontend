@@ -54,6 +54,8 @@ export class DialogNoticeComponent {
       this.noticeMessage = '更新成功'
     } else if (this.data.noticeType == 'orderFailed') {
       this.noticeMessage = '更新失敗'
+    } else if (this.data.noticeType == 'noOrderType') {
+      this.noticeMessage = '無法辨識訂單模式，請重新掃碼進入'
     }
   }
 
