@@ -7,8 +7,8 @@ import { Observable } from 'rxjs';
 })
 export class Http {
 
-  // private baseUrl = 'http://localhost:8080';
-  private baseUrl="http://192.168.0.174:8080";
+  private baseUrl = 'http://localhost:8080';
+  // private baseUrl="http://192.168.0.174:8080";
 
   constructor(private http: HttpClient) { }
 
