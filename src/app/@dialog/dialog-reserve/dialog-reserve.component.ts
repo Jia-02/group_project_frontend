@@ -310,7 +310,8 @@ export class DialogReserveComponent {
       this.dialog.open(DialogNoticeComponent, {
         width: '25%',
         height: 'auto',
-        data: { noticeType: 'isRequired' }
+        data: { noticeType: 'isRequired' },
+        disableClose: true
       });
       return;
     }
@@ -322,7 +323,8 @@ export class DialogReserveComponent {
       const dialogRef = this.dialog.open(DialogNoticeComponent, {
         width: '25%',
         height: 'auto',
-        data: { noticeType: 'phoneLength' }
+        data: { noticeType: 'phoneLength' },
+        disableClose: true
       });
       return; // 不送出
     }
@@ -338,7 +340,8 @@ export class DialogReserveComponent {
           this.dialog.open(DialogNoticeComponent, {
             width: '25%',
             height: 'auto',
-            data: { noticeType: 'peopleCount' }
+            data: { noticeType: 'peopleCount' },
+            disableClose: true
           })
         }
       });
@@ -348,7 +351,8 @@ export class DialogReserveComponent {
   updateCheck() {
     if (this.reservation.reservationPhone !== this.originalPhone) {
       this.dialog.open(DialogNoticeComponent, {
-        data: { noticeType: 'phoneError'}
+        data: { noticeType: 'phoneError'},
+        disableClose: true
       })
       // 強制把電話改回原本的，避免送出後報錯
       this.reservation.reservationPhone = this.originalPhone;

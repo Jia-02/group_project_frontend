@@ -32,7 +32,7 @@
       <div class="listScrollArea">
         @if(searchRes && inputSearch){
         @for(item of searchRes; track item){
-        <div class="reservationItem">
+        <div class="reservationItem" [class.is-past]="item.reservationTimeEnd < currentTime">
           <div class="itemLeftGroup">
             <div class="nameText">{{item.reservationName}}</div>
             <div class="phoneText">{{item.reservationPhone}}</div>
@@ -73,7 +73,7 @@
         } @else {
         @for(item of reservation; track item){
         @if(item){
-        <div class="reservationItem">
+        <div class="reservationItem" [class.is-past]="item.reservationTimeEnd < currentTime">
           <div class="itemLeftGroup">
             <div class="nameText">{{item.reservationName}}</div>
             <div class="phoneText">{{item.reservationPhone}}</div>

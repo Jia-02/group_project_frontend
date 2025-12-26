@@ -154,6 +154,7 @@ export class ReserveComponent {
       data: dialogData,
       width: '80%',
       height: 'auto',
+      disableClose: true
     });
 
     // 監聽關閉，若更新成功刷新畫面
@@ -173,7 +174,8 @@ export class ReserveComponent {
         deleteType: 'reservation',
         reservationDate: this.formatDateStr(this.selectedDay),
         reservationPhone: this.selectedReservationData.reservationPhone
-      }
+      },
+      disableClose: true
     });
 
     // 監聽關閉，若更新成功刷新畫面
@@ -219,7 +221,8 @@ export class ReserveComponent {
       const dialogRef = this.dialog.open(DialogNoticeComponent, {
         width: '25%',
         height: 'auto',
-        data: { noticeType: 'tableClose' }
+        data: { noticeType: 'tableClose' },
+        disableClose: true
       });
 
       if (event) {
@@ -330,6 +333,7 @@ export class ReserveComponent {
         defaultTableId: targetTableId,
         defaultTime: targetTime,
       },
+      disableClose: true
     });
 
     // 新增後也要重新載入全覽

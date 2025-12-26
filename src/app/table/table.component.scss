@@ -149,6 +149,37 @@
   box-shadow: 0 4px 8px rgba(0,0,0,0.08);
 }
 
+/* 已過期的樣式 */
+.reservationItem.is-past {
+  background-color: #F2F4F6;
+  border-color: #d1d1d1;
+  opacity: 0.8;
+  color: #bbb;
+}
+
+/* 確保過期後 hover 效果不會太突兀 */
+.reservationItem.is-past:hover {
+  border-color: #bbb;
+  box-shadow: none;
+}
+
+/* 當外層卡片是 is-past 狀態時，變更人數文字的顏色 */
+.reservationItem.is-past .countBadge.main {
+  color: #9390A5 !important; /* 變成跟「未報到」一樣的灰色 */
+}
+
+/* 如果你希望小圖示（小孩、座椅）也變淡，可以一起加上 */
+.reservationItem.is-past .countBadge.sub,
+.reservationItem.is-past .countBadge-sub,
+.reservationItem.is-past .countBadge-sub mat-icon {
+  color: #bbb !important;
+}
+
+/* 確保數字本身也變色 */
+.reservationItem.is-past .fontSize20 {
+  color: #9390A5;
+}
+
 .itemLeftGroup {
   flex: 1.2;
   display: flex;

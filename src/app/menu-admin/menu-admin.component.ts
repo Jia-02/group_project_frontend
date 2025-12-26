@@ -246,12 +246,13 @@ export class MenuAdminComponent {
   // 新增餐點
   addProduct() {
     const dialogRef = this.dialog.open(DialogMenuComponent, {
-      width: '85%',
+      width: '80%',
       height: 'auto',
       data: {
         categoryId: this.currentCategory.categoryId,
         categoryType: this.currentCategory.categoryType,
-      }
+      },
+      disableClose: true
     });
 
     dialogRef.afterClosed().subscribe(res => {
@@ -296,7 +297,8 @@ export class MenuAdminComponent {
         categoryType: this.currentCategory.categoryType,
         product: product,
         isEditMode: true
-      }
+      },
+      disableClose: true
     });
 
     dialogRef.afterClosed().subscribe(res => {
@@ -313,7 +315,8 @@ export class MenuAdminComponent {
         deleteType: 'product',
         categoryId: this.currentCategoryId,
         productId: product.productId
-      }
+      },
+      disableClose: true
     });
 
     dialogRef.afterClosed().subscribe(res => {
@@ -378,7 +381,7 @@ export class MenuAdminComponent {
       }
     };
 
-    // 抓附餐 > 成功後去抓飲料
+
     // 如果有附餐
     if (sideCategoryId > 0) {
       this.httpClientService.getApi(`product/list?categoryId=${sideCategoryId}`)
@@ -412,7 +415,8 @@ export class MenuAdminComponent {
           drinkDishList: this.drinkDishList,
           currentCategoryId: this.currentCategoryId,
           categoryType: this.currentCategory.categoryType,
-        }
+        },
+        disableClose: true
       });
 
       dialogRef.afterClosed().subscribe((res: any) => {
@@ -440,7 +444,8 @@ export class MenuAdminComponent {
           categoryType: this.currentCategory.categoryType,
           targetSet: pkg,
           isEditMode: true
-        }
+        },
+        disableClose: true
       });
 
       dialogRef.afterClosed().subscribe((res: any) => {
@@ -546,7 +551,8 @@ export class MenuAdminComponent {
       data: {
         categoryId: this.currentCategoryId, // 傳入當前的分類 ID
         existingOptions: this.dataService.optionList // 目前的選項列表
-      }
+      },
+      disableClose: true
     });
 
     dialogRef.afterClosed().subscribe(res => {
@@ -564,7 +570,8 @@ export class MenuAdminComponent {
         existingOptions: this.dataService.optionList,
         targetOption: targetOption,
         isEditMode: true
-      }
+      },
+      disableClose: true
     });
 
     dialogRef.afterClosed().subscribe(res => {

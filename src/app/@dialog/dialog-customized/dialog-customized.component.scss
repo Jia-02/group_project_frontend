@@ -13,7 +13,7 @@
 .dialogContent {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 10px;
   padding: 30px !important;
   min-width: 450px;
 }
@@ -96,21 +96,20 @@
   margin: 4px 0;
 }
 
-/* --- [本頁專屬] 選項列表 --- */
+/* --- 選項列表 --- */
 .optionsContainer {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  max-height: 350px; /* 超過高度可捲動 */
+  gap: 5px;
+  max-height: 400px; /* 超過高度可捲動 */
   overflow-y: auto;
-  padding: 2px;      /* 避免 focus shadow 被切掉 */
 }
 
 /* 單一選項列 */
 .optionRow {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 10px;
 }
 
 /* 前方的 Icon 裝飾 */
