@@ -13,7 +13,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
   flex-shrink: 0;
   z-index: 10;
 }
@@ -64,7 +64,7 @@
   border-radius: 12px;
   max-width: 420px;
   overflow: hidden;
-  box-shadow: 3px 3px 10px rgba(0,0,0,0.1);
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
 }
 
 .column-header {
@@ -74,35 +74,44 @@
   font-weight: bold;
 }
 
-.column-header h3 { margin: 0; font-size: 18px; }
+.column-header h3 {
+  margin: 0;
+  font-size: 18px;
+}
 
 .column-content {
   flex: 1;
   padding: 10px;
-  overflow-y: auto; /* 欄位內部垂直捲動 */
+  overflow-y: auto;
+  /* 欄位內部垂直捲動 */
 }
 
 /* --- 第一欄：準備中 --- */
 .col-preparing {
   background-color: #e0e4e8;
 }
+
 .col-preparing .column-header {
   background-color: #546e7a;
 }
 
 /* --- 第二欄：待送餐  --- */
 .col-ready {
-  background-color: #fff3e0; /* 淺橘底 */
+  background-color: #fff3e0;
+  /* 淺橘底 */
   border: 2px solid #F2C58E;
 }
+
 .col-ready .column-header {
-  background-color: #F2C58E; /* 亮橘頭 */
+  background-color: #F2C58E;
+  /* 亮橘頭 */
 }
 
 /* --- 第三欄：已送達 --- */
 .col-served {
   background-color: #e0e4e8;
 }
+
 .col-served .column-header {
   background-color: #9ca3af;
 }
@@ -113,7 +122,7 @@
   border-radius: 8px;
   padding: 25px;
   margin: 8px 8px 20px 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -155,13 +164,22 @@
 .payment-row {
   display: flex;
 }
+
 .badge {
   font-size: 12px;
   padding: 2px 6px;
   border-radius: 4px;
 }
-.badge.paid { background-color: #e8f5e9; color: #2e7d32; }
-.badge.unpaid { background-color: #ffebee; color: #c62828; }
+
+.badge.paid {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.badge.unpaid {
+  background-color: #ffebee;
+  color: #c62828;
+}
 
 /* 餐點清單 */
 .product-list {
@@ -171,10 +189,12 @@
 }
 
 .product-group {
-  border-bottom: 1px solid #f9f9f9;
   padding-bottom: 4px;
 }
-.product-group:last-child { border-bottom: none; }
+
+.product-group:last-child {
+  border-bottom: none;
+}
 
 .set-title {
   font-weight: bold;
