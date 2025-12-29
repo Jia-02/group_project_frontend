@@ -5,7 +5,16 @@
       <div class="font">
         <p>外送員登入</p>
         <p>帳號:<input type="text" required placeholder="輸入帳號" [(ngModel)]="loginAccount"></p>
-        <p>密碼:<input type="password" [(ngModel)]="loginPassword"></p>
+        <div class="form-group">
+          <label>密碼:</label>
+          <div class="input-container">
+            <input [type]="showLoginPassword ? 'text' : 'password'" [(ngModel)]="loginPassword" placeholder="輸入密碼">
+            <span class="eye" (click)="showLoginPassword = !showLoginPassword">
+              <mat-icon>{{ showLoginPassword ? 'visibility' : 'visibility_off' }}</mat-icon>
+            </span>
+          </div>
+        </div>
+
         <button class="btnsty" (click)="flipCard()">註冊</button>
         <button (click)="onLogin()">登入</button>
       </div>
@@ -13,7 +22,23 @@
       <div class="back">
         <p>註冊</p>
         <p>帳號:<input type="text" required placeholder="輸入帳號" [(ngModel)]="registerAccount"></p>
-        <p>密碼:<input type="password" [(ngModel)]="registerPassword"></p>
+<!--
+        <p>密碼:<input [type]="showRegisterPassword ? 'text' : 'password'" [(ngModel)]="registerPassword">
+          <span class="eye" (click)="showRegisterPassword = !showRegisterPassword">
+            <mat-icon>{{ showRegisterPassword ? 'visibility' : 'visibility_off' }}</mat-icon>
+          </span>
+        </p> -->
+
+        <div class="form-group">
+          <label>密碼:</label>
+          <div class="input-container">
+            <input [type]="showRegisterPassword ? 'text' : 'password'" [(ngModel)]="registerPassword" placeholder="輸入密碼">
+            <span class="eye" (click)="showRegisterPassword = !showRegisterPassword">
+              <mat-icon>{{ showRegisterPassword ? 'visibility' : 'visibility_off' }}</mat-icon>
+            </span>
+          </div>
+        </div>
+
         <p>姓名:<input type="text" required placeholder="輸入姓名" [(ngModel)]="registerName"></p>
         <p>電話:<input type="text" required placeholder="輸入電話" [(ngModel)]="registerPhone"></p>
         <button class="btnsty" (click)="flipCard()">返回</button>
