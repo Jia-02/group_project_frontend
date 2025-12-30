@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { DataService } from '../@service/data.service';
 import { Router } from '@angular/router';
 import { DialogNoticeComponent } from '../@dialog/dialog-notice/dialog-notice.component';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-send-order-dialog',
@@ -27,7 +28,8 @@ export class SendOrderDialogComponent {
     public dialogRef: MatDialogRef<SendOrderDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: RawOrderData,
     public dataService: DataService,
-    private router: Router
+    private router: Router,
+    private http: HttpClient
   ) {
     if (!data.totalPrice) {
       this.data.totalPrice = this.calculateTotalPrice(data.orderDetailsList);
@@ -190,6 +192,29 @@ export class SendOrderDialogComponent {
         this.goToPage(orderId);
       }
       );
+
+    //   if (this.paymentType === '信用卡') {
+    //   // 如果是信用卡，呼叫後端取得綠界跳轉表單
+    //   this.http.post(url, finalPayload, { responseType: 'text' })
+    //     .subscribe((htmlForm: string) => {
+    //       // 1. 打開一個隱藏的 div 或是動態注入 HTML
+    //       const div = document.createElement('div');
+    //       div.innerHTML = htmlForm;
+    //       document.body.appendChild(div);
+
+    //       // 2. 綠界 SDK 產生的 HTML 通常內含 script 會自動 submit
+    //       // 如果沒有自動跳轉，可以手動觸發：
+    //       const form = div.querySelector('form');
+    //       if (form) form.submit();
+    //     });
+    // } else {
+    //   // 原本的現金支付邏輯
+    //   this.dataService.postApi('orders/add', finalPayload)
+    //     .subscribe((res: any) => {
+    //       this.dialogRef.close();
+    //       this.goToPage(res.ordersId);
+    //     });
+    // }
   }
 
   goToPage(orderId: number) {

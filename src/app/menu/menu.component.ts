@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTabChangeEvent, MatTabsModule } from '@angular/material/tabs';
-
+import { Location } from '@angular/common';
 import { Observable, of } from 'rxjs';
 import { ProductDetailDialogComponent } from '../product-detail-dialog/product-detail-dialog.component';
 import { SettingDetailDialogComponent } from '../setting-detail-dialog/setting-detail-dialog.component';
@@ -38,13 +38,18 @@ export class MenuComponent {
     private dataService: DataService,
     private dialog: MatDialog,
     private orderService: OrderService,
+    private location: Location
   ) { }
 
   ngOnInit(): void {
     this.loadOrderDataFromService();
     this.loadInitialData();
-    this.openBoard();
     this.totalItemsCount;
+    if(this.displayOrderType == '未知模式'){
+      this.location.back();
+    }else{
+     this.openBoard();
+    }
   }
 
   loadOrderDataFromService(): void {
