@@ -311,7 +311,7 @@ export class TableComponent {
           }, flag: false, mod: "編輯",
         },
         width: 'auto',
-        height: 'auto'
+        height: 'auto',
       });
       dialogRef.afterClosed().subscribe((res: any) => {
         if (res) {
@@ -325,7 +325,7 @@ export class TableComponent {
       const dialogRef = this.dialog.open(TableEditComponent, {
         data: { flag: false, mod: "新增" },
         width: 'auto',
-        height: 'auto'
+        height: 'auto',
       });
       dialogRef.afterClosed().subscribe((res: any) => {
         if (res) {
