@@ -221,6 +221,7 @@ interface OrderDetailsList {
   orderDetailsId: number;
   orderDetailsPrice: number;
   settingId: number;
+  settingName ?: string;
   status: string[];
   orderDetails: OrderDetails[];
 }

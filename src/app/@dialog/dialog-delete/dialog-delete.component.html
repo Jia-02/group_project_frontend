@@ -11,6 +11,10 @@
       ＊ 刪除套餐 ＊
     } @else if (data.deleteType == 'category') {
       ＊ 刪除分類 ＊
+    } @else if (data.deleteType == 'cancleOrder') {
+      ＊ 取消訂單 ＊
+    } @else if  (data.deleteType == 'checkOut') {
+      ＊ 確認付款 ＊
     }
   </div>
 
@@ -26,6 +30,10 @@
         確定是否刪掉此套餐?
       } @else if (data.deleteType == 'category') {
         確定是否刪掉此分類?
+      } @else if (data.deleteType == 'cancleOrder') {
+        確定是否取消此訂單?
+      } @else if (data.deleteType == 'checkOut') {
+        確定是否結帳?
       }
     </div>
   </mat-dialog-content>

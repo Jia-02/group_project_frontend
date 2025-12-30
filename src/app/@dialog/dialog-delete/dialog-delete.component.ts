@@ -5,6 +5,7 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogActions, MatDialogContent, MatDial
 import { scheduleItem } from '../../@interface/interface';
 import { Dialog } from '@angular/cdk/dialog';
 import { DialogNoticeComponent } from '../dialog-notice/dialog-notice.component';
+import { DataService } from '../../@service/data.service';
 
 @Component({
   selector: 'app-dialog-delete',
@@ -19,7 +20,8 @@ import { DialogNoticeComponent } from '../dialog-notice/dialog-notice.component'
 export class DialogDeleteComponent {
 
   constructor(
-    private httpClientService: HttpClientService
+    private httpClientService: HttpClientService,
+    private dataService: DataService,
   ) { }
 
   readonly dialogRef = inject(MatDialogRef<DialogDeleteComponent>);
@@ -115,15 +117,28 @@ export class DialogDeleteComponent {
         categoryId: this.data.categoryId
       };
       this.httpClientService.postApi('category/del', payload)
-      .subscribe((res: any) => {
-        if (res.code == 200) {
-          this.dialogRef.close(true);
-        } else if (res.message == '商品上架中。') {
-          this.dialog.open(DialogNoticeComponent, {
+        .subscribe((res: any) => {
+          if (res.code == 200) {
+            this.dialogRef.close(true);
+          } else if (res.message == '商品上架中。') {
+            this.dialog.open(DialogNoticeComponent, {
               data: { noticeType: 'selling' }
             });
-        }
-      });
+          }
+        });
     }
+
+
+
+    // 取消訂單
+    else if (this.data.deleteType == 'cancleOrder') {
+      this.dialogRef.close(true);
+    }
+
+    // 確認結帳
+    else if (this.data.deleteType == 'checkOut') {
+      this.dialogRef.close(true);
+    }
+
   }
 }
