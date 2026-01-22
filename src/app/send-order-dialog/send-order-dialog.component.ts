@@ -164,6 +164,13 @@ export class SendOrderDialogComponent {
       });
     }
 
+    if (this.data.ordersType === 'D' && this.data.totalPrice < 500) {
+      this.dialog.open(DialogNoticeComponent, {
+        data: { noticeType: 'deliveryMin500' }
+      });
+      return;
+    }
+
     const finalPayload: TargetOrderData = {
       ordersType: this.data.ordersType,
       ordersDate: dateStr,
@@ -193,8 +200,15 @@ export class SendOrderDialogComponent {
   }
 
   goToPage(orderId: number) {
-    this.router.navigateByUrl(`/meal/status/user?orderId=${orderId}`);
+    this.router.navigate(
+      ['/meal/status/user'],
+      {
+        queryParams: { orderId },
+        replaceUrl: true
+      }
+    );
   }
+
 }
 
 interface RawProductDetail {

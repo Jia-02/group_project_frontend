@@ -56,6 +56,8 @@ export class DialogNoticeComponent {
       this.noticeMessage = '更新失敗'
     } else if (this.data.noticeType == 'noOrderType') {
       this.noticeMessage = '無法辨識訂單模式，請重新掃碼進入'
+    } else if (this.data.noticeType == 'deliveryMin500') {
+      this.noticeMessage = '外送訂單需滿 500 元才提供服務'
     }
   }
 

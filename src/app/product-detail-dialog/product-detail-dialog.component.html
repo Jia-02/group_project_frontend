@@ -46,7 +46,9 @@
           </div>
 
           <span class="optName">{{ optionItem.option }}</span>
-          <span class="optPrice">+NT$ {{ optionItem.addPrice }}</span>
+          <span class="optPrice">@if (optionGroup.optionName !== '甜度' && optionGroup.optionName !== '冰塊') {
+                                    +NT$ {{ optionItem.addPrice }}
+          }</span>
         </label>
         }
         }

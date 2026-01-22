@@ -31,9 +31,9 @@ export class ProductDetailDialogComponent {
     this.data.optionList.forEach(group => {
       const selectedSet = new Set<string>();
 
-      if (group.optionDetail.length > 0) {
-        selectedSet.add(group.optionDetail[0].option);
-      }
+      if (group.maxSelect === 1 && group.optionDetail.length > 0) {
+      selectedSet.add(group.optionDetail[0].option);
+    }
 
       this.currentSelections.set(group.optionId, selectedSet);
     });

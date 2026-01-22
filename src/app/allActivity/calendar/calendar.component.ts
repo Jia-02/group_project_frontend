@@ -37,8 +37,10 @@ export class CalendarComponent implements OnInit {
 
   calendarTitle: string = '';
   calendarDescription: string = '';
-  calendarStartDate: string = '';
-  calendarEndDate: string = '';
+  formStartDate: string = '';
+  formEndDate: string = '';
+
+
 
   selectedPhotoFile: File | null = null;
   photoUrl: string | null = null;
@@ -60,8 +62,8 @@ export class CalendarComponent implements OnInit {
       this.selectedDayActivities = this.getDayActivities(this.selectedDay);
     }
 
-    this.calendarStartDate = new Date().toISOString().split('T')[0];
-    this.calendarEndDate = this.calendarStartDate;
+    this.formStartDate = new Date().toISOString().split('T')[0];
+    this.formEndDate = this.formStartDate;
   }
 
   loadActivities(): void {
@@ -302,7 +304,7 @@ export class CalendarComponent implements OnInit {
       if (result.action === 'delete') {
         this.activities = this.activities.filter(act => act.calendarId !== result.calendarId);
 
-        console.log(`活動 ID ${result.calendarId} 已刪除，列表已更新。`);
+        console.log(this.activities);
 
       } else if (result.action === 'publish' || result.action === 'saveDraft') {
 
@@ -311,21 +313,19 @@ export class CalendarComponent implements OnInit {
         const mainIndex = this.activities.findIndex(act => act.calendarId === updatedData.calendarId);
 
         if (mainIndex > -1) {
-          const newStartDate = new Date(updatedData.calendarStartDate);
-          const newEndDate = new Date(updatedData.calendarEndDate);
 
           const newActivity: Activity = {
             ...this.activities[mainIndex],
             ...updatedData,
-            calendarStartDate: newStartDate,
-            calendarEndDate: newEndDate,
+            calendarStartDate: new Date(updatedData.calendarStartDate),
+            calendarEndDate: new Date(updatedData.calendarEndDate),
             calendarPhoto: result.photoFile ? result.photoFile.name : (updatedData.calendarPhoto || null),
-            calendarStatus: updatedData.calendarStatus === true || updatedData.calendarStatus === 'published' ? 'published' : 'draft',
+            calendarStatus: (updatedData.calendarStatus === true || updatedData.calendarStatus === 'published') ? 'published' : 'draft',
           };
 
           this.activities[mainIndex] = newActivity;
 
-          console.log(`活動 ${newActivity.calendarTitle} 已更新，日曆準備刷新。`);
+          console.log(newActivity);
         }
       }
 
@@ -388,8 +388,8 @@ export class CalendarComponent implements OnInit {
     this.calendarDescription = '';
     this.selectedPhotoFile = null;
     this.photoUrl = null;
-    this.calendarStartDate = new Date().toISOString().split('T')[0];
-    this.calendarEndDate = this.calendarStartDate;
+    this.formStartDate = new Date().toISOString().split('T')[0];
+    this.formEndDate = this.formStartDate;
   }
 
 }

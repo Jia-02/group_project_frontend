@@ -27,6 +27,16 @@ export class ActivityCheckDialogComponent {
   newPhotoUrl: string | ArrayBuffer | null = null;
   readonly dialog = inject(MatDialog);
 
+  // 確保你有宣告 today
+  today = new Date().toISOString().split('T')[0];
+
+  // 定義 getter 抓取開始日期的值
+  get minEndDate(): string {
+    const startDate = this.form.get('calendarStartDate')?.value;
+    // 如果開始日期還沒選，就預設為 today，否則回傳開始日期
+    return startDate ? startDate : this.today;
+  }
+
   constructor(
     public dialogRef: MatDialogRef<ActivityCheckDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -35,20 +45,17 @@ export class ActivityCheckDialogComponent {
   ) { }
 
   ngOnInit(): void {
-    if (this.data.calendarStartDate) {
-      this.data.calendarStartDate = this.formatDateForInput(this.data.calendarStartDate);
-    }
-    if (this.data.calendarEndDate) {
-      this.data.calendarEndDate = this.formatDateForInput(this.data.calendarEndDate);
-    }
+    console.log('dialog data type:', typeof this.data.calendarStartDate, this.data.calendarStartDate);
+
 
     this.form = this.fb.group({
       calendarId: [this.data.calendarId],
       calendarTitle: [this.data.calendarTitle, Validators.required],
       calendarDescription: [this.data.calendarDescription, Validators.required],
-      calendarStartDate: [this.data.calendarStartDate, Validators.required],
-      calendarEndDate: [this.data.calendarEndDate, Validators.required],
+      calendarStartDate: [this.formatDateForInput(this.data.calendarStartDate), Validators.required],
+      calendarEndDate: [this.formatDateForInput(this.data.calendarEndDate), Validators.required],
     });
+
 
     this.newPhotoUrl = this.data.calendarPhoto;
   }
@@ -76,30 +83,40 @@ export class ActivityCheckDialogComponent {
   }
 
   private saveActivity(status: boolean) {
-    const startDateWithTime = this.form.value.calendarStartDate + ' 00:00:00';
-    const endDateWithTime = this.form.value.calendarEndDate + ' 00:00:00';
 
     let photoName: string | null = null;
     if (this.newPhotoFile) {
-        photoName = this.newPhotoFile.name;
+      photoName = this.newPhotoFile.name;
     } else if (this.data.calendarPhoto) {
-        const parts = this.data.calendarPhoto.split('/');
-        photoName = parts[parts.length - 1];
+      const parts = this.data.calendarPhoto.split('/');
+      photoName = parts[parts.length - 1];
     }
+
+    const start = new Date(this.form.value.calendarStartDate);
+    const end = new Date(this.form.value.calendarEndDate);
+
+    // 格式化為 YYYY-MM-DD HH:mm:ss
+    const formatDateTime = (date: Date) => {
+      const y = date.getFullYear();
+      const m = (date.getMonth() + 1).toString().padStart(2, '0');
+      const d = date.getDate().toString().padStart(2, '0');
+      return `${y}-${m}-${d} 00:00:00`;
+    };
 
     const updatedActivityData = {
       calendarId: this.form.value.calendarId,
       calendarTitle: this.form.value.calendarTitle,
       calendarDescription: this.form.value.calendarDescription,
-      calendarStartDate: startDateWithTime,
-      calendarEndDate: endDateWithTime,
-      calendarPhoto: photoName,
+      calendarStartDate: formatDateTime(start),
+      calendarEndDate: formatDateTime(end),
+      calendarPhoto: photoName, // 保持你原有的圖片處理邏輯
       calendarStatus: status
     };
 
     this.dataService.postApi('calendar/update', updatedActivityData)
       .subscribe((res: any) => {
         console.log(res);
+        console.log(updatedActivityData);
         this.dialogRef.close({ action: status ? 'publish' : 'saveDraft', data: updatedActivityData, photoFile: this.newPhotoFile });
       });
   }
@@ -116,20 +133,20 @@ export class ActivityCheckDialogComponent {
     const id = this.data?.calendarId;
 
     if (typeof id === 'undefined' || id === null) {
-        console.error('刪除錯誤：無法獲取有效的 calendarId，請確認數據已正確傳入。', this.data);
-        this.dialog.open(DialogNoticeComponent, {
-          data: { noticeType: 'activityIdMiss'}
-        })
-        this.dialogRef.close();
-        return;
+      console.error('刪除錯誤：無法獲取有效的 calendarId，請確認數據已正確傳入。', this.data);
+      this.dialog.open(DialogNoticeComponent, {
+        data: { noticeType: 'activityIdMiss' }
+      })
+      this.dialogRef.close();
+      return;
     }
     const deleteUrlWithParam = `calendar/del?calendarId=${id}`;
 
     this.dataService.postApi(deleteUrlWithParam, null)
       .subscribe((res: any) => {
-          console.log(res);
-          this.dialogRef.close({ action: 'delete', calendarId: id });
-        });
+        console.log(res);
+        this.dialogRef.close({ action: 'delete', calendarId: id });
+      });
   }
 
   onCancelClick(): void {
